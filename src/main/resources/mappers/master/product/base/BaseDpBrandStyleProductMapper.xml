@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.DpBrandStyleProductDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	brand_no, brand_style_seq, prdt_no, sort_seq, rgster_no, rgst_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	brand_no = #{brandNo, jdbcType=VARCHAR} AND brand_style_seq = #{brandStyleSeq, jdbcType=INTEGER} AND prdt_no = #{prdtNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.product.model.master.DpBrandStyleProduct" resultType="kr.co.shop.web.product.model.master.DpBrandStyleProduct">
+    
+     /*+ kr.co.shop.web.product.repository.master.DpBrandStyleProductDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			dp_brand_style_product WITH (NOLOCK)
+
+		<where> 
+			<if test="brandNo != null"> 
+				 brand_no = #{brandNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="brandStyleSeq != null"> 
+				 AND brand_style_seq = #{brandStyleSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="prdtNo != null"> 
+				 AND prdt_no = #{prdtNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="sortSeq != null"> 
+				 AND sort_seq = #{sortSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.product.model.master.DpBrandStyleProduct">	
+
+     /*+ kr.co.shop.web.product.repository.master.DpBrandStyleProductDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO dp_brand_style_product
+			 ( brand_no, brand_style_seq, prdt_no, sort_seq, rgster_no, rgst_dtm ) 
+
+		VALUES 
+			 ( #{brandNo, jdbcType=VARCHAR}, #{brandStyleSeq, jdbcType=INTEGER}, #{prdtNo, jdbcType=VARCHAR}, #{sortSeq, jdbcType=INTEGER}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.product.model.master.DpBrandStyleProduct">
+    
+     /*+ kr.co.shop.web.product.repository.master.DpBrandStyleProductDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE dp_brand_style_product
+		<set> 
+			<if test="brandNo != null"> 
+				brand_no = #{brandNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="brandStyleSeq != null"> 
+				brand_style_seq = #{brandStyleSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="prdtNo != null"> 
+				prdt_no = #{prdtNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="sortSeq != null"> 
+				sort_seq = #{sortSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 brand_no = #{brandNo, jdbcType=VARCHAR} AND brand_style_seq = #{brandStyleSeq, jdbcType=INTEGER} AND prdt_no = #{prdtNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.product.model.master.DpBrandStyleProduct">
+    
+     /*+ kr.co.shop.web.product.repository.master.DpBrandStyleProductDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM dp_brand_style_product
+		WHERE 
+			 brand_no = #{brandNo, jdbcType=VARCHAR} AND brand_style_seq = #{brandStyleSeq, jdbcType=INTEGER} AND prdt_no = #{prdtNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

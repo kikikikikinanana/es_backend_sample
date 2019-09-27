@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cart.repository.master.OcCartBenefitDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	cart_seq, cart_benefit_seq, cart_benefit_apply_seq, member_no, hold_cpn_seq, cpn_no, cpn_name, cpn_type_code, promo_no, promo_name, promo_type_code
+    </sql>
+    
+    <sql id="pk-columns">
+    	cart_benefit_apply_seq = #{cartBenefitApplySeq, jdbcType=INTEGER} AND cart_benefit_seq = #{cartBenefitSeq, jdbcType=INTEGER} AND cart_seq = #{cartSeq, jdbcType=BIGINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.cart.model.master.OcCartBenefit" resultType="kr.co.shop.web.cart.model.master.OcCartBenefit">
+    
+     /*+ kr.co.shop.web.cart.repository.master.OcCartBenefitDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			OC_CART_BENEFIT
+		<where> 
+			<if test="cartSeq != null"> 
+				 cart_seq = #{cartSeq, jdbcType=BIGINT}
+			</if> 
+			<if test="cartBenefitSeq != null"> 
+				 AND cart_benefit_seq = #{cartBenefitSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="cartBenefitApplySeq != null"> 
+				 AND cart_benefit_apply_seq = #{cartBenefitApplySeq, jdbcType=INTEGER}
+			</if> 
+			<if test="memberNo != null"> 
+				 AND member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="holdCpnSeq != null"> 
+				 AND hold_cpn_seq = #{holdCpnSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="cpnNo != null"> 
+				 AND cpn_no = #{cpnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="cpnName != null"> 
+				 AND cpn_name = #{cpnName, jdbcType=VARCHAR}
+			</if> 
+			<if test="cpnTypeCode != null"> 
+				 AND cpn_type_code = #{cpnTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="promoNo != null"> 
+				 AND promo_no = #{promoNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="promoName != null"> 
+				 AND promo_name = #{promoName, jdbcType=VARCHAR}
+			</if> 
+			<if test="promoTypeCode != null"> 
+				 AND promo_type_code = #{promoTypeCode, jdbcType=VARCHAR}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.cart.model.master.OcCartBenefit">	
+
+     /*+ kr.co.shop.web.cart.repository.master.OcCartBenefitDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO OC_CART_BENEFIT
+			 ( cart_seq, cart_benefit_seq, cart_benefit_apply_seq, member_no, hold_cpn_seq, cpn_no, cpn_name, cpn_type_code, promo_no, promo_name, promo_type_code ) 
+
+		VALUES 
+			 ( #{cartSeq, jdbcType=BIGINT}, #{cartBenefitSeq, jdbcType=INTEGER}, #{cartBenefitApplySeq, jdbcType=INTEGER}, #{memberNo, jdbcType=VARCHAR}, #{holdCpnSeq, jdbcType=INTEGER}, #{cpnNo, jdbcType=VARCHAR}, #{cpnName, jdbcType=VARCHAR}, #{cpnTypeCode, jdbcType=VARCHAR}, #{promoNo, jdbcType=VARCHAR}, #{promoName, jdbcType=VARCHAR}, #{promoTypeCode, jdbcType=VARCHAR} )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.cart.model.master.OcCartBenefit">
+    
+     /*+ kr.co.shop.web.cart.repository.master.OcCartBenefitDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE OC_CART_BENEFIT
+		<set> 
+			<if test="cartSeq != null"> 
+				cart_seq = #{cartSeq, jdbcType=BIGINT}, 
+			</if> 
+			<if test="cartBenefitSeq != null"> 
+				cart_benefit_seq = #{cartBenefitSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="cartBenefitApplySeq != null"> 
+				cart_benefit_apply_seq = #{cartBenefitApplySeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="holdCpnSeq != null"> 
+				hold_cpn_seq = #{holdCpnSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="cpnNo != null"> 
+				cpn_no = #{cpnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cpnName != null"> 
+				cpn_name = #{cpnName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cpnTypeCode != null"> 
+				cpn_type_code = #{cpnTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="promoNo != null"> 
+				promo_no = #{promoNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="promoName != null"> 
+				promo_name = #{promoName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="promoTypeCode != null"> 
+				promo_type_code = #{promoTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+		</set> 
+		WHERE 
+			 cart_benefit_apply_seq = #{cartBenefitApplySeq, jdbcType=INTEGER} AND cart_benefit_seq = #{cartBenefitSeq, jdbcType=INTEGER} AND cart_seq = #{cartSeq, jdbcType=BIGINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.cart.model.master.OcCartBenefit">
+    
+     /*+ kr.co.shop.web.cart.repository.master.OcCartBenefitDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM OC_CART_BENEFIT
+		WHERE 
+			 cart_benefit_apply_seq = #{cartBenefitApplySeq, jdbcType=INTEGER} AND cart_benefit_seq = #{cartBenefitSeq, jdbcType=INTEGER} AND cart_seq = #{cartSeq, jdbcType=BIGINT}  
+    </delete>
+</mapper>

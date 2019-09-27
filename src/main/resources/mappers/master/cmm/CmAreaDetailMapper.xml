@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cmm.repository.master.CmAreaDetailDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.cmm.model.master.CmAreaDetail">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmAreaDetailDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			CM_AREA_DETAIL
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectCmAreaDetailList" parameterType="kr.co.shop.web.cmm.model.master.CmAreaDetail" resultType="kr.co.shop.web.cmm.model.master.CmAreaDetail">
+    /*+ kr.co.shop.web.cmm.repository.master.CmAreaDetailDao.selectCmAreaDetailList [지역 상세 리스트 조회] [이가영] */
+    
+    	SELECT
+    		A.area_dtl_seq,
+    		A.area_no,
+    		A.area_dtl_name,
+    		A.srch_word,
+    		A.sort_seq
+    	FROM
+    		cm_area_detail A
+    	WHERE
+    		area_no = #{areaNo, jdbcType=VARCHAR}
+    </select>
+
+</mapper>

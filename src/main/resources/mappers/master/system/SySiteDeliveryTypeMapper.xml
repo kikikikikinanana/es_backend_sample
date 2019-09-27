@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.system.repository.master.SySiteDeliveryTypeDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.system.model.master.SySiteDeliveryType">
+    
+     /*+ kr.co.shop.web.system.repository.master.SySiteDeliveryTypeDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			sy_site_delivery_type
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectUseBySiteNo" parameterType="Map" resultType="kr.co.shop.web.system.model.master.SySiteDeliveryType">
+     /*+ kr.co.shop.web.system.repository.master.SySiteDeliveryTypeDao.selectUseBySiteNo [사용중인 배송유형 조회] [김영현] */
+		SELECT 
+				a.site_no
+				, b.code_dtl_name as dlvy_type_code_name
+				, a.dlvy_type_code
+				, a.use_yn
+		FROM 
+			sy_site_delivery_type a
+		LEFT JOIN
+			sy_code_detail b
+		ON
+			b.code_field = #{dlvyTypeCode, jdbcType=VARCHAR} AND a.dlvy_type_code = b.code_dtl_no
+		WHERE 
+			a.site_no = #{siteNo, jdbcType=VARCHAR}
+		AND 
+			a.use_yn = 'Y'
+    </select>
+
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.member.repository.master.MbMemberEasyLoginDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.member.model.master.MbMemberEasyLogin">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberEasyLoginDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			mb_member_easy_login
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectSnsLoginInfo" parameterType="kr.co.shop.web.member.model.master.MbMemberEasyLogin" resultType="kr.co.shop.web.member.model.master.MbMemberEasyLogin">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberEasyLoginDao.selectSnsLoginInfo [회원 sns 정보 조회] [이동엽] */
+    	
+    	 select member_no
+    	      , sns_gbn_code
+    	      , sns_cnnctn_info
+    	      , add_info1
+    	      , add_info2
+		   from mb_member_easy_login
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="memberNo != null and memberNo != ''">
+				and member_no = #{memberNo} 
+			</if>
+			<if test="snsCnnctnInfo != null and snsCnnctnInfo != ''">
+				and sns_cnnctn_info = #{snsCnnctnInfo} 
+			</if>
+			<if test="snsGbnCode != null and snsGbnCode != ''">
+				and sns_gbn_code = #{snsGbnCode} 
+			</if>
+		</trim>
+    </select>
+    
+    <update id="updateEasyLoginInfo" parameterType="kr.co.shop.web.member.model.master.MbMemberEasyLogin">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberEasyLoginDao.updateEasyLoginInfo [회원 sns 정보 변경] [이동엽] */
+    	
+    	update mb_member_easy_login
+    	   set add_info1 = #{addInfo1}
+    	 where member_no = #{memberNo}
+    	   and sns_gbn_code = #{snsGbnCode}
+    </update>
+    
+    <delete id="deleteEasyLoginInfo" parameterType="kr.co.shop.web.member.model.master.MbMemberEasyLogin">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberEasyLoginDao.deleteEasyLoginInfo [회원 sns 정보 삭제] [이동엽] */
+    	
+    	delete from mb_member_easy_login
+    	 where member_no = #{memberNo}
+    	   and sns_gbn_code = #{snsGbnCode}
+    </delete>
+
+</mapper>

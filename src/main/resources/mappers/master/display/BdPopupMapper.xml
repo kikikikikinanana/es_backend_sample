@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.BdPopupDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.display.model.master.BdPopup">
+    
+     /*+ kr.co.shop.web.display.repository.master.BdPopupDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			BD_POPUP
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <resultMap type="kr.co.shop.web.display.model.master.BdPopup" id="bdPopupResultMap" autoMapping="true">
+    	<id property="popupSeq" column="popup_seq"/>
+    	<collection property="bdPopupDevices" ofType="kr.co.shop.web.display.model.master.BdPopupDevice" resultMap="bdPopupDeviceMap" columnPrefix="d_"/>
+    	<collection property="bdPopupDisplayPositions" ofType="kr.co.shop.web.display.model.master.BdPopupDisplayPosition" resultMap="bdPopupDisplayPositionMap" columnPrefix="dp_"/>
+    </resultMap>
+    
+    <resultMap id="bdPopupDeviceMap" type="kr.co.shop.web.display.model.master.BdPopupDevice" autoMapping="true">
+    	<id property="popupSeq" column="popup_seq"/>
+    	<id property="deviceCode" column="device_code"/>
+    </resultMap>
+    
+    <resultMap id="bdPopupDisplayPositionMap" type="kr.co.shop.web.display.model.master.BdPopupDisplayPosition" autoMapping="true">
+    	<id property="popupSeq" column="popup_seq"/>
+    	<id property="popupDispPostnSeq" column="popup_disp_postn_seq"/>
+    </resultMap>
+
+	<select id="selectBdPopup" parameterType="kr.co.shop.web.display.model.master.BdPopup" resultMap="bdPopupResultMap">
+	/*+ kr.co.shop.web.display.repository.master.BdPopupDao.selectBdPopup [팝업 조회] [이가영] */
+	
+		SELECT *
+		FROM (
+			SELECT
+				A.popup_seq,
+				A.site_no,
+				A.popup_title_text,
+				A.disp_yn,
+				A.disp_start_dtm,
+				A.disp_end_dtm,
+				A.disp_day_setup_yn,
+				A.mon_yn,
+				A.tue_yn,
+				A.wed_yn,
+				A.thu_yn,
+				A.fri_yn,
+				A.sat_yn,
+				A.sun_yn,
+				A.disp_day_start_time,
+				A.disp_day_end_time,
+				A.prior_seq,
+				A.disp_limit_type,
+				A.device_code,
+				A.popup_type,
+				A.use_yn,
+				A.rgster_no,
+				A.rgst_dtm,
+				A.moder_no,
+				A.mod_dtm,
+				B.popup_seq as d_popup_seq,
+				B.device_code as d_device_code,
+				B.popup_type as d_popup_type,
+				B.popup_width_num as d_popup_width_num,
+				B.popup_height_num as d_popup_height_num,
+				B.popup_x_postn as d_popup_x_postn,
+				B.popup_y_postn as d_popup_y_postn,
+				B.image_name as d_image_name,
+				B.image_path_text as d_image_path_text,
+				B.image_url as d_image_url,
+				B.altrn_text as d_altrn_text,
+				B.cnnctn_type as d_cnnctn_type,
+				B.link_info as d_link_info,
+				B.link_target_type as d_link_target_type,
+				C.popup_seq as dp_popup_seq,
+				C.popup_disp_postn_seq as dp_popup_disp_postn_seq,
+				C.popup_disp_postn_code as dp_popup_disp_postn_code,
+				C.disp_postn_url as dp_disp_postn_url,
+				C.rgster_no as dp_rgster_no,
+				C.rgst_dtm as dp_rgst_dtm,
+				(case when TO_CHAR(SYSDATE, 'D') = '1' and SUN_YN = 'Y' then 'Y' else 'N' end) as 'is_Sun',
+				(case when TO_CHAR(SYSDATE, 'D') = '2' and MON_YN = 'Y' then 'Y' else 'N' end) as 'is_Mon',
+				(case when TO_CHAR(SYSDATE, 'D') = '3' and TUE_YN = 'Y' then 'Y' else 'N' end) as 'is_Tue',
+				(case when TO_CHAR(SYSDATE, 'D') = '4' and WED_YN = 'Y' then 'Y' else 'N' end) as 'is_Wed',
+				(case when TO_CHAR(SYSDATE, 'D') = '5' and THU_YN = 'Y' then 'Y' else 'N' end) as 'is_Thu',
+				(case when TO_CHAR(SYSDATE, 'D') = '6' and FRI_YN = 'Y' then 'Y' else 'N' end) as 'is_Fri',
+				(case when TO_CHAR(SYSDATE, 'D') = '7' and SAT_YN = 'Y' then 'Y' else 'N' end) as 'is_Sat'
+			FROM bd_popup A
+			LEFT OUTER JOIN bd_popup_device B ON A.popup_seq = B.popup_seq
+			LEFT OUTER JOIN bd_popup_display_position C ON A.popup_seq = C.popup_seq
+			<where> 
+				<if test="popupSeq != null"> 
+					 A.popup_seq = #{popupSeq, jdbcType=INTEGER}
+				</if> 
+				<if test="siteNo != null"> 
+					 AND A.site_no = #{siteNo, jdbcType=VARCHAR}
+				</if> 
+				<if test="popupTitleText != null"> 
+					 AND A.popup_title_text = #{popupTitleText, jdbcType=VARCHAR}
+				</if> 
+				<if test="dispYn != null"> 
+					 AND A.disp_yn = #{dispYn, jdbcType=CHAR}
+				</if>
+				<if test="monYn != null"> 
+					 AND A.mon_yn = #{monYn, jdbcType=CHAR}
+				</if> 
+				<if test="tueYn != null"> 
+					 AND A.tue_yn = #{tueYn, jdbcType=CHAR}
+				</if> 
+				<if test="wedYn != null"> 
+					 AND A.wed_yn = #{wedYn, jdbcType=CHAR}
+				</if> 
+				<if test="thuYn != null"> 
+					 AND A.thu_yn = #{thuYn, jdbcType=CHAR}
+				</if> 
+				<if test="friYn != null"> 
+					 AND A.fri_yn = #{friYn, jdbcType=CHAR}
+				</if> 
+				<if test="satYn != null"> 
+					 AND A.sat_yn = #{satYn, jdbcType=CHAR}
+				</if> 
+				<if test="sunYn != null"> 
+					 AND A.sun_yn = #{sunYn, jdbcType=CHAR}
+				</if> 
+				<if test="dispDayStartTime != null"> 
+					 AND A.disp_day_start_time = #{dispDayStartTime, jdbcType=TIME}
+				</if> 
+				<if test="dispDayEndTime != null"> 
+					 AND A.disp_day_end_time = #{dispDayEndTime, jdbcType=TIME}
+				</if> 
+				<if test="priorSeq != null"> 
+					 AND A.prior_seq = #{priorSeq, jdbcType=INTEGER}
+				</if> 
+				<if test="dispLimitType != null"> 
+					 AND A.disp_limit_type = #{dispLimitType, jdbcType=CHAR}
+				</if> 
+				<if test="deviceCode != null"> 
+					 AND A.device_code = #{deviceCode, jdbcType=VARCHAR}
+				</if> 
+				<if test="popupType != null"> 
+					 AND A.popup_type = #{popupType, jdbcType=CHAR}
+				</if>
+			</where>
+				AND A.disp_yn = 'Y'
+				AND A.use_yn = 'Y'
+				AND A.disp_start_dtm &lt;= SYSDATE
+				AND A.disp_end_dtm >= SYSDATE
+		) TBL
+		WHERE (
+			TBL.disp_day_setup_yn = 'Y'
+			AND (
+				TBL.is_Sun = 'Y'
+				OR TBL.is_Mon = 'Y'
+				OR TBL.is_Tue = 'Y'
+				OR TBL.is_Wed = 'Y'
+				OR TBL.is_Thu = 'Y'
+				OR TBL.is_Fri = 'Y'
+				OR TBL.is_Sat = 'Y'
+			)
+		)
+			OR TBL.disp_day_setup_yn = 'N'
+		ORDER BY TBL.prior_seq, TBL.d_device_code
+	</select>
+	
+	<select id="selectBdPopupList" parameterType="kr.co.shop.web.display.model.master.BdPopup" resultMap="bdPopupResultMap">
+	/*+ kr.co.shop.web.display.repository.master.BdPopupDao.selectBdPopupList [팝업 리스트 조회] [이가영] */
+	
+		SELECT *
+		FROM (
+			SELECT
+				A.popup_seq,
+				A.site_no,
+				A.popup_title_text,
+				A.disp_yn,
+				A.disp_start_dtm,
+				A.disp_end_dtm,
+				A.disp_day_setup_yn,
+				A.mon_yn,
+				A.tue_yn,
+				A.wed_yn,
+				A.thu_yn,
+				A.fri_yn,
+				A.sat_yn,
+				A.sun_yn,
+				A.disp_day_start_time,
+				A.disp_day_end_time,
+				A.prior_seq,
+				A.disp_limit_type,
+				A.device_code,
+				A.popup_type,
+				A.use_yn,
+				A.rgster_no,
+				A.rgst_dtm,
+				A.moder_no,
+				A.mod_dtm,
+				B.popup_seq as d_popup_seq,
+				B.device_code as d_device_code,
+				B.popup_type as d_popup_type,
+				B.popup_width_num as d_popup_width_num,
+				B.popup_height_num as d_popup_height_num,
+				B.popup_x_postn as d_popup_x_postn,
+				B.popup_y_postn as d_popup_y_postn,
+				B.image_name as d_image_name,
+				B.image_path_text as d_image_path_text,
+				B.image_url as d_image_url,
+				B.altrn_text as d_altrn_text,
+				B.cnnctn_type as d_cnnctn_type,
+				B.link_info as d_link_info,
+				B.link_target_type as d_link_target_type,
+				C.popup_seq as dp_popup_seq,
+				C.popup_disp_postn_seq as dp_popup_disp_postn_seq,
+				C.popup_disp_postn_code as dp_popup_disp_postn_code,
+				C.disp_postn_url as dp_disp_postn_url,
+				C.rgster_no as dp_rgster_no,
+				C.rgst_dtm as dp_rgst_dtm,
+				(case when TO_CHAR(SYSDATE, 'D') = '1' and SUN_YN = 'Y' then 'Y' else 'N' end) as 'is_Sun',
+				(case when TO_CHAR(SYSDATE, 'D') = '2' and MON_YN = 'Y' then 'Y' else 'N' end) as 'is_Mon',
+				(case when TO_CHAR(SYSDATE, 'D') = '3' and TUE_YN = 'Y' then 'Y' else 'N' end) as 'is_Tue',
+				(case when TO_CHAR(SYSDATE, 'D') = '4' and WED_YN = 'Y' then 'Y' else 'N' end) as 'is_Wed',
+				(case when TO_CHAR(SYSDATE, 'D') = '5' and THU_YN = 'Y' then 'Y' else 'N' end) as 'is_Thu',
+				(case when TO_CHAR(SYSDATE, 'D') = '6' and FRI_YN = 'Y' then 'Y' else 'N' end) as 'is_Fri',
+				(case when TO_CHAR(SYSDATE, 'D') = '7' and SAT_YN = 'Y' then 'Y' else 'N' end) as 'is_Sat'
+			FROM bd_popup A
+			LEFT OUTER JOIN bd_popup_device B ON A.popup_seq = B.popup_seq
+			LEFT OUTER JOIN bd_popup_display_position C ON A.popup_seq = C.popup_seq
+			<where> 
+				<if test="popupSeq != null"> 
+					 A.popup_seq = #{popupSeq, jdbcType=INTEGER}
+				</if> 
+				<if test="siteNo != null"> 
+					 AND A.site_no = #{siteNo, jdbcType=VARCHAR}
+				</if> 
+				<if test="popupTitleText != null">
+					 AND A.popup_title_text = #{popupTitleText, jdbcType=VARCHAR}
+				</if> 
+				<if test="dispYn != null"> 
+					 AND A.disp_yn = #{dispYn, jdbcType=CHAR}
+				</if>
+				<if test="monYn != null"> 
+					 AND A.mon_yn = #{monYn, jdbcType=CHAR}
+				</if> 
+				<if test="tueYn != null"> 
+					 AND A.tue_yn = #{tueYn, jdbcType=CHAR}
+				</if> 
+				<if test="wedYn != null"> 
+					 AND A.wed_yn = #{wedYn, jdbcType=CHAR}
+				</if> 
+				<if test="thuYn != null"> 
+					 AND A.thu_yn = #{thuYn, jdbcType=CHAR}
+				</if> 
+				<if test="friYn != null"> 
+					 AND A.fri_yn = #{friYn, jdbcType=CHAR}
+				</if> 
+				<if test="satYn != null"> 
+					 AND A.sat_yn = #{satYn, jdbcType=CHAR}
+				</if> 
+				<if test="sunYn != null"> 
+					 AND A.sun_yn = #{sunYn, jdbcType=CHAR}
+				</if> 
+				<if test="dispDayStartTime != null"> 
+					 AND A.disp_day_start_time = #{dispDayStartTime, jdbcType=TIME}
+				</if> 
+				<if test="dispDayEndTime != null"> 
+					 AND A.disp_day_end_time = #{dispDayEndTime, jdbcType=TIME}
+				</if> 
+				<if test="priorSeq != null"> 
+					 AND A.prior_seq = #{priorSeq, jdbcType=INTEGER}
+				</if> 
+				<if test="deviceCode != null"> 
+					 AND A.device_code = #{deviceCode, jdbcType=VARCHAR}
+					 AND B.device_code = #{deviceCode, jdbcType=VARCHAR}
+				</if> 
+				<if test="popupType != null"> 
+					 AND A.popup_type = #{popupType, jdbcType=CHAR}
+				</if>
+				<if test="popupOpenType != null"> 
+					 AND B.popup_type = #{popupOpenType, jdbcType=CHAR}
+				</if>
+			</where>
+				AND A.disp_yn = 'Y'
+				AND A.use_yn = 'Y'
+				AND A.disp_start_dtm &lt;= SYSDATE
+				AND A.disp_end_dtm >= SYSDATE
+				<if test="exceptions != null">
+					AND A.popup_seq NOT IN
+					<foreach collection="exceptions" item="item" open="(" close=")" separator=",">
+						#{item}
+					</foreach>
+				</if>
+				AND A.disp_limit_type IN
+				<foreach collection="dispLimitTypes" item="type" open="(" close=")" separator=","> 
+					#{type}
+				</foreach>
+				AND C.disp_postn_url = #{dispPostnUrl, jdbcType=VARCHAR}
+		) TBL
+		WHERE (
+				TBL.disp_day_setup_yn = 'Y'
+				AND (
+					TBL.is_Sun = 'Y'
+					OR TBL.is_Mon = 'Y'
+					OR TBL.is_Tue = 'Y'
+					OR TBL.is_Wed = 'Y'
+					OR TBL.is_Thu = 'Y'
+					OR TBL.is_Fri = 'Y'
+					OR TBL.is_Sat = 'Y'
+				)
+			)
+			OR TBL.disp_day_setup_yn = 'N'
+		ORDER BY TBL.prior_seq, TBL.d_device_code
+	</select>
+
+</mapper>

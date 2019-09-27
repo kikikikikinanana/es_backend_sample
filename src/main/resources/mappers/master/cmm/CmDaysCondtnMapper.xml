@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cmm.repository.master.CmDaysCondtnDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.cmm.model.master.CmDaysCondtn">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmDaysCondtnDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			cm_days_condtn
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectDaysCondtn" parameterType="kr.co.shop.web.cmm.model.master.CmDaysCondtn" resultType="kr.co.shop.web.cmm.model.master.CmDaysCondtn">
+    	/*+ kr.co.shop.web.cmm.repository.master.CmDaysCondtnDao.selectDaysCondtn [조건날짜 조회][이동엽] */
+    	SELECT A.CONDTN_SETUP_SEQ
+		     , A.CONDTN_TERM_NAME
+		     , A.CONDTN_DESC_INFO
+		     , A.CONDTN_TERM_VALUE
+		  FROM CM_DAYS_CONDTN A
+		 WHERE A.CONDTN_TERM_NAME = #{condtnTermName}
+    </select>
+
+</mapper>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderMemoDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	order_no, order_memo_seq, order_prdt_seq, order_memo_gbn_code, memo_text, del_yn, rgster_no, rgst_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	order_memo_seq = #{orderMemoSeq, jdbcType=INTEGER} AND order_no = #{orderNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.order.model.master.OcOrderMemo" resultType="kr.co.shop.web.order.model.master.OcOrderMemo">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderMemoDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			OC_ORDER_MEMO
+		<where> 
+			<if test="orderNo != null"> 
+				 order_no = #{orderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderMemoSeq != null"> 
+				 AND order_memo_seq = #{orderMemoSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				 AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="orderMemoGbnCode != null"> 
+				 AND order_memo_gbn_code = #{orderMemoGbnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="memoText != null"> 
+				 AND memo_text = #{memoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="delYn != null"> 
+				 AND del_yn = #{delYn, jdbcType=CHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.order.model.master.OcOrderMemo">	
+
+     /*+ kr.co.shop.web.order.repository.master.OcOrderMemoDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO OC_ORDER_MEMO
+			 ( order_no, order_memo_seq, order_prdt_seq, order_memo_gbn_code, memo_text, del_yn, rgster_no, rgst_dtm ) 
+
+		VALUES 
+			 ( #{orderNo, jdbcType=VARCHAR}, #{orderMemoSeq, jdbcType=INTEGER}, #{orderPrdtSeq, jdbcType=TINYINT}, #{orderMemoGbnCode, jdbcType=VARCHAR}, #{memoText, jdbcType=VARCHAR}, #{delYn, jdbcType=CHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.order.model.master.OcOrderMemo">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderMemoDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE OC_ORDER_MEMO
+		<set> 
+			<if test="orderNo != null"> 
+				order_no = #{orderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderMemoSeq != null"> 
+				order_memo_seq = #{orderMemoSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="orderMemoGbnCode != null"> 
+				order_memo_gbn_code = #{orderMemoGbnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="memoText != null"> 
+				memo_text = #{memoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="delYn != null"> 
+				del_yn = #{delYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 order_memo_seq = #{orderMemoSeq, jdbcType=INTEGER} AND order_no = #{orderNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.order.model.master.OcOrderMemo">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderMemoDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM OC_ORDER_MEMO
+		WHERE 
+			 order_memo_seq = #{orderMemoSeq, jdbcType=INTEGER} AND order_no = #{orderNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

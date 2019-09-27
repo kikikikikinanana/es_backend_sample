@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.event.repository.master.EvEventJoinMemberDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.event.model.master.EvEventJoinMember">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventJoinMemberDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			ev_event_join_member
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectEventJoinMemberCount" parameterType="kr.co.shop.web.event.model.master.EvEventJoinMember" resultType="int">
+    /*+ kr.co.shop.web.event.repository.master.EvEventJoinMemberDao.selectEventJoinMemberCount [이벤트 회원 참여 수 쿼리] [이지훈] */
+    	SELECT 
+			COUNT(*)
+		FROM 
+			EV_EVENT_JOIN_MEMBER
+		WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}	
+		<if test='limitType != null and limitType = "D" '>
+			AND TO_CHAR(SYSDATE, 'YYYYMMDD') = TO_CHAR(JOIN_DTM, 'YYYYMMDD')
+		</if>
+		<if test='winYn != null and winYn != "" '>
+			AND WIN_YN = #{winYn, jdbcType=VARCHAR}
+		</if>
+		<if test='recentYn != null and recentYn != "" and recentYn == "Y" '>
+			AND TO_CHAR(ADD_MONTHS(SYSDATE, -2), 'YYYYMMDD') <![CDATA[<=]]> TO_CHAR(JOIN_DTM, 'YYYYMMDD')
+		</if>
+		<if test='addInfo1 != null and addInfo1 != "" and loginIdDupPermYn == "Y" '>
+			AND ADD_INFO1 = #{addInfo1, jdbcType=VARCHAR}
+		</if>
+    </select>
+    
+    <select id="selectEventJoinWinMemberDetail" parameterType="kr.co.shop.web.event.model.master.EvEventJoinMember" resultType="kr.co.shop.web.event.model.master.EvEventJoinMember">
+    /*+ kr.co.shop.web.event.repository.master.EvEventJoinMemberDao.selectEventJoinWinMemberDetail [이벤트 회원 참여 당첨자 상세 쿼리] [이지훈] */
+    	SELECT 
+			<include refid="select-columns" />
+		FROM 
+			EV_EVENT_JOIN_MEMBER
+		WHERE EVENT_NO = #{eventNo, jdbcType=VARCHAR}
+		    AND MEMBER_NO = #{memberNo, jdbcType=VARCHAR}	
+			AND WIN_YN = 'Y'
+		FETCH FIRST 1 ROWS ONLY
+    </select>
+    
+    <select id="selectDrawOrderCheckInfo" parameterType="kr.co.shop.web.event.model.master.EvEventJoinMember" resultType="kr.co.shop.web.event.model.master.EvEventJoinMember">
+    /*+ kr.co.shop.web.event.repository.master.EvEventJoinMemberDao.selectDrawOrderCheckInfo [이벤트 드로우 정보 쿼리] [이지훈] */
+    	SELECT
+    		EE.EVENT_NO
+    		,EE.PRZWR_ORDER_START_YMD
+			,EE.PRZWR_ORDER_END_YMD
+    		,EEJM.EV_EVENT_JOIN_MEMBER_SEQ
+    		,EEJM.EVENT_NO, MEMBER_NO
+    		,EEJM.PRDT_NO
+    		,EEJM.ADD_INFO1
+    		,EEJM.ADD_INFO2
+    		,EEJM.ADD_INFO3
+    		,EEJM.ADD_INFO4
+    		,EEJM.ADD_INFO5
+    		,EEJM.DEVICE_CODE
+    		,EEJM.JOIN_DTM
+    		,EEJM.WIN_YN 
+		FROM 
+			EV_EVENT EE
+		INNER JOIN EV_EVENT_JOIN_MEMBER EEJM
+		            ON EEJM.MEMBER_NO = #{memberNo, jdbcType=VARCHAR}	
+		          AND EE.EVENT_NO = EEJM.EVENT_NO
+		          AND EEJM.WIN_YN = 'Y'
+		WHERE EE.EVENT_NO = #{eventNo, jdbcType=VARCHAR}
+			AND EE.PRZWR_ORDER_START_YMD <![CDATA[<=]]> SYSDATE  
+			AND EE.PRZWR_ORDER_END_YMD <![CDATA[>=]]> SYSDATE
+			<if test='prdtRecptStoreType != null and prdtRecptStoreType != "" '>
+			AND EE.PRDT_RECPT_STORE_TYPE = #{prdtRecptStoreType, jdbcType=VARCHAR}
+			</if>
+			AND EE.ONLN_RECPT_YN = #{onlnRecptYn, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectDrawOrderCheckCount" parameterType="kr.co.shop.web.event.model.master.EvEventJoinMember" resultType="int">
+    /*+ kr.co.shop.web.event.repository.master.EvEventJoinMemberDao.selectDrawOrderCheckCount [이벤트 드로우 검증 count] [이지훈] */
+    	SELECT 
+			COUNT(*)
+		FROM 
+			EV_EVENT EE
+		INNER JOIN EV_EVENT_JOIN_MEMBER EEJM
+		            ON EE.EVENT_NO = EEJM.EVENT_NO
+		          AND EEJM.MEMBER_NO = #{memberNo, jdbcType=VARCHAR}	
+		          AND EEJM.WIN_YN = 'Y'
+		INNER JOIN EV_EVENT_TARGET_PRODUCT EETP
+					ON EE.EVENT_NO = EETP.EVENT_NO
+					AND EETP.PRDT_NO = #{prdtNo, jdbcType=VARCHAR}
+		WHERE EE.EVENT_NO = #{eventNo, jdbcType=VARCHAR}
+			AND EE.PRZWR_ORDER_START_YMD <![CDATA[<=]]> SYSDATE  
+			AND EE.PRZWR_ORDER_END_YMD <![CDATA[>=]]> SYSDATE     
+    </select>
+
+</mapper>

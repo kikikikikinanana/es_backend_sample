@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.claim.repository.master.OcClaimStatusHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.claim.model.master.OcClaimStatusHistory">
+    
+     /*+ kr.co.shop.web.claim.repository.master.OcClaimStatusHistoryDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			OC_CLAIM_STATUS_HISTORY
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+	
+	<insert id="insertClaimStatusHistory" parameterType="kr.co.shop.web.claim.model.master.OcClaimStatusHistory">
+		/*+ kr.co.shop.web.claim.repository.master.OcClaimStatusHistoryDao.insertClaimStatusHistory [클레임상태이력 등록] [KTH] */
+		<selectKey resultType="short" keyProperty="clmStatHistSeq" order="BEFORE">
+			SELECT NVL(MAX(CLM_STAT_HIST_SEQ), 0) + 1
+			  FROM OC_CLAIM_STATUS_HISTORY
+			 WHERE CLM_NO = #{clmNo, jdbcType=VARCHAR}
+			   AND CLM_PRDT_SEQ = #{clmPrdtSeq, jdbcType=TINYINT}
+		</selectKey>
+		INSERT INTO OC_CLAIM_STATUS_HISTORY
+			 (
+			   CLM_NO
+			 , CLM_PRDT_SEQ
+			 , CLM_STAT_HIST_SEQ
+			 , CLM_PRDT_STAT_CODE
+			 , STOCK_GBN_CODE
+			 , NOTE_TEXT
+			 , RGSTER_NO
+			 , RGST_DTM
+			 )
+		VALUES
+			 (
+			   #{clmNo, jdbcType=VARCHAR}
+			 , #{clmPrdtSeq, jdbcType=TINYINT}
+			 , #{clmStatHistSeq, jdbcType=TINYINT}
+			 , #{clmPrdtStatCode, jdbcType=VARCHAR}
+			 , #{stockGbnCode, jdbcType=VARCHAR}
+			 , #{noteText, jdbcType=VARCHAR}
+			 , #{rgsterNo, jdbcType=VARCHAR}
+			 , SYSDATE
+			 )
+	</insert>
+
+</mapper>

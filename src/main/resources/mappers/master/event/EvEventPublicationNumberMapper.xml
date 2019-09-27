@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.event.repository.master.EvEventPublicationNumberDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.event.model.master.EvEventPublicationNumber">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventPublicationNumberDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			ev_event_publication_number
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <update id="updatePublNumber" parameterType="kr.co.shop.web.event.model.master.EvEventPublicationNumber">
+    
+    /*+ kr.co.shop.web.event.repository.master.EvEventPublicationNumberDao.updatePublNumber [이벤트 발행번호 수정 쿼리] [이지훈] */  
+    	UPDATE EV_EVENT_PUBLICATION_NUMBER
+		<set> 
+			<if test="rgstYn != null"> 
+				RGST_YN = #{rgstYn, jdbcType=CHAR}, 
+			</if> 
+		</set> 
+		WHERE 
+			 EVENT_NO = #{eventNo, jdbcType=VARCHAR} 
+			 AND EVENT_PBLICTE_NO = #{eventPblicteNo, jdbcType=VARCHAR}
+    </update>
+</mapper>

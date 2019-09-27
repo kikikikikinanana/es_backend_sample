@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.member.repository.master.MbMemberDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="kr.co.shop.web.member.model.master.MbMember" resultType="kr.co.shop.web.member.model.master.MbMember">
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			mb_member
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectByLoginId" parameterType="kr.co.shop.web.member.model.master.MbMember" resultType="kr.co.shop.web.member.model.master.MbMember">
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			mb_member
+		WHERE 
+			login_id COLLATE Korean_Wansung_CS_AS = #{loginId, jdbcType=VARCHAR}
+		  AND
+			leave_yn = #{leaveYn, jdbcType=VARCHAR}
+    </select>
+    
+     <select id="selectMemberList" parameterType="kr.co.shop.web.member.model.master.MbMember" resultType="kr.co.shop.web.member.model.master.MbMember">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberDao.selectMemberList [회원리스트 조회]  */
+    	
+    	SELECT 
+			<include refid="select-columns" />
+		FROM 
+			mb_member
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="memberNo != null and memberNo != ''">
+				and member_no = #{memberNo} 
+			</if>
+			<if test="loginId != null and loginId != ''">
+				and login_id COLLATE Korean_Wansung_CS_AS = #{loginId, jdbcType=VARCHAR}
+			</if>
+			<if test="memberName != null and memberName != ''">
+				and member_name = #{memberName}
+			</if>
+			<if test="emailAddrText != null and emailAddrText != ''">
+				and email_addr_text = #{emailAddrText}
+			</if>
+			<if test="hdphnNoText != null and hdphnNoText != ''">
+				and hdphn_no_text = #{hdphnNoText}
+			</if>
+			<if test="leaveYn != null and leaveYn != ''">
+				and leave_yn = #{leaveYn}
+			</if>
+		</trim>
+    </select>
+    
+    <select id="selectMemberInfo" parameterType="kr.co.shop.web.member.model.master.MbMember" resultType="kr.co.shop.web.member.model.master.MbMember">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberDao.selectMemberInfo [회원정보 조회]  */
+    	
+    	SELECT 
+			<include refid="select-columns" />
+			 , FN_CODE_VALUE( 'BANK_CODE' , BANK_CODE ) AS BANK_CODE_NAME
+		FROM 
+			mb_member
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="memberNo != null and memberNo != ''">
+				and member_no = #{memberNo} 
+			</if>
+			<if test="loginId != null and loginId != ''">
+				and login_id COLLATE Korean_Wansung_CS_AS = #{loginId, jdbcType=VARCHAR}
+			</if>
+			<if test="memberName != null and memberName != ''">
+				and member_name = #{memberName}
+			</if>
+			<if test="emailAddrText != null and emailAddrText != ''">
+				and email_addr_text = #{emailAddrText}
+			</if>
+			<if test="safeKey != null and safeKey != ''">
+				and safe_key = #{safeKey}
+			</if>
+			<if test="leaveYn != null and leaveYn != ''">
+				and leave_yn = #{leaveYn}
+			</if>
+		</trim>
+    </select>
+    
+    <select id="selectIdSerarchInfoList" parameterType="kr.co.shop.web.member.model.master.MbMember" resultType="kr.co.shop.web.member.model.master.MbMember">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberDao.selectIdSerarchInfoList [아이디 찾기 정보 조회]  */
+    	
+    	SELECT member_no
+    		 , login_id
+    		 , join_dtm
+     		 , leave_dtm
+     		 , leave_yn
+     	  FROM mb_member
+     	 WHERE leave_yn != #{leaveYn}
+		<if test="memberName != null and memberName != ''">
+			and member_name = #{memberName, jdbcType=VARCHAR}
+		</if>
+		<if test="emailAddrText != null and emailAddrText != ''">
+			and email_addr_text = #{emailAddrText, jdbcType=VARCHAR}
+		</if>
+		<if test="hdphnNoText != null and hdphnNoText != ''">
+			and hdphn_no_text = #{hdphnNoText, jdbcType=VARCHAR}
+		</if>
+    </select>
+    
+    <update id="updateLeave" parameterType="kr.co.shop.web.member.model.master.MbMember">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberDao.updateLeave [회원탈퇴 업데이트]  */
+    	UPDATE MB_MEMBER
+    	   SET LEAVE_YN 		= #{leaveYn, jdbcType=CHAR}
+    	     , LEAVE_GBN_CODE 	= #{leaveGbnCode, jdbcType=VARCHAR}
+    	     , LEAVE_RSN_CODE 	= #{leaveRsnCode, jdbcType=VARCHAR}
+    	     , MOD_DTM 			= SYSDATE
+    	     , LEAVE_DTM 		= SYSDATE
+    	     , MODER_NO 		= #{memberNo}
+    	   WHERE MEMBER_NO 		= #{memberNo}
+    </update>
+    
+    <update id="updateLoginFailCount" parameterType="kr.co.shop.web.member.model.master.MbMember">
+    	UPDATE MB_MEMBER
+    	<trim prefix="SET" prefixOverrides=",">
+			<if test="moderNo != null">
+			, MODER_NO = #{moderNo}
+			</if>
+			<if test="modDtm != null">
+			, MOD_DTM = #{modDtm}
+			</if>
+			<if test="loginFailIncrease == 'Y'.toString()">
+			, PSWD_ERROR_COUNT = (SELECT NVL(MAX(PSWD_ERROR_COUNT), 0) + 1
+									FROM MB_MEMBER
+								   WHERE MEMBER_NO = #{memberNo})
+			</if>
+		</trim>
+		WHERE MEMBER_NO = #{memberNo}
+    </update>
+    
+	<select id="getSafeKey" parameterType="String" resultType="String">
+	/*+ kr.co.shop.web.member.repository.master.MbMemberDao.getSafeKey [안심키  조회]  */
+		SELECT SAFE_KEY
+		  FROM MB_MEMBER
+		 WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectMemberSequence" resultType="String">
+		/*+ kr.co.shop.web.member.repository.master.MbMemberDao.selectMemberSequence [회원 시퀀스  조회]  */
+		
+    	SELECT CONCAT('MB', NEXT VALUE FOR SEQ_MB_MEMBER_MEMBER_NO)
+    </select>
+    
+    <select id="insertMemberInfo" parameterType="kr.co.shop.web.member.model.master.MbMember">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberDao.insertMemberInfo [회원등록]  */
+    
+    	INSERT INTO MB_MEMBER(
+		       MEMBER_NO
+		     , LOGIN_ID
+		     , MEMBER_NAME
+		     , PSWD_TEXT
+		     , PSWD_SALT_TEXT
+		     , MEMBER_TYPE_CODE
+		     , EMAIL_ADDR_TEXT
+		     , HDPHN_NO_TEXT
+		     <if test="genderType != null">
+		     , GENDER_TYPE
+		     </if>
+		     , BIRTH_YMD
+		     , ANNVR_YMD
+		     , POINT_PSWD_TEXT
+		     , POINT_PSWD_SALT_TEXT
+		     , SMS_RECV_YN
+		     , SMS_RECV_YN_MOD_DTM
+		     , EMAIL_RECV_YN
+		     , EMAIL_RECV_YN_MOD_DTM
+		     , NIGHT_SMS_RECV_YN
+		     , NIGHT_SMS_RECV_YN_MOD_DTM
+		     , NIGHT_EMAIL_RECV_YN
+		     , NIGHT_EMAIL_RECV_YN_MOD_DTM
+		     , JOIN_DTM
+		     , DEVICE_CODE
+		     , MEMBER_CNVRT_DTM
+		     , SAFE_KEY
+		     , SAFE_KEY_SEQ
+		     , CI_VALUE
+		     , RECMD_STORE_NO
+		     , RGSTER_NO
+		     , RGST_DTM
+		     , MODER_NO
+		     , MOD_DTM
+		) VALUES (
+		       #{memberNo}
+		     , #{loginId}
+		     , #{memberName}
+		     , #{pswdText}
+		     , #{pswdSaltText}
+		     , #{memberTypeCode}
+		     , #{emailAddrText}
+		     , #{hdphnNoText}
+		     <if test="genderType != null">
+		     , #{genderType}
+		     </if>
+		     , TO_CHAR(#{birthYmd, jdbcType=TIMESTAMP}, 'YYYY-MM-DD')
+		     , TO_CHAR(#{birthYmd, jdbcType=TIMESTAMP}, 'YYYY-MM-DD')
+		     , #{pointPswdText}
+		     , #{pointPswdSaltText}
+		     , #{smsRecvYn}
+		     <choose>
+		     	<when test="smsRecvYn == 'Y'.toString()">
+		     	, SYSDATE
+		     	</when>
+		     	<otherwise>
+		     	, null
+		     	</otherwise>
+		     </choose>
+		     , #{emailRecvYn}
+		     <choose>
+		     	<when test="emailRecvYn == 'Y'.toString()">
+		     	, SYSDATE
+		     	</when>
+		     	<otherwise>
+		     	, null
+		     	</otherwise>
+		     </choose>
+		     , #{nightSmsRecvYn}
+		     <choose>
+		     	<when test="nightSmsRecvYn == 'Y'.toString()">
+		     	, SYSDATE
+		     	</when>
+		     	<otherwise>
+		     	, null
+		     	</otherwise>
+		     </choose>
+		     , #{nightEmailRecvYn}
+		     <choose>
+		     	<when test="nightEmailRecvYn == 'Y'.toString()">
+		     	, SYSDATE
+		     	</when>
+		     	<otherwise>
+		     	, null
+		     	</otherwise>
+		     </choose>
+		     , SYSDATE
+		     , #{deviceCode}
+		     , SYSDATE
+		     , #{safeKey}
+		     , #{safeKeySeq}
+		     , #{ciValue}
+		     , #{recmdStoreNo}
+		     , #{rgsterNo}
+		     , SYSDATE
+		     , #{moderNo}
+		     , SYSDATE
+		)
+    </select>
+    
+    <update id="updateRefundAcnt" parameterType="kr.co.shop.web.member.model.master.MbMember">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberDao.updateRefundAcnt [회원 환불계좌 등록]  */
+    	UPDATE MB_MEMBER
+    	   SET BANK_CODE 		= #{bankCode, jdbcType=VARCHAR}
+    	     , ACNT_NO_TEXT 	= #{acntNoText, jdbcType=VARCHAR}
+    	     , ACNT_HLDR_NAME 	= #{acntHldrName, jdbcType=VARCHAR}
+    	     , ACNT_CRTFC_YN 	= #{acntCrtfcYn, jdbcType=CHAR}
+    	     , MOD_DTM 			= SYSDATE
+    	   WHERE MEMBER_NO 		= #{memberNo}
+    </update>
+
+    <select id="selectLeaveMemberInfo" parameterType="kr.co.shop.web.member.model.master.MbMember" resultType="kr.co.shop.web.member.model.master.MbMember">
+    	SELECT 
+			<include refid="select-columns" />
+		FROM 
+			mb_member
+		WHERE 
+			leave_yn = 'Y'
+		<if test="safeKey != null and safeKey != ''">
+			and safe_key = #{safeKey}
+		</if>
+    </select>
+    
+    <update id="updatePaymentMeansCode" parameterType="kr.co.shop.web.member.model.master.MbMember">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberDao.updatePaymentMeansCode [회원 결제수단 수정]  */
+    	
+    	UPDATE MB_MEMBER
+    	   SET PYMNT_MEANS_CODE = #{pymntMeansCode}
+    	     , MOD_DTM	= SYSDATE
+    	 WHERE MEMBER_NO = #{memberNo}
+    </update>
+
+
+</mapper>

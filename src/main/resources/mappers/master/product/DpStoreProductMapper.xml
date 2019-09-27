@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.DpStoreProductDao">
+
+    <!-- select id="getStoreProductList" parameterType="kr.co.shop.web.display.model.master.DpStoreProduct" resultType="kr.co.shop.web.display.model.master.DpStoreProduct">
+    
+     /*+ kr.co.shop.fo.display.repository.DpStoreProductDao.select [매장전용 상품존 조회 쿼리] [백인천] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			pd_product
+		<where> 
+			<if test="brandNo != null"> 
+				 brand_no = #{brandNo, jdbcType=VARCHAR}
+			</if> 
+		</where>  
+    </select-->
+
+	<sql id="select-columns-alias-a">
+		A.prdt_no, A.prdt_type_code, A.site_no, A.chnnl_no, A.prdt_name, A.eng_prdt_name, A.vndr_no, A.vndr_prdt_no_text, A.mmny_prdt_yn, A.brand_no, A.brand_sort_seq, A.org_place_code, A.style_info, A.prdt_color_info, A.mnftr_name, A.std_ctgr_no, A.stdr_ctgr_no, A.cntc_prdt_setup_yn, A.rltn_goods_setup_yn, A.add_optn_setup_yn, A.size_chart_disp_yn, A.size_chart_seq, A.emp_dscnt_yn, A.order_mnfct_yn, A.dprc_except_yn, A.store_pickup_psblt_yn, A.free_dlvy_yn, A.stock_intgr_yn, A.stock_un_intgr_rsn_code, A.stock_mgmt_yn, A.buy_limit_yn, A.min_buy_psblt_qty, A.day_max_buy_psblt_qty, A.max_buy_psblt_qty, A.item_code, A.gender_gbn_code, A.disp_flag_text, A.srch_psblt_yn, A.srch_key_word_text, A.wrhs_alert_yn, A.sell_start_dtm, A.sell_end_dtm, A.rsv_prdt_yn, A.rsv_dlvy_ymd, A.afflts_send_yn, A.aconnect_disp_yn, A.disp_yn, A.igrmall_disp_except_yn, A.vndr_suspd_yn, A.aprv_stat_code, A.sell_stat_code, A.use_yn, A.rgster_no, A.rgst_dtm, A.aprver_no, A.aprver_dtm, A.moder_no, A.mod_dtm
+    </sql>
+    
+    <sql id="select-columns-admin-info">
+		, ADMIN_APRVER.login_id AS aprver_id
+		, ADMIN_APRVER.admin_name AS aprver_name
+		, ADMIN_RGSTER.login_id AS rgster_id
+		, ADMIN_RGSTER.admin_name AS rgster_name
+		, ADMIN_MODER.login_id AS moder_id
+		, ADMIN_MODER.admin_name AS moder_name
+	</sql>
+
+	<sql id="from-table-sy-admin">
+		LEFT OUTER JOIN sy_admin ADMIN_APRVER ON A.aprver_no = ADMIN_APRVER.admin_no
+		LEFT OUTER JOIN sy_admin ADMIN_RGSTER ON A.rgster_no = ADMIN_RGSTER.admin_no
+		LEFT OUTER JOIN sy_admin ADMIN_MODER ON A.moder_no = ADMIN_MODER.admin_no
+	</sql>
+
+	<sql id="from-table-product-image-representation">
+		LEFT OUTER JOIN (
+			SELECT
+				prdt_no,
+				NVL(image_name,		'') title_image_name,
+				NVL(image_path_text,	'') title_image_path_text,
+				NVL(image_url,		'') title_image_url,
+				NVL(altrn_text,		'') title_image_altrn_text
+			FROM
+				pd_product_relation_file
+			WHERE
+				prdt_rltn_file_seq = 1
+				AND disp_postn_type = 'P'
+				AND file_type = 'I'
+		) PRODUCT_IMAGE ON PRODUCT.prdt_no = PRODUCT_IMAGE.prdt_no
+	</sql>
+	
+	<sql id="from-table-product-price-history-recent">
+		LEFT OUTER JOIN (
+			SELECT
+				PRODUCT_PRICE_HISTORY.prdt_no,
+				NVL(PRODUCT_PRICE_HISTORY.normal_amt, 0) normal_amt,
+				NVL(PRODUCT_PRICE_HISTORY.sell_amt, 0) sell_amt,
+				NVL(PRODUCT_PRICE_HISTORY.erp_dscnt_rate, 0) erp_dscnt_rate,
+				NVL(PRODUCT_PRICE_HISTORY.onln_dscnt_rate, 0) onln_dscnt_rate,
+				NVL(PRODUCT_PRICE_HISTORY.emp_dscnt_rate, 0) emp_dscnt_rate
+			FROM
+				(
+					SELECT
+						prdt_no,
+						MAX(prdt_price_hist_seq) max_seq
+					FROM
+						pd_product_price_history
+					WHERE
+						SYSDATE <![CDATA[>=]]> apply_start_dtm
+						AND SYSDATE <![CDATA[<=]]> apply_end_dtm
+					GROUP BY
+						prdt_no
+				) PRODUCT_PRICE_HISTORY_MAX
+				LEFT JOIN
+				(
+					SELECT
+						prdt_no,
+						prdt_price_hist_seq,
+						apply_start_dtm,
+						apply_end_dtm,
+						normal_amt,
+						sell_amt,
+						erp_dscnt_rate,
+						onln_dscnt_rate,
+						emp_dscnt_rate
+					FROM
+						pd_product_price_history
+					) PRODUCT_PRICE_HISTORY ON PRODUCT_PRICE_HISTORY_MAX.prdt_no = PRODUCT_PRICE_HISTORY.prdt_no AND PRODUCT_PRICE_HISTORY_MAX.max_seq = PRODUCT_PRICE_HISTORY.prdt_price_hist_seq
+		) PRODUCT_PRICE ON PRODUCT.prdt_no = PRODUCT_PRICE.prdt_no
+	</sql>
+    
+    <sql id="where-product-search-vo-alias-a">
+    	<where>
+    		<!--  상품유형 중 조회하지 않아야 할 대상. (ex. 사은품,배송비) -->
+    		<if test="bean.excludePrdtTypeCodeList != null">
+				AND A.prdt_type_code NOT IN
+				<foreach item="item" index="index" collection="bean.excludePrdtTypeCodeList" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+    		<!-- 승인상태코드 -->
+    		<if test="bean.aprvStatCode != null and bean.aprvStatCode != ''">
+    			AND A.aprv_stat_code = #{bean.aprvStatCode, jdbcType=VARCHAR}
+    		</if>
+    		<!-- 자사상품여부 -->
+    		<if test="bean.mmnyPrdtYn != null and bean.mmnyPrdtYn != ''">
+    			AND A.mmny_prdt_yn = #{bean.mmnyPrdtYn, jdbcType=VARCHAR}
+    		</if>
+    		<!-- 업체번호 -->
+    		<if test="bean.vndrNo != null and bean.vndrNo != ''">
+   				AND A.vndr_no = #{bean.vndrNo, jdbcType=VARCHAR}
+   			</if>
+    		<!-- 상품유형검색 (온라인, 매장전용) -->
+    		<if test="bean.prdtTypeCode != null and bean.prdtTypeCode != ''">
+    			AND A.prdt_type_code = #{bean.prdtTypeCode, jdbcType=VARCHAR}
+    		</if>
+    		<!-- 상품명 검색 -->
+    		<if test="bean.prdtName != null and bean.prdtName != '' and bean.engPrdtName != null and bean.engPrdtName != ''">
+    			AND
+    				(
+    					A.prdt_name LIKE '%' + #{bean.prdtTypeCode, jdbcType=VARCHAR} + '%'
+    					OR A.eng_prdt_name LIKE '%' + #{bean.prdtTypeCode, jdbcType=VARCHAR} + '%'
+    				)
+    		</if>
+    		<!-- 스타일검색 -->
+    		<if test="bean.styleInfo != null and bean.styleInfo != ''">
+    			AND A.style_info LIKE '%' + #{bean.styleInfo, jdbcType=VARCHAR} + '%'
+    		</if>
+    		<!-- 색상정보 검색 -->
+    		<if test="bean.prdtColorInfo != null and bean.prdtColorInfo != ''">
+    			AND A.prdt_color_info LIKE '%' + #{bean.prdtColorInfo, jdbcType=VARCHAR} + '%'
+    		</if>
+    		<!-- 상품검색어 검색 -->
+    		<if test="bean.srchKeyWordText != null and bean.srchKeyWordText != ''">
+    			AND A.srch_key_word_text LIKE '%' + #{bean.srchKeyWordText, jdbcType=VARCHAR} + '%'
+    		</if>
+    		<!-- 승인자ID 검색 -->
+    		<if test="bean.aprverId != null and bean.aprverId != ''">
+    			AND X.aprver_id = #{bean.aprverId, jdbcType=VARCHAR}
+    		</if>
+    		<!-- 승인자이름 검색 -->
+    		<if test="bean.aprverName != null and bean.aprverName != ''">
+    			AND X.aprver_name = #{bean.aprverName, jdbcType=VARCHAR}
+    		</if>
+    		<!-- 승인자ID 검색 -->
+    		<if test="bean.rgsterId != null and bean.rgsterId != ''">
+    			AND Y.rgster_id = #{bean.rgsterId, jdbcType=VARCHAR}
+    		</if>
+    		<!-- 승인자이름 검색 -->
+    		<if test="bean.rgsterName != null and bean.rgsterName != ''">
+    			AND Y.rgster_name = #{bean.rgsterName, jdbcType=VARCHAR}
+    		</if>
+    		<!-- 승인자ID 검색 -->
+    		<if test="bean.moderId != null and bean.moderId != ''">
+    			AND Z.moder_id = #{bean.moderId, jdbcType=VARCHAR}
+    		</if>
+    		<!-- 승인자이름 검색 -->
+    		<if test="bean.moderName != null and bean.moderName != ''">
+    			AND Z.moder_name = #{bean.moderName, jdbcType=VARCHAR}
+    		</if>
+    		<!-- 상품코드 검색 -->
+    		<if test="bean.prdtCodeType != null and bean.prdtCodeType != ''">
+    			<choose>
+    				<when test="bean.prdtCodeType == 'prdt-code-online'.toString()">
+    					AND A.prdt_no IN
+			    		<foreach item="item" index="index" collection="bean.prdtCodeList" open="(" separator="," close=")">
+			    			#{item}
+			    		</foreach>
+    				</when>
+    				<when test="bean.prdtCodeType == 'prdt-code-erp'.toString()">
+    					AND A.vndr_prdt_no_text IN
+			    		<foreach item="item" index="index" collection="bean.prdtCodeList" open="(" separator="," close=")">
+			    			#{item}
+			    		</foreach>
+    				</when>
+    			</choose>
+    		</if>
+    		<!-- 브랜드 검색 -->
+    		<if test="bean.brandNo != null and bean.brandNo != ''">
+    			AND A.brand_no = #{bean.brandNo, jdbcType=VARCHAR}
+    		</if>
+    		<!-- 판매상태 중 상품판매코드 -->
+    		<if test="bean.sellStatCodes != null">
+    			AND A.sell_stat_code IN
+	    		<foreach item="item" index="index" collection="bean.sellStatCodes" open="(" separator="," close=")">
+	    			#{item}
+	    		</foreach>
+    		</if>
+    		<!-- 전시여부 검색 -->
+			<if test="bean.dispYn != null and bean.dispYn != ''"> 
+				 AND A.disp_yn = #{bean.dispYn, jdbcType=CHAR}
+			</if>
+    		<!-- 표준카테고리 검색 -->
+			<if test="bean.stdCtgrNo != null and bean.stdCtgrNo != ''"> 
+				 AND A.std_ctgr_no = #{bean.stdCtgrNo, jdbcType=VARCHAR}
+			</if>
+			<!-- 전시 채널 및 전시카테고리(기준카테고리) 검색 -->
+			<if test='bean.chnnlNo != null and bean.chnnlNo != "" and bean.stdrCtgrNo != null and bean.stdrCtgrNo != ""'> 
+				 AND A.chnnl_no = #{bean.chnnlNo, jdbcType=VARCHAR}
+				 AND A.stdr_ctgr_no = #{bean.stdrCtgrNo, jdbcType=VARCHAR}
+			</if>
+    		
+    		<!-- 기간조회 (상품등록일, 상품승인완료일, 상품최종수정일, 판매시작일, 판매종료일, 예상출고일) -->
+    		<if test="bean.periodStartDate != null and bean.periodEndDate != null">
+    			<choose>
+					<!-- 최종승인일 -->
+					<when test="bean.periodType == 'aprver-dtm'.toString()">
+						AND A.aprver_dtm
+							BETWEEN
+								TO_DATE(#{bean.periodStartDate, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+								AND TO_DATE(#{bean.periodEndDate, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+					</when>
+    				<!-- 판매시작일 -->
+    				<when test="bean.periodType == 'sell-start-dtm'.toString()">
+						AND A.sell_start_dtm
+							BETWEEN
+								TO_DATE(#{bean.periodStartDate, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+								AND TO_DATE(#{bean.periodEndDate, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+					</when>
+					<!-- 판매종료일 -->
+					<when test="bean.periodType == 'sell-end-dtm'.toString()">
+						AND A.sell_end_dtm
+							BETWEEN
+								TO_DATE(#{bean.periodStartDate, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+								AND TO_DATE(#{bean.periodEndDate, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+					</when>
+					<!-- 예상출고일 -->
+					<when test="bean.periodType == 'rsv-dlvy-ymd'.toString()">
+						AND A.rsv_dlvy_ymd
+							BETWEEN
+								TO_DATE(#{bean.periodStartDate, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+								AND TO_DATE(#{bean.periodEndDate, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+					</when>
+    			</choose>
+    		</if>
+			<!-- 추가검색 -->
+			<if test="bean.useAdvancedSearch != null and bean.useAdvancedSearch == 'Y'.toString()"> 
+				<!-- 테마 -->
+				<if test="bean.genderGbnCode != null and bean.genderGbnCode != ''"> 
+					 AND A.gender_gbn_code = #{bean.genderGbnCode, jdbcType=CHAR}
+				</if>
+				<!-- 예약상품여부 -->
+				<if test="bean.rsvPrdtYn != null and bean.rsvPrdtYn != ''"> 
+					 AND A.rsv_prdt_yn = #{bean.rsvPrdtYn, jdbcType=CHAR}
+				</if>
+				<!-- 무료배송상품여부 -->
+				<if test="bean.freeDlvyYn != null and bean.freeDlvyYn != ''"> 
+					 AND A.free_dlvy_yn = #{bean.freeDlvyYn, jdbcType=CHAR}
+				</if>
+				<!-- 임직원 할인제외여부 -->
+				<if test="bean.empDscntYn != null and bean.empDscntYn != ''"> 
+					 AND A.emp_dscnt_yn = #{bean.empDscntYn, jdbcType=CHAR}
+				</if>
+				<!-- 감가제외여부 -->
+				<if test="bean.dprcExecptYn != null and bean.dprcExecptYn != ''"> 
+					 AND A.dprc_execpt_yn = #{bean.dprcExecptYn, jdbcType=CHAR}
+				</if>
+				<!-- 통합재고연동여부 -->
+				<if test="bean.stockIntgrYn != null and bean.stockIntgrYn != ''"> 
+					 AND A.stock_intgr_yn = #{bean.stockIntgrYn, jdbcType=CHAR}
+				</if>
+				<!-- TODO 매장등급 -->
+				<!-- 매장픽업 가능여부 -->
+				<if test="bean.storePickupPsbltYn != null and bean.storePickupPsbltYn != ''"> 
+					 AND A.store_pickup_psblt_yn = #{bean.storePickupPsbltYn, jdbcType=CHAR}
+				</if>
+				<!-- 제슈사 전송대상 -->
+				<if test="bean.affltsSendYn != null and bean.affltsSendYn != ''"> 
+					 AND A.afflts_send_yn = #{bean.affltsSendYn, jdbcType=CHAR}
+				</if>
+				<!-- 판매가 시작~종료 -->
+				<if test="bean.sellPriceStartWith != null and bean.sellPriceStartWith >= 0 and bean.sellPriceEndWith != null and bean.sellPriceEndWith >= 0"> 
+					 AND 
+					 	(
+					 		A.afflts_send_yn <![CDATA[>=]]> #{bean.sellPriceStartWith, jdbcType=INTEGER}
+					 		AND A.sellPriceEndWith <![CDATA[<=]]> #{bean.sellPriceEndWith, jdbcType=INTEGER}
+					 	)
+				</if>
+			</if>
+			
+		</where>
+    </sql>
+
+	<select id="getStoreProductTotalCount" parameterType="pageable" resultType="int">
+		/*+ kr.co.shop.fo.display.repository.DpStoreProductDao.getStoreProductTotalCount [매장전용 상품존 상품 총수량] [백인천] */
+		SELECT 
+			<include refid="Paging.totalCount" />
+		FROM
+			pd_product A
+			<include refid="from-table-sy-admin" />
+			LEFT OUTER JOIN sy_standard_category STANDARD_CATEGORY ON A.std_ctgr_no = STANDARD_CATEGORY.std_ctgr_no
+			LEFT OUTER JOIN dp_category CATEGORY ON A.stdr_ctgr_no = CATEGORY.ctgr_no
+			LEFT OUTER JOIN sy_site SITE ON A.site_no = SITE.site_no
+			LEFT OUTER JOIN sy_site_chnnl SITE_CHNNL ON A.chnnl_no = SITE_CHNNL.chnnl_no
+			LEFT OUTER JOIN dp_brand BRAND ON A.brand_no = BRAND.brand_no
+			LEFT OUTER JOIN vd_vendor VENDOR ON A.vndr_no = VENDOR.vndr_no
+		<include refid="where-product-search-vo-alias-a"/>
+    </select>
+
+
+    <select id="getStoreProductList" parameterType="pageable" resultType="kr.co.shop.web.product.model.master.DpStoreProduct">
+		/*+ kr.co.shop.fo.display.repository.DpStoreProductDao.getStoreProductList [매장전용 상품존 조회 쿼리] [백인천] */
+		SELECT
+			PRODUCT.*,
+			PRODUCT_IMAGE.title_image_name,
+			PRODUCT_IMAGE.title_image_path_text,
+			PRODUCT_IMAGE.title_image_url,
+			PRODUCT_IMAGE.title_image_altrn_text,
+			PRODUCT_PRICE.normal_amt,
+			PRODUCT_PRICE.sell_amt,
+			PRODUCT_PRICE.erp_dscnt_rate,
+			PRODUCT_PRICE.onln_dscnt_rate,
+			PRODUCT_PRICE.emp_dscnt_rate
+		FROM (  
+				SELECT 
+					<include refid="select-columns-alias-a" />
+					<include refid="select-columns-admin-info" />,
+					STANDARD_CATEGORY.std_ctgr_name,
+					CATEGORY.ctgr_name stdr_ctgr_name,
+					SITE.site_name,
+					SITE_CHNNL.chnnl_name,
+					BRAND.brand_name,
+					VENDOR.vndr_name
+				FROM
+					pd_product A
+					<include refid="from-table-sy-admin" />
+					LEFT OUTER JOIN sy_standard_category STANDARD_CATEGORY ON A.std_ctgr_no = STANDARD_CATEGORY.std_ctgr_no
+					LEFT OUTER JOIN dp_category CATEGORY ON A.stdr_ctgr_no = CATEGORY.ctgr_no
+					LEFT OUTER JOIN sy_site SITE ON A.site_no = SITE.site_no
+					LEFT OUTER JOIN sy_site_chnnl SITE_CHNNL ON A.chnnl_no = SITE_CHNNL.chnnl_no
+					LEFT OUTER JOIN dp_brand BRAND ON A.brand_no = BRAND.brand_no
+					LEFT OUTER JOIN vd_vendor VENDOR ON A.vndr_no = VENDOR.vndr_no
+				<include refid="where-product-search-vo-alias-a"/>
+				ORDER BY
+					A.prdt_no DESC
+				<include refid="Paging.mssql" />
+			) PRODUCT
+			<include refid="from-table-product-image-representation" />
+			<include refid="from-table-product-price-history-recent" />
+    </select>
+
+</mapper>

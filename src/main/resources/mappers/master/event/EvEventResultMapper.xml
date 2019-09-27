@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.event.repository.master.EvEventResultDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.event.model.master.EvEventResult">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventResultDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			ev_event_result
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectEventResultCount" parameterType="Pageable" resultType="int">
+     	SELECT 
+			COUNT(*)
+		FROM 
+			EV_EVENT EE
+		INNER JOIN EV_EVENT_RESULT EER
+					ON EER.EVENT_NO = EE.EVENT_NO
+		<include refid="whereSql" />
+     </select>
+     
+     <select id="selectEventResultList" parameterType="Pageable" resultType="kr.co.shop.web.event.model.master.EvEventResult">
+      /*+ kr.co.shop.web.event.repository.master.EvEventResultDao.selectEventResultList [이벤트결과조회 쿼리] [이지훈] */  
+     	SELECT 
+			EER.EVENT_NO
+			,EER.PBLC_YN
+			,EER.PBLC_YMD
+			,EER.PBLC_CONT_TEXT
+			,EER.TMPR_SAVE_YN
+			,EER.RGSTER_NO
+			,EER.RGST_DTM
+			,EER.MODER_NO
+			,EER.MOD_DTM
+			,EE.EVENT_NAME
+		FROM 
+			EV_EVENT EE
+		INNER JOIN EV_EVENT_RESULT EER
+					ON EER.EVENT_NO = EE.EVENT_NO
+		<include refid="whereSql" />
+		ORDER BY EER.RGST_DTM DESC
+		<include refid="Paging.mssql" />
+     </select>
+     
+     <select id="selectEventResult" parameterType="kr.co.shop.web.event.model.master.EvEventResult" resultType="kr.co.shop.web.event.model.master.EvEventResult">
+      /*+ kr.co.shop.web.event.repository.master.EvEventResultDao.selectEventResult [이벤트결과조회 쿼리] [이지훈] */  
+     	SELECT 
+			EER.EVENT_NO
+			,EER.PBLC_YN
+			,EER.PBLC_YMD
+			,EER.PBLC_CONT_TEXT
+			,EER.TMPR_SAVE_YN
+			,EER.RGSTER_NO
+			,EER.RGST_DTM
+			,EER.MODER_NO
+			,EER.MOD_DTM
+			,EE.EVENT_NAME
+			,LAG(EE.EVENT_NO) OVER(ORDER BY EE.EVENT_NO) AS PREV_EVENT_NO
+			,LEAD(EE.EVENT_NO) OVER(ORDER BY EE.EVENT_NO) AS NEXT_EVENT_NO
+			,LAG(EE.EVENT_NAME) OVER(ORDER BY EE.EVENT_NO) AS PREV_EVENT_NAME
+			,LEAD(EE.EVENT_NAME) OVER(ORDER BY EE.EVENT_NO) AS NEXT_EVENT_NAME
+			,LAG(EER.PBLC_YMD) OVER(ORDER BY EE.EVENT_NO) AS PREV_PBLC_YMD
+			,LEAD(EER.PBLC_YMD) OVER(ORDER BY EE.EVENT_NO) AS NEXT_PBLC_YMD
+		FROM 
+			EV_EVENT EE
+		INNER JOIN EV_EVENT_RESULT EER
+					ON EER.EVENT_NO = EE.EVENT_NO
+		WHERE EE.EVENT_NO = #{eventNo, jdbcType=VARCHAR}
+     </select>
+     
+     <sql id="whereSql">
+     	<where>
+     		
+     	</where>
+     </sql>
+
+</mapper>

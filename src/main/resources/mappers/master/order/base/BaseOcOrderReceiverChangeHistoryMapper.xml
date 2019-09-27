@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderReceiverChangeHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	order_no, rcvr_chng_hist_seq, dlvy_type_code, store_no, store_name, store_add_info, cvnstr_seq, rcvr_name, rcvr_tel_no_text, rcvr_hdphn_no_text, rcvr_post_code_text, rcvr_post_addr_text, rcvr_dtl_addr_text, rgster_no, rgst_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	order_no = #{orderNo, jdbcType=VARCHAR} AND rcvr_chng_hist_seq = #{rcvrChngHistSeq, jdbcType=TINYINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.order.model.master.OcOrderReceiverChangeHistory" resultType="kr.co.shop.web.order.model.master.OcOrderReceiverChangeHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderReceiverChangeHistoryDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			OC_ORDER_RECEIVER_CHANGE_HISTORY
+		<where> 
+			<if test="orderNo != null"> 
+				 order_no = #{orderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrChngHistSeq != null"> 
+				 AND rcvr_chng_hist_seq = #{rcvrChngHistSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="dlvyTypeCode != null"> 
+				 AND dlvy_type_code = #{dlvyTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeNo != null"> 
+				 AND store_no = #{storeNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeName != null"> 
+				 AND store_name = #{storeName, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeAddInfo != null"> 
+				 AND store_add_info = #{storeAddInfo, jdbcType=VARCHAR}
+			</if> 
+			<if test="cvnstrSeq != null"> 
+				 AND cvnstr_seq = #{cvnstrSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="rcvrName != null"> 
+				 AND rcvr_name = #{rcvrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrTelNoText != null"> 
+				 AND rcvr_tel_no_text = #{rcvrTelNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrHdphnNoText != null"> 
+				 AND rcvr_hdphn_no_text = #{rcvrHdphnNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrPostCodeText != null"> 
+				 AND rcvr_post_code_text = #{rcvrPostCodeText, jdbcType=CHAR}
+			</if> 
+			<if test="rcvrPostAddrText != null"> 
+				 AND rcvr_post_addr_text = #{rcvrPostAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrDtlAddrText != null"> 
+				 AND rcvr_dtl_addr_text = #{rcvrDtlAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.order.model.master.OcOrderReceiverChangeHistory">	
+
+     /*+ kr.co.shop.web.order.repository.master.OcOrderReceiverChangeHistoryDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO OC_ORDER_RECEIVER_CHANGE_HISTORY
+			 ( order_no, rcvr_chng_hist_seq, dlvy_type_code, store_no, store_name, store_add_info, cvnstr_seq, rcvr_name, rcvr_tel_no_text, rcvr_hdphn_no_text, rcvr_post_code_text, rcvr_post_addr_text, rcvr_dtl_addr_text, rgster_no, rgst_dtm ) 
+
+		VALUES 
+			 ( #{orderNo, jdbcType=VARCHAR}, #{rcvrChngHistSeq, jdbcType=TINYINT}, #{dlvyTypeCode, jdbcType=VARCHAR}, #{storeNo, jdbcType=VARCHAR}, #{storeName, jdbcType=VARCHAR}, #{storeAddInfo, jdbcType=VARCHAR}, #{cvnstrSeq, jdbcType=TINYINT}, #{rcvrName, jdbcType=VARCHAR}, #{rcvrTelNoText, jdbcType=VARCHAR}, #{rcvrHdphnNoText, jdbcType=VARCHAR}, #{rcvrPostCodeText, jdbcType=CHAR}, #{rcvrPostAddrText, jdbcType=VARCHAR}, #{rcvrDtlAddrText, jdbcType=VARCHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.order.model.master.OcOrderReceiverChangeHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderReceiverChangeHistoryDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE OC_ORDER_RECEIVER_CHANGE_HISTORY
+		<set> 
+			<if test="orderNo != null"> 
+				order_no = #{orderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrChngHistSeq != null"> 
+				rcvr_chng_hist_seq = #{rcvrChngHistSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="dlvyTypeCode != null"> 
+				dlvy_type_code = #{dlvyTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeNo != null"> 
+				store_no = #{storeNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeName != null"> 
+				store_name = #{storeName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeAddInfo != null"> 
+				store_add_info = #{storeAddInfo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cvnstrSeq != null"> 
+				cvnstr_seq = #{cvnstrSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="rcvrName != null"> 
+				rcvr_name = #{rcvrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrTelNoText != null"> 
+				rcvr_tel_no_text = #{rcvrTelNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrHdphnNoText != null"> 
+				rcvr_hdphn_no_text = #{rcvrHdphnNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrPostCodeText != null"> 
+				rcvr_post_code_text = #{rcvrPostCodeText, jdbcType=CHAR}, 
+			</if> 
+			<if test="rcvrPostAddrText != null"> 
+				rcvr_post_addr_text = #{rcvrPostAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrDtlAddrText != null"> 
+				rcvr_dtl_addr_text = #{rcvrDtlAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 order_no = #{orderNo, jdbcType=VARCHAR} AND rcvr_chng_hist_seq = #{rcvrChngHistSeq, jdbcType=TINYINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.order.model.master.OcOrderReceiverChangeHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderReceiverChangeHistoryDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM OC_ORDER_RECEIVER_CHANGE_HISTORY
+		WHERE 
+			 order_no = #{orderNo, jdbcType=VARCHAR} AND rcvr_chng_hist_seq = #{rcvrChngHistSeq, jdbcType=TINYINT}  
+    </delete>
+</mapper>

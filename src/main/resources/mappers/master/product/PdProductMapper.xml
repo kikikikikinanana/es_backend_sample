@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.PdProductDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+
+    -->
+
+    <resultMap type="kr.co.shop.web.product.model.master.PdProductWrapper" id="productWrapper" autoMapping="true">
+    	<id property="prdtNo" column="prdt_no" />
+    	<association property="eventDraw" javaType="kr.co.shop.web.event.model.master.EvEvent" columnPrefix="ed_" autoMapping="true"/>
+    	<collection property="brand" ofType="kr.co.shop.web.product.model.master.DpBrand" columnPrefix="dp_br_" autoMapping="true"/>
+    	<collection property="productPrice" ofType="kr.co.shop.web.product.model.master.PdProductPriceHistory" columnPrefix="pc_" autoMapping="true"/>
+    	<collection property="productOption" ofType="kr.co.shop.web.product.model.master.PdProductOption" resultMap="productOption" columnPrefix="po_"/>
+    	<collection property="productImage" ofType="kr.co.shop.web.product.model.master.PdProductRelationFile" columnPrefix="pi_" autoMapping="true"/>
+    	<collection property="productImageExtra" ofType="kr.co.shop.web.product.model.master.PdProductRelationFile" columnPrefix="pe_" autoMapping="true"/>
+    	<collection property="productDetailImage" ofType="kr.co.shop.web.product.model.master.PdProductRelationFile" columnPrefix="di_" autoMapping="true"/>
+    	<collection property="productNotice" ofType="kr.co.shop.web.product.model.master.PdProductAddInfo" columnPrefix="pn_" autoMapping="true"/>
+    	<collection property="productPrecaution" ofType="kr.co.shop.web.product.model.master.PdProductAddInfo" columnPrefix="pp_" autoMapping="true"/>
+    	<collection property="productAuthority" ofType="kr.co.shop.web.product.model.master.PdProductAddInfo" columnPrefix="pa_" autoMapping="true"/>
+    	<collection property="productDetail" ofType="kr.co.shop.web.product.model.master.PdProductDetail" columnPrefix="dt_" autoMapping="true"/>
+    	<collection property="productIcon" ofType="kr.co.shop.web.product.model.master.CmProductIcon" columnPrefix="ic_" autoMapping="true"/>
+    	<collection property="memberInterest" ofType="kr.co.shop.web.member.model.master.MbMemberInterestProduct" columnPrefix="mp_" autoMapping="true"/>
+    </resultMap>
+    <resultMap type="kr.co.shop.web.product.model.master.PdProductOption" id="productOption" autoMapping="true">
+    	<id property="prdtNo" column="prdt_no" />
+    	<!-- <id property="prdtOptnNo" column="prdt_optn_no" /> -->
+    	<id property="optnName" column="optn_name" />
+    	<collection property="optionPrice" ofType="kr.co.shop.web.product.model.master.PdProductOptionPriceHistory" resultMap="productOptionPrice" columnPrefix="pc_"/>
+    </resultMap>
+    <resultMap type="kr.co.shop.web.product.model.master.PdProductOptionPriceHistory" id="productOptionPrice" autoMapping="true">
+    	<id property="prdtNo" column="prdt_no" />
+    	<id property="prdtOptnNo" column="prdt_optn_no" />
+    </resultMap>
+
+    <!-- 상품상세내용조회 -->
+    <resultMap type="kr.co.shop.web.product.model.master.PdProductDetailWrapper" id="productDetailWrapper">
+    	<id property="prdtNo" column="prdt_no"/>
+    	<association property="detail" javaType="kr.co.shop.web.product.model.master.PdProductDetail" columnPrefix="pd_" autoMapping="true"/>
+    	<collection property="file" ofType="kr.co.shop.web.product.model.master.PdProductRelationFile" columnPrefix="di_" autoMapping="true"/>
+    	<collection property="notice" ofType="kr.co.shop.web.product.model.master.PdProductAddInfo" columnPrefix="pn_" autoMapping="true"/>
+    	<collection property="precaution" ofType="kr.co.shop.web.product.model.master.PdProductAddInfo" columnPrefix="pp_" autoMapping="true"/>
+    	<collection property="authority" ofType="kr.co.shop.web.product.model.master.PdProductAddInfo" columnPrefix="pa_" autoMapping="true"/>
+    </resultMap>
+    
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.product.model.master.PdProduct">
+		/*+ kr.co.shop.web.product.repository.master.PdProductDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */
+		SELECT
+			<include refid="select-columns" />
+		FROM
+			PD_PRODUCT
+		WHERE
+			<include refid="pk-columns" />
+    </select>
+
+    <sql id="select-columns-alias-a">
+		A.prdt_no, A.prdt_type_code, A.site_no, A.chnnl_no, A.prdt_name, A.eng_prdt_name, A.vndr_no, A.vndr_prdt_no_text, A.mmny_prdt_yn, A.brand_no, A.brand_sort_seq, A.org_place_code, A.style_info, A.prdt_color_info, A.mnftr_name, A.std_ctgr_no, A.stdr_ctgr_no, A.cntc_prdt_setup_yn, A.rltn_goods_setup_yn, A.add_optn_setup_yn, A.size_chart_disp_yn, A.size_chart_seq, A.emp_dscnt_yn, A.order_mnfct_yn, A.dprc_except_yn, A.store_pickup_psblt_yn, A.free_dlvy_yn, A.stock_intgr_yn, A.stock_un_intgr_rsn_code, A.stock_mgmt_yn, A.buy_limit_yn, A.min_buy_psblt_qty, A.day_max_buy_psblt_qty, A.max_buy_psblt_qty, A.item_code, A.gender_gbn_code, A.disp_flag_text, A.srch_psblt_yn, A.srch_key_word_text, A.wrhs_alert_yn, A.sell_start_dtm, A.sell_end_dtm, A.rsv_prdt_yn, A.rsv_dlvy_ymd, A.afflts_send_yn, A.aconnect_disp_yn, A.disp_yn, A.igrmall_disp_except_yn, A.vndr_suspd_yn, A.aprv_stat_code, A.sell_stat_code, A.use_yn, A.rgster_no, A.rgst_dtm, A.aprver_no, A.aprver_dtm, A.moder_no, A.mod_dtm
+    </sql>
+
+    <select id="selectProductListWithAll" parameterType="kr.co.shop.web.product.model.master.PdProductWithAll" resultType="kr.co.shop.web.product.model.master.PdProductWithAll">
+    	/*+ kr.co.shop.bo.product.repository.master.PdProductOptionDao.selectProductListWithAll [상품 목록 가격,재고,상품까지 같이 조회(서비스 요청서)] [황성준] */
+    	SELECT
+    		 <include refid="select-columns-alias-a" />
+    		 , B.prdt_optn_no, B.optn_name, B.total_stock_qty, B.total_order_qty, B.order_psblt_qty, B.vndr_prdt_no_text, B.sell_stat_code AS optn_sell_stat_code, B.sold_out_rsn_text, B.sort_seq, B.use_yn AS optn_use_yn
+    		 <foreach collection="stockGbnCodeList" item="item" open="," close="" separator=",">
+				CASE WHEN C.[${item.codeDtlNo}] > 0 THEN C.[${item.codeDtlNo}] ELSE 0 END AS 'stock_${item.insdMgmtInfoText}_qty'
+			 </foreach>
+			 <foreach collection="stockGbnCodeList" item="item" open="," close="" separator=",">
+			 	${item.codeDtlNo} AS 'stock_${item.insdMgmtInfoText}_gbn_code'
+			 </foreach>
+    		 , D.prdt_price_hist_seq, D.normal_amt, D.sell_amt, D.erp_dscnt_rate, D.onln_dscnt_rate, D.emp_dscnt_rate
+    		 , E.optn_add_amt
+    		 , F.brand_name
+    		 , #{cartSeq, jdbcType=INTEGER} AS cart_seq
+    		 , G.image_path_text, G.image_url
+    	FROM pd_product A
+    	JOIN pd_product_option B
+    	ON A.prdt_no = B.prdt_no
+    	AND B.prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}
+    	LEFT JOIN (SELECT PIV.* FROM
+    			(SELECT stock_qty, stock_gbn_code  FROM pd_product_option_stock WHERE prdt_no = #{prdtNo, jdbcType=VARCHAR} and prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR} ) C
+				PIVOT (SUM(C.stock_qty) FOR C.stock_gbn_code IN
+				<foreach collection="stockGbnCodeList" item="item" open="(" close=")" separator=",">
+					[${item.codeDtlNo}]
+				</foreach>
+				) AS PIV
+			 ) C
+		ON 1=1
+   		JOIN pd_product_price_history D
+   		ON 	A.prdt_no = D.prdt_no
+   		AND D.prdt_price_hist_seq = (SELECT prdt_price_hist_seq
+    								 FROM pd_product_price_history
+    								 WHERE prdt_no = B.prdt_no
+    								 AND APPLY_START_DTM <![CDATA[<=]]> SYSDATE
+    								 AND APPLY_END_DTM >= SYSDATE
+    								 ORDER BY prdt_price_hist_seq DESC
+    								 FETCH FIRST 1 ROWS ONLY)
+    	LEFT JOIN pd_product_option_price_history E
+    	ON 	A.prdt_no = E.prdt_no
+    	AND B.prdt_optn_no = E.prdt_optn_no
+    	AND E.sell_price_hist_seq = (SELECT sell_price_hist_seq
+    								 FROM pd_product_option_price_history
+    								 WHERE prdt_no = B.prdt_no
+    								 AND prdt_optn_no = B.prdt_optn_no
+    								 AND APPLY_START_DTM <![CDATA[<=]]> SYSDATE
+    								 AND APPLY_END_DTM >= SYSDATE
+    								 ORDER BY sell_price_hist_seq DESC
+    								 FETCH FIRST 1 ROWS ONLY)
+    	JOIN dp_brand F
+    	ON A.brand_no = F.brand_no
+    	LEFT JOIN pd_product_relation_file G
+    	ON A.prdt_no = G.prdt_no
+    	AND G.prdt_rltn_file_seq = 1
+		AND G.disp_postn_type = 'P'
+		AND G.file_type = 'I'
+    	<where>
+    		AND A.prdt_no = #{prdtNo, jdbcType=VARCHAR}
+    		<if test='siteNo != null and siteNo != ""'>
+	    		AND A.site_no = #{siteNo, jdbcType=VARCHAR}
+    		</if>
+    		<!--
+    		AND B.sell_stat_code = '10001'
+    		AND B.use_yn = 'Y'
+    		-->
+    	</where>
+    </select>
+
+    <select id="selectDisplayProductTotalCount" parameterType="pageableProduct" resultType="java.util.HashMap">
+    	/*+ kr.co.shop.web.product.repository.master.PdProductDao.selectDisplayProductTotalCount [상품 전시 목록 전체갯수 조회 쿼리] [김세훈] */
+    	<include refid="Product.getTotalCountByPaging"/>
+    </select>
+    <select id="selectDisplayProductList" parameterType="pageableProduct" resultMap="productWrapper">
+    	/*+ kr.co.shop.web.product.repository.master.PdProductDao.selectDisplayProductList [상품 전시 목록 조회 쿼리] [김세훈] */
+    	<!-- <include refid="Product.getList"/> -->
+    	<include refid="Product.getListByPaging"/>
+    </select>
+    <select id="selectDisplayProduct" parameterType="pageableProduct" resultMap="productWrapper">
+    	/*+ kr.co.shop.web.product.repository.master.PdProductDao.selectDisplayProduct [상품 주요정보 조회 쿼리] [김세훈] */
+    	SELECT
+			<include refid="Product.select"/>
+		FROM
+			<include refid="Product.from"/>
+		<where>
+			AND INNER_PRODUCT.prdt_no = #{bean.prdtNo, jdbcType=VARCHAR}
+			<include refid="Product.where"/>
+		</where>
+    </select>
+
+    <select id="selectDisplayProductDetail" parameterType="pageableProduct" resultMap="productDetailWrapper">
+    	/*+ kr.co.shop.web.product.repository.master.PdProductDao.selectDisplayProductDetail [상품 상세정보 조회 쿼리] [김세훈] */
+    	SELECT
+			<include refid="Product.select"/>
+		FROM
+			<include refid="Product.from"/>
+		<where>
+			AND INNER_PRODUCT.prdt_no = #{bean.prdtNo, jdbcType=VARCHAR}
+			<include refid="Product.where"/>
+		</where>
+    </select>
+
+    <select id="selectDisplayRelatedProduct" parameterType="pageableProduct" resultMap="productWrapper">
+    	/*+ kr.co.shop.web.product.repository.master.PdProductDao.selectDisplayRelatedProduct [연계상품 조회 쿼리] [김세훈] */
+    	<!-- <include refid="Product.getList"/> -->
+    	<include refid="Product.getListByPaging"/>
+    </select>
+
+    <select id="selectDisplayProductAccessCheckInfo" parameterType="pageableProduct" resultType="kr.co.shop.web.product.model.master.PdProductWrapper">
+    	/*+ kr.co.shop.web.product.repository.master.PdProductDao.selectDisplayProductAccessCheckInfo [상품 상세 페이지 접근 검사항목 조회 쿼리] [김세훈] */
+		SELECT
+			<include refid="Product.select-product-type"/>
+		FROM
+			pd_product INNER_PRODUCT
+			<include refid="Product.from-event-draw"/>
+		<where>
+			AND INNER_PRODUCT.prdt_no = #{bean.prdtNo, jdbcType=VARCHAR}
+			<include refid="Product.where"/>
+		</where>
+    </select>
+
+   	<sql id="targtPrdtList">
+		WITH OC_CART_PRD AS (
+		<foreach item="item" index="index" collection="cartPrdtList" separator="UNION ALL">
+		SELECT ${item.cartSeq} AS CART_SEQ, #{item.siteNo} AS SITE_NO, #{item.chnnlNo} AS CHNNL_NO
+		     , #{item.prdtNo} AS PRDT_NO, #{item.prdtOptnNo} AS PRDT_OPTN_NO, ${item.orderQty} AS ORDER_QTY
+		</foreach>
+		)
+	</sql>
+
+    <select id="selectProductWithAllList" parameterType="kr.co.shop.web.product.model.master.CartProductSearchVO" resultType="kr.co.shop.web.product.model.master.PdProductWithAll">
+    	/*+ kr.co.shop.web.product.repository.master.PdProductDao.selectProductWithAllList [상품 서비스요청서 (김진성 부장님)] [황성준] */
+		<include refid="targtPrdtList" />
+		SELECT B.PRDT_NO, B.PRDT_TYPE_CODE, B.SITE_NO, B.CHNNL_NO, B.PRDT_NAME, B.ENG_PRDT_NAME
+		     , B.VNDR_NO, B.VNDR_PRDT_NO_TEXT, B.MMNY_PRDT_YN, B.BRAND_NO, B.BRAND_SORT_SEQ
+		     , B.ORG_PLACE_CODE, B.STYLE_INFO, B.PRDT_COLOR_INFO, B.MNFTR_NAME, B.STD_CTGR_NO
+		     , B.STDR_CTGR_NO, B.CNTC_PRDT_SETUP_YN, B.RLTN_GOODS_SETUP_YN, B.ADD_OPTN_SETUP_YN, B.SIZE_CHART_DISP_YN
+		     , B.SIZE_CHART_SEQ, B.EMP_DSCNT_YN, B.ORDER_MNFCT_YN, B.DPRC_EXCEPT_YN, B.STORE_PICKUP_PSBLT_YN
+		     , B.FREE_DLVY_YN, B.STOCK_INTGR_YN, B.STOCK_UN_INTGR_RSN_CODE, B.STOCK_MGMT_YN, B.BUY_LIMIT_YN
+		     , B.MIN_BUY_PSBLT_QTY, B.DAY_MAX_BUY_PSBLT_QTY, B.MAX_BUY_PSBLT_QTY, B.ITEM_CODE
+		     , B.GENDER_GBN_CODE, B.DISP_FLAG_TEXT, B.SRCH_PSBLT_YN, B.SRCH_KEY_WORD_TEXT, B.WRHS_ALERT_YN
+		     , B.SELL_START_DTM, B.SELL_END_DTM, B.RSV_PRDT_YN, B.RSV_DLVY_YMD, B.AFFLTS_SEND_YN
+		     , B.ACONNECT_DISP_YN, B.DISP_YN, B.IGRMALL_DISP_EXCEPT_YN, B.VNDR_SUSPD_YN, B.APRV_STAT_CODE
+		     , B.SELL_STAT_CODE , B.USE_YN, B.RGSTER_NO, B.RGST_DTM, B.APRVER_NO
+		     , B.APRVER_DTM , B.MODER_NO , B.MOD_DTM
+		     , C.PRDT_OPTN_NO, C.OPTN_NAME, C.TOTAL_STOCK_QTY, C.TOTAL_ORDER_QTY, C.ORDER_PSBLT_QTY
+		     , C.VNDR_PRDT_NO_TEXT, C.SELL_STAT_CODE AS OPTN_SELL_STAT_CODE, C.SOLD_OUT_RSN_TEXT
+		     , C.SORT_SEQ, C.USE_YN AS OPTN_USE_YN, C.ADD_OPTN1_TEXT, C.ADD_OPTN2_TEXT
+		     , D.STOCK_AI_QTY, D.STOCK_AW_QTY, D.STOCK_AS_QTY, D.STOCK_VD_QTY
+		     , E.PRDT_PRICE_HIST_SEQ, E.NORMAL_AMT, E.SELL_AMT, E.erp_dscnt_rate, E.onln_dscnt_rate, E.emp_dscnt_rate
+		     , NVL(F.OPTN_ADD_AMT, 0) AS OPTN_ADD_AMT
+		     , G.BRAND_NAME
+		     , A.CART_SEQ
+		     , H.IMAGE_PATH_TEXT, H.IMAGE_URL
+		     , A.ORDER_QTY
+		  FROM OC_CART_PRD A
+		INNER JOIN PD_PRODUCT B ON A.PRDT_NO = B.PRDT_NO AND A.SITE_NO = B.SITE_NO
+		INNER JOIN PD_PRODUCT_OPTION C ON A.PRDT_NO = C.PRDT_NO AND A.PRDT_OPTN_NO = C.PRDT_OPTN_NO
+		LEFT OUTER JOIN (
+		                    SELECT Y.PRDT_NO, Y.PRDT_OPTN_NO
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10000' THEN X.STOCK_QTY ELSE 0 END) AS STOCK_AI_QTY
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10001' THEN X.STOCK_QTY ELSE 0 END) AS STOCK_AW_QTY
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10002' THEN X.STOCK_QTY ELSE 0 END) AS STOCK_AS_QTY
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10003' THEN X.STOCK_QTY ELSE 0 END) AS STOCK_VD_QTY
+		                      FROM PD_PRODUCT_OPTION_STOCK X
+		                RIGHT OUTER JOIN OC_CART_PRD Y ON Y.PRDT_NO = X.PRDT_NO AND Y.PRDT_OPTN_NO = X.PRDT_OPTN_NO
+		                  GROUP BY Y.PRDT_NO, Y.PRDT_OPTN_NO
+		                ) D ON A.PRDT_NO = D.PRDT_NO AND A.PRDT_OPTN_NO = D.PRDT_OPTN_NO
+				INNER JOIN (
+		                SELECT X.PRDT_NO, X.PRDT_PRICE_HIST_SEQ, X.NORMAL_AMT, X.SELL_AMT, Y.CART_SEQ, X.erp_dscnt_rate, X.onln_dscnt_rate, X.emp_dscnt_rate
+		                  FROM PD_PRODUCT_PRICE_HISTORY X
+		            INNER JOIN OC_CART_PRD Y ON Y.PRDT_NO = X.PRDT_NO
+		                 WHERE X.PRDT_PRICE_HIST_SEQ = ( SELECT MAX(Z.PRDT_PRICE_HIST_SEQ)
+		                                                    FROM PD_PRODUCT_PRICE_HISTORY Z
+		                                                   WHERE Z.PRDT_NO = Y.PRDT_NO
+		                                                   GROUP BY Z.PRDT_NO
+		                                                )
+		           ) E ON A.PRDT_NO = E.PRDT_NO AND A.CART_SEQ = E.CART_SEQ
+		LEFT OUTER JOIN (
+		                SELECT X.PRDT_NO, X.PRDT_OPTN_NO, X.SELL_PRICE_HIST_SEQ, X.OPTN_ADD_AMT, Y.CART_SEQ
+		                  FROM PD_PRODUCT_OPTION_PRICE_HISTORY X
+		            INNER JOIN OC_CART_PRD Y ON Y.PRDT_NO = X.PRDT_NO AND Y.PRDT_OPTN_NO = X.PRDT_OPTN_NO
+		                 WHERE X.SELL_PRICE_HIST_SEQ = ( SELECT MAX(Z.SELL_PRICE_HIST_SEQ)
+		                                                    FROM PD_PRODUCT_OPTION_PRICE_HISTORY Z
+		                                                   WHERE Z.PRDT_NO = Y.PRDT_NO
+                                                         AND Z.PRDT_OPTN_NO = Y.PRDT_OPTN_NO
+		                                                   GROUP BY Z.PRDT_NO
+		                                                )
+		           ) F ON A.PRDT_NO = F.PRDT_NO AND A.PRDT_OPTN_NO = F.PRDT_OPTN_NO AND A.CART_SEQ = F.CART_SEQ
+		INNER JOIN DP_BRAND G ON B.BRAND_NO = G.BRAND_NO
+		LEFT OUTER JOIN PD_PRODUCT_RELATION_FILE H ON A.PRDT_NO = H.PRDT_NO AND H.DISP_POSTN_TYPE = 'P' AND H.FILE_TYPE = 'I' AND H.PRDT_RLTN_FILE_SEQ = ( SELECT MIN(Z.PRDT_RLTN_FILE_SEQ) FROM PD_PRODUCT_RELATION_FILE Z WHERE Z.PRDT_NO = H.PRDT_NO AND Z.DISP_POSTN_TYPE = H.DISP_POSTN_TYPE AND Z.FILE_TYPE = H.FILE_TYPE)
+	<if test='storePickupPsbltYn != null and storePickupPsbltYn == "Y"'> /* 매장 픽업 가능 상품만 조회  */
+		 WHERE (B.STORE_PICKUP_PSBLT_YN = 'Y' AND D.STOCK_AS_QTY > 0)
+	</if>
+	</select>
+	
+	<select id="selectProductDlvy" parameterType="java.lang.String" resultType="kr.co.shop.web.product.model.master.PdProduct">
+		/*+ kr.co.shop.web.product.repository.master.PdProductDao.selectProductDlvy [배송비 상품 조회 쿼리] [김태호] */
+		SELECT A.PRDT_NO
+			 , A.PRDT_TYPE_CODE
+			 , A.SITE_NO
+			 , A.CHNNL_NO
+			 , A.PRDT_NAME
+			 , A.ENG_PRDT_NAME
+			 , A.MMNY_PRDT_YN
+			 , A.STYLE_INFO
+			 , A.PRDT_COLOR_INFO
+			 , A.MNFTR_NAME
+			 , A.ITEM_CODE
+			 , A.GENDER_GBN_CODE
+		FROM PD_PRODUCT A
+		<where>
+			AND A.PRDT_TYPE_CODE = #{value}
+		</where>
+	</select>
+	
+</mapper>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.promotion.repository.master.PrPromotionTargetGradeDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	promo_no, promo_trgt_grade_seq, member_type_code, mbshp_grade_code, emp_yn
+    </sql>
+    
+    <sql id="pk-columns">
+    	promo_no = #{promoNo, jdbcType=VARCHAR} AND promo_trgt_grade_seq = #{promoTrgtGradeSeq, jdbcType=TINYINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.promotion.model.master.PrPromotionTargetGrade" resultType="kr.co.shop.web.promotion.model.master.PrPromotionTargetGrade">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrPromotionTargetGradeDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			PR_PROMOTION_TARGET_GRADE
+		<where> 
+			<if test="promoNo != null"> 
+				 promo_no = #{promoNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="promoTrgtGradeSeq != null"> 
+				 AND promo_trgt_grade_seq = #{promoTrgtGradeSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="memberTypeCode != null"> 
+				 AND member_type_code = #{memberTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="mbshpGradeCode != null"> 
+				 AND mbshp_grade_code = #{mbshpGradeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="empYn != null"> 
+				 AND emp_yn = #{empYn, jdbcType=CHAR}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.promotion.model.master.PrPromotionTargetGrade">	
+
+     /*+ kr.co.shop.web.promotion.repository.master.PrPromotionTargetGradeDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO PR_PROMOTION_TARGET_GRADE
+			 ( promo_no, promo_trgt_grade_seq, member_type_code, mbshp_grade_code, emp_yn ) 
+
+		VALUES 
+			 ( #{promoNo, jdbcType=VARCHAR}, #{promoTrgtGradeSeq, jdbcType=TINYINT}, #{memberTypeCode, jdbcType=VARCHAR}, #{mbshpGradeCode, jdbcType=VARCHAR}, #{empYn, jdbcType=CHAR} )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.promotion.model.master.PrPromotionTargetGrade">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrPromotionTargetGradeDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE PR_PROMOTION_TARGET_GRADE
+		<set> 
+			<if test="promoNo != null"> 
+				promo_no = #{promoNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="promoTrgtGradeSeq != null"> 
+				promo_trgt_grade_seq = #{promoTrgtGradeSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="memberTypeCode != null"> 
+				member_type_code = #{memberTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mbshpGradeCode != null"> 
+				mbshp_grade_code = #{mbshpGradeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="empYn != null"> 
+				emp_yn = #{empYn, jdbcType=CHAR}, 
+			</if> 
+		</set> 
+		WHERE 
+			 promo_no = #{promoNo, jdbcType=VARCHAR} AND promo_trgt_grade_seq = #{promoTrgtGradeSeq, jdbcType=TINYINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.promotion.model.master.PrPromotionTargetGrade">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrPromotionTargetGradeDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM PR_PROMOTION_TARGET_GRADE
+		WHERE 
+			 promo_no = #{promoNo, jdbcType=VARCHAR} AND promo_trgt_grade_seq = #{promoTrgtGradeSeq, jdbcType=TINYINT}  
+    </delete>
+</mapper>

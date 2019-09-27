@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cmm.repository.master.CmMessageSendHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	mesg_send_seq, send_tel_no_text, sndr_name, recv_tel_no_text, rcvr_name, mesg_title_text, mesg_cont_text, send_type_code, send_yn, send_dtm, resend_type_code, resend_mesg_cont_text, rsv_send_dtm, site_no, mesg_tmpl_seq, member_no, order_no, order_prdt_seq, cnsl_script_seq, mesg_id, admin_send_yn, rgster_no, rgst_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	mesg_send_seq = #{mesgSendSeq, jdbcType=INTEGER}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.cmm.model.master.CmMessageSendHistory" resultType="kr.co.shop.web.cmm.model.master.CmMessageSendHistory">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmMessageSendHistoryDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			cm_message_send_history WITH (NOLOCK)
+
+		<where> 
+			<if test="mesgSendSeq != null"> 
+				 mesg_send_seq = #{mesgSendSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="sendTelNoText != null"> 
+				 AND send_tel_no_text = #{sendTelNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="sndrName != null"> 
+				 AND sndr_name = #{sndrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="recvTelNoText != null"> 
+				 AND recv_tel_no_text = #{recvTelNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrName != null"> 
+				 AND rcvr_name = #{rcvrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="mesgTitleText != null"> 
+				 AND mesg_title_text = #{mesgTitleText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mesgContText != null"> 
+				 AND mesg_cont_text = #{mesgContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="sendTypeCode != null"> 
+				 AND send_type_code = #{sendTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="sendYn != null"> 
+				 AND send_yn = #{sendYn, jdbcType=CHAR}
+			</if> 
+			<if test="sendDtm != null"> 
+				 AND send_dtm = #{sendDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="resendTypeCode != null"> 
+				 AND resend_type_code = #{resendTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="resendMesgContText != null"> 
+				 AND resend_mesg_cont_text = #{resendMesgContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rsvSendDtm != null"> 
+				 AND rsv_send_dtm = #{rsvSendDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="mesgTmplSeq != null"> 
+				 AND mesg_tmpl_seq = #{mesgTmplSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="memberNo != null"> 
+				 AND member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderNo != null"> 
+				 AND order_no = #{orderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				 AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="cnslScriptSeq != null"> 
+				 AND cnsl_script_seq = #{cnslScriptSeq, jdbcType=VARCHAR}
+			</if> 
+			<if test="mesgId != null"> 
+				 AND mesg_id = #{mesgId, jdbcType=VARCHAR}
+			</if> 
+			<if test="adminSendYn != null"> 
+				 AND admin_send_yn = #{adminSendYn, jdbcType=CHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+	<insert id="insert" useGeneratedKeys="true" keyProperty="mesgSendSeq">
+
+     /*+ kr.co.shop.web.cmm.repository.master.CmMessageSendHistoryDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO cm_message_send_history
+			 ( send_tel_no_text, sndr_name, recv_tel_no_text, rcvr_name, mesg_title_text, mesg_cont_text, send_type_code, send_yn, send_dtm, resend_type_code, resend_mesg_cont_text, rsv_send_dtm, site_no, mesg_tmpl_seq, member_no, order_no, order_prdt_seq, cnsl_script_seq, mesg_id, admin_send_yn, rgster_no, rgst_dtm ) 
+
+		VALUES 
+			 ( #{sendTelNoText, jdbcType=VARCHAR}, #{sndrName, jdbcType=VARCHAR}, #{recvTelNoText, jdbcType=VARCHAR}, #{rcvrName, jdbcType=VARCHAR}, #{mesgTitleText, jdbcType=VARCHAR}, #{mesgContText, jdbcType=VARCHAR}, #{sendTypeCode, jdbcType=VARCHAR}, #{sendYn, jdbcType=CHAR}, <choose><when test="sendDtm != null">#{sendDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{resendTypeCode, jdbcType=VARCHAR}, #{resendMesgContText, jdbcType=VARCHAR}, <choose><when test="rsvSendDtm != null">#{rsvSendDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{siteNo, jdbcType=VARCHAR}, #{mesgTmplSeq, jdbcType=INTEGER}, #{memberNo, jdbcType=VARCHAR}, #{orderNo, jdbcType=VARCHAR}, #{orderPrdtSeq, jdbcType=TINYINT}, #{cnslScriptSeq, jdbcType=VARCHAR}, #{mesgId, jdbcType=VARCHAR}, #{adminSendYn, jdbcType=CHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.cmm.model.master.CmMessageSendHistory">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmMessageSendHistoryDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE cm_message_send_history
+		<set> 
+			<if test="mesgSendSeq != null"> 
+				mesg_send_seq = #{mesgSendSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="sendTelNoText != null"> 
+				send_tel_no_text = #{sendTelNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="sndrName != null"> 
+				sndr_name = #{sndrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="recvTelNoText != null"> 
+				recv_tel_no_text = #{recvTelNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrName != null"> 
+				rcvr_name = #{rcvrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mesgTitleText != null"> 
+				mesg_title_text = #{mesgTitleText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mesgContText != null"> 
+				mesg_cont_text = #{mesgContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="sendTypeCode != null"> 
+				send_type_code = #{sendTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="sendYn != null"> 
+				send_yn = #{sendYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="sendDtm != null"> 
+				send_dtm = #{sendDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="resendTypeCode != null"> 
+				resend_type_code = #{resendTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="resendMesgContText != null"> 
+				resend_mesg_cont_text = #{resendMesgContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rsvSendDtm != null"> 
+				rsv_send_dtm = #{rsvSendDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mesgTmplSeq != null"> 
+				mesg_tmpl_seq = #{mesgTmplSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderNo != null"> 
+				order_no = #{orderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="cnslScriptSeq != null"> 
+				cnsl_script_seq = #{cnslScriptSeq, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mesgId != null"> 
+				mesg_id = #{mesgId, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="adminSendYn != null"> 
+				admin_send_yn = #{adminSendYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 mesg_send_seq = #{mesgSendSeq, jdbcType=INTEGER}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.cmm.model.master.CmMessageSendHistory">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmMessageSendHistoryDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM cm_message_send_history
+		WHERE 
+			 mesg_send_seq = #{mesgSendSeq, jdbcType=INTEGER}  
+    </delete>
+</mapper>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.afterService.repository.master.OcAsAcceptDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.afterService.model.master.OcAsAccept">
+    
+     /*+ kr.co.shop.web.afterService.repository.master.OcAsAcceptDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			OC_AS_ACCEPT
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+	<insert id="insertOcAsAccept" parameterType="kr.co.shop.web.afterService.model.master.OcAsAccept">
+     /*+ kr.co.shop.web.afterService.model.master.OcAsAcceptDao.inertOcAsAccept [접수 insert] [이상호] */
+	INSERT INTO OC_AS_ACCEPT(
+				   AS_ACCEPT_NO
+				  ,AS_ACCEPT_DTM
+				  ,AS_GBN_CODE
+				  ,SITE_NO
+				  ,ORG_ORDER_NO
+				  ,ORG_ORDER_DTM
+				  ,ORDER_NO
+				  ,MEMBER_NO
+				  ,MEMBER_TYPE_CODE
+				  ,MBSHP_GRADE_CODE
+				  ,EMP_YN
+				  ,OTS_VIP_YN
+				  ,DEVICE_CODE
+				  ,BUYER_NAME
+				  ,BUYER_TEL_NO_TEXT
+				  ,BUYER_HDPHN_NO_TEXT
+				  ,BUYER_POST_CODE_TEXT
+				  ,BUYER_POST_ADDR_TEXT
+				  ,BUYER_DTL_ADDR_TEXT
+				  ,DLVY_TYPE_CODE
+				  ,RCVR_NAME
+				  ,RCVR_TEL_NO_TEXT
+				  ,RCVR_HDPHN_NO_TEXT
+				  ,RCVR_POST_CODE_TEXT
+				  ,RCVR_POST_ADDR_TEXT
+				  ,RCVR_DTL_ADDR_TEXT
+				  ,DLVY_MEMO_TEXT
+				  ,TOTAL_AS_AMT
+				  ,ADD_DLVY_AMT
+				  ,TOTAL_PYMNT_AMT
+				  ,UN_PROC_YN
+				  ,ADMIN_ACCEPT_YN
+				  ,AS_STAT_CODE
+				  ,RGSTER_NO
+				  ,RGST_DTM
+				) VALUES (
+				   #{asAcceptNo, jdbcType=VARCHAR}
+				  ,SYSDATE 
+				  ,#{asGbnCode, jdbcType=VARCHAR}
+				  ,#{siteNo, jdbcType=VARCHAR}
+				  ,#{orgOrderNo, jdbcType=VARCHAR}
+				  ,#{orgOrderDtm, jdbcType=VARCHAR}
+				  ,#{orderNo, jdbcType=VARCHAR}
+				  ,#{memberNo, jdbcType=VARCHAR}
+				  ,#{memberTypeCode, jdbcType=VARCHAR}
+				  ,#{mbshpGradeCode, jdbcType=VARCHAR}
+				  ,#{empYn, jdbcType=CHAR}
+				  ,#{otsVipYn, jdbcType=CHAR}
+				  ,#{deviceCode, jdbcType=VARCHAR}
+				  ,#{buyerName, jdbcType=VARCHAR}
+				  ,''
+				  ,#{buyerHdphnNoText, jdbcType=VARCHAR}
+				  ,#{buyerPostCodeText, jdbcType=CHAR} 
+				  ,#{buyerPostAddrText, jdbcType=VARCHAR}
+				  ,#{buyerDtlAddrText, jdbcType=VARCHAR} 
+				  ,#{dlvyTypeCode, jdbcType=VARCHAR}
+				  ,#{rcvrName, jdbcType=VARCHAR}  
+				  ,''
+				  ,#{rcvrHdphnNoText, jdbcType=VARCHAR} 
+				  ,#{rcvrPostCodeText, jdbcType=CHAR}  
+				  ,#{rcvrPostAddrText, jdbcType=VARCHAR}
+				  ,#{rcvrDtlAddrText, jdbcType=VARCHAR} 
+				  ,'' 
+				  ,0   
+				  ,#{addDlvyAmt, jdbcType=INTEGER}
+				  ,0   
+				  ,#{unProcYn, jdbcType=CHAR}
+				  ,#{adminAcceptYn, jdbcType=CHAR}
+				  ,#{asStatCode, jdbcType=VARCHAR} 
+				  ,#{rgsterNo, jdbcType=VARCHAR} 
+				  ,SYSDATE  
+				)
+	</insert>
+	
+	 <select id="selectOcAsAcceptDetailInfo" parameterType="kr.co.shop.web.afterService.model.master.OcAsAccept" resultType="kr.co.shop.web.afterService.model.master.OcAsAccept">
+    
+     /*+ kr.co.shop.web.afterService.repository.master.OcAsAcceptDao.selectOcAsAcceptDetailInfo [상세조회 쿼리] [이상호] */  
+    
+		SELECT  A.AS_ACCEPT_NO
+			  , B.AS_ACCEPT_PRDT_SEQ
+		      , TO_CHAR(A.AS_ACCEPT_DTM, 'YYYY.MM.DD HH24:MI:SS') AS AS_ACCEPT_DATE
+		      , TO_CHAR(A.MOD_DTM, 'YYYY.MM.DD HH24:MI:SS') AS STR_MOD_DTM
+		      , A.ORDER_NO
+		      , TO_CHAR(A.ORG_ORDER_DTM, 'YYYY.MM.DD HH24:MI:SS') AS ORG_ORDER_DATE
+		      , FN_CODE_VALUE('AS_STAT_CODE',A.AS_STAT_CODE) AS AS_STAT_CODE_NAME
+		      , A.AS_STAT_CODE
+		      , FN_CODE_VALUE('AS_GBN_CODE',A.AS_GBN_CODE) AS AS_GBN_CODE_NAME
+		      , A.AS_GBN_CODE
+		      , A.BUYER_POST_CODE_TEXT
+		      , A.BUYER_POST_ADDR_TEXT
+		      , A.BUYER_DTL_ADDR_TEXT
+		      , A.BUYER_NAME
+		      , A.BUYER_HDPHN_NO_TEXT
+		      , A.RCVR_POST_CODE_TEXT
+		      , A.RCVR_POST_ADDR_TEXT
+		      , A.RCVR_DTL_ADDR_TEXT
+		      , A.RCVR_NAME
+		      , A.RCVR_HDPHN_NO_TEXT
+		      , A.ADD_DLVY_AMT
+		      , A.TOTAL_PYMNT_AMT
+		      , A.ADMIN_ACCEPT_YN
+		      , A.MEMBER_NO
+		      , A.SITE_NO
+		      , FN_CODE_VALUE('AS_PROC_TYPE_CODE', B.AS_PROC_TYPE_CODE) AS AS_PROC_TYPE_CODE_NAME
+		      , A.TOTAL_AS_AMT
+		 FROM OC_AS_ACCEPT 			A
+		 JOIN OC_AS_ACCEPT_PRODUCT 	B ON A.AS_ACCEPT_NO = B.AS_ACCEPT_NO
+		 WHERE A.AS_ACCEPT_NO = #{asAcceptNo, jdbcType=VARCHAR}
+    </select>
+    
+    
+     <update id="updateOcAsAcceptWithdrawal" parameterType="kr.co.shop.web.afterService.model.master.OcAsAccept">
+    
+     /*+ kr.co.shop.web.afterService.repository.master.OcAsAcceptDao.updateOcAsAcceptWithdrawal [접수철회  update] [이상호] */
+    
+		UPDATE OC_AS_ACCEPT
+		<set> 
+			<if test="asWthdrawRsnCode != null"> 
+				as_wthdraw_rsn_code = #{asWthdrawRsnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asWthdrawContText != null"> 
+				as_wthdraw_cont_text = #{asWthdrawContText, jdbcType=VARCHAR}, 
+			</if> 
+			as_wthdraw_dtm = SYSDATE , 
+			<if test="asStatCode != null"> 
+				as_stat_code = #{asStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			mod_dtm = SYSDATE 
+		</set> 
+		WHERE 
+			 as_accept_no = #{asAcceptNo, jdbcType=VARCHAR}   
+    </update>
+    
+       <update id="updateOcAsAccept" parameterType="kr.co.shop.web.afterService.model.master.OcAsAccept">
+    
+     /*+ kr.co.shop.web.afterService.repository.master.OcAsAcceptDao.updateOcAsAccept [접수수정  update] [이상호] */
+    
+		UPDATE OC_AS_ACCEPT
+		<set> 
+			<if test="asGbnCode != null"> 
+				as_gbn_code = #{asGbnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerName != null"> 
+				buyer_name = #{buyerName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerTelNoText != null"> 
+				buyer_tel_no_text = #{buyerTelNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerHdphnNoText != null"> 
+				buyer_hdphn_no_text = #{buyerHdphnNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerPostCodeText != null"> 
+				buyer_post_code_text = #{buyerPostCodeText, jdbcType=CHAR}, 
+			</if> 
+			<if test="buyerPostAddrText != null"> 
+				buyer_post_addr_text = #{buyerPostAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerDtlAddrText != null"> 
+				buyer_dtl_addr_text = #{buyerDtlAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrName != null"> 
+				rcvr_name = #{rcvrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrTelNoText != null"> 
+				rcvr_tel_no_text = #{rcvrTelNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrHdphnNoText != null"> 
+				rcvr_hdphn_no_text = #{rcvrHdphnNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrPostCodeText != null"> 
+				rcvr_post_code_text = #{rcvrPostCodeText, jdbcType=CHAR}, 
+			</if> 
+			<if test="rcvrPostAddrText != null"> 
+				rcvr_post_addr_text = #{rcvrPostAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrDtlAddrText != null"> 
+				rcvr_dtl_addr_text = #{rcvrDtlAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			mod_dtm = SYSDATE 
+		</set> 
+		WHERE 
+			 as_accept_no = #{asAcceptNo, jdbcType=VARCHAR}   
+    </update>
+	
+
+</mapper>

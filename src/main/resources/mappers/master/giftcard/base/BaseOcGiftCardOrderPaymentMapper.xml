@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderPaymentDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	gift_card_order_no, gift_card_order_pymnt_seq, pymnt_dtm, device_code, main_pymnt_means_yn, pymnt_means_code, pymnt_vndr_code, pymnt_organ_code_text, pymnt_organ_name, pymnt_organ_no_text, intrst_free_yn, instmt_term_count, card_gbn_type, card_type, pymnt_aprv_no_text, pymnt_amt, cash_rcpt_issue_yn, cash_rcpt_aprv_no, cash_rcpt_deal_no, gift_card_pin_no_text, pymnt_stat_code, rspns_code_text, rspns_mesg_text, pymnt_log_info, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR} AND gift_card_order_pymnt_seq = #{giftCardOrderPymntSeq, jdbcType=TINYINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrderPayment" resultType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrderPayment">
+    
+     /*+ kr.co.shop.web.system.repository.master.OcGiftCardOrderPaymentDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			OC_GIFT_CARD_ORDER_PAYMENT
+		<where> 
+			<if test="giftCardOrderNo != null"> 
+				 gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="giftCardOrderPymntSeq != null"> 
+				 AND gift_card_order_pymnt_seq = #{giftCardOrderPymntSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="pymntDtm != null"> 
+				 AND pymnt_dtm = #{pymntDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="deviceCode != null"> 
+				 AND device_code = #{deviceCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="mainPymntMeansYn != null"> 
+				 AND main_pymnt_means_yn = #{mainPymntMeansYn, jdbcType=CHAR}
+			</if> 
+			<if test="pymntMeansCode != null"> 
+				 AND pymnt_means_code = #{pymntMeansCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntVndrCode != null"> 
+				 AND pymnt_vndr_code = #{pymntVndrCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntOrganCodeText != null"> 
+				 AND pymnt_organ_code_text = #{pymntOrganCodeText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntOrganName != null"> 
+				 AND pymnt_organ_name = #{pymntOrganName, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntOrganNoText != null"> 
+				 AND pymnt_organ_no_text = #{pymntOrganNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="intrstFreeYn != null"> 
+				 AND intrst_free_yn = #{intrstFreeYn, jdbcType=CHAR}
+			</if> 
+			<if test="instmtTermCount != null"> 
+				 AND instmt_term_count = #{instmtTermCount, jdbcType=TINYINT}
+			</if> 
+			<if test="cardGbnType != null"> 
+				 AND card_gbn_type = #{cardGbnType, jdbcType=CHAR}
+			</if> 
+			<if test="cardType != null"> 
+				 AND card_type = #{cardType, jdbcType=CHAR}
+			</if> 
+			<if test="pymntAprvNoText != null"> 
+				 AND pymnt_aprv_no_text = #{pymntAprvNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntAmt != null"> 
+				 AND pymnt_amt = #{pymntAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="cashRcptIssueYn != null"> 
+				 AND cash_rcpt_issue_yn = #{cashRcptIssueYn, jdbcType=CHAR}
+			</if> 
+			<if test="cashRcptAprvNo != null"> 
+				 AND cash_rcpt_aprv_no = #{cashRcptAprvNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="cashRcptDealNo != null"> 
+				 AND cash_rcpt_deal_no = #{cashRcptDealNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="giftCardPinNoText != null"> 
+				 AND gift_card_pin_no_text = #{giftCardPinNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntStatCode != null"> 
+				 AND pymnt_stat_code = #{pymntStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="rspnsCodeText != null"> 
+				 AND rspns_code_text = #{rspnsCodeText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rspnsMesgText != null"> 
+				 AND rspns_mesg_text = #{rspnsMesgText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntLogInfo != null"> 
+				 AND pymnt_log_info = #{pymntLogInfo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrderPayment">	
+
+     /*+ kr.co.shop.web.system.repository.master.OcGiftCardOrderPaymentDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO OC_GIFT_CARD_ORDER_PAYMENT
+			 ( gift_card_order_no, gift_card_order_pymnt_seq, pymnt_dtm, device_code, main_pymnt_means_yn, pymnt_means_code, pymnt_vndr_code, pymnt_organ_code_text, pymnt_organ_name, pymnt_organ_no_text, intrst_free_yn, instmt_term_count, card_gbn_type, card_type, pymnt_aprv_no_text, pymnt_amt, cash_rcpt_issue_yn, cash_rcpt_aprv_no, cash_rcpt_deal_no, gift_card_pin_no_text, pymnt_stat_code, rspns_code_text, rspns_mesg_text, pymnt_log_info, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{giftCardOrderNo, jdbcType=VARCHAR}, #{giftCardOrderPymntSeq, jdbcType=TINYINT}, <choose><when test="pymntDtm != null">#{pymntDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{deviceCode, jdbcType=VARCHAR}, #{mainPymntMeansYn, jdbcType=CHAR}, #{pymntMeansCode, jdbcType=VARCHAR}, #{pymntVndrCode, jdbcType=VARCHAR}, #{pymntOrganCodeText, jdbcType=VARCHAR}, #{pymntOrganName, jdbcType=VARCHAR}, #{pymntOrganNoText, jdbcType=VARCHAR}, #{intrstFreeYn, jdbcType=CHAR}, #{instmtTermCount, jdbcType=TINYINT}, #{cardGbnType, jdbcType=CHAR}, #{cardType, jdbcType=CHAR}, #{pymntAprvNoText, jdbcType=VARCHAR}, #{pymntAmt, jdbcType=INTEGER}, #{cashRcptIssueYn, jdbcType=CHAR}, #{cashRcptAprvNo, jdbcType=VARCHAR}, #{cashRcptDealNo, jdbcType=VARCHAR}, #{giftCardPinNoText, jdbcType=VARCHAR}, #{pymntStatCode, jdbcType=VARCHAR}, #{rspnsCodeText, jdbcType=VARCHAR}, #{rspnsMesgText, jdbcType=VARCHAR}, #{pymntLogInfo, jdbcType=VARCHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrderPayment">
+    
+     /*+ kr.co.shop.web.system.repository.master.OcGiftCardOrderPaymentDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE OC_GIFT_CARD_ORDER_PAYMENT
+		<set> 
+			<if test="giftCardOrderNo != null"> 
+				gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="giftCardOrderPymntSeq != null"> 
+				gift_card_order_pymnt_seq = #{giftCardOrderPymntSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="pymntDtm != null"> 
+				pymnt_dtm = #{pymntDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="deviceCode != null"> 
+				device_code = #{deviceCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mainPymntMeansYn != null"> 
+				main_pymnt_means_yn = #{mainPymntMeansYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="pymntMeansCode != null"> 
+				pymnt_means_code = #{pymntMeansCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pymntVndrCode != null"> 
+				pymnt_vndr_code = #{pymntVndrCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pymntOrganCodeText != null"> 
+				pymnt_organ_code_text = #{pymntOrganCodeText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pymntOrganName != null"> 
+				pymnt_organ_name = #{pymntOrganName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pymntOrganNoText != null"> 
+				pymnt_organ_no_text = #{pymntOrganNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="intrstFreeYn != null"> 
+				intrst_free_yn = #{intrstFreeYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="instmtTermCount != null"> 
+				instmt_term_count = #{instmtTermCount, jdbcType=TINYINT}, 
+			</if> 
+			<if test="cardGbnType != null"> 
+				card_gbn_type = #{cardGbnType, jdbcType=CHAR}, 
+			</if> 
+			<if test="cardType != null"> 
+				card_type = #{cardType, jdbcType=CHAR}, 
+			</if> 
+			<if test="pymntAprvNoText != null"> 
+				pymnt_aprv_no_text = #{pymntAprvNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pymntAmt != null"> 
+				pymnt_amt = #{pymntAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="cashRcptIssueYn != null"> 
+				cash_rcpt_issue_yn = #{cashRcptIssueYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="cashRcptAprvNo != null"> 
+				cash_rcpt_aprv_no = #{cashRcptAprvNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cashRcptDealNo != null"> 
+				cash_rcpt_deal_no = #{cashRcptDealNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="giftCardPinNoText != null"> 
+				gift_card_pin_no_text = #{giftCardPinNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pymntStatCode != null"> 
+				pymnt_stat_code = #{pymntStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rspnsCodeText != null"> 
+				rspns_code_text = #{rspnsCodeText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rspnsMesgText != null"> 
+				rspns_mesg_text = #{rspnsMesgText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pymntLogInfo != null"> 
+				pymnt_log_info = #{pymntLogInfo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR} AND gift_card_order_pymnt_seq = #{giftCardOrderPymntSeq, jdbcType=TINYINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrderPayment">
+    
+     /*+ kr.co.shop.web.system.repository.master.OcGiftCardOrderPaymentDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM OC_GIFT_CARD_ORDER_PAYMENT
+		WHERE 
+			 gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR} AND gift_card_order_pymnt_seq = #{giftCardOrderPymntSeq, jdbcType=TINYINT}  
+    </delete>
+</mapper>

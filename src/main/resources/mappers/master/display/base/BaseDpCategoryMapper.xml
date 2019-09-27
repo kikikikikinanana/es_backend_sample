@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.DpCategoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	ctgr_no, up_ctgr_no, site_no, chnnl_no, ctgr_name, leaf_ctgr_yn, ctgr_level, std_ctgr_no, pc_disp_tmpl_no, pc_disp_image_name, pc_disp_image_path_text, pc_disp_image_url, mobile_disp_tmpl_no, mobile_disp_tmpl_image_name, mobile_disp_tmpl_image_path_text, mobile_disp_tmpl_image_url, ctgr_name_disp_type, pc_image_name, pc_image_path_text, pc_image_url, pc_altrn_text, mobile_image_name, mobile_image_path_text, mobile_image_url, mobile_altrn_text, srch_filter_use_yn, sort_seq, disp_yn, use_yn, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	ctgr_no = #{ctgrNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.display.model.master.DpCategory" resultType="kr.co.shop.web.display.model.master.DpCategory">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpCategoryDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			DP_CATEGORY
+		<where> 
+			<if test="ctgrNo != null"> 
+				 ctgr_no = #{ctgrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="upCtgrNo != null"> 
+				 AND up_ctgr_no = #{upCtgrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="chnnlNo != null"> 
+				 AND chnnl_no = #{chnnlNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="ctgrName != null"> 
+				 AND ctgr_name = #{ctgrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="leafCtgrYn != null"> 
+				 AND leaf_ctgr_yn = #{leafCtgrYn, jdbcType=CHAR}
+			</if> 
+			<if test="ctgrLevel != null"> 
+				 AND ctgr_level = #{ctgrLevel, jdbcType=TINYINT}
+			</if> 
+			<if test="stdCtgrNo != null"> 
+				 AND std_ctgr_no = #{stdCtgrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcDispTmplNo != null"> 
+				 AND pc_disp_tmpl_no = #{pcDispTmplNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcDispImageName != null"> 
+				 AND pc_disp_image_name = #{pcDispImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcDispImagePathText != null"> 
+				 AND pc_disp_image_path_text = #{pcDispImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcDispImageUrl != null"> 
+				 AND pc_disp_image_url = #{pcDispImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileDispTmplNo != null"> 
+				 AND mobile_disp_tmpl_no = #{mobileDispTmplNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileDispTmplImageName != null"> 
+				 AND mobile_disp_tmpl_image_name = #{mobileDispTmplImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileDispTmplImagePathText != null"> 
+				 AND mobile_disp_tmpl_image_path_text = #{mobileDispTmplImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileDispTmplImageUrl != null"> 
+				 AND mobile_disp_tmpl_image_url = #{mobileDispTmplImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="ctgrNameDispType != null"> 
+				 AND ctgr_name_disp_type = #{ctgrNameDispType, jdbcType=CHAR}
+			</if> 
+			<if test="pcImageName != null"> 
+				 AND pc_image_name = #{pcImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcImagePathText != null"> 
+				 AND pc_image_path_text = #{pcImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcImageUrl != null"> 
+				 AND pc_image_url = #{pcImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcAltrnText != null"> 
+				 AND pc_altrn_text = #{pcAltrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileImageName != null"> 
+				 AND mobile_image_name = #{mobileImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileImagePathText != null"> 
+				 AND mobile_image_path_text = #{mobileImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileImageUrl != null"> 
+				 AND mobile_image_url = #{mobileImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileAltrnText != null"> 
+				 AND mobile_altrn_text = #{mobileAltrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="srchFilterUseYn != null"> 
+				 AND srch_filter_use_yn = #{srchFilterUseYn, jdbcType=CHAR}
+			</if> 
+			<if test="sortSeq != null"> 
+				 AND sort_seq = #{sortSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="dispYn != null"> 
+				 AND disp_yn = #{dispYn, jdbcType=CHAR}
+			</if> 
+			<if test="useYn != null"> 
+				 AND use_yn = #{useYn, jdbcType=CHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.display.model.master.DpCategory">	
+
+     /*+ kr.co.shop.web.display.repository.master.DpCategoryDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO DP_CATEGORY
+			 ( ctgr_no, up_ctgr_no, site_no, chnnl_no, ctgr_name, leaf_ctgr_yn, ctgr_level, std_ctgr_no, pc_disp_tmpl_no, pc_disp_image_name, pc_disp_image_path_text, pc_disp_image_url, mobile_disp_tmpl_no, mobile_disp_tmpl_image_name, mobile_disp_tmpl_image_path_text, mobile_disp_tmpl_image_url, ctgr_name_disp_type, pc_image_name, pc_image_path_text, pc_image_url, pc_altrn_text, mobile_image_name, mobile_image_path_text, mobile_image_url, mobile_altrn_text, srch_filter_use_yn, sort_seq, disp_yn, use_yn, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{ctgrNo, jdbcType=VARCHAR}, #{upCtgrNo, jdbcType=VARCHAR}, #{siteNo, jdbcType=VARCHAR}, #{chnnlNo, jdbcType=VARCHAR}, #{ctgrName, jdbcType=VARCHAR}, #{leafCtgrYn, jdbcType=CHAR}, #{ctgrLevel, jdbcType=TINYINT}, #{stdCtgrNo, jdbcType=VARCHAR}, #{pcDispTmplNo, jdbcType=VARCHAR}, #{pcDispImageName, jdbcType=VARCHAR}, #{pcDispImagePathText, jdbcType=VARCHAR}, #{pcDispImageUrl, jdbcType=VARCHAR}, #{mobileDispTmplNo, jdbcType=VARCHAR}, #{mobileDispTmplImageName, jdbcType=VARCHAR}, #{mobileDispTmplImagePathText, jdbcType=VARCHAR}, #{mobileDispTmplImageUrl, jdbcType=VARCHAR}, #{ctgrNameDispType, jdbcType=CHAR}, #{pcImageName, jdbcType=VARCHAR}, #{pcImagePathText, jdbcType=VARCHAR}, #{pcImageUrl, jdbcType=VARCHAR}, #{pcAltrnText, jdbcType=VARCHAR}, #{mobileImageName, jdbcType=VARCHAR}, #{mobileImagePathText, jdbcType=VARCHAR}, #{mobileImageUrl, jdbcType=VARCHAR}, #{mobileAltrnText, jdbcType=VARCHAR}, #{srchFilterUseYn, jdbcType=CHAR}, #{sortSeq, jdbcType=INTEGER}, #{dispYn, jdbcType=CHAR}, #{useYn, jdbcType=CHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.display.model.master.DpCategory">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpCategoryDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE DP_CATEGORY
+		<set> 
+			<if test="ctgrNo != null"> 
+				ctgr_no = #{ctgrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="upCtgrNo != null"> 
+				up_ctgr_no = #{upCtgrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="chnnlNo != null"> 
+				chnnl_no = #{chnnlNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="ctgrName != null"> 
+				ctgr_name = #{ctgrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="leafCtgrYn != null"> 
+				leaf_ctgr_yn = #{leafCtgrYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="ctgrLevel != null"> 
+				ctgr_level = #{ctgrLevel, jdbcType=TINYINT}, 
+			</if> 
+			<if test="stdCtgrNo != null"> 
+				std_ctgr_no = #{stdCtgrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcDispTmplNo != null"> 
+				pc_disp_tmpl_no = #{pcDispTmplNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcDispImageName != null"> 
+				pc_disp_image_name = #{pcDispImageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcDispImagePathText != null"> 
+				pc_disp_image_path_text = #{pcDispImagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcDispImageUrl != null"> 
+				pc_disp_image_url = #{pcDispImageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileDispTmplNo != null"> 
+				mobile_disp_tmpl_no = #{mobileDispTmplNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileDispTmplImageName != null"> 
+				mobile_disp_tmpl_image_name = #{mobileDispTmplImageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileDispTmplImagePathText != null"> 
+				mobile_disp_tmpl_image_path_text = #{mobileDispTmplImagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileDispTmplImageUrl != null"> 
+				mobile_disp_tmpl_image_url = #{mobileDispTmplImageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="ctgrNameDispType != null"> 
+				ctgr_name_disp_type = #{ctgrNameDispType, jdbcType=CHAR}, 
+			</if> 
+			<if test="pcImageName != null"> 
+				pc_image_name = #{pcImageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcImagePathText != null"> 
+				pc_image_path_text = #{pcImagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcImageUrl != null"> 
+				pc_image_url = #{pcImageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcAltrnText != null"> 
+				pc_altrn_text = #{pcAltrnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileImageName != null"> 
+				mobile_image_name = #{mobileImageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileImagePathText != null"> 
+				mobile_image_path_text = #{mobileImagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileImageUrl != null"> 
+				mobile_image_url = #{mobileImageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileAltrnText != null"> 
+				mobile_altrn_text = #{mobileAltrnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="srchFilterUseYn != null"> 
+				srch_filter_use_yn = #{srchFilterUseYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="sortSeq != null"> 
+				sort_seq = #{sortSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="dispYn != null"> 
+				disp_yn = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="useYn != null"> 
+				use_yn = #{useYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 ctgr_no = #{ctgrNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.display.model.master.DpCategory">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpCategoryDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM DP_CATEGORY
+		WHERE 
+			 ctgr_no = #{ctgrNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

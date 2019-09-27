@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.board.repository.master.BdAdminNoticeDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	admin_notc_seq, apply_system_type, notc_title_text, notc_cont_text, popup_yn, always_popup_yn, popup_start_ymd, popup_end_ymd, vndr_all_choice_yn, disp_yn, hit_count, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	admin_notc_seq = #{adminNotcSeq, jdbcType=INTEGER}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.board.model.master.BdAdminNotice" resultType="kr.co.shop.web.board.model.master.BdAdminNotice">
+    
+     /*+ kr.co.shop.web.board.repository.master.BdAdminNoticeDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			bd_admin_notice WITH (NOLOCK)
+
+		<where> 
+			<if test="adminNotcSeq != null"> 
+				 admin_notc_seq = #{adminNotcSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="applySystemType != null"> 
+				 AND apply_system_type = #{applySystemType, jdbcType=CHAR}
+			</if> 
+			<if test="notcTitleText != null"> 
+				 AND notc_title_text = #{notcTitleText, jdbcType=VARCHAR}
+			</if> 
+			<if test="notcContText != null"> 
+				 AND notc_cont_text = #{notcContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="popupYn != null"> 
+				 AND popup_yn = #{popupYn, jdbcType=CHAR}
+			</if> 
+			<if test="alwaysPopupYn != null"> 
+				 AND always_popup_yn = #{alwaysPopupYn, jdbcType=CHAR}
+			</if> 
+			<if test="popupStartYmd != null"> 
+				 AND popup_start_ymd = #{popupStartYmd, jdbcType=DATE}
+			</if> 
+			<if test="popupEndYmd != null"> 
+				 AND popup_end_ymd = #{popupEndYmd, jdbcType=DATE}
+			</if> 
+			<if test="vndrAllChoiceYn != null"> 
+				 AND vndr_all_choice_yn = #{vndrAllChoiceYn, jdbcType=CHAR}
+			</if> 
+			<if test="dispYn != null"> 
+				 AND disp_yn = #{dispYn, jdbcType=CHAR}
+			</if> 
+			<if test="hitCount != null"> 
+				 AND hit_count = #{hitCount, jdbcType=INTEGER}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+	<insert id="insert" useGeneratedKeys="true" keyProperty="adminNotcSeq">
+
+     /*+ kr.co.shop.web.board.repository.master.BdAdminNoticeDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO bd_admin_notice
+			 ( apply_system_type, notc_title_text, notc_cont_text, popup_yn, always_popup_yn, popup_start_ymd, popup_end_ymd, vndr_all_choice_yn, disp_yn, hit_count, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{applySystemType, jdbcType=CHAR}, #{notcTitleText, jdbcType=VARCHAR}, #{notcContText, jdbcType=VARCHAR}, #{popupYn, jdbcType=CHAR}, #{alwaysPopupYn, jdbcType=CHAR}, <choose><when test="popupStartYmd != null">#{popupStartYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="popupEndYmd != null">#{popupEndYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, #{vndrAllChoiceYn, jdbcType=CHAR}, #{dispYn, jdbcType=CHAR}, #{hitCount, jdbcType=INTEGER}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.board.model.master.BdAdminNotice">
+    
+     /*+ kr.co.shop.web.board.repository.master.BdAdminNoticeDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE bd_admin_notice
+		<set> 
+			<if test="adminNotcSeq != null"> 
+				admin_notc_seq = #{adminNotcSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="applySystemType != null"> 
+				apply_system_type = #{applySystemType, jdbcType=CHAR}, 
+			</if> 
+			<if test="notcTitleText != null"> 
+				notc_title_text = #{notcTitleText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="notcContText != null"> 
+				notc_cont_text = #{notcContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="popupYn != null"> 
+				popup_yn = #{popupYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="alwaysPopupYn != null"> 
+				always_popup_yn = #{alwaysPopupYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="popupStartYmd != null"> 
+				popup_start_ymd = #{popupStartYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="popupEndYmd != null"> 
+				popup_end_ymd = #{popupEndYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="vndrAllChoiceYn != null"> 
+				vndr_all_choice_yn = #{vndrAllChoiceYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="dispYn != null"> 
+				disp_yn = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="hitCount != null"> 
+				hit_count = #{hitCount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 admin_notc_seq = #{adminNotcSeq, jdbcType=INTEGER}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.board.model.master.BdAdminNotice">
+    
+     /*+ kr.co.shop.web.board.repository.master.BdAdminNoticeDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM bd_admin_notice
+		WHERE 
+			 admin_notc_seq = #{adminNotcSeq, jdbcType=INTEGER}  
+    </delete>
+</mapper>

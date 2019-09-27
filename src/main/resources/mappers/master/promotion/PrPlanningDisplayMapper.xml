@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.promotion.repository.master.PrPlanningDisplayDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.promotion.model.master.PrPlanningDisplay">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrPlanningDisplayDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			PR_PLANNING_DISPLAY
+		WHERE 
+			<include refid="pk-columns" />
+    </select>
+    
+    <resultMap type="kr.co.shop.web.promotion.model.master.PrPlanningDisplay" id="prPlanningDisplayResultMap" autoMapping="true">
+    	<id property="plndpNo" column="plndp_no"/>
+    	<collection property="pdProducts" ofType="kr.co.shop.web.product.model.master.PdProduct" resultMap="pdProductResult" columnPrefix="pd_"/>
+    </resultMap>
+    
+    <resultMap id="pdProductResult" type="kr.co.shop.web.product.model.master.PdProduct" autoMapping="true">
+    	<id property="prdtNo" column="prdt_no"/>
+    	<collection property="pdProductRelationFiles" ofType="kr.co.shop.web.product.model.master.PdProductRelationFile" resultMap="pdProductRelationFileResult" columnPrefix="rf_"/>
+    </resultMap>
+    
+    <resultMap id="pdProductRelationFileResult" type="kr.co.shop.web.product.model.master.PdProductRelationFile" autoMapping="true">
+    	<id property="prdtRltnFileSeq" column="prdt_rltn_file_seq"/>
+    </resultMap>
+    
+	<select id="selectPrPlanningDisplayList" parameterType="kr.co.shop.web.promotion.model.master.PrPlanningDisplay" resultMap="prPlanningDisplayResultMap">
+    /*+ kr.co.shop.web.promotion.repository.master.PrPlanningDisplayDao.selectPrPlanningDisplayList [기획전 목록 조회] [이가영] */
+    	
+    	WITH LIST_CTE (
+			plndp_no, plndp_name, plndp_start_dtm, plndp_end_dtm, chnnl_no, vndr_gbn_type, vndr_no,
+			srch_word_text, plndp_cont_text, pc_plndp_url, mobile_plndp_url,
+			pc_banner_image_name, pc_banner_image_path_text, pc_banner_image_url, pc_banner_image_altrn_text,
+			mobile_banner_image_name, mobile_banner_image_path_text, mobile_banner_image_url, mobile_banner_image_altrn_text,
+			dtl_desc_disp_seq, disp_type, corner_apply_yn, corner_disp_type, disp_yn, use_yn, RGST_DTM, plndp_stat_code,
+			pd_prdt_no, pd_prdt_type_code, pd_site_no, pd_chnnl_no, pd_prdt_name, pd_eng_prdt_name,
+			pd_vndr_no, pd_vndr_prdt_no_text, pd_brand_no, pd_brand_name,  pd_rf_prdt_no, pd_rf_prdt_rltn_file_seq,
+			pd_rf_image_url, sort_seq
+		)
+		AS (
+		SELECT
+			PPD.plndp_no,
+			PPD.plndp_name,
+			PPD.plndp_start_dtm,
+			PPD.plndp_end_dtm,
+			PPD.chnnl_no,
+			PPD.vndr_gbn_type,
+			PPD.vndr_no,
+			PPD.srch_word_text,
+			PPD.plndp_cont_text,
+			PPD.pc_plndp_url,
+			PPD.mobile_plndp_url,
+			PPD.pc_banner_image_name,
+			PPD.pc_banner_image_path_text,
+			PPD.pc_banner_image_url,
+			PPD.pc_banner_image_altrn_text,
+			PPD.mobile_banner_image_name,
+			PPD.mobile_banner_image_path_text,
+			PPD.mobile_banner_image_url,
+			PPD.mobile_banner_image_altrn_text,
+			PPD.dtl_desc_disp_seq,
+			PPD.disp_type,
+			PPD.corner_apply_yn,
+			PPD.corner_disp_type,
+			PPD.disp_yn,
+			PPD.use_yn,
+			PPD.RGST_DTM,
+			PPD.plndp_stat_code,
+			PD.prdt_no as pd_prdt_no,
+			PD.prdt_type_code as pd_prdt_type_code,
+			PD.site_no as pd_site_no,
+			PD.chnnl_no as pd_chnnl_no,
+			PD.prdt_name as pd_prdt_name,
+			PD.eng_prdt_name as pd_eng_prdt_name,
+			PD.vndr_no as pd_vndr_no,
+			PD.vndr_prdt_no_text as pd_vndr_prdt_no_text,
+			PD.brand_no as pd_brand_no,
+			BRD.brand_name as pd_brand_name,
+			RF.prdt_no as pd_rf_prdt_no,
+			RF.prdt_rltn_file_seq as pd_rf_prdt_rltn_file_seq,
+			RF.image_url as pd_rf_image_url,
+			PDP.sort_seq as sort_seq
+		FROM
+			PR_PLANNING_DISPLAY PPD
+		LEFT OUTER JOIN PR_PLANNING_DISPLAY_PRODUCT PDP ON PPD.PLNDP_NO = PDP.PLNDP_NO
+		LEFT OUTER JOIN PD_PRODUCT PD ON PDP.PRDT_NO = PD.PRDT_NO
+		LEFT OUTER JOIN DP_BRAND BRD ON BRD.BRAND_NO = PD.BRAND_NO
+		LEFT OUTER JOIN PD_PRODUCT_RELATION_FILE RF ON RF.PRDT_NO = PD.PRDT_NO AND RF.PRDT_RLTN_FILE_SEQ = 1
+		LEFT OUTER JOIN PR_PLANNING_DISPLAY_APPLY_GRADE AG ON PPD.PLNDP_NO = AG.PLNDP_NO
+		LEFT OUTER JOIN PR_PLANNING_DISPLAY_APPLY_DEVICE AD ON PPD.PLNDP_NO = AD.PLNDP_NO
+		WHERE
+			PPD.corner_apply_yn = 'N'
+			AND PPD.USE_YN = 'Y'
+			AND PPD.DISP_YN = 'Y'
+			AND PPD.PLNDP_STAT_CODE = '10003'
+			AND PPD.PLNDP_START_DTM &lt;= SYSDATE
+			AND PPD.PLNDP_END_DTM >= SYSDATE
+			AND PPD.CHNNL_NO = #{bean.chnnlNo, jdbcType=VARCHAR}
+			<if test="bean.memberTypeCode != null and bean.memberTypeCode != ''">
+				AND AG.MEMBER_TYPE_CODE = #{bean.memberTypeCode, jdbcType=VARCHAR}			
+			</if>
+			<if test="bean.mbshpGradeCode != null and bean.mbshpGradeCode != ''">
+				AND AG.MBSHP_GRADE_CODE = #{bean.mbshpGradeCode, jdbcType=VARCHAR}			
+			</if>
+			AND AD.DEVICE_CODE = #{bean.deviceCode, jdbcType=VARCHAR}
+		UNION ALL
+		SELECT
+			PPD.plndp_no,
+			PPD.plndp_name,
+			PPD.plndp_start_dtm,
+			PPD.plndp_end_dtm,
+			PPD.chnnl_no,
+			PPD.vndr_gbn_type,
+			PPD.vndr_no,
+			PPD.srch_word_text,
+			PPD.plndp_cont_text,
+			PPD.pc_plndp_url,
+			PPD.mobile_plndp_url,
+			PPD.pc_banner_image_name,
+			PPD.pc_banner_image_path_text,
+			PPD.pc_banner_image_url,
+			PPD.pc_banner_image_altrn_text,
+			PPD.mobile_banner_image_name,
+			PPD.mobile_banner_image_path_text,
+			PPD.mobile_banner_image_url,
+			PPD.mobile_banner_image_altrn_text,
+			PPD.dtl_desc_disp_seq,
+			PPD.disp_type,
+			PPD.corner_apply_yn,
+			PPD.corner_disp_type,
+			PPD.disp_yn,
+			PPD.use_yn,
+			PPD.RGST_DTM,
+			PPD.plndp_stat_code,
+			PD.prdt_no as pd_prdt_no,
+			PD.prdt_type_code as pd_prdt_type_code,
+			PD.site_no as pd_site_no,
+			PD.chnnl_no as pd_chnnl_no,
+			PD.prdt_name as pd_prdt_name,
+			PD.eng_prdt_name as pd_eng_prdt_name,
+			PD.vndr_no as pd_vndr_no,
+			PD.vndr_prdt_no_text as pd_vndr_prdt_no_text,
+			PD.brand_no as pd_brand_no,
+			BRD.brand_name as pd_brand_name,
+			RF.prdt_no as pd_rf_prdt_no,
+			RF.prdt_rltn_file_seq as pd_rf_prdt_rltn_file_seq,
+			RF.image_url as pd_rf_image_url,
+			CNP.sort_seq as sort_seq
+		FROM
+			PR_PLANNING_DISPLAY PPD
+		LEFT OUTER JOIN PR_PLANNING_DISPLAY_CORNER CN ON PPD.PLNDP_NO = CN.PLNDP_NO
+		LEFT OUTER JOIN PR_PLANNING_DISPLAY_CORNER_PRODUCT CNP ON CN.PLNDP_CORNER_SEQ = CNP.PLNDP_CORNER_SEQ
+		LEFT OUTER JOIN PD_PRODUCT PD ON CNP.PRDT_NO = PD.PRDT_NO
+		LEFT OUTER JOIN DP_BRAND BRD ON BRD.BRAND_NO = PD.BRAND_NO
+		LEFT OUTER JOIN PD_PRODUCT_RELATION_FILE RF ON RF.PRDT_NO = PD.PRDT_NO AND RF.PRDT_RLTN_FILE_SEQ = 1
+		LEFT OUTER JOIN PR_PLANNING_DISPLAY_APPLY_GRADE AG ON PPD.PLNDP_NO = AG.PLNDP_NO
+		LEFT OUTER JOIN PR_PLANNING_DISPLAY_APPLY_DEVICE AD ON PPD.PLNDP_NO = AD.PLNDP_NO
+		WHERE
+			PPD.corner_apply_yn = 'Y'
+			AND PPD.USE_YN = 'Y'
+			AND PPD.DISP_YN = 'Y'
+			AND PPD.PLNDP_STAT_CODE = '10003'
+			AND PPD.PLNDP_START_DTM &lt;= SYSDATE
+			AND PPD.PLNDP_END_DTM >= SYSDATE
+			AND PPD.CHNNL_NO = #{bean.chnnlNo, jdbcType=VARCHAR}
+			<if test="bean.memberTypeCode != null and bean.memberTypeCode != ''">
+				AND AG.MEMBER_TYPE_CODE = #{bean.memberTypeCode, jdbcType=VARCHAR}
+			</if>
+			<if test="bean.mbshpGradeCode != null and bean.mbshpGradeCode != ''">
+				AND AG.MBSHP_GRADE_CODE = #{bean.mbshpGradeCode, jdbcType=VARCHAR}			
+			</if>
+			AND AD.DEVICE_CODE = #{bean.deviceCode, jdbcType=VARCHAR}
+		)
+		select aa.*
+		from (SELECT DENSE_RANK() over(order by rgst_dtm desc, plndp_no) as rn, * FROM LIST_CTE) aa
+		WHERE
+			AA.RN > (#{pageNum, jdbcType=INTEGER} - 1) * #{rowsPerPage, jdbcType=INTEGER} AND AA.RN &lt;= (#{pageNum, jdbcType=INTEGER}) * #{rowsPerPage, jdbcType=INTEGER}
+		order by rn, sort_seq
+    </select>
+    
+    <select id="selectPrPlanningDisplayListCount" parameterType="kr.co.shop.web.promotion.model.master.PrPlanningDisplay" resultType="int">
+    /*+ kr.co.shop.web.promotion.repository.master.PrPlanningDisplayDao.selectPrPlanningDisplayListCount [기획전 목록 카운트 조회] [이가영] */
+    	
+		SELECT
+			COUNT(*)
+		FROM
+			PR_PLANNING_DISPLAY PPD
+		INNER JOIN PR_PLANNING_DISPLAY_APPLY_GRADE AG ON PPD.PLNDP_NO = AG.PLNDP_NO
+		INNER JOIN PR_PLANNING_DISPLAY_APPLY_DEVICE AD ON PPD.PLNDP_NO = AD.PLNDP_NO
+		WHERE
+			PPD.PLNDP_STAT_CODE = '10003'
+			AND PPD.USE_YN = 'Y'
+			AND PPD.DISP_YN = 'Y'
+			AND PPD.PLNDP_START_DTM &lt;= SYSDATE
+			AND PPD.PLNDP_END_DTM >= SYSDATE
+			AND PPD.CHNNL_NO = #{bean.chnnlNo, jdbcType=VARCHAR}
+			<if test="bean.memberTypeCode != null and bean.memberTypeCode != ''">
+				AND AG.MEMBER_TYPE_CODE = #{bean.memberTypeCode, jdbcType=VARCHAR}			
+			</if>
+			<if test="bean.mbshpGradeCode != null and bean.mbshpGradeCode != ''">
+				AND AG.MBSHP_GRADE_CODE = #{bean.mbshpGradeCode, jdbcType=VARCHAR}			
+			</if>
+			AND AD.DEVICE_CODE = #{bean.deviceCode, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectPrPlanningDisplayDetail" parameterType="kr.co.shop.web.promotion.model.master.PrPlanningDisplay" resultType="kr.co.shop.web.promotion.model.master.PrPlanningDisplay">
+    /*+ kr.co.shop.web.promotion.repository.master.PrPlanningDisplayDao.selectPrPlanningDisplayDetail [기획전 상세 조회] [이가영] */
+    	
+    	SELECT
+    		PPD.plndp_no,
+    		PPD.plndp_name,
+    		PPD.plndp_start_dtm,
+    		PPD.plndp_end_dtm,
+    		PPD.chnnl_no,
+    		PPD.vndr_gbn_type,
+    		PPD.vndr_no,
+    		PPD.srch_word_text,
+    		PPD.plndp_cont_text,
+    		PPD.pc_plndp_url,
+    		PPD.mobile_plndp_url,
+    		PPD.pc_banner_image_name,
+    		PPD.pc_banner_image_path_text,
+    		PPD.pc_banner_image_url,
+    		PPD.pc_banner_image_altrn_text,
+    		PPD.mobile_banner_image_name,
+    		PPD.mobile_banner_image_path_text,
+    		PPD.mobile_banner_image_url,
+    		PPD.mobile_banner_image_altrn_text,
+    		PPD.threed_image_name,
+    		PPD.threed_image_path_text,
+    		PPD.threed_image_disp_seq,
+    		PPD.movie_upload_yn,
+    		PPD.disp_movie_name,
+    		PPD.movie_name,
+    		PPD.movie_path_text,
+    		PPD.movie_url,
+    		PPD.movie_image_name,
+    		PPD.movie_image_path_text,
+    		PPD.movie_image_url,
+    		PPD.movie_image_altrn_text,
+    		PPD.movie_disp_seq,
+    		PPD.pc_dtl_desc_text,
+    		PPD.mobile_dtl_desc_text,
+    		PPD.dtl_desc_disp_seq,
+    		PPD.disp_type,
+    		PPD.corner_apply_yn,
+    		PPD.corner_disp_type,
+    		PPD.disp_yn,
+    		PPD.use_yn,
+    		PPD.plndp_stat_code,
+    		PPD.rgster_no,
+    		PPD.rgst_dtm,
+    		PPD.moder_no,
+    		PPD.mod_dtm
+    	FROM
+    		PR_PLANNING_DISPLAY PPD
+    	WHERE
+    		PPD.plndp_no = #{plndpNo, jdbcType=VARCHAR}
+	   		<choose>
+	   			<when test='isPreview != null and isPreview == "y"'></when>
+	   			<otherwise>
+	   				AND PPD.PLNDP_STAT_CODE = '10003'
+					AND PPD.USE_YN = 'Y'
+					AND PPD.DISP_YN = 'Y'
+					AND PPD.PLNDP_START_DTM &lt;= SYSDATE
+					AND PPD.PLNDP_END_DTM >= SYSDATE
+	   			</otherwise>
+	   		</choose>    		
+    </select>
+
+</mapper>

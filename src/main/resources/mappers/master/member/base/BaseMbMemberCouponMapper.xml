@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.member.repository.master.MbMemberCouponDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	member_no, hold_cpn_seq, cpn_no, paper_no_text, event_no, cpn_issue_dtm, valid_start_dtm, valid_end_dtm, cpn_use_dtm, use_store_no, re_issue_rsn_text, cpn_stat_code, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	hold_cpn_seq = #{holdCpnSeq, jdbcType=INTEGER} AND member_no = #{memberNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.member.model.master.MbMemberCoupon" resultType="kr.co.shop.web.member.model.master.MbMemberCoupon">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberCouponDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			mb_member_coupon WITH (NOLOCK)
+
+		<where> 
+			<if test="memberNo != null"> 
+				 member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="holdCpnSeq != null"> 
+				 AND hold_cpn_seq = #{holdCpnSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="cpnNo != null"> 
+				 AND cpn_no = #{cpnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="paperNoText != null"> 
+				 AND paper_no_text = #{paperNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="eventNo != null"> 
+				 AND event_no = #{eventNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="cpnIssueDtm != null"> 
+				 AND cpn_issue_dtm = #{cpnIssueDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="validStartDtm != null"> 
+				 AND valid_start_dtm = #{validStartDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="validEndDtm != null"> 
+				 AND valid_end_dtm = #{validEndDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="cpnUseDtm != null"> 
+				 AND cpn_use_dtm = #{cpnUseDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="useStoreNo != null"> 
+				 AND use_store_no = #{useStoreNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="reIssueRsnText != null"> 
+				 AND re_issue_rsn_text = #{reIssueRsnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="cpnStatCode != null"> 
+				 AND cpn_stat_code = #{cpnStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.member.model.master.MbMemberCoupon">	
+
+     /*+ kr.co.shop.web.member.repository.master.MbMemberCouponDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO mb_member_coupon
+			 ( member_no, hold_cpn_seq, cpn_no, paper_no_text, event_no, cpn_issue_dtm, valid_start_dtm, valid_end_dtm, cpn_use_dtm, use_store_no, re_issue_rsn_text, cpn_stat_code, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{memberNo, jdbcType=VARCHAR}, #{holdCpnSeq, jdbcType=INTEGER}, #{cpnNo, jdbcType=VARCHAR}, #{paperNoText, jdbcType=VARCHAR}, #{eventNo, jdbcType=VARCHAR}, <choose><when test="cpnIssueDtm != null">#{cpnIssueDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="validStartDtm != null">#{validStartDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="validEndDtm != null">#{validEndDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="cpnUseDtm != null">#{cpnUseDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{useStoreNo, jdbcType=VARCHAR}, #{reIssueRsnText, jdbcType=VARCHAR}, #{cpnStatCode, jdbcType=VARCHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.member.model.master.MbMemberCoupon">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberCouponDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE mb_member_coupon
+		<set> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="holdCpnSeq != null"> 
+				hold_cpn_seq = #{holdCpnSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="cpnNo != null"> 
+				cpn_no = #{cpnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="paperNoText != null"> 
+				paper_no_text = #{paperNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="eventNo != null"> 
+				event_no = #{eventNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cpnIssueDtm != null"> 
+				cpn_issue_dtm = #{cpnIssueDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="validStartDtm != null"> 
+				valid_start_dtm = #{validStartDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="validEndDtm != null"> 
+				valid_end_dtm = #{validEndDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="cpnUseDtm != null"> 
+				cpn_use_dtm = #{cpnUseDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="useStoreNo != null"> 
+				use_store_no = #{useStoreNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="reIssueRsnText != null"> 
+				re_issue_rsn_text = #{reIssueRsnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cpnStatCode != null"> 
+				cpn_stat_code = #{cpnStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 hold_cpn_seq = #{holdCpnSeq, jdbcType=INTEGER} AND member_no = #{memberNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.member.model.master.MbMemberCoupon">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberCouponDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM mb_member_coupon
+		WHERE 
+			 hold_cpn_seq = #{holdCpnSeq, jdbcType=INTEGER} AND member_no = #{memberNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

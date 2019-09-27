@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.afterService.repository.master.OcAsAcceptProductDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	as_accept_no, as_accept_prdt_seq, org_order_no, order_no, order_prdt_seq, prdt_no, prdt_optn_no, prdt_name, eng_prdt_name, optn_name, prdt_type_code, style_info, prdt_color_code, brand_no, order_amt, as_rsn_code, as_etc_rsn_text, as_accept_cont_text, as_dlbrt_code, as_dlbrt_cont_text, as_proc_type_code, as_proc_type_dtl_code, as_proc_cont_text, as_amt, logis_vndr_code, waybil_no_text, dlvy_todo_ymd, as_prdt_stat_code, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	as_accept_no = #{asAcceptNo, jdbcType=VARCHAR} AND as_accept_prdt_seq = #{asAcceptPrdtSeq, jdbcType=TINYINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.afterService.model.master.OcAsAcceptProduct" resultType="kr.co.shop.web.afterService.model.master.OcAsAcceptProduct">
+    
+     /*+ kr.co.shop.web.afterService.repository.master.OcAsAcceptProductDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			OC_AS_ACCEPT_PRODUCT
+		<where> 
+			<if test="asAcceptNo != null"> 
+				 as_accept_no = #{asAcceptNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="asAcceptPrdtSeq != null"> 
+				 AND as_accept_prdt_seq = #{asAcceptPrdtSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="orgOrderNo != null"> 
+				 AND org_order_no = #{orgOrderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderNo != null"> 
+				 AND order_no = #{orderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				 AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="prdtNo != null"> 
+				 AND prdt_no = #{prdtNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtOptnNo != null"> 
+				 AND prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtName != null"> 
+				 AND prdt_name = #{prdtName, jdbcType=VARCHAR}
+			</if> 
+			<if test="engPrdtName != null"> 
+				 AND eng_prdt_name = #{engPrdtName, jdbcType=VARCHAR}
+			</if> 
+			<if test="optnName != null"> 
+				 AND optn_name = #{optnName, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtTypeCode != null"> 
+				 AND prdt_type_code = #{prdtTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="styleInfo != null"> 
+				 AND style_info = #{styleInfo, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtColorCode != null"> 
+				 AND prdt_color_code = #{prdtColorCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="brandNo != null"> 
+				 AND brand_no = #{brandNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderAmt != null"> 
+				 AND order_amt = #{orderAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="asRsnCode != null"> 
+				 AND as_rsn_code = #{asRsnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="asEtcRsnText != null"> 
+				 AND as_etc_rsn_text = #{asEtcRsnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="asAcceptContText != null"> 
+				 AND as_accept_cont_text = #{asAcceptContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="asDlbrtCode != null"> 
+				 AND as_dlbrt_code = #{asDlbrtCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="asDlbrtContText != null"> 
+				 AND as_dlbrt_cont_text = #{asDlbrtContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="asProcTypeCode != null"> 
+				 AND as_proc_type_code = #{asProcTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="asProcTypeDtlCode != null"> 
+				 AND as_proc_type_dtl_code = #{asProcTypeDtlCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="asProcContText != null"> 
+				 AND as_proc_cont_text = #{asProcContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="asAmt != null"> 
+				 AND as_amt = #{asAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="logisVndrCode != null"> 
+				 AND logis_vndr_code = #{logisVndrCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="waybilNoText != null"> 
+				 AND waybil_no_text = #{waybilNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="dlvyTodoYmd != null"> 
+				 AND dlvy_todo_ymd = #{dlvyTodoYmd, jdbcType=DATE}
+			</if> 
+			<if test="asPrdtStatCode != null"> 
+				 AND as_prdt_stat_code = #{asPrdtStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.afterService.model.master.OcAsAcceptProduct">	
+
+     /*+ kr.co.shop.web.afterService.repository.master.OcAsAcceptProductDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO OC_AS_ACCEPT_PRODUCT
+			 ( as_accept_no, as_accept_prdt_seq, org_order_no, order_no, order_prdt_seq, prdt_no, prdt_optn_no, prdt_name, eng_prdt_name, optn_name, prdt_type_code, style_info, prdt_color_code, brand_no, order_amt, as_rsn_code, as_etc_rsn_text, as_accept_cont_text, as_dlbrt_code, as_dlbrt_cont_text, as_proc_type_code, as_proc_type_dtl_code, as_proc_cont_text, as_amt, logis_vndr_code, waybil_no_text, dlvy_todo_ymd, as_prdt_stat_code, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{asAcceptNo, jdbcType=VARCHAR}, #{asAcceptPrdtSeq, jdbcType=TINYINT}, #{orgOrderNo, jdbcType=VARCHAR}, #{orderNo, jdbcType=VARCHAR}, #{orderPrdtSeq, jdbcType=TINYINT}, #{prdtNo, jdbcType=VARCHAR}, #{prdtOptnNo, jdbcType=VARCHAR}, #{prdtName, jdbcType=VARCHAR}, #{engPrdtName, jdbcType=VARCHAR}, #{optnName, jdbcType=VARCHAR}, #{prdtTypeCode, jdbcType=VARCHAR}, #{styleInfo, jdbcType=VARCHAR}, #{prdtColorCode, jdbcType=VARCHAR}, #{brandNo, jdbcType=VARCHAR}, #{orderAmt, jdbcType=INTEGER}, #{asRsnCode, jdbcType=VARCHAR}, #{asEtcRsnText, jdbcType=VARCHAR}, #{asAcceptContText, jdbcType=VARCHAR}, #{asDlbrtCode, jdbcType=VARCHAR}, #{asDlbrtContText, jdbcType=VARCHAR}, #{asProcTypeCode, jdbcType=VARCHAR}, #{asProcTypeDtlCode, jdbcType=VARCHAR}, #{asProcContText, jdbcType=VARCHAR}, #{asAmt, jdbcType=INTEGER}, #{logisVndrCode, jdbcType=VARCHAR}, #{waybilNoText, jdbcType=VARCHAR}, <choose><when test="dlvyTodoYmd != null">#{dlvyTodoYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, #{asPrdtStatCode, jdbcType=VARCHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.afterService.model.master.OcAsAcceptProduct">
+    
+     /*+ kr.co.shop.web.afterService.repository.master.OcAsAcceptProductDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE OC_AS_ACCEPT_PRODUCT
+		<set> 
+			<if test="asAcceptNo != null"> 
+				as_accept_no = #{asAcceptNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asAcceptPrdtSeq != null"> 
+				as_accept_prdt_seq = #{asAcceptPrdtSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="orgOrderNo != null"> 
+				org_order_no = #{orgOrderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderNo != null"> 
+				order_no = #{orderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="prdtNo != null"> 
+				prdt_no = #{prdtNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtOptnNo != null"> 
+				prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtName != null"> 
+				prdt_name = #{prdtName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="engPrdtName != null"> 
+				eng_prdt_name = #{engPrdtName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="optnName != null"> 
+				optn_name = #{optnName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtTypeCode != null"> 
+				prdt_type_code = #{prdtTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="styleInfo != null"> 
+				style_info = #{styleInfo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtColorCode != null"> 
+				prdt_color_code = #{prdtColorCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="brandNo != null"> 
+				brand_no = #{brandNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderAmt != null"> 
+				order_amt = #{orderAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="asRsnCode != null"> 
+				as_rsn_code = #{asRsnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asEtcRsnText != null"> 
+				as_etc_rsn_text = #{asEtcRsnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asAcceptContText != null"> 
+				as_accept_cont_text = #{asAcceptContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asDlbrtCode != null"> 
+				as_dlbrt_code = #{asDlbrtCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asDlbrtContText != null"> 
+				as_dlbrt_cont_text = #{asDlbrtContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asProcTypeCode != null"> 
+				as_proc_type_code = #{asProcTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asProcTypeDtlCode != null"> 
+				as_proc_type_dtl_code = #{asProcTypeDtlCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asProcContText != null"> 
+				as_proc_cont_text = #{asProcContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asAmt != null"> 
+				as_amt = #{asAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="logisVndrCode != null"> 
+				logis_vndr_code = #{logisVndrCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="waybilNoText != null"> 
+				waybil_no_text = #{waybilNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dlvyTodoYmd != null"> 
+				dlvy_todo_ymd = #{dlvyTodoYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="asPrdtStatCode != null"> 
+				as_prdt_stat_code = #{asPrdtStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 as_accept_no = #{asAcceptNo, jdbcType=VARCHAR} AND as_accept_prdt_seq = #{asAcceptPrdtSeq, jdbcType=TINYINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.afterService.model.master.OcAsAcceptProduct">
+    
+     /*+ kr.co.shop.web.afterService.repository.master.OcAsAcceptProductDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM OC_AS_ACCEPT_PRODUCT
+		WHERE 
+			 as_accept_no = #{asAcceptNo, jdbcType=VARCHAR} AND as_accept_prdt_seq = #{asAcceptPrdtSeq, jdbcType=TINYINT}  
+    </delete>
+</mapper>

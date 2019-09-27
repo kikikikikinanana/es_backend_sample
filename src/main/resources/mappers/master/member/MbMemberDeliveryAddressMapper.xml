@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.member.repository.master.MbMemberDeliveryAddressDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.member.model.master.MbMemberDeliveryAddress">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberDeliveryAddressDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			mb_member_delivery_address
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+	
+	<select id="selectMemberDeliveryAddressCount" parameterType="kr.co.shop.web.member.model.master.MbMemberDeliveryAddress" resultType="int">
+		/*+ kr.co.shop.web.member.repository.master.MbMemberDeliveryAddressDao.selectMemberDeliveryAddressCount [배송주소록 목록 COUNT] [유성민] */ 
+		SELECT <include refid="Paging.totalCount" />
+		  FROM MB_MEMBER_DELIVERY_ADDRESS
+		 WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+		 <if test="dlvyAddrSeq != null">
+		   AND DLVY_ADDR_SEQ = #{dlvyAddrSeq, jdbcType=INTEGER}
+		 </if>
+	</select>
+	
+	<select id="selectMemberDeliveryAddressPaging" parameterType="pageable" resultType="kr.co.shop.web.member.model.master.MbMemberDeliveryAddress">
+		/*+ kr.co.shop.web.member.repository.master.MbMemberDeliveryAddressDao.selectMemberDeliveryAddressPaging [배송주소록 목록 페이징] [유성민] */ 
+		SELECT <include refid="select-columns" />
+		  FROM MB_MEMBER_DELIVERY_ADDRESS
+		 WHERE MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+		 <if test="bean.dlvyAddrSeq != null">
+		   AND DLVY_ADDR_SEQ = #{bean.dlvyAddrSeq, jdbcType=INTEGER}
+		 </if>
+		 ORDER BY DFLT_DLVY_ADDR_YN DESC, DLVY_ADDR_SEQ
+		<include refid="Paging.mssql" />
+	</select>
+	
+	<select id="selectDlvyAddrSeqNextVal" parameterType="kr.co.shop.web.member.model.master.MbMemberDeliveryAddress" resultType="int">
+	/*+ kr.co.shop.web.member.repository.master.MbMemberDeliveryAddressDao.selectDlvyAddrSeqNextVal [배송지 순번 생성] [유성민] */ 
+		SELECT NVL(MAX(DLVY_ADDR_SEQ), 0) + 1
+		  FROM MB_MEMBER_DELIVERY_ADDRESS
+		 WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateDefaultDeliveryAddressCancle" parameterType="kr.co.shop.web.member.model.master.MbMemberDeliveryAddress">
+	/*+ kr.co.shop.web.member.repository.master.MbMemberDeliveryAddressDao.insertMemberInfo [기본배송지 해제]  [유성민]*/
+		UPDATE MB_MEMBER_DELIVERY_ADDRESS
+		   SET DFLT_DLVY_ADDR_YN = 'N'
+			 , MODER_NO = #{moderNo, jdbcType=VARCHAR} 
+			 , MOD_DTM = SYSDATE
+		 WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+		   AND DFLT_DLVY_ADDR_YN = 'Y'
+	</update>
+	
+	<select id="selectMemberDeliveryList" parameterType="String" resultType="kr.co.shop.web.member.model.master.MbMemberDeliveryAddress">
+		/*+ kr.co.shop.web.member.repository.master.MbMemberDeliveryAddressDao.selectMemberDeliveryList [배송지 리스트 조회]  [이동엽]*/
+		
+		SELECT MEMBER_NO
+			 , DLVY_ADDR_SEQ
+			 , ADD_DLVY_ADDR_YN
+			 , DFLT_DLVY_ADDR_YN
+			 , DLVY_ADDR_NAME
+			 , RCVR_NAME
+			 , HDPHN_NO_TEXT
+			 , POST_CODE_TEXT
+			 , POST_ADDR_TEXT
+			 , DTL_ADDR_TEXT
+			 , RGSTER_NO
+			 , RGST_DTM
+			 , MODER_NO
+			 , MOD_DTM
+		  FROM MB_MEMBER_DELIVERY_ADDRESS
+		 WHERE MEMBER_NO = #{memberNo}
+	</select>
+	
+</mapper>

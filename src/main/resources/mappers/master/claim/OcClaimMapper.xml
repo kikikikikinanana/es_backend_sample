@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.claim.repository.master.OcClaimDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.claim.model.master.OcClaim">
+    
+     /*+ kr.co.shop.web.claim.repository.master.OcClaimDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			OC_CLAIM
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+
+	<select id="selectClaimListCountForPaging" parameterType="pageable" resultType="int">
+	
+	/*+ kr.co.shop.web.claim.repository.master.OcClaimDao.selectClaimListCountForPaging [클레임 페이징을 위한 클레임 번호 목록 갯수 카운트] [이강수] */  
+		  
+		  SELECT <include refid="Paging.totalCount" />
+		    FROM OC_CLAIM
+		   WHERE MEMBER_NO 		= #{bean.memberNo, jdbcType=VARCHAR}
+		     AND CLM_GBN_CODE 	= #{bean.clmGbnCode, jdbcType=VARCHAR}
+		<if test="bean.fromDate != null and bean.fromDate != '' and bean.toDate != null and bean.toDate !=''">
+           	 AND CLM_DTM BETWEEN TO_DATE(#{bean.fromDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') AND TO_DATE(#{bean.toDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 1
+        </if>
+        
+	</select>
+
+	<select id="selectClaimListForPaging" parameterType="pageable" resultType="kr.co.shop.web.claim.model.master.OcClaim">
+	
+	/*+ kr.co.shop.web.claim.repository.master.OcClaimDao.selectClaimListForPaging [클레임  페이징을 위한 클레임 번호 목록 조회] [이강수] */  
+
+ 		  SELECT CLM_NO
+ 		  	   , CLM_GBN_CODE
+			   , TO_CHAR(CLM_DTM, 'YYYY-MM-DD HH24:MI:SS') AS STR_CLM_DTM
+			   , ORG_ORDER_NO
+			   , TO_CHAR(ORG_ORDER_DTM, 'YYYY-MM-DD HH24:MI:SS') AS STR_ORG_ORDER_DTM
+		    FROM OC_CLAIM
+		   WHERE MEMBER_NO 		= #{bean.memberNo, jdbcType=VARCHAR}
+		   	 AND CLM_GBN_CODE 	= #{bean.clmGbnCode, jdbcType=VARCHAR}
+		<if test="bean.fromDate != null and bean.fromDate != '' and bean.toDate != null and bean.toDate !=''">
+           	 AND CLM_DTM BETWEEN TO_DATE(#{bean.fromDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') AND TO_DATE(#{bean.toDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') + 1
+        </if>
+		ORDER BY CLM_DTM DESC
+		<include refid="Paging.mssql" />
+		
+	</select>
+	
+	<update id="updateClaimWthdraw" parameterType="kr.co.shop.web.claim.model.master.OcClaim">
+		
+	/*+ kr.co.shop.web.claim.repository.master.OcClaimDao.updateClaimWthdraw [클레임 접수철회 업데이트] [이강수] */
+		
+		UPDATE OC_CLAIM
+		<set>
+				MOD_DTM 				= SYSDATE
+			  , MODER_NO 				= #{moderNo, jdbcType=VARCHAR}
+			  , CLM_STAT_CODE 			= #{clmStatCode, jdbcType=VARCHAR}
+			  , CLM_WTHDRAW_RSN_CODE 	= #{clmWthdrawRsnCode, jdbcType=VARCHAR}
+			<if test='clmWthdrawContText != null'>
+			  , CLM_WTHDRAW_CONT_TEXT 	= #{clmWthdrawContText, jdbcType=VARCHAR}
+			</if>
+		</set>
+		 WHERE CLM_NO = #{clmNo, jdbcType=VARCHAR}
+		 
+	</update>
+	
+	<select id="selectClaimDetail" parameterType="kr.co.shop.web.claim.model.master.OcClaim" resultType="kr.co.shop.web.claim.model.master.OcClaim">
+	
+	/*+ kr.co.shop.web.claim.repository.master.OcClaimDao.selectClaimDetail [클레임 상세 조회] [이강수] */  
+	
+		  SELECT A.ORG_ORDER_NO
+		  	   , A.ORDER_NO
+		  	   , A.CLM_NO
+		  	   , A.CLM_GBN_CODE
+		  	   , A.SITE_NO
+		  	   , TO_CHAR(A.ORG_ORDER_DTM, 'YYYY.MM.DD HH24:MI:SS')	AS STR_ORG_ORDER_DTM
+			   , TO_CHAR(A.CLM_DTM, 'YYYY.MM.DD HH24:MI:SS')			AS STR_CLM_DTM
+			   , A.CLM_STAT_CODE
+			   ----------- S : 주문고객, 환불계좌 등 정보  --------------
+			   , CASE WHEN (SELECT PYMNT_MEANS_CODE
+							  FROM OC_ORDER_PAYMENT
+							 WHERE ORDER_NO = A.ORDER_NO
+							   AND MAIN_PYMNT_MEANS_YN = 'Y') = #{pymntMeansCodeVirtualAccount , jdbcType=VARCHAR}
+					  THEN 'Y'
+					  ELSE 'N'
+					  END 													AS VRTL_ACNT_YN
+			   , A.MEMBER_NO
+			   , A.ACNT_HLDR_NAME
+			   , A.BANK_CODE
+			   , FN_CODE_VALUE('BANK_CODE', A.BANK_CODE)				AS BANK_CODE_NAME
+			   , A.RFND_ACNT_TEXT
+			   ----------- E : 주문고객, 환불계좌 등 정보  --------------
+			   ----------- S : 회수,수령 관련 칼럼들 -------------------
+			   , B.BUYER_EMAIL_ADDR_TEXT
+			   , A.BUYER_POST_CODE_TEXT
+			   , A.BUYER_POST_ADDR_TEXT
+			   , A.BUYER_DTL_ADDR_TEXT
+			   , A.BUYER_HDPHN_NO_TEXT
+			   , A.BUYER_NAME
+			   , A.RCVR_POST_CODE_TEXT
+			   , A.RCVR_POST_ADDR_TEXT
+			   , A.RCVR_DTL_ADDR_TEXT
+			   , A.RCVR_HDPHN_NO_TEXT
+			   , A.RCVR_NAME
+			   ----------- E : 회수,수령 관련 칼럼들 --------------------
+			   ----------- S : 금액 관련 칼럼들 ------------------------
+			   , NVL( A.ADD_DLVY_AMT,  0)								AS ADD_DLVY_AMT
+			   , A.ADD_DLVY_AMT_PYMNT_TYPE
+			   ----------- E : 금액 관련 칼럼들 ------------------------
+			   , CASE WHEN A.MOD_DTM IS NULL
+					  THEN ''
+					  ELSE TO_CHAR(A.MOD_DTM, 'YYYY.MM.DD HH24:MI:SS')
+					  END 													AS STR_MOD_DTM
+		   FROM OC_CLAIM	A
+		   JOIN OC_ORDER	B ON A.ORDER_NO	= B.ORDER_NO
+		  WHERE A.CLM_NO 	= #{clmNo, jdbcType=VARCHAR}
+			AND A.MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+		<if test='nonUserOrderNo != null and nonUserOrderPw != null'>	-- 비회원 클레임상세 조회 시 조건절
+			AND B.ORDER_NO 	= #{nonUserOrderNo, jdbcType=VARCHAR}
+			AND B.PSWD_TEXT = #{nonUserOrderPw, jdbcType=VARCHAR}
+		</if>
+		
+	</select>
+	
+	<update id="updateClaimDetail" parameterType="kr.co.shop.web.claim.model.master.OcClaim">
+	
+	/*+ kr.co.shop.web.claim.repository.master.OcClaimDao.updateClaimDetail [클레임 상세 업데이트] [이강수] */  
+	
+		UPDATE OC_CLAIM
+		<set>
+				MOD_DTM 				= SYSDATE
+			  , MODER_NO 				= #{moderNo, jdbcType=VARCHAR}
+			  , BUYER_POST_CODE_TEXT	= #{buyerPostCodeText, jdbcType=VARCHAR}
+			  , BUYER_POST_ADDR_TEXT	= #{buyerPostAddrText, jdbcType=VARCHAR}
+			  , BUYER_DTL_ADDR_TEXT		= #{buyerDtlAddrText, jdbcType=VARCHAR}
+			  , BUYER_NAME				= #{buyerName, jdbcType=VARCHAR}
+			  , BUYER_HDPHN_NO_TEXT		= #{buyerHdphnNoText, jdbcType=VARCHAR}
+			<if test='rcvrPostCodeText != null'>
+			  , RCVR_POST_CODE_TEXT		= #{rcvrPostCodeText, jdbcType=VARCHAR}
+			</if>
+			<if test='rcvrPostAddrText != null'>
+			  , RCVR_POST_ADDR_TEXT		= #{rcvrPostAddrText, jdbcType=VARCHAR}
+			</if>
+			<if test='rcvrDtlAddrText != null'>
+			  , RCVR_DTL_ADDR_TEXT		= #{rcvrDtlAddrText, jdbcType=VARCHAR}
+			</if>
+			<if test='rcvrName != null'>
+			  , RCVR_NAME				= #{rcvrName, jdbcType=VARCHAR}
+			</if>
+			<if test='rcvrHdphnNoText != null'>
+			  , RCVR_HDPHN_NO_TEXT		= #{rcvrHdphnNoText, jdbcType=VARCHAR}
+			</if>
+		</set>
+		 WHERE CLM_NO = #{clmNo, jdbcType=VARCHAR} 			
+			
+	</update>
+	
+	<insert id="insertClaimInfo" parameterType="kr.co.shop.web.claim.model.master.OcClaim">
+		/*+ kr.co.shop.web.claim.repository.master.OcClaimDao.insertClaimInfo [클레임 마스터 저장] [KTH] */
+		<selectKey resultType="String" keyProperty="clmNo" order="BEFORE">
+			SELECT TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(TO_CHAR(NVL(SUBSTR(MAX(CLM_NO), -5), 0) + 1), 5, '0')
+			  FROM OC_CLAIM
+			 WHERE SUBSTR(MAX(CLM_NO),1, 8) = SUBSTR(TO_CHAR(SYSDATE, 'YYYYMMDD'), 1, 8)
+		</selectKey>
+		INSERT INTO OC_CLAIM
+			 (
+			   CLM_NO
+			 , CLM_DTM
+			 , CLM_GBN_CODE
+			 , SITE_NO
+			 , EMP_ORDER_YN
+			 , ORG_ORDER_NO
+			 , ORG_ORDER_DTM
+			 , ORDER_NO
+			 , MEMBER_NO
+			 , MEMBER_TYPE_CODE
+			 , MBSHP_GRADE_CODE
+			 , EMP_YN
+			 , OTS_VIP_YN
+			 , DEVICE_CODE
+			 , RSV_ORDER_YN
+			 , RTRVL_GBN_TYPE
+			 , RTRVL_STORE_NO
+			 , RTRVL_REQ_YN
+			 , BUYER_NAME
+			 , BUYER_TEL_NO_TEXT
+			 , BUYER_HDPHN_NO_TEXT
+			 , BUYER_POST_CODE_TEXT
+			 , BUYER_POST_ADDR_TEXT
+			 , BUYER_DTL_ADDR_TEXT
+			 , LOGIS_VNDR_CODE
+			 , RTRVL_WAYBIL_NO_TEXT
+			 , DLVY_TYPE_CODE
+			 , STORE_NO
+			 , STORE_NAME
+			 , STORE_ADD_INFO
+			 , RCVR_NAME
+			 , RCVR_TEL_NO_TEXT
+			 , RCVR_HDPHN_NO_TEXT
+			 , RCVR_POST_CODE_TEXT
+			 , RCVR_POST_ADDR_TEXT
+			 , RCVR_DTL_ADDR_TEXT
+			 , DLVY_MEMO_TEXT
+			 , BANK_CODE
+			 , RFND_ACNT_TEXT
+			 , ACNT_HLDR_NAME
+			 , ADD_DLVY_AMT_PYMNT_TYPE
+			 , ADD_DLVY_AMT
+			 , HOLD_CPN_SEQ
+			 , VNDR_NO
+			 , SHARE_RATE
+			 , ECLS_DLVY_AMT
+			 , TOTAL_RFND_AMT
+			 , TOTAL_REDEMP_AMT
+			 , UN_PROC_YN
+			 , ADMIN_ACCEPT_YN
+			 , OFLN_ACCEPT_YN
+			 , CLM_WTHDRAW_RSN_CODE
+			 , CLM_WTHDRAW_CONT_TEXT
+			 , CLM_STAT_CODE
+			<if test="asAcceptNo != null">
+			 , AS_ACCEPT_NO
+			</if>
+			 , CNCL_FAIL_DTM
+			 , RGSTER_NO
+			 , RGST_DTM
+			 , MODER_NO
+			 , MOD_DTM
+			 )
+		SELECT
+			   #{clmNo, jdbcType=CHAR}
+			 , SYSDATE
+			 , #{clmGbnCode, jdbcType=CHAR}				-- 클레임구분코드
+			 , A.SITE_NO
+			 , A.EMP_ORDER_YN
+			 , A.ORG_ORDER_NO
+			 , (
+					SELECT RGST_DTM FROM OC_ORDER WHERE ORG_ORDER_NO = A.ORG_ORDER_NO AND ORG_ORDER_NO = ORDER_NO
+				) AS ORG_ORDER_DTM
+			 , A.ORDER_NO
+			 , A.MEMBER_NO
+			 , A.MEMBER_TYPE_CODE
+			 , A.MBSHP_GRADE_CODE
+			 , A.EMP_YN
+			 , A.OTS_VIP_YN
+			 , A.DEVICE_CODE
+			 , A.RSV_ORDER_YN
+			 , #{rtrvlGbnType, jdbcType=CHAR}			-- 회수지구분(O:온라인 고정값)
+			 , #{rtrvlStoreNo, jdbcType=VARCHAR}		-- 회수매장번호
+			 , #{rtrvlReqYn, jdbcType=CHAR}				-- 회수신청여부
+			 , #{buyerName}
+			 , #{buyerHdphnNoText, jdbcType=VARCHAR}
+			 , #{buyerHdphnNoText, jdbcType=VARCHAR}
+			 , #{buyerPostCodeText, jdbcType=VARCHAR}
+			 , #{buyerPostAddrText, jdbcType=VARCHAR}
+			 , #{buyerDtlAddrText, jdbcType=VARCHAR}
+			 , NULL						-- 회수택배사코드
+			 , NULL						-- 회수송장번호
+			 , #{dlvyTypeCode, jdbcType=VARCHAR}		-- 배송유형코드
+			 , A.STORE_NO
+			 , A.STORE_NAME
+			 , A.STORE_ADD_INFO
+			 , #{rcvrName, jdbcType=VARCHAR}
+			 , #{rcvrHdphnNoText, jdbcType=VARCHAR}
+			 , #{rcvrHdphnNoText, jdbcType=VARCHAR}
+			 , #{rcvrPostCodeText, jdbcType=VARCHAR}
+			 , #{rcvrPostAddrText, jdbcType=VARCHAR}
+			 , #{rcvrDtlAddrText, jdbcType=VARCHAR}
+			 , #{dlvyMemoText, jdbcType=VARCHAR}
+			 , #{bankCode, jdbcType=VARCHAR}
+			 , #{rfndAcntText, jdbcType=VARCHAR}
+			 , #{acntHldrName, jdbcType=VARCHAR}
+			 , #{addDlvyAmtPymntType, jdbcType=CHAR}	-- 추가배송비결제방법
+			 , #{addDlvyAmt, jdbcType=INTEGER}			-- 추가배송비
+			 , #{holdCpnSeq, jdbcType=INTEGER}			-- 보유쿠폰순번
+			 , #{vndrNo, jdbcType=VARCHAR}				-- 업체번호
+			 , 0										-- 분담률
+			 , 0										-- 동봉배송비
+			 , #{totalRfndAmt, jdbcType=INTEGER}		-- 총환불금액
+			 , #{totalRedempAmt, jdbcType=INTEGER}		-- 총환수금액
+			 , #{unProcYn, jdbcType=CHAR}				-- 미처리여부
+			 , #{adminAcceptYn, jdbcType=CHAR}			-- 관리자접수여부
+			 , #{oflnAcceptYn, jdbcType=CHAR}			-- 오프라인접수여부
+			 , NULL										-- 클레임철회사유코드
+			 , NULL										-- 클레임철회내용
+			 , #{clmStatCode, jdbcType=VARCHAR}			-- 클레임상태코드
+			<if test="asAcceptNo != null">
+			 , #{asAcceptNo, jdbcType=VARCHAR}			-- AS접수번호
+			</if>
+			 , NULL
+			 , #{rgsterNo, jdbcType=VARCHAR}
+			 , SYSDATE
+			 , #{moderNo, jdbcType=VARCHAR}
+			 , SYSDATE
+		  FROM OC_ORDER A
+		 WHERE ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+	</insert>
+	
+	<select id="selectSumOrderAmtSumDlvyAmt" parameterType="kr.co.shop.web.claim.model.master.OcClaimProduct" resultType="kr.co.shop.web.claim.model.master.OcClaim">
+	
+	/*+ kr.co.shop.web.claim.repository.master.OcClaimDao.selectSumOrderAmtSumDlvyAmt [클레임 주문금액합계/배송비합계 조회] [이강수] */  
+	
+		  WITH CP AS(
+			  SELECT PRDT_TYPE_CODE
+			       , CASE WHEN PRDT_TYPE_CODE NOT IN (#{prdtTypeCodeGift, jdbcType=VARCHAR}, #{prdtTypeCodeDelivery, jdbcType=VARCHAR})
+						  THEN ORDER_AMT
+						  END				AS ORDER_AMT
+				   , CASE WHEN PRDT_TYPE_CODE = #{prdtTypeCodeDelivery, jdbcType=VARCHAR}
+						  THEN ORDER_AMT 
+						  END				AS DLVY_AMT
+				FROM OC_CLAIM_PRODUCT
+			   WHERE CLM_NO = #{clmNo, jdbcType=VARCHAR}
+		  )
+		  SELECT NVL( SUM(ORDER_AMT), 0 )	AS SUM_ORDER_AMT	-- 주문금액합계 (주문금액)
+		       , NVL( SUM(DLVY_AMT),  0 )	AS SUM_DLVY_AMT		-- 배송비합계 (환불배송비)
+		    FROM CP
+	
+	</select>
+	
+	<update id="updateClaimStat" parameterType="kr.co.shop.web.claim.model.master.OcClaim">
+		/*+ kr.co.shop.web.claim.repository.master.OcClaimDao.updateClaimStat [클레임 상태 업데이트] [김태호] */
+		UPDATE OC_CLAIM
+		   SET MODER_NO = #{moderNo, jdbcType=VARCHAR}
+			 , MOD_DTM = SYSDATE
+			 , CLM_STAT_CODE = #{clmStatCode, jdbcType=VARCHAR}
+		 WHERE CLM_NO = #{clmNo, jdbcType=VARCHAR}
+	</update>
+	
+</mapper>

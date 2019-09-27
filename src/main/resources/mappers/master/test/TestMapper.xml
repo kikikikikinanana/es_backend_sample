@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.test.repository.master.TestDao">
+
+	<sql id="cartProductList"> <!--  parameterType="kr.co.shop.web.cart.model.master.OcCart" resultType="kr.co.shop.web.cart.model.master.OcCart" -->
+		WITH OC_CART_PRD AS (
+		<foreach item="item" index="index" collection="list" separator="UNION ALL">
+		SELECT ${item.cartSeq} AS CART_SEQ, #{item.siteNo} AS SITE_NO, #{item.chnnlNo} AS CHNNL_NO
+		     , #{item.prdtNo} AS PRDT_NO, #{item.prdtOptnNo} AS PRDT_OPTN_NO, ${item.orderQty} AS ORDER_QTY
+		     , #{item.memberTypeCode} AS MEMBER_TYPE_CODE, #{item.mbshpGradeCode} AS MBSHP_GRADE_CODE
+		     , #{item.empYn} AS EMP_YN, #{item.deviceCode} AS DEVICE_CODE
+		</foreach>
+		)
+	</sql>
+
+	<sql id="targtPrdtList">
+		WITH OC_CART_PRD AS (
+		<foreach item="item" index="index" collection="cartPrdtList" separator="UNION ALL">
+		SELECT ${item.cartSeq} AS CART_SEQ, #{item.siteNo} AS SITE_NO, #{item.chnnlNo} AS CHNNL_NO
+		     , #{item.prdtNo} AS PRDT_NO, #{item.prdtOptnNo} AS PRDT_OPTN_NO, ${item.orderQty} AS ORDER_QTY
+		</foreach>
+		)
+	</sql>
+
+	<select id="selectProductList1" parameterType="kr.co.shop.web.test.vo.CartPrdtSearchVO" resultType="kr.co.shop.web.product.model.master.PdProductWithAll">
+		<include refid="targtPrdtList" />
+		SELECT B.PRDT_NO, B.PRDT_TYPE_CODE, B.SITE_NO, B.CHNNL_NO, B.PRDT_NAME, B.ENG_PRDT_NAME
+		     , B.VNDR_NO, B.VNDR_PRDT_NO_TEXT, B.MMNY_PRDT_YN, B.BRAND_NO, B.BRAND_SORT_SEQ
+		     , B.ORG_PLACE_CODE, B.STYLE_INFO, B.PRDT_COLOR_INFO, B.MNFTR_NAME, B.STD_CTGR_NO
+		     , B.STDR_CTGR_NO, B.CNTC_PRDT_SETUP_YN, B.RLTN_GOODS_SETUP_YN, B.ADD_OPTN_SETUP_YN, B.SIZE_CHART_DISP_YN
+		     , B.SIZE_CHART_SEQ, B.EMP_DSCNT_YN, B.ORDER_MNFCT_YN, B.DPRC_EXCEPT_YN, B.STORE_PICKUP_PSBLT_YN
+		     , B.FREE_DLVY_YN, B.STOCK_INTGR_YN, B.STOCK_UN_INTGR_RSN_CODE, B.STOCK_MGMT_YN, B.BUY_LIMIT_YN
+		     , B.MIN_BUY_PSBLT_QTY, B.DAY_MAX_BUY_PSBLT_QTY, B.MAX_BUY_PSBLT_QTY, B.ITEM_CODE
+		     , B.GENDER_GBN_CODE, B.DISP_FLAG_TEXT, B.SRCH_PSBLT_YN, B.SRCH_KEY_WORD_TEXT, B.WRHS_ALERT_YN
+		     , B.SELL_START_DTM, B.SELL_END_DTM, B.RSV_PRDT_YN, B.RSV_DLVY_YMD, B.AFFLTS_SEND_YN
+		     , B.ACONNECT_DISP_YN, B.DISP_YN, B.IGRMALL_DISP_EXCEPT_YN, B.VNDR_SUSPD_YN, B.APRV_STAT_CODE
+		     , B.SELL_STAT_CODE , B.USE_YN, B.RGSTER_NO, B.RGST_DTM, B.APRVER_NO
+		     , B.APRVER_DTM , B.MODER_NO , B.MOD_DTM
+		     , C.PRDT_OPTN_NO, C.OPTN_NAME, C.TOTAL_STOCK_QTY, C.TOTAL_ORDER_QTY, C.ORDER_PSBLT_QTY
+		     , C.VNDR_PRDT_NO_TEXT, C.SELL_STAT_CODE AS OPTN_SELL_STAT_CODE, C.SOLD_OUT_RSN_TEXT
+		     , C.SORT_SEQ, C.USE_YN AS OPTN_USE_YN, C.ADD_OPTN1_TEXT, C.ADD_OPTN2_TEXT
+		     , D.STOCK_AI_QTY, D.STOCK_AW_QTY, D.STOCK_AS_QTY, D.STOCK_VD_QTY
+		     , E.PRDT_PRICE_HIST_SEQ, E.NORMAL_AMT, E.SELL_AMT
+		     , F.OPTN_ADD_AMT
+		     , G.BRAND_NAME
+		     , A.CART_SEQ
+		     , H.IMAGE_PATH_TEXT, H.IMAGE_URL
+		  FROM OC_CART_PRD A WITH (NOLOCK)
+		INNER JOIN PD_PRODUCT B WITH (NOLOCK) ON A.PRDT_NO = B.PRDT_NO AND A.SITE_NO = B.SITE_NO
+		INNER JOIN PD_PRODUCT_OPTION C WITH (NOLOCK) ON A.PRDT_NO = C.PRDT_NO AND A.PRDT_OPTN_NO = C.PRDT_OPTN_NO
+		LEFT OUTER JOIN (
+		                    SELECT Y.PRDT_NO, Y.PRDT_OPTN_NO
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10000' THEN X.STOCK_QTY ELSE 0 END) AS "STOCK_AI_QTY"
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10001' THEN X.STOCK_QTY ELSE 0 END) AS "STOCK_AW_QTY"
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10002' THEN X.STOCK_QTY ELSE 0 END) AS "STOCK_AS_QTY"
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10003' THEN X.STOCK_QTY ELSE 0 END) AS "STOCK_VD_QTY"
+		                      FROM PD_PRODUCT_OPTION_STOCK X WITH (NOLOCK)
+		                RIGHT OUTER JOIN OC_CART_PRD Y WITH (NOLOCK) ON Y.PRDT_NO = X.PRDT_NO AND Y.PRDT_OPTN_NO = X.PRDT_OPTN_NO
+		                  GROUP BY Y.PRDT_NO, Y.PRDT_OPTN_NO
+		                ) D ON A.PRDT_NO = D.PRDT_NO AND A.PRDT_OPTN_NO = D.PRDT_OPTN_NO
+		INNER JOIN (
+		                SELECT X.PRDT_NO, X.PRDT_PRICE_HIST_SEQ, X.NORMAL_AMT, X.SELL_AMT
+		                  FROM PD_PRODUCT_PRICE_HISTORY X WITH (NOLOCK)
+		            INNER JOIN OC_CART_PRD Y WITH (NOLOCK) ON Y.PRDT_NO = X.PRDT_NO
+		                 WHERE X.PRDT_PRICE_HIST_SEQ IN ( SELECT MAX(Z.PRDT_PRICE_HIST_SEQ)
+		                                                    FROM PD_PRODUCT_PRICE_HISTORY Z
+		                                                   WHERE Z.PRDT_NO = Y.PRDT_NO
+		                                                   GROUP BY Z.PRDT_NO
+		                                                )
+		           ) E ON A.PRDT_NO = E.PRDT_NO
+		INNER JOIN (
+		                SELECT X.PRDT_NO, X.PRDT_OPTN_NO, X.SELL_PRICE_HIST_SEQ, X.OPTN_ADD_AMT
+		                  FROM PD_PRODUCT_OPTION_PRICE_HISTORY X WITH (NOLOCK)
+		            INNER JOIN OC_CART_PRD Y WITH (NOLOCK) ON Y.PRDT_NO = X.PRDT_NO
+		                 WHERE X.SELL_PRICE_HIST_SEQ IN ( SELECT MAX(Z.SELL_PRICE_HIST_SEQ)
+		                                                    FROM PD_PRODUCT_OPTION_PRICE_HISTORY Z
+		                                                   WHERE Z.PRDT_NO = Y.PRDT_NO
+		                                                   GROUP BY Z.PRDT_NO
+		                                                )
+		           ) F ON A.PRDT_NO = F.PRDT_NO AND A.PRDT_OPTN_NO = F.PRDT_OPTN_NO
+		INNER JOIN DP_BRAND G ON B.BRAND_NO = G.BRAND_NO
+		LEFT OUTER JOIN PD_PRODUCT_RELATION_FILE H ON A.PRDT_NO = H.PRDT_NO AND H.DISP_POSTN_TYPE = 'P' AND H.FILE_TYPE = 'I' AND H.PRDT_RLTN_FILE_SEQ = ( SELECT MIN(Z.PRDT_RLTN_FILE_SEQ) FROM PD_PRODUCT_RELATION_FILE Z WHERE Z.PRDT_NO = H.PRDT_NO AND Z.DISP_POSTN_TYPE = H.DISP_POSTN_TYPE AND Z.FILE_TYPE = H.FILE_TYPE)
+
+	</select>
+
+	<select id="selectPromotionDscntList1" parameterType="kr.co.shop.web.test.vo.CartPrdtSearchVO" resultType="kr.co.shop.web.promotion.model.master.PrPromotion">
+		<include refid="targtPrdtList" />
+	    SELECT A.PROMO_NO
+	         , H.CART_SEQ
+	         , H.PRDT_OPTN_NO
+	         , A.PROMO_TYPE_CODE
+	         , FN_CODE_VALUE('PROMO_TYPE_CODE', A.PROMO_TYPE_CODE) AS PROMO_TYPE_NAME
+	         , A.PROMO_NAME
+	         , A.STOCK_DDCT_TYPE  -- A(전체 재고), O (온라인 재고)
+	         , A.CPN_SMTM_APPLY_PSBLT_YN -- 쿠폰 사용 허용 여부
+	         , A.IMDTL_DSCNT_TYPE -- 즉시 할인 유형 R(정율:d), A(정액), U(균일가)
+	         , CASE WHEN A.PROMO_TYPE_CODE = '10001' THEN G.DSCNT_RATE ELSE A.IMDTL_DSCNT_VALUE END AS DSCNT_RATE-- 즉시 할인 가(율)
+	         , E.PRDT_NO
+	         , H.PRDT_NO AS CART_PRDT_NO
+	         , E.PRDT_TYPE -- T(대상상품), L(제외상품), G(사은품)
+	         , F.PRDT_NO AS GIFT_PRDT_NO-- '사은품 상품 번호
+			 , I.PRDT_NAME AS GIFT_PRDT_NAME
+			 , '001' AS GIFT_PRDT_OPTN_NO
+	         , F.EVENT_LIMIT_QTY -- 행사 수량
+	         , F.CMSN_RATE -- 업체 수수료율
+	         , H.ORDER_QTY
+	         , G.BUY_QTY
+	         , G.DSCNT_RATE AS "다족구매 할인율"
+	      FROM PR_PROMOTION A
+	INNER JOIN PR_PROMOTION_TARGET_CHANNEL B ON A.PROMO_NO = B.PROMO_NO
+	INNER JOIN PR_PROMOTION_TARGET_DEVICE C  ON A.PROMO_NO = C.PROMO_NO
+	INNER JOIN PR_PROMOTION_TARGET_GRADE D   ON A.PROMO_NO = D.PROMO_NO
+	INNER JOIN PR_PROMOTION_TARGET_PRODUCT E ON A.PROMO_NO = E.PROMO_NO
+	LEFT OUTER JOIN PR_PROMOTION_TARGET_PRODUCT F ON A.PROMO_NO = F.PROMO_NO AND F.PRDT_TYPE = 'G'
+	LEFT OUTER JOIN PR_PROMOTION_MULTI_BUY_DISCOUNT G ON A.PROMO_NO = G.PROMO_NO AND A.PROMO_TYPE_CODE = '10001'
+	INNER JOIN OC_CART_PRD H ON E.PRDT_NO = H.PRDT_NO
+	LEFT OUTER JOIN PD_PRODUCT I ON I.PRDT_NO = F.PRDT_NO AND A.PROMO_TYPE_CODE = '10005'
+	INNER JOIN PD_PRODUCT J ON J.PRDT_NO = E.PRDT_NO
+	     WHERE 1=1
+	       AND GETDATE() BETWEEN A.PROMO_START_DTM AND A.PROMO_END_DTM
+	       AND A.USE_YN = 'Y'
+	       AND B.CHNNL_NO = J.CHNNL_NO
+	       AND C.DEVICE_CODE = #{deviceCode}
+	       AND D.MEMBER_TYPE_CODE = #{memberTypeCode}
+		<if test='empYn != null and empYn != ""'>
+		   AND D.EMP_YN = #{empYn}
+		</if>
+	       AND E.PRDT_TYPE = 'T'
+	       AND (( A.PROMO_TYPE_CODE = '10001' AND G.MULTI_BUY_DSCNT_SEQ = (
+	                                                                         SELECT TOP 1 Z.MULTI_BUY_DSCNT_SEQ
+	                                                                           FROM PR_PROMOTION_MULTI_BUY_DISCOUNT Z
+	                                                                          WHERE Z.PROMO_NO = A.PROMO_NO
+	                                                                             AND Z.BUY_QTY &lt;= (
+	                                                                                                SELECT SUM(ORDER_QTY)
+	                                                                                                  FROM OC_CART_PRD A
+	                                                                                                     , PR_PROMOTION_TARGET_PRODUCT B
+	                                                                                                 WHERE 1 = 1
+	                                                                                                   AND A.PRDT_NO = B.PRDT_NO
+	                                                                                                   AND B.PROMO_NO = Z.PROMO_NO
+	                                                                                              )
+	                                                                          ORDER BY Z.MULTI_BUY_DSCNT_SEQ DESC
+	                                                                      )
+	            ) OR (A.PROMO_TYPE_CODE != '10001' AND 1 = 1))
+	      -- ORDER BY H.CART_SEQ
+	</select>
+
+
+	<select id="selectProductList" parameterType="kr.co.shop.web.cart.model.master.OcCart" resultType="kr.co.shop.web.product.model.master.PdProductWithAll">
+		<include refid="cartProductList" />
+		SELECT B.PRDT_NO, B.PRDT_TYPE_CODE, B.SITE_NO, B.CHNNL_NO, B.PRDT_NAME, B.ENG_PRDT_NAME
+		     , B.VNDR_NO, B.VNDR_PRDT_NO_TEXT, B.MMNY_PRDT_YN, B.BRAND_NO, B.BRAND_SORT_SEQ
+		     , B.ORG_PLACE_CODE, B.STYLE_INFO, B.PRDT_COLOR_INFO, B.MNFTR_NAME, B.STD_CTGR_NO
+		     , B.STDR_CTGR_NO, B.CNTC_PRDT_SETUP_YN, B.RLTN_GOODS_SETUP_YN, B.ADD_OPTN_SETUP_YN, B.SIZE_CHART_DISP_YN
+		     , B.SIZE_CHART_SEQ, B.EMP_DSCNT_YN, B.ORDER_MNFCT_YN, B.DPRC_EXCEPT_YN, B.STORE_PICKUP_PSBLT_YN
+		     , B.FREE_DLVY_YN, B.STOCK_INTGR_YN, B.STOCK_UN_INTGR_RSN_CODE, B.STOCK_MGMT_YN, B.BUY_LIMIT_YN
+		     , B.MIN_BUY_PSBLT_QTY, B.DAY_MAX_BUY_PSBLT_QTY, B.MAX_BUY_PSBLT_QTY, B.ITEM_CODE
+		     , B.GENDER_GBN_CODE, B.DISP_FLAG_TEXT, B.SRCH_PSBLT_YN, B.SRCH_KEY_WORD_TEXT, B.WRHS_ALERT_YN
+		     , B.SELL_START_DTM, B.SELL_END_DTM, B.RSV_PRDT_YN, B.RSV_DLVY_YMD, B.AFFLTS_SEND_YN
+		     , B.ACONNECT_DISP_YN, B.DISP_YN, B.IGRMALL_DISP_EXCEPT_YN, B.VNDR_SUSPD_YN, B.APRV_STAT_CODE
+		     , B.SELL_STAT_CODE , B.USE_YN, B.RGSTER_NO, B.RGST_DTM, B.APRVER_NO
+		     , B.APRVER_DTM , B.MODER_NO , B.MOD_DTM
+		     , C.PRDT_OPTN_NO, C.OPTN_NAME, C.TOTAL_STOCK_QTY, C.TOTAL_ORDER_QTY, C.ORDER_PSBLT_QTY
+		     , C.VNDR_PRDT_NO_TEXT, C.SELL_STAT_CODE AS OPTN_SELL_STAT_CODE, C.SOLD_OUT_RSN_TEXT
+		     , C.SORT_SEQ, C.USE_YN AS OPTN_USE_YN, C.ADD_OPTN1_TEXT, C.ADD_OPTN2_TEXT
+		     , D.STOCK_AI_QTY, D.STOCK_AW_QTY, D.STOCK_AS_QTY, D.STOCK_VD_QTY
+		     , E.PRDT_PRICE_HIST_SEQ, E.NORMAL_AMT, E.SELL_AMT
+		     , F.OPTN_ADD_AMT
+		     , G.BRAND_NAME
+		     , A.CART_SEQ
+		     , H.IMAGE_PATH_TEXT, H.IMAGE_URL
+		  FROM OC_CART_PRD A WITH (NOLOCK)
+		INNER JOIN PD_PRODUCT B WITH (NOLOCK) ON A.PRDT_NO = B.PRDT_NO AND A.SITE_NO = B.SITE_NO
+		INNER JOIN PD_PRODUCT_OPTION C WITH (NOLOCK) ON A.PRDT_NO = C.PRDT_NO AND A.PRDT_OPTN_NO = C.PRDT_OPTN_NO
+		LEFT OUTER JOIN (
+		                    SELECT Y.PRDT_NO, Y.PRDT_OPTN_NO
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10000' THEN X.STOCK_QTY ELSE 0 END) AS "STOCK_AI_QTY"
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10001' THEN X.STOCK_QTY ELSE 0 END) AS "STOCK_AW_QTY"
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10002' THEN X.STOCK_QTY ELSE 0 END) AS "STOCK_AS_QTY"
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10003' THEN X.STOCK_QTY ELSE 0 END) AS "STOCK_VD_QTY"
+		                      FROM PD_PRODUCT_OPTION_STOCK X WITH (NOLOCK)
+		                RIGHT OUTER JOIN OC_CART_PRD Y WITH (NOLOCK) ON Y.PRDT_NO = X.PRDT_NO AND Y.PRDT_OPTN_NO = X.PRDT_OPTN_NO
+		                  GROUP BY Y.PRDT_NO, Y.PRDT_OPTN_NO
+		                ) D ON A.PRDT_NO = D.PRDT_NO AND A.PRDT_OPTN_NO = D.PRDT_OPTN_NO
+		INNER JOIN (
+		                SELECT X.PRDT_NO, X.PRDT_PRICE_HIST_SEQ, X.NORMAL_AMT, X.SELL_AMT
+		                  FROM PD_PRODUCT_PRICE_HISTORY X WITH (NOLOCK)
+		            INNER JOIN OC_CART_PRD Y WITH (NOLOCK) ON Y.PRDT_NO = X.PRDT_NO
+		                 WHERE X.PRDT_PRICE_HIST_SEQ IN ( SELECT MAX(Z.PRDT_PRICE_HIST_SEQ)
+		                                                    FROM PD_PRODUCT_PRICE_HISTORY Z
+		                                                   WHERE Z.PRDT_NO = Y.PRDT_NO
+		                                                   GROUP BY Z.PRDT_NO
+		                                                )
+		           ) E ON A.PRDT_NO = E.PRDT_NO
+		INNER JOIN (
+		                SELECT X.PRDT_NO, X.PRDT_OPTN_NO, X.SELL_PRICE_HIST_SEQ, X.OPTN_ADD_AMT
+		                  FROM PD_PRODUCT_OPTION_PRICE_HISTORY X WITH (NOLOCK)
+		            INNER JOIN OC_CART_PRD Y WITH (NOLOCK) ON Y.PRDT_NO = X.PRDT_NO
+		                 WHERE X.SELL_PRICE_HIST_SEQ IN ( SELECT MAX(Z.SELL_PRICE_HIST_SEQ)
+		                                                    FROM PD_PRODUCT_OPTION_PRICE_HISTORY Z
+		                                                   WHERE Z.PRDT_NO = Y.PRDT_NO
+		                                                   GROUP BY Z.PRDT_NO
+		                                                )
+		           ) F ON A.PRDT_NO = F.PRDT_NO AND A.PRDT_OPTN_NO = F.PRDT_OPTN_NO
+		INNER JOIN DP_BRAND G ON B.BRAND_NO = G.BRAND_NO
+		LEFT OUTER JOIN PD_PRODUCT_RELATION_FILE H ON A.PRDT_NO = H.PRDT_NO AND H.DISP_POSTN_TYPE = 'P' AND H.FILE_TYPE = 'I' AND H.PRDT_RLTN_FILE_SEQ = ( SELECT MIN(Z.PRDT_RLTN_FILE_SEQ) FROM PD_PRODUCT_RELATION_FILE Z WHERE Z.PRDT_NO = H.PRDT_NO AND Z.DISP_POSTN_TYPE = H.DISP_POSTN_TYPE AND Z.FILE_TYPE = H.FILE_TYPE)
+
+	</select>
+
+	<select id="selectPromotionDscntList" parameterType="kr.co.shop.web.cart.model.master.OcCart" resultType="kr.co.shop.web.promotion.model.master.PrPromotion">
+		<include refid="cartProductList" />
+	    SELECT A.PROMO_NO
+	         , H.CART_SEQ
+	         , H.PRDT_OPTN_NO
+	         , A.PROMO_TYPE_CODE
+	         , FN_CODE_VALUE('PROMO_TYPE_CODE', A.PROMO_TYPE_CODE) AS PROMO_TYPE_NAME
+	         , A.PROMO_NAME
+	         , A.STOCK_DDCT_TYPE  -- A(전체 재고), O (온라인 재고)
+	         , A.CPN_SMTM_APPLY_PSBLT_YN -- 쿠폰 사용 허용 여부
+	         , A.IMDTL_DSCNT_TYPE -- 즉시 할인 유형 R(정율:d), A(정액), U(균일가)
+	         , CASE WHEN A.PROMO_TYPE_CODE = '10001' THEN G.DSCNT_RATE ELSE A.IMDTL_DSCNT_VALUE END AS DSCNT_RATE-- 즉시 할인 가(율)
+	         , E.PRDT_NO
+	         , H.PRDT_NO AS CART_PRDT_NO
+	         , E.PRDT_TYPE -- T(대상상품), L(제외상품), G(사은품)
+	         , F.PRDT_NO AS GIFT_PRDT_NO-- '사은품 상품 번호
+			 , I.PRDT_NAME AS GIFT_PRDT_NAME
+			 , '001' AS GIFT_PRDT_OPTN_NO
+	         , F.EVENT_LIMIT_QTY -- 행사 수량
+	         , F.CMSN_RATE -- 업체 수수료율
+	         , H.ORDER_QTY
+	         , G.BUY_QTY
+	         , G.DSCNT_RATE AS "다족구매 할인율"
+	      FROM PR_PROMOTION A
+	INNER JOIN PR_PROMOTION_TARGET_CHANNEL B ON A.PROMO_NO = B.PROMO_NO
+	INNER JOIN PR_PROMOTION_TARGET_DEVICE C  ON A.PROMO_NO = C.PROMO_NO
+	INNER JOIN PR_PROMOTION_TARGET_GRADE D   ON A.PROMO_NO = D.PROMO_NO
+	INNER JOIN PR_PROMOTION_TARGET_PRODUCT E ON A.PROMO_NO = E.PROMO_NO
+	LEFT OUTER JOIN PR_PROMOTION_TARGET_PRODUCT F ON A.PROMO_NO = F.PROMO_NO AND F.PRDT_TYPE = 'G'
+	LEFT OUTER JOIN PR_PROMOTION_MULTI_BUY_DISCOUNT G ON A.PROMO_NO = G.PROMO_NO AND A.PROMO_TYPE_CODE = '10001'
+	INNER JOIN OC_CART_PRD H ON E.PRDT_NO = H.PRDT_NO
+	LEFT OUTER JOIN PD_PRODUCT I ON I.PRDT_NO = F.PRDT_NO AND A.PROMO_TYPE_CODE = '10005'
+	     WHERE 1=1
+	       AND GETDATE() BETWEEN A.PROMO_START_DTM AND A.PROMO_END_DTM
+	       AND A.USE_YN = 'Y'
+	       AND B.CHNNL_NO = '10000'
+	       AND C.DEVICE_CODE = '10000'
+	       AND D.MEMBER_TYPE_CODE = '10000'
+	       AND E.PRDT_TYPE = 'T'
+	       AND (( A.PROMO_TYPE_CODE = '10001' AND G.MULTI_BUY_DSCNT_SEQ = (
+	                                                                         SELECT TOP 1 Z.MULTI_BUY_DSCNT_SEQ
+	                                                                           FROM PR_PROMOTION_MULTI_BUY_DISCOUNT Z
+	                                                                          WHERE Z.PROMO_NO = A.PROMO_NO
+	                                                                             AND Z.BUY_QTY &lt;= (
+	                                                                                                SELECT SUM(ORDER_QTY)
+	                                                                                                  FROM OC_CART_PRD A
+	                                                                                                     , PR_PROMOTION_TARGET_PRODUCT B
+	                                                                                                 WHERE 1 = 1
+	                                                                                                   AND A.PRDT_NO = B.PRDT_NO
+	                                                                                                   AND B.PROMO_NO = Z.PROMO_NO
+	                                                                                              )
+	                                                                          ORDER BY Z.MULTI_BUY_DSCNT_SEQ DESC
+	                                                                      )
+	            ) OR (A.PROMO_TYPE_CODE != '10001' AND 1 = 1))
+	      -- ORDER BY H.CART_SEQ
+	</select>
+
+
+	<select id="selectDpCategoryList" parameterType="kr.co.shop.web.display.model.master.DpCategory" resultType="kr.co.shop.web.display.model.master.DpCategory">
+		SELECT A.CTGR_NO, A.UP_CTGR_NO, A.SITE_NO, A.CHNNL_NO, A.CTGR_NAME
+             , A.LEAF_CTGR_YN, A.CTGR_LEVEL, A.STD_CTGR_NO, A.PC_DISP_TMPL_NO, A.MOBILE_DISP_TMPL_NO
+             , A.CTGR_NAME_DISP_TYPE, A.PC_IMAGE_NAME, A.PC_IMAGE_PATH_TEXT, A.PC_IMAGE_URL, A.PC_ALTRN_TEXT
+             , A.MOBILE_IMAGE_NAME, A.MOBILE_IMAGE_PATH_TEXT, A.MOBILE_IMAGE_URL, A.MOBILE_ALTRN_TEXT, A.SRCH_FILTER_USE_YN
+             , A.SORT_SEQ, A.DISP_YN, A.USE_YN, A.CTGR_LEVEL AS LEVEL
+		  FROM DP_CATEGORY A
+		<where>
+		       A.USE_YN = 'Y'
+		   AND A.DISP_YN = 'Y'
+		<if test="ctgrNo != null and ctgrNo != ''">
+		   AND A.CTGR_NO = #{ctgNo, jdbcType=VARCHAR}
+		</if>
+		<if test="upCtgrNo != null and upCtgrNo != ''">
+		   AND A.UP_CTGR_NO = #{upCtgrNo, jdbcType=VARCHAR}
+		</if>
+		<if test="siteNo != null and siteNo != ''">
+		   AND A.SITE_NO = #{siteNo, jdbcType=VARCHAR}
+		</if>
+		<if test="chnnlNo != null and chnnlNo != ''">
+		   AND A.CHNNL_NO = #{chnnlNo, jdbcType=VARCHAR}
+		</if>
+		<if test="leafCtgrYn != null and leafCtgrYn != ''">
+		   AND A.LEAF_CTGR_YN = #{leafCtgrYn, jdbcType=CHAR}
+		</if>
+		<if test="ctgrLevel != null and ctgrLevel != ''">
+		   AND A.CTGR_LEVEL = #{ctgrLevel, jdbcType=TINYINT}
+		</if>
+		<if test="pcDispTmplNo != null and pcDispTmplNo != ''">
+		   AND A.PC_DISP_TMPL_NO = #{pcDispTmplNo, jdbcType=VARCHAR}
+		</if>
+		<if test="mobileDispTmplNo != null and mobileDispTmplNo != ''">
+		   AND A.MOBILE_DISP_TMPL_NO = #{mobileDispTmplNo, jdbcType=VARCHAR}
+		</if>
+		<if test="ctgrNameDispType != null and ctgrNameDispType != ''">
+		   AND A.CTGR_NAME_DISP_TYPE = #{ctgrNameDispType, jdbcType=CHAR}
+		</if>
+		<if test="srchFilterUseYn != null and srchFilterUseYn != ''">
+		   AND A.SRCH_FILTER_USE_YN = #{srchFilterUseYn, jdbcType=CHAR}
+		</if>
+		<if test="sortSeq != null and sortSeq != ''">
+		   AND A.SORT_SEQ = #{sortSeq, jdbcType=INTEGER}
+		</if>
+		</where>
+	</select>
+</mapper>

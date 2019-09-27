@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderProductDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	order_no, order_prdt_seq, up_order_prdt_seq, prdt_no, prdt_optn_no, prdt_name, eng_prdt_name, optn_name, prdt_type_code, style_info, prdt_color_code, rsv_prdt_yn, vndr_no, vndr_name, vndr_prdt_no_text, brand_no, chnnl_no, std_ctgr_no, ctgr_no, event_no, plndp_no, mmny_prdt_yn, emp_dscnt_yn, order_mnfct_yn, dprc_except_yn, free_dlvy_yn, order_qty, prdt_normal_amt, prdt_sell_amt, optn_add_amt, sell_amt, emp_dscnt_rate, emp_amt, total_dscnt_amt, cpn_dscnt_amt, order_amt, vndr_cmsn_rate, afflts_order_no, afflts_order_prdt_no, sell_cncl_req_yn, sell_cncl_reqtr_no, sell_cncl_req_dtm, sell_cncl_rsn_code, sell_cncl_rsn_text, logis_cnvrt_req_dtm, logis_cnvrt_yn, logis_cnvrt_rsn_code, pickup_extsn_yn, order_prdt_stat_code, sales_dcsn_ymd, gender_gbn_code, insd_mgmt_info_text, buy_point_save_rate, delay_send_day, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	order_no = #{orderNo, jdbcType=VARCHAR} AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.order.model.master.OcOrderProduct" resultType="kr.co.shop.web.order.model.master.OcOrderProduct">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderProductDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			OC_ORDER_PRODUCT
+		<where> 
+			<if test="orderNo != null"> 
+				 order_no = #{orderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				 AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="upOrderPrdtSeq != null"> 
+				 AND up_order_prdt_seq = #{upOrderPrdtSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="prdtNo != null"> 
+				 AND prdt_no = #{prdtNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtOptnNo != null"> 
+				 AND prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtName != null"> 
+				 AND prdt_name = #{prdtName, jdbcType=VARCHAR}
+			</if> 
+			<if test="engPrdtName != null"> 
+				 AND eng_prdt_name = #{engPrdtName, jdbcType=VARCHAR}
+			</if> 
+			<if test="optnName != null"> 
+				 AND optn_name = #{optnName, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtTypeCode != null"> 
+				 AND prdt_type_code = #{prdtTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="styleInfo != null"> 
+				 AND style_info = #{styleInfo, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtColorCode != null"> 
+				 AND prdt_color_code = #{prdtColorCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="rsvPrdtYn != null"> 
+				 AND rsv_prdt_yn = #{rsvPrdtYn, jdbcType=CHAR}
+			</if> 
+			<if test="vndrNo != null"> 
+				 AND vndr_no = #{vndrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="vndrName != null"> 
+				 AND vndr_name = #{vndrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="vndrPrdtNoText != null"> 
+				 AND vndr_prdt_no_text = #{vndrPrdtNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="brandNo != null"> 
+				 AND brand_no = #{brandNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="chnnlNo != null"> 
+				 AND chnnl_no = #{chnnlNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="stdCtgrNo != null"> 
+				 AND std_ctgr_no = #{stdCtgrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="ctgrNo != null"> 
+				 AND ctgr_no = #{ctgrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="eventNo != null"> 
+				 AND event_no = #{eventNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="plndpNo != null"> 
+				 AND plndp_no = #{plndpNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="mmnyPrdtYn != null"> 
+				 AND mmny_prdt_yn = #{mmnyPrdtYn, jdbcType=CHAR}
+			</if> 
+			<if test="empDscntYn != null"> 
+				 AND emp_dscnt_yn = #{empDscntYn, jdbcType=CHAR}
+			</if> 
+			<if test="orderMnfctYn != null"> 
+				 AND order_mnfct_yn = #{orderMnfctYn, jdbcType=CHAR}
+			</if> 
+			<if test="dprcExceptYn != null"> 
+				 AND dprc_except_yn = #{dprcExceptYn, jdbcType=CHAR}
+			</if> 
+			<if test="freeDlvyYn != null"> 
+				 AND free_dlvy_yn = #{freeDlvyYn, jdbcType=CHAR}
+			</if> 
+			<if test="orderQty != null"> 
+				 AND order_qty = #{orderQty, jdbcType=INTEGER}
+			</if> 
+			<if test="prdtNormalAmt != null"> 
+				 AND prdt_normal_amt = #{prdtNormalAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="prdtSellAmt != null"> 
+				 AND prdt_sell_amt = #{prdtSellAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="optnAddAmt != null"> 
+				 AND optn_add_amt = #{optnAddAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="sellAmt != null"> 
+				 AND sell_amt = #{sellAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="empDscntRate != null"> 
+				 AND emp_dscnt_rate = #{empDscntRate, jdbcType=TINYINT}
+			</if> 
+			<if test="empAmt != null"> 
+				 AND emp_amt = #{empAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="totalDscntAmt != null"> 
+				 AND total_dscnt_amt = #{totalDscntAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="cpnDscntAmt != null"> 
+				 AND cpn_dscnt_amt = #{cpnDscntAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="orderAmt != null"> 
+				 AND order_amt = #{orderAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="vndrCmsnRate != null"> 
+				 AND vndr_cmsn_rate = #{vndrCmsnRate, jdbcType=TINYINT}
+			</if> 
+			<if test="affltsOrderNo != null"> 
+				 AND afflts_order_no = #{affltsOrderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="affltsOrderPrdtNo != null"> 
+				 AND afflts_order_prdt_no = #{affltsOrderPrdtNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="sellCnclReqYn != null"> 
+				 AND sell_cncl_req_yn = #{sellCnclReqYn, jdbcType=CHAR}
+			</if> 
+			<if test="sellCnclReqtrNo != null"> 
+				 AND sell_cncl_reqtr_no = #{sellCnclReqtrNo, jdbcType=TINYINT}
+			</if> 
+			<if test="sellCnclReqDtm != null"> 
+				 AND sell_cncl_req_dtm = #{sellCnclReqDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="sellCnclRsnCode != null"> 
+				 AND sell_cncl_rsn_code = #{sellCnclRsnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="sellCnclRsnText != null"> 
+				 AND sell_cncl_rsn_text = #{sellCnclRsnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="logisCnvrtReqDtm != null"> 
+				 AND logis_cnvrt_req_dtm = #{logisCnvrtReqDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="logisCnvrtYn != null"> 
+				 AND logis_cnvrt_yn = #{logisCnvrtYn, jdbcType=CHAR}
+			</if> 
+			<if test="logisCnvrtRsnCode != null"> 
+				 AND logis_cnvrt_rsn_code = #{logisCnvrtRsnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="pickupExtsnYn != null"> 
+				 AND pickup_extsn_yn = #{pickupExtsnYn, jdbcType=CHAR}
+			</if> 
+			<if test="orderPrdtStatCode != null"> 
+				 AND order_prdt_stat_code = #{orderPrdtStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="salesDcsnYmd != null"> 
+				 AND sales_dcsn_ymd = #{salesDcsnYmd, jdbcType=DATE}
+			</if> 
+			<if test="genderGbnCode != null"> 
+				 AND gender_gbn_code = #{genderGbnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="insdMgmtInfoText != null"> 
+				 AND insd_mgmt_info_text = #{insdMgmtInfoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="buyPointSaveRate != null"> 
+				 AND buy_point_save_rate = #{buyPointSaveRate, jdbcType=TINYINT}
+			</if> 
+			<if test="delaySendDay != null"> 
+				 AND delay_send_day = #{delaySendDay, jdbcType=DATE}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.order.model.master.OcOrderProduct">	
+
+     /*+ kr.co.shop.web.order.repository.master.OcOrderProductDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO OC_ORDER_PRODUCT
+			 ( order_no, order_prdt_seq, up_order_prdt_seq, prdt_no, prdt_optn_no, prdt_name, eng_prdt_name, optn_name, prdt_type_code, style_info, prdt_color_code, rsv_prdt_yn, vndr_no, vndr_name, vndr_prdt_no_text, brand_no, chnnl_no, std_ctgr_no, ctgr_no, event_no, plndp_no, mmny_prdt_yn, emp_dscnt_yn, order_mnfct_yn, dprc_except_yn, free_dlvy_yn, order_qty, prdt_normal_amt, prdt_sell_amt, optn_add_amt, sell_amt, emp_dscnt_rate, emp_amt, total_dscnt_amt, cpn_dscnt_amt, order_amt, vndr_cmsn_rate, afflts_order_no, afflts_order_prdt_no, sell_cncl_req_yn, sell_cncl_reqtr_no, sell_cncl_req_dtm, sell_cncl_rsn_code, sell_cncl_rsn_text, logis_cnvrt_req_dtm, logis_cnvrt_yn, logis_cnvrt_rsn_code, pickup_extsn_yn, order_prdt_stat_code, sales_dcsn_ymd, gender_gbn_code, insd_mgmt_info_text, buy_point_save_rate, delay_send_day, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{orderNo, jdbcType=VARCHAR}, #{orderPrdtSeq, jdbcType=TINYINT}, #{upOrderPrdtSeq, jdbcType=TINYINT}, #{prdtNo, jdbcType=VARCHAR}, #{prdtOptnNo, jdbcType=VARCHAR}, #{prdtName, jdbcType=VARCHAR}, #{engPrdtName, jdbcType=VARCHAR}, #{optnName, jdbcType=VARCHAR}, #{prdtTypeCode, jdbcType=VARCHAR}, #{styleInfo, jdbcType=VARCHAR}, #{prdtColorCode, jdbcType=VARCHAR}, #{rsvPrdtYn, jdbcType=CHAR}, #{vndrNo, jdbcType=VARCHAR}, #{vndrName, jdbcType=VARCHAR}, #{vndrPrdtNoText, jdbcType=VARCHAR}, #{brandNo, jdbcType=VARCHAR}, #{chnnlNo, jdbcType=VARCHAR}, #{stdCtgrNo, jdbcType=VARCHAR}, #{ctgrNo, jdbcType=VARCHAR}, #{eventNo, jdbcType=VARCHAR}, #{plndpNo, jdbcType=VARCHAR}, #{mmnyPrdtYn, jdbcType=CHAR}, #{empDscntYn, jdbcType=CHAR}, #{orderMnfctYn, jdbcType=CHAR}, #{dprcExceptYn, jdbcType=CHAR}, #{freeDlvyYn, jdbcType=CHAR}, #{orderQty, jdbcType=INTEGER}, #{prdtNormalAmt, jdbcType=INTEGER}, #{prdtSellAmt, jdbcType=INTEGER}, #{optnAddAmt, jdbcType=INTEGER}, #{sellAmt, jdbcType=INTEGER}, #{empDscntRate, jdbcType=TINYINT}, #{empAmt, jdbcType=INTEGER}, #{totalDscntAmt, jdbcType=INTEGER}, #{cpnDscntAmt, jdbcType=INTEGER}, #{orderAmt, jdbcType=INTEGER}, #{vndrCmsnRate, jdbcType=TINYINT}, #{affltsOrderNo, jdbcType=VARCHAR}, #{affltsOrderPrdtNo, jdbcType=VARCHAR}, #{sellCnclReqYn, jdbcType=CHAR}, #{sellCnclReqtrNo, jdbcType=TINYINT}, <choose><when test="sellCnclReqDtm != null">#{sellCnclReqDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{sellCnclRsnCode, jdbcType=VARCHAR}, #{sellCnclRsnText, jdbcType=VARCHAR}, <choose><when test="logisCnvrtReqDtm != null">#{logisCnvrtReqDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{logisCnvrtYn, jdbcType=CHAR}, #{logisCnvrtRsnCode, jdbcType=VARCHAR}, #{pickupExtsnYn, jdbcType=CHAR}, #{orderPrdtStatCode, jdbcType=VARCHAR}, <choose><when test="salesDcsnYmd != null">#{salesDcsnYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, #{genderGbnCode, jdbcType=VARCHAR}, #{insdMgmtInfoText, jdbcType=VARCHAR}, #{buyPointSaveRate, jdbcType=TINYINT}, <choose><when test="delaySendDay != null">#{delaySendDay, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.order.model.master.OcOrderProduct">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderProductDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE OC_ORDER_PRODUCT
+		<set> 
+			<if test="orderNo != null"> 
+				order_no = #{orderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="upOrderPrdtSeq != null"> 
+				up_order_prdt_seq = #{upOrderPrdtSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="prdtNo != null"> 
+				prdt_no = #{prdtNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtOptnNo != null"> 
+				prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtName != null"> 
+				prdt_name = #{prdtName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="engPrdtName != null"> 
+				eng_prdt_name = #{engPrdtName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="optnName != null"> 
+				optn_name = #{optnName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtTypeCode != null"> 
+				prdt_type_code = #{prdtTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="styleInfo != null"> 
+				style_info = #{styleInfo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtColorCode != null"> 
+				prdt_color_code = #{prdtColorCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rsvPrdtYn != null"> 
+				rsv_prdt_yn = #{rsvPrdtYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="vndrNo != null"> 
+				vndr_no = #{vndrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="vndrName != null"> 
+				vndr_name = #{vndrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="vndrPrdtNoText != null"> 
+				vndr_prdt_no_text = #{vndrPrdtNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="brandNo != null"> 
+				brand_no = #{brandNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="chnnlNo != null"> 
+				chnnl_no = #{chnnlNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="stdCtgrNo != null"> 
+				std_ctgr_no = #{stdCtgrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="ctgrNo != null"> 
+				ctgr_no = #{ctgrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="eventNo != null"> 
+				event_no = #{eventNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="plndpNo != null"> 
+				plndp_no = #{plndpNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mmnyPrdtYn != null"> 
+				mmny_prdt_yn = #{mmnyPrdtYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="empDscntYn != null"> 
+				emp_dscnt_yn = #{empDscntYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="orderMnfctYn != null"> 
+				order_mnfct_yn = #{orderMnfctYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="dprcExceptYn != null"> 
+				dprc_except_yn = #{dprcExceptYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="freeDlvyYn != null"> 
+				free_dlvy_yn = #{freeDlvyYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="orderQty != null"> 
+				order_qty = #{orderQty, jdbcType=INTEGER}, 
+			</if> 
+			<if test="prdtNormalAmt != null"> 
+				prdt_normal_amt = #{prdtNormalAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="prdtSellAmt != null"> 
+				prdt_sell_amt = #{prdtSellAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="optnAddAmt != null"> 
+				optn_add_amt = #{optnAddAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="sellAmt != null"> 
+				sell_amt = #{sellAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="empDscntRate != null"> 
+				emp_dscnt_rate = #{empDscntRate, jdbcType=TINYINT}, 
+			</if> 
+			<if test="empAmt != null"> 
+				emp_amt = #{empAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="totalDscntAmt != null"> 
+				total_dscnt_amt = #{totalDscntAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="cpnDscntAmt != null"> 
+				cpn_dscnt_amt = #{cpnDscntAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="orderAmt != null"> 
+				order_amt = #{orderAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="vndrCmsnRate != null"> 
+				vndr_cmsn_rate = #{vndrCmsnRate, jdbcType=TINYINT}, 
+			</if> 
+			<if test="affltsOrderNo != null"> 
+				afflts_order_no = #{affltsOrderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="affltsOrderPrdtNo != null"> 
+				afflts_order_prdt_no = #{affltsOrderPrdtNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="sellCnclReqYn != null"> 
+				sell_cncl_req_yn = #{sellCnclReqYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="sellCnclReqtrNo != null"> 
+				sell_cncl_reqtr_no = #{sellCnclReqtrNo, jdbcType=TINYINT}, 
+			</if> 
+			<if test="sellCnclReqDtm != null"> 
+				sell_cncl_req_dtm = #{sellCnclReqDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="sellCnclRsnCode != null"> 
+				sell_cncl_rsn_code = #{sellCnclRsnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="sellCnclRsnText != null"> 
+				sell_cncl_rsn_text = #{sellCnclRsnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="logisCnvrtReqDtm != null"> 
+				logis_cnvrt_req_dtm = #{logisCnvrtReqDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="logisCnvrtYn != null"> 
+				logis_cnvrt_yn = #{logisCnvrtYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="logisCnvrtRsnCode != null"> 
+				logis_cnvrt_rsn_code = #{logisCnvrtRsnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pickupExtsnYn != null"> 
+				pickup_extsn_yn = #{pickupExtsnYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="orderPrdtStatCode != null"> 
+				order_prdt_stat_code = #{orderPrdtStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="salesDcsnYmd != null"> 
+				sales_dcsn_ymd = #{salesDcsnYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="genderGbnCode != null"> 
+				gender_gbn_code = #{genderGbnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="insdMgmtInfoText != null"> 
+				insd_mgmt_info_text = #{insdMgmtInfoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyPointSaveRate != null"> 
+				buy_point_save_rate = #{buyPointSaveRate, jdbcType=TINYINT}, 
+			</if> 
+			<if test="delaySendDay != null"> 
+				delay_send_day = #{delaySendDay, jdbcType=DATE}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 order_no = #{orderNo, jdbcType=VARCHAR} AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.order.model.master.OcOrderProduct">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderProductDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM OC_ORDER_PRODUCT
+		WHERE 
+			 order_no = #{orderNo, jdbcType=VARCHAR} AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}  
+    </delete>
+</mapper>

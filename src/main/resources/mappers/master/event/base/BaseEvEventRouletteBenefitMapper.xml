@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.event.repository.master.EvEventRouletteBenefitDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	event_no, event_rulet_benefit_seq, benefit_name, benefit_gbn_code, benefit_value, image_name, image_path_text, image_url, altrn_text, issue_limit_count, issue_count, win_rate_code, win_rate_value, win_rate
+    </sql>
+    
+    <sql id="pk-columns">
+    	event_no = #{eventNo, jdbcType=VARCHAR} AND event_rulet_benefit_seq = #{eventRuletBenefitSeq, jdbcType=TINYINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.event.model.master.EvEventRouletteBenefit" resultType="kr.co.shop.web.event.model.master.EvEventRouletteBenefit">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventRouletteBenefitDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			ev_event_roulette_benefit
+		<where> 
+			<if test="eventNo != null"> 
+				 event_no = #{eventNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="eventRuletBenefitSeq != null"> 
+				 AND event_rulet_benefit_seq = #{eventRuletBenefitSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="benefitName != null"> 
+				 AND benefit_name = #{benefitName, jdbcType=VARCHAR}
+			</if> 
+			<if test="benefitGbnCode != null"> 
+				 AND benefit_gbn_code = #{benefitGbnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="benefitValue != null"> 
+				 AND benefit_value = #{benefitValue, jdbcType=VARCHAR}
+			</if> 
+			<if test="imageName != null"> 
+				 AND image_name = #{imageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="imagePathText != null"> 
+				 AND image_path_text = #{imagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="imageUrl != null"> 
+				 AND image_url = #{imageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="altrnText != null"> 
+				 AND altrn_text = #{altrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="issueLimitCount != null"> 
+				 AND issue_limit_count = #{issueLimitCount, jdbcType=INTEGER}
+			</if> 
+			<if test="issueCount != null"> 
+				 AND issue_count = #{issueCount, jdbcType=INTEGER}
+			</if> 
+			<if test="winRateCode != null"> 
+				 AND win_rate_code = #{winRateCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="winRateValue != null"> 
+				 AND win_rate_value = #{winRateValue, jdbcType=TINYINT}
+			</if> 
+			<if test="winRate != null"> 
+				 AND win_rate = #{winRate, jdbcType=TINYINT}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.event.model.master.EvEventRouletteBenefit">	
+
+     /*+ kr.co.shop.web.event.repository.master.EvEventRouletteBenefitDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO ev_event_roulette_benefit
+			 ( event_no, event_rulet_benefit_seq, benefit_name, benefit_gbn_code, benefit_value, image_name, image_path_text, image_url, altrn_text, issue_limit_count, issue_count, win_rate_code, win_rate_value, win_rate ) 
+
+		VALUES 
+			 ( #{eventNo, jdbcType=VARCHAR}, #{eventRuletBenefitSeq, jdbcType=TINYINT}, #{benefitName, jdbcType=VARCHAR}, #{benefitGbnCode, jdbcType=VARCHAR}, #{benefitValue, jdbcType=VARCHAR}, #{imageName, jdbcType=VARCHAR}, #{imagePathText, jdbcType=VARCHAR}, #{imageUrl, jdbcType=VARCHAR}, #{altrnText, jdbcType=VARCHAR}, #{issueLimitCount, jdbcType=INTEGER}, #{issueCount, jdbcType=INTEGER}, #{winRateCode, jdbcType=VARCHAR}, #{winRateValue, jdbcType=TINYINT}, #{winRate, jdbcType=TINYINT} )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.event.model.master.EvEventRouletteBenefit">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventRouletteBenefitDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE ev_event_roulette_benefit
+		<set> 
+			<if test="eventNo != null"> 
+				event_no = #{eventNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="eventRuletBenefitSeq != null"> 
+				event_rulet_benefit_seq = #{eventRuletBenefitSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="benefitName != null"> 
+				benefit_name = #{benefitName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="benefitGbnCode != null"> 
+				benefit_gbn_code = #{benefitGbnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="benefitValue != null"> 
+				benefit_value = #{benefitValue, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="imageName != null"> 
+				image_name = #{imageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="imagePathText != null"> 
+				image_path_text = #{imagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="imageUrl != null"> 
+				image_url = #{imageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="altrnText != null"> 
+				altrn_text = #{altrnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="issueLimitCount != null"> 
+				issue_limit_count = #{issueLimitCount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="issueCount != null"> 
+				issue_count = #{issueCount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="winRateCode != null"> 
+				win_rate_code = #{winRateCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="winRateValue != null"> 
+				win_rate_value = #{winRateValue, jdbcType=TINYINT}, 
+			</if> 
+			<if test="winRate != null"> 
+				win_rate = #{winRate, jdbcType=TINYINT}, 
+			</if> 
+		</set> 
+		WHERE 
+			 event_no = #{eventNo, jdbcType=VARCHAR} AND event_rulet_benefit_seq = #{eventRuletBenefitSeq, jdbcType=TINYINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.event.model.master.EvEventRouletteBenefit">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventRouletteBenefitDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM ev_event_roulette_benefit
+		WHERE 
+			 event_no = #{eventNo, jdbcType=VARCHAR} AND event_rulet_benefit_seq = #{eventRuletBenefitSeq, jdbcType=TINYINT}  
+    </delete>
+</mapper>

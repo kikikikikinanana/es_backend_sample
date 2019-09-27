@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.DpBrandStyleDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.product.model.master.DpBrandStyle">
+     /*+ kr.co.shop.web.product.repository.master.DpBrandStyleDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			dp_brand_style
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    
+	<select id="getBrandStyleList" parameterType="kr.co.shop.web.product.model.master.DpBrandStyle" resultType="kr.co.shop.web.product.model.master.DpBrandStyle">
+	/*+ kr.co.shop.bo.product.repository.master.DpBrandStyleDao.getBrandStyleList [브랜드 스타일 리스트 조회 쿼리] [백인천] */
+    	SELECT
+    		<include refid="select-columns-alias-a" />,
+    		<include refid="select-columns-subquery" />
+    	FROM
+    		dp_brand_style A
+    	WHERE
+    		A.disp_yn = 'Y'
+			<if test="brandNo != null"> 
+				AND A.brand_no = #{brandNo, jdbcType=VARCHAR} 
+			</if>
+		ORDER BY
+			A.sort_seq ASC
+    </select>
+    
+    <select id="getBrandCategoryList" parameterType="kr.co.shop.web.product.model.master.DpBrandStyle" resultType="kr.co.shop.web.product.model.master.DpBrandStyle">
+	/*+ kr.co.shop.bo.product.repository.master.DpBrandStyleDao.getBrandCategoryList [브랜드 카테고리 리스트 조회 쿼리] [백인천] */
+		WITH CTGR_CTE (
+		   CTGR_NO, UP_CTGR_NO, CTGR_NAME, LEAF_CTGR_YN, CTGR_LEVEL_
+		   , STD_CTGR_NO, SORT, CTGR_NAME_PATH, CTGR_NO_PATH, LEVEL_
+		)
+		AS (SELECT A.CTGR_NO, 
+		           A.UP_CTGR_NO, 
+		           A.CTGR_NAME, 
+		           A.LEAF_CTGR_YN, 
+		           A.CTGR_LEVEL, 
+		           A.STD_CTGR_NO, 
+		           TO_CHAR(LPAD(TO_CHAR(A.SORT_SEQ), 4, '0')) SORT,
+		           A.CTGR_NAME CTGR_NAME_PATH,
+		           A.CTGR_NO CTGR_NO_PATH,
+		           A.CTGR_LEVEL AS LEVEL_
+		      FROM DP_CATEGORY A
+		     WHERE A.UP_CTGR_NO IS NULL OR A.UP_CTGR_NO = ''
+		     		AND A.site_no = '10001'
+					AND A.chnnl_no = '10003'
+					AND A.use_yn = 'Y'
+					AND A.disp_yn = 'Y'
+		     UNION ALL
+		    SELECT B.CTGR_NO, 
+		           B.UP_CTGR_NO, 
+		           B.CTGR_NAME, 
+		           B.LEAF_CTGR_YN, 
+		           B.CTGR_LEVEL, 
+		           B.STD_CTGR_NO, 
+		           C.SORT || '>' || LPAD(TO_CHAR(B.SORT_SEQ), 4, '0') SORT,
+		           C.CTGR_NAME_PATH || '>' ||  B.CTGR_NAME CTGR_NAME_PATH,
+		           C.CTGR_NO_PATH || '>' ||  B.CTGR_NO CTGR_NO_PATH,
+		           B.CTGR_LEVEL AS LEVEL_
+		      FROM DP_CATEGORY B, CTGR_CTE C
+		     WHERE B.UP_CTGR_NO = C.CTGR_NO
+					AND B.site_no = '10001'
+					AND B.chnnl_no = '10003'
+					AND B.use_yn = 'Y'
+					AND B.disp_yn = 'Y'
+		)
+		SELECT T.TOP_CTGR AS brand_no, T.TOP_CTGR_NAME AS brand_style_name, COUNT(T.TOP_CTGR) AS brandStyleCount
+		FROM (
+			SELECT SUBSTR(X.CTGR_NO_PATH, 1, 10) AS TOP_CTGR
+				, CASE 
+					<!-- WHEN PATINDEX('%>%', X.CTGR_NAME_PATH)-1 &gt; 0 THEN LEFT(X.CTGR_NAME_PATH, PATINDEX('%>%', X.CTGR_NAME_PATH)-1) 
+					WHEN PATINDEX('%>%', X.CTGR_NAME_PATH)-1 &lt; 1 THEN X.CTGR_NAME_PATH -->
+					WHEN INSTR(X.CTGR_NAME_PATH, '>')-1 &gt; 0 THEN SUBSTR(X.CTGR_NAME_PATH, 1, INSTR(X.CTGR_NAME_PATH, '>')-1) 
+					WHEN INSTR(X.CTGR_NAME_PATH, '>')-1 &lt; 1 THEN X.CTGR_NAME_PATH
+				END AS TOP_CTGR_NAME
+				, X.*
+			FROM DP_BRAND_STYLE_PRODUCT A
+				left outer join pd_product B ON A.PRDT_NO = B.PRDT_NO
+				left outer join CTGR_CTE X ON B.STDR_CTGR_NO = X.CTGR_NO
+			WHERE A.BRAND_NO = #{brandNo, jdbcType=VARCHAR}
+		) T
+		GROUP BY T.TOP_CTGR, T.TOP_CTGR_NAME
+    </select>
+    
+    <sql id="select-columns-alias-a">
+    	A.brand_no, A.brand_style_seq, A.brand_style_name, A.sort_seq, A.disp_yn, A.rgster_no, A.rgst_dtm, A.moder_no, A.mod_dtm
+    </sql>
+    
+    <sql id="select-columns-subquery">
+    	(SELECT count(brand_no)
+    	FROM dp_brand_style_product
+    	WHERE 1 = 1
+    		AND brand_no = A.brand_no
+    		AND brand_style_seq = A.brand_style_seq
+    	) AS brand_style_count
+    </sql>
+    
+</mapper>

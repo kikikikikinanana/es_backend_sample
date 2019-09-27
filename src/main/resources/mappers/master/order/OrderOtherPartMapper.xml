@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OrderOtherPartDao">
+
+	<select id="selectProgressOrderClmAsCount" parameterType="kr.co.shop.web.order.model.master.OcOrder" resultType="kr.co.shop.web.order.vo.OrderOtherPartVo">
+	
+		/*+ kr.co.shop.web.order.repository.master.OrderOtherPartDao.selectProgressOrderClmAsCount [최근 배송지 목록 조회] [이강수] */
+		
+		SELECT CC.CLAIM_CNT   -- 클레임 건수
+             , OC.ORDER_CNT   -- 주문건수
+             , AC.AS_CNT      -- AS 건수
+		  FROM (
+               SELECT  COUNT( OC.CLM_NO) CLAIM_CNT
+                 FROM OC_CLAIM OC
+                WHERE OC.MEMBER_NO = #{memberNo}
+				  AND OC.CLM_STAT_CODE NOT IN (
+							 '10002'  -- 취소접수철회
+							,'10007'  -- 교환접수취소
+							,'10008'  -- 교환접수철회
+							,'10016'  --교환완료
+							,'10017'  -- 교환불가
+							,'10019'  -- 반품접수취소
+							,'10020'   -- 반품접수철회
+							,'10027' -- 반품불가
+					  )
+          ) CC -- 클레임 건수
+        , (
+                SELECT COUNT(DISTINCT OC.ORDER_NO) AS ORDER_CNT
+                  FROM OC_ORDER OC
+                     , OC_ORDER_PRODUCT OOP
+				 WHERE OC.MEMBER_NO = #{memberNo}
+                   AND OC.ORDER_NO = OOP.ORDER_NO
+                   AND OC.ORDER_STAT_CODE  ='10002'
+                   AND OOP.ORDER_PRDT_STAT_CODE NOT IN (
+							 '10000'  -- 임시주문
+							,'10001'  --입금대기
+							,'10009' -- 취소접수
+							,'10010' -- 환수/환불접수
+							,'10011' --취소완료
+					   )
+          ) OC -- 주문건수
+        , (
+               SELECT COUNT(OAA.AS_ACCEPT_NO) AS AS_CNT
+                 FROM OC_AS_ACCEPT OAA
+                WHERE OAA.MEMBER_NO = #{memberNo}
+                  AND OAA.AS_STAT_CODE NOT IN (
+                             '10001'               --        자동접수취소
+                            ,'10002'       --      A/S접수철회
+                            ,'10011'       --      A/S완료
+                            ,'10012'       --      A/S불가
+                            )
+          ) AC -- AS건수
+	  
+	</select>
+	
+	<select id="selectOverDayYnAfterBuyDecision" parameterType="kr.co.shop.web.order.model.master.OcOrder" resultType="kr.co.shop.web.order.vo.OrderOtherPartVo">
+	
+		/*+ kr.co.shop.web.order.repository.master.OrderOtherPartDao.selectOverDayYnAfterBuyDecision [구매확정 후 30 진행 여부 유효성 검사] [방난기] */
+
+		SELECT 
+               OC.ORDER_NO
+             , OC.STORE_NAME  
+             , CASE WHEN ( OC.MEMBER_TYPE_CODE = '10001') THEN 'Y'
+                    ELSE 'N'
+                  END AS MEMBER_SHIP_YN						-- 멤버십회원 여부
+             , OC.BUY_DCSN_DTM								-- 구매확정일시
+             , CASE WHEN OC.BUY_DCSN_DTM IS NOT NULL AND SYSDATE <![CDATA[<]]> TO_DATE(OC.BUY_DCSN_DTM, 'YYYY-MM-DD' ) + 31  THEN 'N'
+					ELSE 'Y'
+				  END AS BUYDAY_OVERDAY					-- 30일경과 여부 NULL 경우는 경과로 처리
+             , OC.PYMNT_AMT								-- 결제 금액
+             , OC.ORDER_DTM								-- 주문일자
+             , OC.POINT_SAVE_YN							-- 포인트 적립여부
+             , OC.CRTFC_NO_TEXT                        	-- 인증번호
+          FROM OC_ORDER			OC	
+             , OC_ORDER_PRODUCT	OOP
+         WHERE OC.MEMBER_NO 		= #{memberNo}		-- 필수 
+           AND OC.ORDER_NO 			= #{orderNo}		-- 필수 
+           AND OC.ORDER_NO 			= OOP.ORDER_NO
+           AND OC.ORDER_STAT_CODE  	= '10002'			-- 주문상태코드 결제완료
+           AND OOP.ORDER_PRDT_STAT_CODE NOT IN (
+					 '10000'	-- 임시주문
+					,'10001'	--입금대기
+					,'10009'	-- 취소접수
+					,'10010'	-- 환수/환불접수
+					,'10011'	--취소완료
+			   )
+		FETCH FIRST 1 ROWS ONLY
+
+	</select>
+
+	<parameterMap id="paramMap" type="hashMap">
+		<parameter property="onOffType" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN" />
+		<parameter property="buyNoText" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN" />
+		<parameter property="crtfcNoText" javaType="java.lang.String" jdbcType="VARCHAR" mode="IN" />
+		<parameter property="output" javaType="java.lang.String" jdbcType="VARCHAR" mode="OUT" />
+	</parameterMap>
+	
+	<select id="callProcedureForDecodeOrderNum" statementType="CALLABLE" parameterMap="paramMap">
+		{ call PR_DECODE_ORDERNO_TEST (?, ?, ?, ?) }
+	</select>
+
+	<update id="updatePointSaveYn" parameterType="kr.co.shop.web.order.model.master.OcOrder">
+	/*+ kr.co.shop.web.order.repository.master.OrderOtherPartDao.updatePointSaveYn [포인트 적럽여부 update] [유성민] */
+		UPDATE OC_ORDER
+		   SET POINT_SAVE_YN = 'Y'
+			 , MODER_NO = #{moderNo, jdbcType=VARCHAR}
+		 WHERE ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+	</update>
+	
+	<select id="getOrderProductInfoList" parameterType="kr.co.shop.web.order.model.master.OcOrderProduct" resultType="kr.co.shop.web.order.model.master.OcOrderProduct">
+	/*+ kr.co.shop.web.order.repository.master.OrderOtherPartDao.getOrderProductInfoList [주문상품 조회] [유성민] */
+		SELECT ORDER_NO
+			 , ORDER_PRDT_SEQ
+			 , PRDT_NO
+			 , PRDT_OPTN_NO
+			 , VNDR_PRDT_NO_TEXT
+			 , MMNY_PRDT_YN
+			 , ORDER_PRDT_STAT_CODE
+		  FROM OC_ORDER_PRODUCT
+		 WHERE ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+	</select>
+	
+	
+	<select id="getOrderMemberPointExportList" parameterType="kr.co.shop.web.order.model.master.OcOrder" resultType="kr.co.shop.web.order.model.master.OcOrder">
+	/*+ kr.co.shop.web.order.repository.master.OrderOtherPartDao.getOrderMemberPointExportList [회원 - 포인트 사후적립] */
+		 SELECT 
+		     T.ORDER_NO  	AS ORDER_NO -- 주문번호
+		   , T.ORDER_DTM 	AS ORDER_DTM -- 주문일시
+		  , CASE 
+			  WHEN T.RANK_COUNT  > 1  
+			   THEN RTRIM(T.PRDT_NAME) || LTRIM('외 '|| TO_CHAR(T.RANK_COUNT))||'개' 
+			  ELSE  RTRIM(T.PRDT_NAME) 
+			END  			AS ORDER_PRDT_INFO 		--주문상품 정보
+		  , T.PYMNT_AMT  	AS PYMNT_AMT 		-- 결제금액
+		  , 0 				AS SAVE_POINT   		-- 적립포인트
+		  , T.ORDER_CANCEL_YN     AS ORDER_CANCEL_YN		--취소여부
+		  , T.SAVEPOINTDTM  AS SAVEPOINT_DTM 	--적립일시
+		 FROM (
+			  SELECT  OC.ORDER_NO  -- 주문번호
+					, OC.ORDER_DTM  --주문일자
+					, OC.BUY_DCSN_DTM --구매확정일자
+					, OC.PYMNT_AMT  -- 결제금액
+					, OOP.BUY_POINT_SAVE_RATE -- 구매포인트 적립율
+					, OOP.PRDT_NAME
+					 , RANK()OVER( PARTITION BY OOP.ORDER_NO  ORDER BY  OOP.ORDER_NO , OOP.ORDER_PRDT_SEQ  DESC ) AS RANK_SEQ 
+					 , COUNT(OC.ORDER_NO) OVER( PARTITION BY OOP.ORDER_NO   ) AS RANK_COUNT
+					 , CASE 
+					 	WHEN OC.CNCL_AMT  > 0  THEN 'Y' 
+						ELSE  'N'
+					   END 						AS ORDER_CANCEL_YN 			--취소 여부
+				     , SYSDATE AS SAVEPOINTDTM
+			  FROM OC_ORDER OC
+			     ,OC_ORDER_PRODUCT OOP
+				WHERE OC.ORDER_NO = OOP.ORDER_NO
+				 AND OOP.PRDT_TYPE_CODE != '10004'	-- 배송비 제외 
+				-- AND OOP.ORDER_PRDT_STAT_CODE ='10008'  --구매확정
+				 AND OC.BUY_DCSN_DTM  IS NOT NULL
+				-- AND  SYSDATE BETWEEN  OC.BUY_DCSN_DTM  AND  OC.BUY_DCSN_DTM + 30   -- 구매확정일부터 30일 기준
+				 
+				 <if test="memberTypeCode == '10000' and @kr.co.shop.common.util.UtilsText@isNotBlank(memberTypeCode)">
+				  -- 온라인 회원
+				 AND OC.MEMBER_TYPE_CODE ='10000'
+				 AND OC.MEMBER_NO =  #{memberNo, jdbcType=VARCHAR}    -- 회원 번호
+				 </if>
+				 
+				 <if test="memberTypeCode == '10002' and @kr.co.shop.common.util.UtilsText@isNotBlank(memberTypeCode)">
+				  -- 비회원
+				 AND OC.MEMBER_TYPE_CODE ='10002
+				 AND OC.ORDER_NO = #{orderNo, jdbcType=VARCHAR}  -- 비회원 주문번호 필수
+				 	<if test="crtfcNoText != null and @kr.co.shop.common.util.UtilsText@isNotBlank(crtfcNoText)">
+				 	AND OC.CRTFC_NO_TEXT = #{crtfcNoText, jdbcType=VARCHAR}  -- 비회원 인증 번호 선택
+				 	</if>
+				 	<if test="orderDtm != null and @kr.co.shop.common.util.UtilsText@isNotBlank(orderDtm)">
+				 	AND OC.ORDER_DTM =  TO_DATE(#{orderDtm}, 'YYYY-MM-DD')  -- 비회원 주문일자
+				 	</if> 
+				 </if>
+			) T WHERE RANK_SEQ =1
+	</select>
+
+
+
+<select id="selectOrderProductBuyConfirm" parameterType="kr.co.shop.web.order.model.master.OcOrderProduct" resultType="kr.co.shop.web.order.model.master.OcOrderProduct">
+	/*+ kr.co.shop.web.order.repository.master.OrderOtherPartDao.selectOrderProductBuyConfirm [상품 - 구매확정] [NKB] */
+		  SELECT
+		          OOP.ORDER_NO					-- 주문번호                               
+				, OOP.ORDER_PRDT_SEQ			-- 주문상품순번                        
+				, OOP.UP_ORDER_PRDT_SEQ		-- 상위주문상품순번                  
+				, OOP.PRDT_NO						-- 상품번호                               
+				, OOP.PRDT_OPTN_NO				-- 상품옵션번호                        
+				, OOP.PRDT_NAME					-- 상품명                                  
+				, OOP.ENG_PRDT_NAME				-- 영문상품명                            
+				, OOP.OPTN_NAME					 -- 옵션명                                  
+				, OOP.PRDT_TYPE_CODE			-- 상품유형코드                        
+				, OOP.STYLE_INFO					-- 스타일정보                            
+				, OOP.PRDT_COLOR_CODE			-- 상품색상코드                        
+				, OOP.RSV_PRDT_YN				-- 예약상품여부                        
+				, OOP.VNDR_NO						 -- 업체번호                               
+				, OOP.VNDR_NAME					 -- 업체명                                  
+				, OOP.VNDR_PRDT_NO_TEXT		-- 업체상품번호                        
+				, OOP.BRAND_NO					-- 브랜드번호                            
+				, OOP.CHNNL_NO					-- 채널번호                               
+				, OOP.STD_CTGR_NO				 -- 표준카테고리번호                  
+				, OOP.CTGR_NO						-- 카테고리번호                        
+				, OOP.EVENT_NO					-- 이벤트번호                            
+				, OOP.PLNDP_NO					 -- 기획전번호                            
+				, OOP.MMNY_PRDT_YN				 -- 자사상품여부                        
+				, OOP.EMP_DSCNT_YN				 -- 임직원할인여부                     
+				, OOP.ORDER_MNFCT_YN			-- 주문제작여부                        
+				, OOP.DPRC_EXCEPT_YN			 -- 감가제외여부                        
+				, OOP.FREE_DLVY_YN				 -- 무료배송여부                        
+				, OOP.ORDER_QTY					 -- 주문수량                               
+				, OOP.PRDT_NORMAL_AMT			 -- 상품정상가                            
+				, OOP.PRDT_SELL_AMT				 -- 상품판매가                            
+				, OOP.OPTN_ADD_AMT				 -- 옵션추가금액                        
+				, OOP.SELL_AMT					-- 판매가                                  
+				, OOP.EMP_DSCNT_RATE			 -- 임직원할인율                        
+				, OOP.EMP_AMT					-- 임직원가                               
+				, OOP.TOTAL_DSCNT_AMT			-- 할인금액합계                        
+				, OOP.CPN_DSCNT_AMT				-- 쿠폰할인금액                        
+				, OOP.ORDER_AMT					-- 주문금액                               
+				, OOP.VNDR_CMSN_RATE			-- 업체수수료율                        
+				, OOP.AFFLTS_ORDER_NO			-- 제휴사주문번호                     
+				, OOP.AFFLTS_ORDER_PRDT_NO	-- 제휴사주문상품번호               
+				, OOP.SELL_CNCL_REQ_YN			 -- 판매취소요청여부                  
+				, OOP.SELL_CNCL_REQTR_NO		-- 판매취소요청자번호               
+				, OOP.SELL_CNCL_REQ_DTM		-- 판매취소요청일                     
+				, OOP.SELL_CNCL_RSN_CODE		-- 판매취소사유코드                  
+				, OOP.SELL_CNCL_RSN_TEXT		-- 판매취소사유                        
+				, OOP.LOGIS_CNVRT_REQ_DTM		-- 택배전환신청일                     
+				, OOP.LOGIS_CNVRT_YN			-- 택배전환여부                        
+				, OOP.LOGIS_CNVRT_RSN_CODE	-- 택배전환사유코드                  
+				, OOP.PICKUP_EXTSN_YN			-- 픽업연장여부                        
+				, OOP.ORDER_PRDT_STAT_CODE	-- 주문상품상태코드                  
+				, OOP.SALES_DCSN_YMD			-- 매출확정일자                        
+				, OOP.GENDER_GBN_CODE			 -- 성별구분코드                        
+				, OOP.INSD_MGMT_INFO_TEXT		-- 내부관리정보                        
+				, OOP.BUY_POINT_SAVE_RATE		 -- 구매포인트적립율                  
+				, OOP.DELAY_SEND_DAY			-- 지연발송일                            
+		  FROM OC_ORDER OC 
+		      , OC_ORDER_PRODUCT OOP
+		 WHERE OC.ORDER_NO = OOP.ORDER_NO
+		 <if test="orderNo != null and @kr.co.shop.common.util.UtilsText@isNotBlank(orderNo)">
+		 AND OC.ORDER_NO=  #{orderNo, jdbcType=VARCHAR}   --주문번호
+		 </if>		 
+		 AND OC.MEMBER_NO =  #{memberNo, jdbcType=VARCHAR} -- 회원번호
+		 AND OOP.PRDT_NO = #{prdtNo, jdbcType=VARCHAR} -- 상품번호
+		 AND OOP.ORDER_PRDT_STAT_CODE ='10008' 			-- 구매확정
+		  AND not EXISTS (
+							SELECT 1 FROM BD_PRODUCT_REVIEW BPR WHERE BPR.ORDER_NO = OOP.ORDER_NO 
+							AND BPR.ORDER_PRDT_SEQ = OOP.ORDER_PRDT_SEQ 
+							AND BPR.PRDT_NO = #{prdtNo, jdbcType=VARCHAR} -- 상품번호
+						 )
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	
+	<select id="selectOrderProductQnaTarget" parameterType="kr.co.shop.web.order.model.master.OcOrderProduct" resultType="kr.co.shop.web.product.model.master.BdProductReview">
+		/*+ kr.co.shop.web.order.repository.master.OrderOtherPartDao.selectOrderProductQnaTarget [상품 - 구매확정 Q/A대상 기준] [NKB] */
+		SELECT *
+		FROM (
+			 SELECT 
+			        'Y' AS ONLN_BUY_YN
+			        , OC.ORDER_NO
+					, OC.SITE_NO
+					, OOP.CHNNL_NO
+					, OOP.ORDER_PRDT_SEQ
+					, '' AS SAFE_KEY  				--안심키
+					, '' AS SAFE_KEY_SEQ 	 		-- 안심키순번
+					, TO_CHAR(OC.ORDER_DTM, 'YYYYMMDD')  AS SALE_DATE 	--판매일자
+					, '' AS STORE_CD 				--매장코드
+					, '' AS POS_NO
+					, '' AS DEAL_NO
+					, OOP.PRDT_NO   AS PRODUCT_CD
+					, '' AS SIZE_CD
+			  FROM OC_ORDER OC 
+			      , OC_ORDER_PRODUCT OOP
+			 WHERE OC.ORDER_NO = OOP.ORDER_NO
+			  	<!-- AND OC.ORDER_NO	= #{orderNo, jdbcType=VARCHAR}     주문번호 -->
+			 	AND OC.MEMBER_NO 	= #{memberNo, jdbcType=VARCHAR}  	-- 회원번호
+			  	AND OOP.PRDT_NO 	= #{prdtNo, jdbcType=VARCHAR} 		-- 상품번호
+			   <if test="prdtOptnNo != null and @kr.co.shop.common.util.UtilsText@isNotBlank(prdtOptnNo)">
+				AND OOP.PRDT_OPTN_NO = #{prdtOptnNo, jdbcType=VARCHAR} 	-- 옵션번호
+				</if>	
+			 	AND OOP.ORDER_PRDT_STAT_CODE ='10008' 						-- 구매확정
+			 	AND not EXISTS (
+								SELECT 1 FROM BD_PRODUCT_REVIEW BPR where BPR.ORDER_NO = OOP.ORDER_NO 
+								AND BPR.ORDER_PRDT_SEQ = OOP.ORDER_PRDT_SEQ  
+								AND BPR.PRDT_NO = #{prdtNo, jdbcType=VARCHAR} 	
+							 )
+			 FETCH FIRST 1 ROWS ONLY
+		 )
+		UNION ALL
+		SELECT *
+		FROM (
+			SELECT    'N' AS ONLN_BUY_YN
+					, 'N'   AS ORDER_NO
+					, 'N'   AS  SITE_NO
+					, 'N'   AS CHNNL_NO
+					, 0   AS ORDER_PRDT_SEQ
+					, IODH.SAFE_KEY  		-- 안심키
+					, IODH.SAFE_KEY_SEQ  	-- 안심키순번
+					, IODH.SALE_DATE 		-- 판매일자
+					, IODH.STORE_CD 		-- 매장코드
+					, IODH.POS_NO
+					, IODH.DEAL_NO
+					, IODH.PRODUCT_CD
+					, IODH.SIZE_CD
+			FROM IF_OFF_DEAL_HISTORY IODH
+			WHERE IODH.SAFE_KEY = #{safeKey, jdbcType=VARCHAR}   -- 안심키
+				AND IODH.PRODUCT_CD = #{prdtNo, jdbcType=VARCHAR} -- 상품번호
+				<if test="prdtOptnNo != null and @kr.co.shop.common.util.UtilsText@isNotBlank(prdtOptnNo)">
+				AND IODH.SIZE_CD 	= #{prdtOptnNo, jdbcType=VARCHAR} -- 옵션번호
+				</if>
+			 	AND not EXISTS (
+								SELECT 1 FROM BD_PRODUCT_REVIEW BPR where BPR.SAFE_KEY = IODH.SAFE_KEY 
+									AND BPR.SAFE_KEY_SEQ = IODH.SAFE_KEY_SEQ  
+									AND BPR.PRDT_NO = #{prdtNo, jdbcType=VARCHAR}
+						 	)
+			FETCH FIRST 1 ROWS ONLY
+		)
+	</select>
+</mapper>

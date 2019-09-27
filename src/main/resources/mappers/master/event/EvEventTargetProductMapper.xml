@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.event.repository.master.EvEventTargetProductDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.event.model.master.EvEventTargetProduct">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventTargetProductDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			ev_event_target_product
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectDrawTargetProduct" parameterType="kr.co.shop.web.event.model.master.EvEventTargetProduct" resultType="kr.co.shop.web.event.model.master.EvEventTargetProduct">
+    /*+ kr.co.shop.web.event.repository.master.EvEventTargetProductDao.selectDrawTargetProduct [런칭캘린더 대상 상품 top1 조회 쿼리] [이지훈] */
+    SELECT
+		PP.PRDT_NO
+		,PP.PRDT_NAME
+		,PP.ENG_PRDT_NAME
+		,PP.RSV_DLVY_YMD
+		,PP.SELL_START_DTM
+		,EETP.EVENT_NO
+		,FN_BRAND_NAME(PP.BRAND_NO) AS BRAND_NAME
+		,FN_PRDT_PROMO_PRICE(PP.PRDT_NO) AS SELL_AMT
+		,PDRF.IMAGE_URL
+		,CASE
+			WHEN TO_DATE(TO_CHAR(PP.SELL_START_DTM, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') <![CDATA[>=]]> SYSDATE AND EETP.EVENT_NO IS NULL THEN 'PLAN_PRDT'
+			WHEN TO_DATE(TO_CHAR(PP.SELL_START_DTM, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') <![CDATA[>=]]> SYSDATE AND EETP.EVENT_NO IS NOT NULL THEN 'DRAW_PRDT'
+			ELSE 'ING_PRDT'
+		END AS BANNER_STATUS
+	FROM PD_PRODUCT PP
+	LEFT OUTER JOIN PD_PRODUCT_RELATION_FILE PDRF
+						ON PP.PRDT_NO = PDRF.PRDT_NO
+					  AND PDRF.PRDT_RLTN_FILE_SEQ = 1 
+	LEFT OUTER JOIN EV_EVENT_TARGET_PRODUCT EETP
+ 				ON PP.PRDT_NO = EETP.PRDT_NO
+	WHERE PP.USE_YN = 'Y'
+		AND PP.DISP_YN = 'Y'
+  		<!-- AND CONVERT(DATETIME, PP.SELL_START_DTM) <![CDATA[>=]]> SYSDATE -->
+  		<!-- <if test='prdtNo != null and prdtNo != "" '>
+  			AND PP.PRDT_NO = #{prdtNo, jdbcType=VARCHAR}
+  		</if> -->
+  		
+  		AND PP.PRDT_NO = '2000000045'<!-- 임시  -->
+	ORDER BY PP.SELL_START_DTM ASC
+	FETCH FIRST 1 ROWS ONLY
+    </select>
+    
+    <select id="selectDrawTargetProductListByEventNo" parameterType="kr.co.shop.web.event.model.master.EvEventTargetProduct" resultType="kr.co.shop.web.event.model.master.EvEventTargetProduct">
+    /*+ kr.co.shop.web.event.repository.master.EvEventTargetProductDao.selectDrawTargetProductListByEventNo [이벤트 상세(드로우 대상 상품 리스트 조회 쿼리)] [이지훈] */
+    SELECT
+		PP.PRDT_NO
+		,PP.PRDT_NAME
+		,PP.ENG_PRDT_NAME
+		,PP.RSV_DLVY_YMD
+		,PP.SELL_START_DTM
+		,EETP.EVENT_NO
+		,FN_BRAND_NAME(PP.BRAND_NO) AS BRAND_NAME
+		,FN_PRDT_PROMO_PRICE(PP.PRDT_NO) AS SELL_AMT
+		,PDRF.IMAGE_URL
+	FROM EV_EVENT_TARGET_PRODUCT EETP
+	INNER JOIN PD_PRODUCT PP 
+ 				ON PP.PRDT_NO = EETP.PRDT_NO
+	LEFT OUTER JOIN PD_PRODUCT_RELATION_FILE PDRF
+						ON PP.PRDT_NO = PDRF.PRDT_NO
+					  AND PDRF.PRDT_RLTN_FILE_SEQ = 1 
+	WHERE EETP.EVENT_NO = #{eventNo, jdbcType=VARCHAR}
+		AND PP.USE_YN = 'Y'
+		AND PP.DISP_YN = 'Y'
+  		<!-- AND CONVERT(DATETIME, PP.SELL_START_DTM) <![CDATA[>=]]> SYSDATE -->
+  		<!-- <if test='prdtNo != null and prdtNo != "" '>
+  			AND PP.PRDT_NO = #{prdtNo, jdbcType=VARCHAR}
+  		</if> -->
+	ORDER BY EETP.SORT_SEQ ASC
+    </select>
+
+</mapper>

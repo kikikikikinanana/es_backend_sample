@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.member.repository.master.MbMemberGiftCardDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			MB_MEMBER_GIFT_CARD
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectGiftcardInfo" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard" resultType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.selectGiftcardInfo [my기프트카드  조회 쿼리] [유상욱] */
+    
+    	SELECT 
+			<include refid="select-columns" />
+		FROM 
+			MB_MEMBER_GIFT_CARD
+		WHERE 
+			1=1
+			<if test="memberNo != null"> 
+				 AND MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+			</if>
+			<if test="cardNoText != null"> 
+				 AND CARD_NO_TEXT = #{cardNoText, jdbcType=VARCHAR}
+			</if>
+			AND DEL_YN = 'N'
+    </select>
+    
+    <insert id="registGiftCard" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.registGiftCard [my기프트카드 저장 쿼리] [유상욱] */
+    
+    	INSERT INTO MB_MEMBER_GIFT_CARD
+			 ( 
+				 MEMBER_NO
+				 , GIFT_CARD_SEQ
+				 , GIFT_CARD_NO
+				 , GIFT_CARD_NAME
+				 , CARD_NO_TEXT
+				 , CARD_PIN_NO_TEXT
+				 , CARD_AMT
+				 , RPRSNT_CARD_YN
+				 , DEL_YN
+				 , RGST_DTM
+			 ) 
+
+		VALUES 
+			 ( 
+			 	#{memberNo, jdbcType=VARCHAR}
+			 	, #{giftCardSeq, jdbcType=INTEGER}
+			 	, #{giftCardNo, jdbcType=VARCHAR}
+			 	, #{giftCardName, jdbcType=VARCHAR}
+			 	, #{cardNoText, jdbcType=VARCHAR}
+			 	, #{cardPinNoText, jdbcType=VARCHAR}
+			 	, #{cardAmt, jdbcType=INTEGER}
+			 	, #{rprsntCardYn, jdbcType=CHAR}
+			 	, #{delYn, jdbcType=CHAR}
+			 	, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>SYSDATE</otherwise></choose>
+		 	)
+    </insert>
+    
+    <update id="updateGiftCard" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.updateGiftCard [my기프트카드 update 쿼리] [유상욱] */
+    
+		UPDATE MB_MEMBER_GIFT_CARD
+		<set> 
+			<if test="giftCardNo != null"> 
+				GIFT_CARD_NO = #{giftCardNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="giftCardName != null"> 
+				GIFT_CARD_NAME = #{giftCardName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cardNoText != null"> 
+				CARD_NO_TEXT = #{cardNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cardPinNoText != null"> 
+				CARD_PIN_NO_TEXT = #{cardPinNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cardAmt != null"> 
+				CARD_AMT = #{cardAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="rprsntCardYn != null"> 
+				RPRSNT_CARD_YN = #{rprsntCardYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="delYn != null"> 
+				DEL_YN = #{delYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="delDtm != null"> 
+				DEL_DTM = #{delDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="modDtm != null"> 
+				MOD_DTM = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 GIFT_CARD_SEQ = #{giftCardSeq, jdbcType=INTEGER} AND MEMBER_NO = #{memberNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <select id="selectGiftCardNo" parameterType="String" resultType="String">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.selectGiftCardNo [기프트카드 번호 조회 쿼리] [YSW] */
+    
+    	SELECT GIFT_CARD_NO
+			FROM PD_GIFT_CARD
+		WHERE MGMT_NO_TEXT = #{mgmtNoText, jdbcType=VARCHAR}
+    </select>
+ 
+    <select id="selectMyGiftCardCnt" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard" resultType="int">
+    
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.selectMyGiftCardCnt [등록된 기프트카드 카운트 조회 쿼리] [YSW] */
+    
+    	SELECT 
+       		COUNT(*) AS CNT
+       	FROM 
+       		MB_MEMBER_GIFT_CARD
+    	WHERE 1=1
+    		<if test="memberNo != null"> 
+				 AND MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+			</if>
+    </select>
+    
+    <select id="selectGiftCardCount" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard" resultType="int">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.selectGiftCardCount [등록된 기프트카드 카운트 조회 쿼리] [YSW] */
+    
+    	SELECT 
+       		COUNT(*) AS CNT
+       	FROM 
+       		MB_MEMBER_GIFT_CARD
+    	WHERE 1=1
+    		<if test="memberNo != null"> 
+				 AND MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+			</if>
+			AND DEL_YN = 'N'
+    </select>
+    
+    <select id="selectDuplCard" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard" resultType="int">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.selectDuplCard [기프트카드 중복카드번호 카운트 조회 쿼리] [YSW] */
+    
+    	SELECT 
+    		COUNT(*) AS CNT
+   		FROM 
+   			MB_MEMBER_GIFT_CARD
+		WHERE 1=1
+			<if test="cardNoText != null"> 
+				AND CARD_NO_TEXT = #{cardNoText, jdbcType=VARCHAR}
+			</if>
+			<if test="memberNo != null"> 
+				AND MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+			</if>
+		AND DEL_YN = 'N'
+    </select>
+    
+    <select id="selectMyGiftCard" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard"  resultType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.selectMyGiftCard [my 기프트카드 조회 쿼리] [YSW] */
+    
+    	SELECT
+    		MEMBER_NO
+    		, GIFT_CARD_SEQ
+    		, GIFT_CARD_NO
+    		, GIFT_CARD_NAME
+    		, CARD_NO_TEXT
+    		, CARD_PIN_NO_TEXT
+    		, CARD_AMT
+    		, RPRSNT_CARD_YN
+    		, DEL_YN
+    		, DEL_DTM
+    		, RGST_DTM
+    		, MOD_DTM
+    		, (SELECT IMAGE_URL FROM PD_GIFT_CARD B WHERE B.GIFT_CARD_NO = A.GIFT_CARD_NO) AS IMAGE_URL
+    		, (SELECT GIFT_CARD_NAME FROM PD_GIFT_CARD B WHERE B.GIFT_CARD_NO = A.GIFT_CARD_NO) AS PD_GIFT_CARD_NAME
+   		FROM
+   			MB_MEMBER_GIFT_CARD a
+    	WHERE DEL_YN = 'N'
+   		<if test="memberNo != null"> 
+			AND member_no = #{memberNo, jdbcType=VARCHAR}
+		</if>
+		<if test="cardNoText != null"> 
+			AND card_no_text = #{cardNoText, jdbcType=VARCHAR}
+		</if>
+			ORDER BY gift_card_seq
+    
+    </select>
+    
+    <update id="updateDelYn" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.updateDelYn [기프트카드 등록해지 쿼리] [YSW] */
+    
+    	UPDATE MB_MEMBER_GIFT_CARD
+    	SET
+    		DEL_YN = 'Y',
+    		DEL_DTM = SYSDATE
+   		WHERE 1=1
+   			AND CARD_NO_TEXT = #{cardNoText, jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateRprsntAll" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.updateRprsntAll [모든 대표카드 구분 초기화 쿼리] [YSW] */
+    
+    	UPDATE MB_MEMBER_GIFT_CARD
+    	SET
+    		RPRSNT_CARD_YN = 'N'
+   		WHERE
+   			MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+    		
+    </update>
+    
+    <update id="updateRprsnt" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.updateRprsnt [대표카드 구분 업데이트 쿼리] [YSW] */
+    
+    	UPDATE MB_MEMBER_GIFT_CARD
+    	SET
+    		RPRSNT_CARD_YN = 'Y'
+   		WHERE
+   			CARD_NO_TEXT = #{cardNoText, jdbcType=VARCHAR}
+   			AND DEL_YN = 'N'
+    </update>
+    
+    <update id="updateGiftCardName" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.updateGiftCardName [기프트카드 이름 업데이트 쿼리] [YSW] */
+    
+    	UPDATE MB_MEMBER_GIFT_CARD
+    	SET
+    		GIFT_CARD_NAME = #{giftCardName, jdbcType=VARCHAR}
+   		WHERE
+   			CARD_NO_TEXT = #{cardNoText, jdbcType=VARCHAR}
+   			AND DEL_YN = 'N'
+    </update>
+    
+    <select id="selectGiftCardName" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard" resultType="String">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.updateGiftCardName [기프트카드 조회 쿼리] [YSW] */
+    
+    	SELECT
+    		GIFT_CARD_NAME
+   		FROM MB_MEMBER_GIFT_CARD
+   		WHERE
+   			CARD_NO_TEXT = #{cardNoText, jdbcType=VARCHAR}
+   			AND DEL_YN = 'N'
+    </select>
+    
+    <update id="updateGiftCardAmt" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.updateGiftCardAmt [충전후 기프트카드 금액 업데이트 쿼리] [YSW] */
+    
+    	UPDATE MB_MEMBER_GIFT_CARD
+    	SET
+    		CARD_AMT = #{cardAmt, jdbcType=VARCHAR}
+   		WHERE
+   			CARD_NO_TEXT = #{cardNoText, jdbcType=VARCHAR}
+   			AND DEL_YN = 'N'
+    </update>
+    
+    <select id="selectMyGiftCardCheck" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard" resultType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.selectMyGiftCardCheck [보유한 기프트카드 체크 쿼리] [YSW] */
+    
+    	SELECT 
+    		COUNT(*) AS CNT 
+    	FROM MB_MEMBER_GIFT_CARD
+		WHERE 
+			DEL_YN = 'N'
+			AND MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectMyGiftCardList" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard"  resultType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.selectMyGiftCardList [보유한 기프트카드 조회 쿼리] [YSW] */
+    
+    	SELECT
+    		MEMBER_NO
+    		, GIFT_CARD_SEQ
+    		, GIFT_CARD_NO
+    		, GIFT_CARD_NAME
+    		, CARD_NO_TEXT
+    		, CARD_PIN_NO_TEXT
+    		, CARD_AMT
+    		, RPRSNT_CARD_YN
+    		, DEL_YN
+    		, DEL_DTM
+    		, RGST_DTM
+    		, MOD_DTM
+    		, (SELECT IMAGE_URL FROM PD_GIFT_CARD B WHERE B.GIFT_CARD_NO = A.GIFT_CARD_NO) AS IMAGE_URL
+   		FROM
+   			MB_MEMBER_GIFT_CARD A
+    	WHERE 
+    		DEL_YN = 'N'
+   		<if test="memberNo != null"> 
+			AND MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+		</if>
+		ORDER BY RPRSNT_CARD_YN DESC, GIFT_CARD_SEQ ASC
+    
+    </select>
+    
+    <update id="updateGiftCardDelYn" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+    /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.updateGiftCardDelYn [기프트카드 사용유무 업데이트 쿼리] [YSW] */
+    
+    	UPDATE MB_MEMBER_GIFT_CARD
+    	SET
+    		DEL_YN = #{delYn, jdbcType=VARCHAR}
+   		WHERE
+   			CARD_NO_TEXT = #{cardNoText, jdbcType=VARCHAR}
+			AND MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+   			AND DEL_YN = 'N'
+    </update>
+    
+    <select id="selectCardImg" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard" resultType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    	SELECT  
+			(SELECT IMAGE_URL FROM PD_GIFT_CARD WHERE GIFT_CARD_NO = A.GIFT_CARD_NO) AS IMAGE_URL 
+		FROM MB_MEMBER_GIFT_CARD A 
+		WHERE 
+			A.CARD_NO_TEXT = #{cardNoText, jdbcType=VARCHAR}
+			AND DEL_YN = 'N'
+    </select>
+    
+    <select id="selectCardImgCode" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard" resultType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    	SELECT
+    		GIFT_CARD_NO
+    	FROM MB_MEMBER_GIFT_CARD
+		WHERE 
+			CARD_NO_TEXT = #{cardNoText, jdbcType=VARCHAR}
+			AND DEL_YN = 'N'
+    </select>
+
+</mapper>

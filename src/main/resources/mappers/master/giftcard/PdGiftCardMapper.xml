@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.giftcard.repository.master.PdGiftCardDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.giftcard.model.master.PdGiftCard">
+    
+     /*+ kr.co.shop.web.giftcard.repository.master.PdGiftCardDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			pd_gift_card
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectPdGiftCardList" parameterType="Pageable" resultType="kr.co.shop.web.giftcard.model.master.PdGiftCard">
+    
+   	/*+ kr.co.shop.web.giftcard.repository.master.PdGiftCardDao.selectPdGiftCardList [상품 카드 조회 쿼리] [유상욱] */
+   	
+   		SELECT
+   			<include refid="select-columns" />
+  		FROM 
+			PD_GIFT_CARD
+		WHERE 1=1
+			AND USE_YN = 'Y'
+		ORDER BY GIFT_CARD_NO DESC
+		<include refid="Paging.mssql" />
+    </select>
+    
+    <select id="selectPdGiftCardListTotal" resultType="int">
+    
+   	/*+ kr.co.shop.web.giftcard.repository.master.PdGiftCardDao.selectPdGiftCardListTotal [상품 카드 전체 갯수 조회 쿼리] [유상욱] */
+   	
+   		SELECT
+   			count(*)
+  		FROM 
+			PD_GIFT_CARD
+		WHERE 1=1
+			AND USE_YN = 'Y'
+    </select>
+    
+    <select id="selectPdGiftCardInfo" parameterType="kr.co.shop.web.giftcard.model.master.PdGiftCard" resultType="kr.co.shop.web.giftcard.model.master.PdGiftCard">
+    
+    /*+ kr.co.shop.web.giftcard.repository.master.PdGiftCardDao.selectPdGiftCardInfo [상품 카드 상세 조회 쿼리] [유상욱] */
+    
+    	SELECT
+   			<include refid="select-columns" />
+  		FROM 
+			PD_GIFT_CARD
+		<where>
+			<if test="giftCardNo != null"> 
+				GIFT_CARD_NO = #{giftCardNo, jdbcType=VARCHAR}
+			</if>
+		</where>
+    </select>
+    
+    <select id="selectPdGiftCardInfoForSale" parameterType="kr.co.shop.web.giftcard.model.master.PdGiftCard" resultType="kr.co.shop.web.giftcard.model.master.PdGiftCard">
+    
+    /*+ kr.co.shop.web.giftcard.repository.master.PdGiftCardDao.selectPdGiftCardInfoForSale [상품 카드 상세 조회 쿼리] [유상욱] */
+    
+	    SELECT 
+	    	<include refid="select-columns" />
+	    FROM 
+	    	PD_GIFT_CARD
+	    <where>
+			<if test="giftCardNo != null"> 
+				 GIFT_CARD_NO = #{giftCardNo, jdbcType=VARCHAR}
+			</if>
+		</where>
+    
+    </select>
+
+</mapper>

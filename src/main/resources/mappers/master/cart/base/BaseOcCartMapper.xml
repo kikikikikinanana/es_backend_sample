@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cart.repository.master.OcCartDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	cart_seq, up_cart_seq, member_no, session_id, site_no, chnnl_no, cart_type, prdt_no, prdt_optn_no, prdt_type_code, ctgr_no, plndp_no, event_no, vndr_no, order_qty, rgst_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	cart_seq = #{cartSeq, jdbcType=BIGINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.cart.model.master.OcCart" resultType="kr.co.shop.web.cart.model.master.OcCart">
+    
+     /*+ kr.co.shop.web.cart.repository.master.OcCartDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			OC_CART
+		<where> 
+			<if test="cartSeq != null"> 
+				 cart_seq = #{cartSeq, jdbcType=BIGINT}
+			</if> 
+			<if test="upCartSeq != null"> 
+				 AND up_cart_seq = #{upCartSeq, jdbcType=BIGINT}
+			</if> 
+			<if test="memberNo != null"> 
+				 AND member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="sessionId != null"> 
+				 AND session_id = #{sessionId, jdbcType=VARCHAR}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="chnnlNo != null"> 
+				 AND chnnl_no = #{chnnlNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="cartType != null"> 
+				 AND cart_type = #{cartType, jdbcType=CHAR}
+			</if> 
+			<if test="prdtNo != null"> 
+				 AND prdt_no = #{prdtNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtOptnNo != null"> 
+				 AND prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtTypeCode != null"> 
+				 AND prdt_type_code = #{prdtTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="ctgrNo != null"> 
+				 AND ctgr_no = #{ctgrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="plndpNo != null"> 
+				 AND plndp_no = #{plndpNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="eventNo != null"> 
+				 AND event_no = #{eventNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="vndrNo != null"> 
+				 AND vndr_no = #{vndrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderQty != null"> 
+				 AND order_qty = #{orderQty, jdbcType=INTEGER}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+	<insert id="insert" useGeneratedKeys="true" keyProperty="cartSeq">
+
+     /*+ kr.co.shop.web.cart.repository.master.OcCartDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO OC_CART
+			 ( up_cart_seq, member_no, session_id, site_no, chnnl_no, cart_type, prdt_no, prdt_optn_no, prdt_type_code, ctgr_no, plndp_no, event_no, vndr_no, order_qty, rgst_dtm ) 
+
+		VALUES 
+			 ( #{upCartSeq, jdbcType=BIGINT}, #{memberNo, jdbcType=VARCHAR}, #{sessionId, jdbcType=VARCHAR}, #{siteNo, jdbcType=VARCHAR}, #{chnnlNo, jdbcType=VARCHAR}, #{cartType, jdbcType=CHAR}, #{prdtNo, jdbcType=VARCHAR}, #{prdtOptnNo, jdbcType=VARCHAR}, #{prdtTypeCode, jdbcType=VARCHAR}, #{ctgrNo, jdbcType=VARCHAR}, #{plndpNo, jdbcType=VARCHAR}, #{eventNo, jdbcType=VARCHAR}, #{vndrNo, jdbcType=VARCHAR}, #{orderQty, jdbcType=INTEGER}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.cart.model.master.OcCart">
+    
+     /*+ kr.co.shop.web.cart.repository.master.OcCartDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE OC_CART
+		<set> 
+			<if test="cartSeq != null"> 
+				cart_seq = #{cartSeq, jdbcType=BIGINT}, 
+			</if> 
+			<if test="upCartSeq != null"> 
+				up_cart_seq = #{upCartSeq, jdbcType=BIGINT}, 
+			</if> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="sessionId != null"> 
+				session_id = #{sessionId, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="chnnlNo != null"> 
+				chnnl_no = #{chnnlNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cartType != null"> 
+				cart_type = #{cartType, jdbcType=CHAR}, 
+			</if> 
+			<if test="prdtNo != null"> 
+				prdt_no = #{prdtNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtOptnNo != null"> 
+				prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtTypeCode != null"> 
+				prdt_type_code = #{prdtTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="ctgrNo != null"> 
+				ctgr_no = #{ctgrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="plndpNo != null"> 
+				plndp_no = #{plndpNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="eventNo != null"> 
+				event_no = #{eventNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="vndrNo != null"> 
+				vndr_no = #{vndrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderQty != null"> 
+				order_qty = #{orderQty, jdbcType=INTEGER}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 cart_seq = #{cartSeq, jdbcType=BIGINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.cart.model.master.OcCart">
+    
+     /*+ kr.co.shop.web.cart.repository.master.OcCartDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM OC_CART
+		WHERE 
+			 cart_seq = #{cartSeq, jdbcType=BIGINT}  
+    </delete>
+</mapper>

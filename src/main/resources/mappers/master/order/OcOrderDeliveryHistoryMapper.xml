@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderDeliveryHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.order.model.master.OcOrderDeliveryHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderDeliveryHistoryDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			OC_ORDER_DELIVERY_HISTORY
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    
+	<insert id="insertDeliveryList" parameterType="java.util.List">	
+     /*+ kr.co.shop.web.order.repository.master.OcOrderDeliveryHistoryDao.insertDeliveryList [주문 생성시 배송이력 insert 쿼리] [이재영] */
+		INSERT INTO OC_ORDER_DELIVERY_HISTORY
+			 ( 
+			 	order_no, 
+			 	order_prdt_seq, 
+			 	order_dlvy_hist_seq, 
+			 	dlvy_dgre_count, 
+			 	stock_gbn_code, 
+			 	store_no, 
+			 	rcvr_name, 
+			 	rcvr_tel_no_text, 
+			 	rcvr_hdphn_no_text, 
+			 	rcvr_post_code_text, 
+			 	rcvr_post_addr_text, 
+			 	rcvr_dtl_addr_text, 
+			 	dlvy_memo_text, 
+			 	dlvy_stat_code, 
+			 	rsv_dlvy_dtm, 
+			 	dlvy_id_text, 
+			 	rgster_no, 
+			 	rgst_dtm,
+			 	insd_mgmt_info_text) 
+		VALUES
+			<foreach collection="list" item="item" separator=","> 
+			 ( 
+			 	#{item.orderNo, jdbcType=VARCHAR}, 
+			 	#{item.orderPrdtSeq, jdbcType=TINYINT}, 
+			 	#{item.orderDlvyHistSeq, jdbcType=TINYINT}, 
+			 	#{item.dlvyDgreCount, jdbcType=TINYINT}, 
+			 	#{item.stockGbnCode, jdbcType=VARCHAR},
+			 	#{item.storeNo, jdbcType=VARCHAR},
+			 	#{item.rcvrName, jdbcType=VARCHAR}, 
+			 	#{item.rcvrTelNoText, jdbcType=VARCHAR}, 
+			 	#{item.rcvrHdphnNoText, jdbcType=VARCHAR}, 
+			 	#{item.rcvrPostCodeText, jdbcType=CHAR}, 
+			 	#{item.rcvrPostAddrText, jdbcType=VARCHAR}, 
+			 	#{item.rcvrDtlAddrText, jdbcType=VARCHAR},
+			 	#{item.dlvyMemoText, jdbcType=VARCHAR}, 
+			 	#{item.dlvyStatCode, jdbcType=VARCHAR}, 
+			 	<choose>
+			 		<when test="item.rsvDlvyDtm != null">#{item.rsvDlvyDtm, jdbcType=TIMESTAMP}</when>
+			 		<otherwise>null</otherwise>
+			 	</choose>,
+			 	#{item.dlvyIdText, jdbcType=VARCHAR},
+			 	#{item.rgsterNo, jdbcType=VARCHAR}, 
+			 	<choose>
+			 		<when test="item.rgstDtm != null">#{item.rgstDtm, jdbcType=TIMESTAMP}</when>
+			 		<otherwise>SYSDATE</otherwise>
+			 	</choose>,
+			 	(SELECT vndr_prdt_no_text FROM PD_PRODUCT WHERE PRDT_NO = #{item.prdtNo, jdbcType=VARCHAR})
+			 )  
+		</foreach>
+    </insert>
+    
+     <update id="updateOrderStat" parameterType="kr.co.shop.web.order.model.master.OcOrder">
+     	/*+ kr.co.shop.web.order.repository.master.OcOrderDeliveryHistoryDao.updateOrderStat [주문상품배송이력 일괄 update 쿼리] [이재영] */
+		UPDATE 	OC_ORDER_DELIVERY_HISTORY
+		SET 	dlvy_stat_code = #{orderStatCode, jdbcType=VARCHAR} -- OcOrder를 이용 하여 처리.
+		WHERE 	order_no = #{orderNo, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateOcOrderDeliveryHistoryModify" parameterType="kr.co.shop.web.order.model.master.OcOrderDeliveryHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderDeliveryHistoryDao.updateOcOrderDeliveryHistoryModify [주소변경 update 쿼리] [lsh] */
+    
+		UPDATE OC_ORDER_DELIVERY_HISTORY
+		<set> 
+			<if test="rcvrName != null"> 
+				rcvr_name = #{rcvrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrHdphnNoText != null"> 
+				rcvr_hdphn_no_text = #{rcvrHdphnNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrPostCodeText != null"> 
+				rcvr_post_code_text = #{rcvrPostCodeText, jdbcType=CHAR}, 
+			</if> 
+			<if test="rcvrPostAddrText != null"> 
+				rcvr_post_addr_text = #{rcvrPostAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrDtlAddrText != null"> 
+				rcvr_dtl_addr_text = #{rcvrDtlAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			mod_dtm = SYSDATE  
+		</set> 
+		WHERE 
+			order_no = #{orderNo, jdbcType=VARCHAR} 
+    </update>
+    
+    <select id="selectOcOrderDeliveryHistoryList" parameterType="kr.co.shop.web.order.model.master.OcOrderDeliveryHistory" resultType="kr.co.shop.web.order.model.master.OcOrderDeliveryHistory">
+	/*+ kr.co.shop.web.order.repository.master.OcOrderDeliveryHistoryDao.getOcOrderDeliveryHistoryList [주문번호에 관련된 배송이력 상품 리스트]  */
+		SELECT DLVY_ID_TEXT
+		  FROM OC_ORDER_DELIVERY_HISTORY
+		 WHERE ORDER_NO = #{orderNo, jdbcType=VARCHAR} 
+	</select>
+	 
+	
+	 <update id="updateOrderConfirm" parameterType="kr.co.shop.web.order.model.master.OcOrderDeliveryHistory">
+     	/*+ kr.co.shop.web.order.repository.master.OcOrderDeliveryHistoryDao.updateOrderConfirm [배송상태 일괄 update 쿼리] [NKB] */
+		UPDATE 	OC_ORDER_DELIVERY_HISTORY
+		SET 	dlvy_stat_code = #{dlvyStatCode, jdbcType=VARCHAR}
+		       ,MODER_NO = #{moderNo, jdbcType=VARCHAR}
+   		       ,MOD_DTM = SYSDATE
+		WHERE 	order_no = #{orderNo, jdbcType=VARCHAR}
+		<if test="whereDlvyStatCode != null">
+   		AND	dlvy_stat_code = #{whereDlvyStatCode, jdbcType=VARCHAR}
+   		</if>
+	</update>
+	
+	<update id="updateOrderDeliveryHistoryStat" parameterType="kr.co.shop.web.order.model.master.OcOrderDeliveryHistory">
+     	/*+ kr.co.shop.web.order.repository.master.OcOrderDeliveryHistoryDao.updateOrderDeliveryHistoryStat [배송상태 일괄/개별 update 쿼리] [KTH] */
+		UPDATE OC_ORDER_DELIVERY_HISTORY
+		   SET DLVY_STAT_CODE = #{dlvyStatCode, jdbcType=VARCHAR}
+		     , MODER_NO = #{moderNo, jdbcType=VARCHAR}
+   		     , MOD_DTM = SYSDATE
+		 WHERE ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+		<if test="orderPrdtSeq != null">
+		   AND ORDER_PRDT_SEQ = #{orderPrdtSeq, jdbcType=TINYINT}
+   		</if>
+		<if test="whereDlvyStatCode != null">
+		   AND DLVY_STAT_CODE = #{whereDlvyStatCode, jdbcType=VARCHAR}
+   		</if>
+	</update>
+	
+	 <select id="selectOcOrderDeliveryHistory" parameterType="kr.co.shop.web.order.model.master.OcOrderDeliveryHistory" resultType="kr.co.shop.web.order.model.master.OcOrderDeliveryHistory">
+	/*+ kr.co.shop.web.order.repository.master.OcOrderDeliveryHistoryDao.selectOcOrderDeliveryHistory [주문번호에 관련된 배송이력 상품 조회]  */
+		SELECT WMS_SEND_YN
+		     , DLVY_ID_TEXT
+		  FROM OC_ORDER_DELIVERY_HISTORY
+		 WHERE ORDER_NO = #{orderNo, jdbcType=VARCHAR} 
+		   AND ORDER_PRDT_SEQ = #{orderPrdtSeq, jdbcType=TINYINT} 
+	</select>
+</mapper>

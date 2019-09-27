@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.DpSearchWordDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.display.model.master.DpSearchWord">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpSearchWordDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			DP_SEARCH_WORD
+		WHERE 
+			<include refid="pk-columns" />
+    </select>
+    
+    <select id="selectSearchWordList" parameterType="kr.co.shop.web.display.model.master.DpSearchWord" resultType="kr.co.shop.web.display.model.master.DpSearchWord">
+    /*+ kr.co.shop.web.display.repository.master.DpSearchWordDao.selectSearchWordList [검색창 검색어 리스트 조회] [이가영] */
+    
+    	SELECT
+			S.srch_word_seq,
+			S.site_no,
+			S.srch_word_gbn_type,
+			S.srch_word_text,
+			S.cnnctn_type,
+			S.cnnctn_url,
+			S.disp_yn,
+			S.sort_seq,
+			S.rgster_no,
+			S.rgst_dtm,
+			S.moder_no,
+			S.mod_dtm
+		FROM
+			DP_SEARCH_WORD S
+		WHERE
+			S.site_no = #{siteNo, jdbcType=VARCHAR}
+			AND S.srch_word_gbn_type = #{srchWordGbnType, jdbcType=VARCHAR}
+			AND S.disp_yn = 'Y'
+		ORDER BY S.sort_seq
+    </select>
+
+</mapper>

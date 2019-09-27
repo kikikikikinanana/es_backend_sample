@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.DpDisplayTemplateCornerDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.display.model.master.DpDisplayTemplateCorner">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpDisplayTemplateCornerDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			dp_display_template_corner
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectTemplateCornerList" parameterType="kr.co.shop.web.display.model.master.DpDisplayTemplateCorner" resultType="kr.co.shop.web.display.model.master.DpDisplayTemplateCorner">
+    /*+ kr.co.shop.bo.display.repository.master.DpDisplayTemplateCornerDao.selectTemplateCornerList [전시템플릿 코너 리스트 조회] [박민우] */
+	    SELECT
+			A.disp_tmpl_no,
+			A.disp_tmpl_corner_seq,
+			A.corner_name,
+			A.corner_name_disp_type,
+			A.set_count,
+			A.note_text,
+			A.sort_seq,
+			A.use_yn,
+			A.rgster_no,
+			A.rgst_dtm,
+			A.moder_no,
+			A.mod_dtm
+		FROM
+			dp_display_template_corner A
+		WHERE
+			A.disp_tmpl_no = #{dispTmplNo, jdbcType=VARCHAR}    
+		ORDER BY A.sort_seq ASC
+    </select>
+
+</mapper>

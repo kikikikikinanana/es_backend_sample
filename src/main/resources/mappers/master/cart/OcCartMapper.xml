@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cart.repository.master.OcCartDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.cart.model.master.OcCart">
+    
+     /*+ kr.co.shop.web.cart.repository.master.OcCartDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			OC_CART
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="getCartProduct" parameterType="kr.co.shop.web.cart.model.master.OcCart" resultType="kr.co.shop.web.cart.model.master.OcCart">
+	/*+ kr.co.shop.web.cart.repository.master.OcCartDao."getCartProductList" [장바구니 상품 조회  */  
+		SELECT CART_SEQ, UP_CART_SEQ,MEMBER_NO,SESSION_ID,SITE_NO,CHNNL_NO,CART_TYPE,PRDT_NO,PRDT_OPTN_NO,PRDT_TYPE_CODE,CTGR_NO,PLNDP_NO,EVENT_NO,VNDR_NO,ORDER_QTY,RGST_DTM
+		  FROM OC_CART
+		 WHERE CART_SEQ = #{cartSeq, jdbcType=VARCHAR }
+	</select>
+	
+	<select id="getMemberCartList" parameterType="kr.co.shop.web.cart.model.master.OcCart" resultType="kr.co.shop.web.cart.model.master.OcCart">
+	/*+ kr.co.shop.web.cart.repository.master.OcCartDao.getMemberCartList [회원  장바구니 상품조회 ] */  
+		SELECT CART_SEQ, UP_CART_SEQ,MEMBER_NO,SESSION_ID,SITE_NO,CHNNL_NO,CART_TYPE,PRDT_NO,PRDT_OPTN_NO,PRDT_TYPE_CODE,CTGR_NO,PLNDP_NO,EVENT_NO,VNDR_NO,ORDER_QTY,RGST_DTM
+          FROM OC_CART
+         WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+           AND CART_TYPE = #{cartType, jdbcType=VARCHAR}
+           AND SITE_NO = #{siteNo, jdbcType=VARCHAR}
+           <if test="vndrNo != null and  vndrNo !=''">
+           AND VNDR_NO = #{vndrNo, jdbcType=VARCHAR}
+           </if>
+	</select>
+	
+	<select id="getNonMemberCartList" parameterType="kr.co.shop.web.cart.model.master.OcCart" resultType="kr.co.shop.web.cart.model.master.OcCart">
+	/*+ kr.co.shop.web.cart.repository.master.OcCartDao.getNonMemberCartList [session 장바구니 상품조회 ] */  
+		SELECT CART_SEQ, UP_CART_SEQ,MEMBER_NO,SESSION_ID,SITE_NO,CHNNL_NO,CART_TYPE,PRDT_NO,PRDT_OPTN_NO,PRDT_TYPE_CODE,CTGR_NO,PLNDP_NO,EVENT_NO,VNDR_NO,ORDER_QTY,RGST_DTM
+          FROM OC_CART
+         WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+           AND SESSION_ID = #{sessionId, jdbcType=VARCHAR}
+           AND CART_TYPE = #{cartType, jdbcType=VARCHAR}
+           AND SITE_NO = #{siteNo, jdbcType=VARCHAR}
+           <if test="vndrNo != null and  vndrNo !=''">
+           AND VNDR_NO = #{vndrNo, jdbcType=VARCHAR}
+           </if>
+	</select>
+	
+	<delete id="setOcCartReset" parameterType="kr.co.shop.web.cart.model.master.OcCart">
+		/*+ kr.co.shop.web.cart.repository.master.OcCartDao.setOcCartReset [장바구니 사은품 , 배송비 상품 초기화] */  
+		DELETE 
+		  FROM OC_CART
+		 WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+		   AND CART_TYPE = #{cartType, jdbcType=VARCHAR}
+		   AND SITE_NO 	= #{siteNo, jdbcType=VARCHAR}
+		<if test="prdtTypeCodes != null and  prdtTypeCodes !='' and prdtTypeCodes.length > 0">
+			AND PRDT_TYPE_CODE IN -- 상품유형코드 
+			<foreach item="item" index="index" collection="prdtTypeCodes" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="memberNo == 'MB00000000'.toString()">
+			AND SESSION_ID	= #{sessionId, jdbcType=VARCHAR}
+		</if>
+	</delete>
+	
+	<delete id="setOcCartBenefitResetForMember" parameterType="kr.co.shop.web.cart.model.master.OcCart">
+		/*+ kr.co.shop.web.cart.repository.master.OcCartDao.setOcCartBenefitResetForMember [장바구니 혜택 초기화 회원 기준] */  
+		DELETE FROM OC_CART_BENEFIT
+		 WHERE EXISTS (
+				SELECT 1 
+				  FROM OC_CART B
+				 WHERE B.MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+				   AND B.CART_TYPE = #{cartType, jdbcType=VARCHAR}
+				   AND B.SITE_NO = #{siteNo, jdbcType=VARCHAR}
+			)
+	</delete>
+	
+	<delete id="setOcCartBenefitResetForNonMember" parameterType="kr.co.shop.web.cart.model.master.OcCart">
+		/*+ kr.co.shop.web.cart.repository.master.OcCartDao.setOcCartBenefitResetForNonMember [장바구니 혜택 초기화 비회원 기준] */  
+		DELETE FROM OC_CART_BENEFIT
+		 WHERE EXISTS (
+				SELECT 1 
+				  FROM OC_CART B
+				 WHERE B.MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+				   AND B.CART_TYPE = #{cartType, jdbcType=VARCHAR}
+				   AND B.SESSION_ID	= #{sessionId, jdbcType=VARCHAR}
+				   AND B.SITE_NO = #{siteNo, jdbcType=VARCHAR} 
+			)
+	</delete>
+	
+	
+	<update id="setCartPrdtMergeUpdate" parameterType="java.util.List">
+		/*+ kr.co.shop.web.cart.repository.master.OcCartDao.setCartPrdtMergeUpdate [회원 장바구니 비회원 장바구니 merge update] */
+		<foreach collection="list" item='item' separator=";">
+			UPDATE OC_CART 
+			   SET RGST_DTM 	= SYSDATE
+			 WHERE MEMBER_NO 	= #{item.memberNo, jdbcType=VARCHAR}
+			   AND CART_TYPE 	= #{item.cartType, jdbcType=VARCHAR}
+			   AND PRDT_NO 		= #{item.prdtNo, jdbcType=VARCHAR }
+			   AND PRDT_OPTN_NO = #{item.prdtOptnNo, jdbcType=VARCHAR }
+		</foreach>
+	</update>
+	
+	<delete id="setCartPrdtMergeDelete" parameterType="java.util.List">
+		/*+ kr.co.shop.web.cart.repository.master.OcCartDao.setCartPrdtMergeDelete [회원 장바구니 비회원 장바구니 merge delete] */
+		<foreach collection="list" item='item' separator=";">
+			DELETE FROM OC_CART
+			WHERE MEMBER_NO		= #{item.nonMemberNo, jdbcType=VARCHAR } -- 비회원 회원번호 
+			  AND CART_TYPE 	= #{item.cartType, jdbcType=VARCHAR }
+			  AND SESSION_ID 	= #{item.sessionId, jdbcType=VARCHAR }
+			  AND PRDT_NO 		= #{item.prdtNo, jdbcType=VARCHAR }
+			  AND PRDT_OPTN_NO 	= #{item.prdtOptnNo, jdbcType=VARCHAR } 
+		</foreach>
+	</delete>
+	
+	<update id="setCartPrdtAddUpdate" parameterType="java.util.List">
+		/*+ kr.co.shop.web.cart.repository.master.OcCartDao.setCartPrdtAddUpdate [비회원 장바구니  상품 회원 장바구니 merge update] */
+		<foreach collection="list" item='item' separator=";">
+			UPDATE OC_CART 
+			   SET MEMBER_NO  	= #{item.memberNo, jdbcType=VARCHAR}
+			     , RGST_DTM 	= SYSDATE
+			 WHERE MEMBER_NO	= 'MB00000000'
+			   AND CART_TYPE 	= 'B'
+			   AND SESSION_ID 	= #{item.sessionId, jdbcType=VARCHAR }
+			   AND PRDT_NO 		= #{item.prdtNo, jdbcType=VARCHAR }
+			   AND PRDT_OPTN_NO = #{item.prdtOptnNo, jdbcType=VARCHAR }
+		</foreach>
+	</update>
+	
+	<insert id="setCartInsert"  parameterType="java.util.List">
+		/*+ kr.co.shop.web.cart.repository.master.OcCartDao.setCartInsert  */
+		
+			INSERT INTO OC_CART( 
+				  MEMBER_NO
+				, SESSION_ID
+				, SITE_NO
+				, CHNNL_NO
+				, CART_TYPE
+				, PRDT_NO
+				, PRDT_OPTN_NO
+				, PRDT_TYPE_CODE
+				, CTGR_NO
+				, PLNDP_NO
+				, EVENT_NO
+				, VNDR_NO
+				, ORDER_QTY
+				, RGST_DTM 
+			)VALUES
+			<foreach collection="list" item='item' separator=",">
+			(
+				  #{item.memberNo, jdbcType=VARCHAR }
+				, #{item.sessionId, jdbcType=VARCHAR }
+				, '10000'		
+				, '10000'		
+				, 'B'		
+				, #{item.prdtNo, jdbcType=VARCHAR }
+				, #{item.prdtOptnNo, jdbcType=VARCHAR }
+				, '10000'		
+				, '10000'		
+				, '10000'		
+				, '10000'		
+				, '10000'		
+				, #{item.orderQty, jdbcType=VARCHAR }
+				, SYSDATE 	
+			)
+			
+		</foreach>
+    </insert>	
+    
+	<insert id="setCartPrdtInsert"  parameterType="kr.co.shop.web.cart.model.master.OcCart" useGeneratedKeys="true" keyProperty="cartSeq">
+		/*+ kr.co.shop.web.cart.repository.master.OcCartDao.setCartPrdtInsert  */
+			INSERT INTO OC_CART( 
+				  MEMBER_NO
+				, SESSION_ID
+				, SITE_NO
+				, CHNNL_NO
+				, CART_TYPE
+				, PRDT_NO
+				, PRDT_OPTN_NO
+				, PRDT_TYPE_CODE
+				, CTGR_NO
+				, PLNDP_NO
+				, EVENT_NO
+				, VNDR_NO
+				, ORDER_QTY
+				, RGST_DTM 
+			) VALUES (
+				  #{memberNo, jdbcType=VARCHAR }
+				, #{sessionId, jdbcType=VARCHAR }
+				, #{siteNo, jdbcType=VARCHAR }	
+				, #{chnnlNo, jdbcType=VARCHAR }		
+				, #{cartType, jdbcType=VARCHAR }		
+				, #{prdtNo, jdbcType=VARCHAR }
+				, #{prdtOptnNo, jdbcType=VARCHAR }
+				, #{prdtTypeCode, jdbcType=VARCHAR }		
+				, #{ctgrNo, jdbcType=VARCHAR }		
+				, #{plndpNo, jdbcType=VARCHAR }				
+				, #{eventNo, jdbcType=VARCHAR }		
+				, #{vndrNo, jdbcType=VARCHAR }		
+				, #{orderQty, jdbcType=VARCHAR }
+				, SYSDATE 	
+			)
+			
+    </insert>	
+	
+	<delete id="setCartPrdtDelete" parameterType="kr.co.shop.web.cart.model.master.OcCart">
+		/*+ kr.co.shop.web.cart.repository.master.OcCartDao.setCartPrdtMergeDelete [장바구니 상품삭제] */
+		DELETE FROM OC_CART
+		WHERE CART_SEQ IN
+		<foreach item="item" index="index" collection="cartSeqs" open="(" close=")" separator="," >
+			#{item}
+		</foreach>
+	</delete>
+	
+	<update id="setCartPrtdQtySave" parameterType="kr.co.shop.web.cart.model.master.OcCart">
+		/*+ kr.co.shop.web.cart.repository.master.OcCartDao.setCartPrtdQtySave [ 장바구니  상품 수량 변경 ] */
+		UPDATE OC_CART 
+		   SET ORDER_QTY  	= #{orderQty, jdbcType=VARCHAR}
+		 WHERE CART_SEQ	 	= #{cartSeq, jdbcType=VARCHAR }
+	</update>
+	
+	<update id="setCartPrdtOptionSave" parameterType="kr.co.shop.web.cart.model.master.OcCart">
+		/*+ kr.co.shop.web.cart.repository.master.OcCartDao.setCartPrdtOptionSave [ 장바구니  상품 옵션 변경 ] */
+		UPDATE OC_CART 
+		   SET PRDT_NO		= #{prdtNo, jdbcType=VARCHAR}
+			 , PRDT_OPTN_NO	= #{prdtOptnNo, jdbcType=VARCHAR}
+			 , ORDER_QTY  	= #{orderQty, jdbcType=VARCHAR}
+		 WHERE CART_SEQ	 	= #{cartSeq, jdbcType=VARCHAR }
+	</update>
+	
+	<select id="getCartCounting"  resultType="int">
+	/*+ kr.co.shop.web.cart.repository.master.OcCartDao.getCartCounting [회원  장바구니 상품조회 ] */  
+		SELECT COUNT(1) AS CARTCNT
+		  FROM OC_CART
+		 WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+		   AND CART_TYPE = #{cartType, jdbcType=VARCHAR}
+		   AND SITE_NO = #{siteNo, jdbcType=VARCHAR}
+		<if test="memberNo == 'MB00000000'.toString()">
+		   AND SESSION_ID	= #{sessionId, jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<select id="selectCartList" parameterType="kr.co.shop.web.order.vo.OrderCartVo" resultType="kr.co.shop.web.cart.model.master.OcCart">
+		/*+ kr.co.shop.web.cart.repository.master.OcCartDao."selectCartList" [주문 장바구니 list] */
+		SELECT 
+			#{deviceCode} device_code, cart_seq, up_cart_seq, member_no, session_id, site_no, chnnl_no, cart_type, prdt_no, prdt_optn_no, prdt_type_code, ctgr_no, plndp_no, event_no, vndr_no, order_qty, rgst_dtm
+		FROM 
+			OC_CART
+		WHERE 
+			MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+			<if test="sessionId != null and sessionId != ''">
+			AND SESSION_ID = #{sessionId, jdbcType=VARCHAR}
+			</if>
+		AND	
+			CART_SEQ IN
+			<foreach item="item" index="index" collection="cartSeq" open="(" close=")" separator="," >
+				#{item}
+			</foreach>
+	</select>
+</mapper>

@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.promotion.repository.master.PrPromotionDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+
+    -->
+    
+    <resultMap type="kr.co.shop.web.product.model.master.PdProduct" id="productGift" autoMapping="true">
+    	<id property="prdtNo" column="prdt_no"/>
+    	<collection property="productImage" ofType="kr.co.shop.web.product.model.master.PdProductRelationFile" columnPrefix="im_" autoMapping="true"/>
+    </resultMap>
+    
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.promotion.model.master.PrPromotion">
+
+     /*+ kr.co.shop.web.promotion.repository.master.PrPromotionDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */
+
+		SELECT
+			<include refid="select-columns" />
+		FROM
+			PR_PROMOTION
+		WHERE
+			<include refid="pk-columns" />
+    </select>
+
+    <sql id="where-promotion-alias-a">
+  		<!--
+  		AND A.use_yn = 'Y'
+   		-->
+   		AND A.promo_start_dtm <![CDATA[<=]]> SYSDATE
+   		AND A.promo_end_dtm >= SYSDATE
+   		<if test='promoTypeCodeArr != null and promoTypeCodeArr != ""'>
+   			AND A.promo_type_code IN
+   			<foreach collection="promoTypeCodeArr" item="item" open="(" close=")" separator=",">
+   				#{item, jdbcType=VARCHAR}
+   			</foreach>
+   		</if>
+    </sql>
+
+    <sql id="column-dscnt-amt-promotion-alias-a">
+    	<if test='normalAmt != null and normalAmt != ""'>
+    		<!--
+    		, CASE WHEN A.imdtl_dscnt_type = 'R' THEN (#{normalAmt, jdbcType=INTEGER} - (#{normalAmt, jdbcType=INTEGER} * A.imdtl_dscnt_value * 0.01)) + #{optnAddAmt, jdbcType=INTEGER}
+   		 		   WHEN A.imdtl_dscnt_type = 'A' THEN #{normalAmt, jdbcType=INTEGER} - A.imdtl_dscnt_value + #{optnAddAmt, jdbcType=INTEGER}
+   		 		   WHEN A.imdtl_dscnt_type = 'U' THEN A.imdtl_dscnt_value + #{optnAddAmt, jdbcType=INTEGER}
+   		   	  END AS dscnt_amt
+   		   	 -->
+   		   	, CASE WHEN A.imdtl_dscnt_type = 'R' THEN (#{normalAmt, jdbcType=INTEGER} * A.imdtl_dscnt_value * 0.01) * #{orderQty, jdbcType=INTEGER}
+   		 		   WHEN A.imdtl_dscnt_type = 'A' THEN A.imdtl_dscnt_value * #{orderQty, jdbcType=INTEGER}
+   		 		   WHEN A.imdtl_dscnt_type = 'U' THEN (#{normalAmt, jdbcType=INTEGER} - A.imdtl_dscnt_value) * #{orderQty, jdbcType=INTEGER}
+   		   	  END AS dscnt_amt
+		</if>
+    </sql>
+
+    <sql id="join-promotion-alias-b">
+    	<if test='prdtNo != null and prdtNo != ""'>
+	    	JOIN pr_promotion_target_product B
+	    	ON A.promo_no = B.promo_no
+	    	AND B.prdt_no = #{prdtNo, jdbcType=VARCHAR}
+	    </if>
+    </sql>
+
+    <sql id="left-join-promotion-alias-b">
+    	<if test='prdtNo != null and prdtNo != ""'>
+	    	LEFT JOIN pr_promotion_target_product B
+	    	ON A.promo_no = B.promo_no
+	    	AND B.prdt_no = #{prdtNo, jdbcType=VARCHAR}
+	    </if>
+    </sql>
+
+    <sql id="join-promotion-alias-c-d-e">
+    	<if test='prdtNo != null and prdtNo != ""'>
+	    	JOIN pr_promotion_target_channel C
+	    	ON A.promo_no = C.promo_no
+	    	AND C.chnnl_no = (SELECT chnnl_no FROM pd_product WHERE prdt_no = #{prdtNo, jdbcType=VARCHAR})
+	    </if>
+    	<if test='deviceCode != null and deviceCode != ""'>
+	    	JOIN pr_promotion_target_device D
+	    	ON A.promo_no = D.promo_no
+	    	AND D.device_code = #{deviceCode, jdbcType=VARCHAR}
+    	</if>
+    	<if test='memberTypeCode != null and memberTypeCode != ""'>
+	    	JOIN pr_promotion_target_grade E
+	    	ON A.promo_no = E.promo_no
+	    	AND E.member_type_code = #{memberTypeCode, jdbcType=VARCHAR}
+	    	<if test='mbshpGradeCode != null and mbshpGradeCode != ""'>
+		    	AND E.mbshp_grade_code = #{mbshpGradeCode, jdbcType=VARCHAR}
+		    </if>
+		    <if test='empYn != null and empYn != ""'>
+		   		AND E.emp_yn = #{empYn, jdbcType=VARCHAR}
+		    </if>
+    	</if>
+    </sql>
+
+	<select id="getPromotionMultiBuyDiscountList" parameterType="kr.co.shop.web.promotion.model.master.PrPromotion" resultType="kr.co.shop.web.promotion.model.master.PrPromotion">
+    	/*+ kr.co.shop.web.promotion.repository.master.PrPromotionDao.getPromotionMultiBuyDiscountList [프로모션 다족구매 목록 조회] [황성준] */
+    	SELECT *
+    		 <!-- , ((C.buy_qty * #{normalAmt, jdbcType=INTEGER}) - C.buy_qty * (#{normalAmt, jdbcType=INTEGER} * C.dscnt_rate * 0.01)) + (C.buy_qty * #{optnAddAmt, jdbcType=INTEGER}) AS dscnt_amt -->
+    		 , C.buy_qty * (#{normalAmt, jdbcType=INTEGER} * C.dscnt_rate * 0.01) AS dscnt_amt
+    	FROM pr_promotion A
+    	<include refid="join-promotion-alias-b"/>
+    	JOIN pr_promotion_multi_buy_discount C
+    	ON A.promo_no = C.promo_no
+    	AND C.buy_qty = #{orderQty, jdbcType=INTEGER}
+    	<where>
+    		<include refid="where-promotion-alias-a" />
+    	</where>
+	</select>
+
+	<select id="getPromotionDscntList" parameterType="kr.co.shop.web.promotion.model.master.PrPromotion" resultType="kr.co.shop.web.promotion.model.master.PrPromotion">
+		/*+ kr.co.shop.web.promotion.repository.master.PrPromotionDao.getPromotionDscntList [프로모션 할인율을 가진 목록 조회] [황성준] */
+		SELECT A.* <!-- 상풍 -->
+    		   <include refid="column-dscnt-amt-promotion-alias-a"/>
+    	FROM pr_promotion A
+    	<include refid="join-promotion-alias-b"/>
+    	<if test='prdtNo != null and prdtNo != ""'>
+    		AND B.prdt_type = 'T'
+    	</if>
+    	<include refid="join-promotion-alias-c-d-e"/>
+    	<where>
+    		AND A.promo_apply_type = 'P'
+    		<include refid="where-promotion-alias-a" />
+    	</where>
+    	UNION
+    	SELECT A.* <!-- 카테고리 -->
+    		   <include refid="column-dscnt-amt-promotion-alias-a"/>
+    	FROM pr_promotion A
+   		<include refid="left-join-promotion-alias-b"/>
+   		<if test='prdtNo != null and prdtNo != ""'>
+    		AND B.prdt_type NOT IN ('L','G')
+    	</if>
+    	JOIN pr_promotion_target_category F
+    	ON F.promo_no = F.promo_no
+    	AND F.ctgr_no = #{ctgrNo, jdbcType=VARCHAR}
+    	<include refid="join-promotion-alias-c-d-e"/>
+    	<where>
+    		AND A.promo_apply_type = 'C'
+    		<include refid="where-promotion-alias-a" />
+    	</where>
+    	<if test='prdtNo != null and prdtNo != ""'>
+	    	UNION
+	    	SELECT A.* <!-- 브랜드 -->
+	    		   <include refid="column-dscnt-amt-promotion-alias-a"/>
+	    	FROM pr_promotion A
+	    	<include refid="left-join-promotion-alias-b"/>
+	    	AND B.prdt_type NOT IN ('L','G')
+	    	<include refid="join-promotion-alias-c-d-e"/>
+	    	JOIN pr_promotion_target_brand F
+	    	ON A.promo_no = F.promo_no
+	    	AND F.brand_no = (SELECT brand_no FROM pd_product WHERE prdt_no = #{prdtNo, jdbcType=VARCHAR})
+	    	<where>
+	    		AND A.promo_apply_type = 'B'
+	    		<include refid="where-promotion-alias-a" />
+	    	</where>
+    	</if>
+    	ORDER BY dscnt_amt
+	</select>
+
+	<select id="getPromotionFreeGiftList" parameterType="kr.co.shop.web.promotion.model.master.PrPromotion" resultType="kr.co.shop.web.promotion.model.master.PrPromotion">
+		/*+ kr.co.shop.web.promotion.repository.master.PrPromotionDao.getPromotionFreeGiftList [프로모션 사은품 목록 조회] [황성준] */
+		SELECT A.*, C.*, '001' AS prdt_optn_no, '사은품' AS optn_name
+    	FROM pr_promotion A
+    	<include refid="join-promotion-alias-b"/>
+    	<if test='prdtNo != null and prdtNo != ""'>
+    		AND B.prdt_type = 'T'
+    	</if>
+   		JOIN pr_promotion_target_product C
+	    ON A.promo_no = C.promo_no
+    	AND C.prdt_type = 'G'
+    	<where>
+    		<include refid="where-promotion-alias-a" />
+    	</where>
+	</select>
+
+	<select id="selectPromotionByPrimaryKey" parameterType="kr.co.shop.web.promotion.model.master.PrPromotion" resultType="kr.co.shop.web.promotion.model.master.PrPromotion">
+		/*+ kr.co.shop.web.promotion.repository.master.PrPromotionDao.selectPromotionByPrimaryKey [프로모션 단건 조회] [황성준] */
+		SELECT A.*
+    		   <include refid="column-dscnt-amt-promotion-alias-a"/>
+    	FROM pr_promotion A
+    	<where>
+   			AND A.promo_no = #{promoNo, jdbcType=VARCHAR}
+    		<include refid="where-promotion-alias-a" />
+    	</where>
+	</select>
+
+	<select id="selectPromotiontWithAllList" parameterType="kr.co.shop.web.product.model.master.CartProductSearchVO" resultType="kr.co.shop.web.promotion.model.master.PrPromotion">
+		/*+ kr.co.shop.web.promotion.repository.master.PrPromotionDao.selectPromotiontWithAllList [프로모션 목록 조회] [황성준] */
+		<include refid="kr.co.shop.web.product.repository.master.PdProductDao.targtPrdtList" />
+		SELECT TMP.PROMO_NO, TMP.CART_SEQ, TMP.PRDT_OPTN_NO, TMP.PROMO_TYPE_CODE, FN_CODE_VALUE('PROMO_TYPE_CODE', TMP.PROMO_TYPE_CODE) AS PROMO_TYPE_NAME
+		     , TMP.PROMO_NAME, TMP.STOCK_DDCT_TYPE, TMP.CPN_SMTM_APPLY_PSBLT_YN, TMP.IMDTL_DSCNT_TYPE, TMP.DSCNT_RATE
+		     , TMP.PRDT_NO, TMP.CART_PRDT_NO, TMP.PRDT_TYPE, TMP.GIFT_PRDT_NO, TMP.GIFT_PRDT_NAME
+		     , TMP.GIFT_PRDT_OPTN_NO, TMP.EVENT_LIMIT_QTY, TMP.CMSN_RATE, TMP.ORDER_QTY, TMP.BUY_QTY
+		     , TMP.MULTI_BUY_DSCNT_SEQ
+		  FROM (
+		            SELECT A.PROMO_NO
+		                 , H.CART_SEQ
+		                 , H.PRDT_OPTN_NO
+		                 , A.PROMO_TYPE_CODE
+		                 , A.PROMO_NAME
+		                 , A.STOCK_DDCT_TYPE  -- A(전체 재고), O (온라인 재고)
+		                 , A.CPN_SMTM_APPLY_PSBLT_YN -- 쿠폰 사용 허용 여부
+		                 , A.IMDTL_DSCNT_TYPE -- 즉시 할인 유형 R(정율:d), A(정액), U(균일가)
+		                 , CASE WHEN A.PROMO_TYPE_CODE = '10001' THEN G.DSCNT_RATE ELSE A.IMDTL_DSCNT_VALUE END AS DSCNT_RATE-- 즉시 할인 가(율)
+		                 , E.PRDT_NO
+		                 , H.PRDT_NO AS CART_PRDT_NO
+		                 , E.PRDT_TYPE -- T(대상상품), L(제외상품), G(사은품)
+		                 , F.PRDT_NO AS GIFT_PRDT_NO-- '사은품 상품 번호
+		                 , I.PRDT_NAME AS GIFT_PRDT_NAME
+		                 , '001' AS GIFT_PRDT_OPTN_NO
+		                 , F.EVENT_LIMIT_QTY -- 행사 수량
+		                 , F.CMSN_RATE -- 업체 수수료율
+		                 , H.ORDER_QTY
+		                 , G.BUY_QTY
+		                 , G.MULTI_BUY_DSCNT_SEQ
+		                 , (
+		                        SELECT Z.MULTI_BUY_DSCNT_SEQ
+		                          FROM PR_PROMOTION_MULTI_BUY_DISCOUNT Z
+		                         WHERE Z.PROMO_NO = A.PROMO_NO
+		                           AND Z.BUY_QTY &lt;= (
+		                                                        SELECT SUM(ORDER_QTY)
+		                                                          FROM OC_CART_PRD A
+		                                                             , PR_PROMOTION_TARGET_PRODUCT B
+		                                                         WHERE 1 = 1
+		                                                           AND A.PRDT_NO = B.PRDT_NO
+		                                                           AND B.PROMO_NO = Z.PROMO_NO
+		                                                 )
+		                          ORDER BY Z.MULTI_BUY_DSCNT_SEQ DESC
+		                          FETCH FIRST 1 ROWS ONLY
+		                   ) AS APP_MULTI_BUY_DSCNT_SEQ -- 다족구매 할인이 적용될 시퀀스
+		              FROM PR_PROMOTION A
+		        INNER JOIN PR_PROMOTION_TARGET_CHANNEL B ON A.PROMO_NO = B.PROMO_NO
+		        INNER JOIN PR_PROMOTION_TARGET_DEVICE C  ON A.PROMO_NO = C.PROMO_NO
+		        INNER JOIN PR_PROMOTION_TARGET_GRADE D   ON A.PROMO_NO = D.PROMO_NO
+		        INNER JOIN PR_PROMOTION_TARGET_PRODUCT E ON A.PROMO_NO = E.PROMO_NO
+		        LEFT OUTER JOIN PR_PROMOTION_TARGET_PRODUCT F ON A.PROMO_NO = F.PROMO_NO AND F.PRDT_TYPE = 'G'
+		        LEFT OUTER JOIN PR_PROMOTION_MULTI_BUY_DISCOUNT G ON A.PROMO_NO = G.PROMO_NO AND A.PROMO_TYPE_CODE = '10001'
+		        INNER JOIN OC_CART_PRD H ON E.PRDT_NO = H.PRDT_NO
+		        LEFT OUTER JOIN PD_PRODUCT I ON I.PRDT_NO = F.PRDT_NO AND A.PROMO_TYPE_CODE = '10005'
+		        INNER JOIN PD_PRODUCT J ON J.PRDT_NO = E.PRDT_NO
+		             WHERE 1=1
+		               AND SYSDATE BETWEEN A.PROMO_START_DTM AND A.PROMO_END_DTM
+		               AND A.USE_YN = 'Y'
+		               AND B.CHNNL_NO = J.CHNNL_NO
+		            <if test='deviceCode != null and deviceCode != ""'>
+		               AND C.DEVICE_CODE = #{deviceCode, jdbcType=VARCHAR}
+		            </if>
+		            <if test='memberTypeCode != null and memberTypeCode != ""'>
+		               AND D.MEMBER_TYPE_CODE = #{memberTypeCode, jdbcType=VARCHAR}
+		            </if>
+		            <if test='mbshpGradeCode != null and mbshpGradeCode != ""'>
+		               AND D.MBSHP_GRADE_CODE = #{mbshpGradeCode, jdbcType=VARCHAR}
+		            </if>
+		            <if test='empYn != null and empYn != ""'>
+		               AND D.EMP_YN = #{empYn, jdbcType=VARCHAR}
+		            </if>
+		               AND E.PRDT_TYPE = 'T'
+		       ) TMP
+		 WHERE ((TMP.PROMO_TYPE_CODE = '10001' AND TMP.MULTI_BUY_DSCNT_SEQ = TMP.APP_MULTI_BUY_DSCNT_SEQ) OR (TMP.PROMO_TYPE_CODE != '10001' AND 1 = 1))
+	</select>
+	
+	<select id="selectPromotionByPrdtNo" parameterType="java.lang.String" resultType="kr.co.shop.web.product.model.master.PdProductPromotion">
+		/*+ kr.co.shop.web.promotion.repository.master.PrPromotionDao.selectPromotionByPrdtNo [상품에 대한 프로모션 조회] [김세훈] */
+		SELECT
+			*
+		FROM
+			(
+				SELECT
+					PROMOTION.promo_no,
+					PROMOTION.promo_name,
+					PROMOTION.promo_type_code,
+					PROMOTION.promo_start_dtm,
+					PROMOTION.promo_end_dtm,
+					PROMOTION.stock_ddct_type,
+					PROMOTION.cpn_smtm_apply_psblt_yn,
+					PROMOTION.imdtl_dscnt_type,
+					PROMOTION.imdtl_dscnt_value,
+					PROMOTION.promo_apply_type,
+					PROMOTION.afflts_code,
+					PROMOTION.insd_mgmt_info_text,
+					PROMOTION.use_yn,
+					PROMOTION.note_text,
+					PROMOTION.prdt_no,
+					PRODUCT_PRICE.normal_amt,
+					FLOOR(
+						CASE
+							WHEN PROMOTION.imdtl_dscnt_type = 'R' THEN PRODUCT_PRICE.normal_amt - (PRODUCT_PRICE.normal_amt * (PROMOTION.imdtl_dscnt_value * 0.01))
+							WHEN PROMOTION.imdtl_dscnt_type = 'A' THEN PRODUCT_PRICE.normal_amt - PROMOTION.imdtl_dscnt_value
+							WHEN PROMOTION.imdtl_dscnt_type = 'U' THEN PROMOTION.imdtl_dscnt_value
+							ELSE PRODUCT_PRICE.normal_amt
+						END
+					) AS dscnt_amt
+				FROM
+					(
+						SELECT
+							A.promo_no,
+							A.promo_name,
+							A.promo_type_code,
+							A.promo_start_dtm,
+							A.promo_end_dtm,
+							A.stock_ddct_type,
+							A.cpn_smtm_apply_psblt_yn,
+							A.imdtl_dscnt_type,
+							NVL(A.imdtl_dscnt_value, 0) AS imdtl_dscnt_value,
+							A.promo_apply_type,
+							A.afflts_code,
+							A.insd_mgmt_info_text,
+							A.use_yn,
+							A.note_text,
+							--A.rgster_no,
+							--A.rgst_dtm,
+							--A.moder_no,
+							--A.mod_dtm
+							B.prdt_no
+						FROM
+							pr_promotion A
+							JOIN pr_promotion_target_product B ON B.promo_no = A.promo_no
+						WHERE
+							A.promo_type_code IN ('10002', '10004')<!-- 10002:즉시할인, 10004:타임특가 -->
+							-- AND A.promo_apply_type = 'P'<!-- P:상품. C:카테고리, B:브랜드 -->
+							AND A.imdtl_dscnt_type IN ('R', 'A', 'U')<!-- R:정률, A:정액, U:균일가 -->
+							AND A.use_yn = 'Y'
+							AND SYSDATE BETWEEN A.promo_start_dtm AND A.promo_end_dtm 
+							AND B.prdt_no = #{prdtNo, jdbcType=VARCHAR}
+					) PROMOTION
+					LEFT OUTER JOIN
+					(
+						SELECT
+							PRODUCT_PRICE_HISTORY.prdt_no,
+							PRODUCT_PRICE_HISTORY.prdt_price_hist_seq,
+							NVL(PRODUCT_PRICE_HISTORY.normal_amt, 0) normal_amt,
+							NVL(PRODUCT_PRICE_HISTORY.sell_amt, 0) sell_amt,
+							NVL(PRODUCT_PRICE_HISTORY.erp_dscnt_rate, 0) erp_dscnt_rate,
+							NVL(PRODUCT_PRICE_HISTORY.onln_dscnt_rate, 0) onln_dscnt_rate,
+							NVL(PRODUCT_PRICE_HISTORY.emp_dscnt_rate, 0) emp_dscnt_rate
+						FROM
+						(
+							SELECT
+								prdt_no,
+								MAX(prdt_price_hist_seq) max_seq
+							FROM
+								pd_product_price_history
+							WHERE
+								prdt_no = #{prdtNo, jdbcType=VARCHAR}
+								AND SYSDATE &gt;= apply_start_dtm
+									AND SYSDATE &lt;= apply_end_dtm
+							GROUP BY
+								prdt_no
+						) PRODUCT_PRICE_HISTORY_MAX
+						LEFT OUTER JOIN
+						(
+							SELECT
+								*
+							FROM
+								pd_product_price_history
+							WHERE
+								prdt_no = #{prdtNo, jdbcType=VARCHAR}
+						) PRODUCT_PRICE_HISTORY ON PRODUCT_PRICE_HISTORY_MAX.prdt_no = PRODUCT_PRICE_HISTORY.prdt_no AND PRODUCT_PRICE_HISTORY_MAX.max_seq = PRODUCT_PRICE_HISTORY.prdt_price_hist_seq
+					) PRODUCT_PRICE ON PROMOTION.prdt_no = PRODUCT_PRICE.prdt_no
+			) PROMOTION_PRICE
+		ORDER BY
+			PROMOTION_PRICE.dscnt_amt ASC, PROMOTION_PRICE.promo_end_dtm DESC
+	</select>
+
+	<select id="getHotDealList" parameterType="kr.co.shop.web.product.model.master.PrPromotionProduct" resultType="kr.co.shop.web.product.model.master.PrPromotionProduct">
+		/*+ kr.co.shop.web.promotion.repository.master.PrPromotionDao.getHotDealList [핫딜 프로모션 사움 조회] [백인천] */
+		SELECT
+			PP.*,
+			A.*,
+			PRODUCT.*
+		FROM
+			pr_promotion_target_product A
+			LEFT JOIN
+			(
+				SELECT
+					PRODUCT.*,
+					PRODUCT_IMAGE.title_image_name,
+					PRODUCT_IMAGE.title_image_path_text,
+					PRODUCT_IMAGE.title_image_url,
+					PRODUCT_IMAGE.title_image_altrn_text,
+					PRODUCT_OPTION_WITH_STOCK.order_psblt_qty,
+					PRODUCT_OPTION_WITH_STOCK.optn_sell_count_stock_intgr_y,
+					PRODUCT_OPTION_WITH_STOCK.optn_sell_count_stock_intgr_n,
+					PRODUCT_OPTION_WITH_STOCK.optn_sell_count_stock_vendor,
+					PRODUCT_OPTION_WITH_STOCK.use_yn_qty,
+					PRODUCT_PRICE.normal_amt,
+					PRODUCT_PRICE.sell_amt,
+					PRODUCT_PRICE.erp_dscnt_rate,
+					PRODUCT_PRICE.onln_dscnt_rate,
+					PRODUCT_PRICE.emp_dscnt_rate
+				FROM
+					(
+						SELECT 
+							A.prdt_no, A.prdt_type_code, A.site_no, A.chnnl_no, A.prdt_name, A.eng_prdt_name, A.vndr_no, A.vndr_prdt_no_text, A.mmny_prdt_yn, A.brand_no, A.brand_sort_seq, A.org_place_code, A.style_info, A.prdt_color_info, A.mnftr_name, A.std_ctgr_no, A.stdr_ctgr_no, A.cntc_prdt_setup_yn, A.rltn_goods_setup_yn, A.add_optn_setup_yn, A.size_chart_disp_yn, A.size_chart_seq, A.emp_dscnt_yn, A.order_mnfct_yn, A.dprc_except_yn, A.store_pickup_psblt_yn, A.free_dlvy_yn, A.stock_intgr_yn, A.stock_un_intgr_rsn_code, A.stock_mgmt_yn, A.buy_limit_yn, A.min_buy_psblt_qty, A.day_max_buy_psblt_qty, A.max_buy_psblt_qty, A.item_code, A.gender_gbn_code, A.disp_flag_text, A.srch_psblt_yn, A.srch_key_word_text, A.wrhs_alert_yn, A.sell_start_dtm, A.sell_end_dtm, A.rsv_prdt_yn, A.rsv_dlvy_ymd, A.afflts_send_yn, A.aconnect_disp_yn, A.disp_yn, A.igrmall_disp_except_yn, A.vndr_suspd_yn, A.aprv_stat_code, A.sell_stat_code, A.use_yn, A.rgster_no, A.rgst_dtm, A.aprver_no, A.aprver_dtm, A.moder_no, A.mod_dtm
+							, ADMIN_APRVER.login_id AS aprver_id
+							, ADMIN_APRVER.admin_name AS aprver_name
+							, ADMIN_RGSTER.login_id AS rgster_id
+							, ADMIN_RGSTER.admin_name AS rgster_name
+							, ADMIN_MODER.login_id AS moder_id
+							, ADMIN_MODER.admin_name AS moder_name
+							, STANDARD_CATEGORY.std_ctgr_name
+							, CATEGORY.ctgr_name stdr_ctgr_name
+							, SITE.site_name
+							, SITE_CHNNL.chnnl_name
+							, BRAND.brand_name
+							, VENDOR.vndr_name
+						FROM
+							pd_product A
+							LEFT OUTER JOIN sy_admin ADMIN_APRVER ON A.aprver_no = ADMIN_APRVER.admin_no
+							LEFT OUTER JOIN sy_admin ADMIN_RGSTER ON A.rgster_no = ADMIN_RGSTER.admin_no
+							LEFT OUTER JOIN sy_admin ADMIN_MODER ON A.moder_no = ADMIN_MODER.admin_no
+							LEFT OUTER JOIN sy_standard_category STANDARD_CATEGORY ON A.std_ctgr_no = STANDARD_CATEGORY.std_ctgr_no
+							LEFT OUTER JOIN dp_category CATEGORY ON A.stdr_ctgr_no = CATEGORY.ctgr_no
+							LEFT OUTER JOIN sy_site SITE ON A.site_no = SITE.site_no
+							LEFT OUTER JOIN sy_site_chnnl SITE_CHNNL ON A.chnnl_no = SITE_CHNNL.chnnl_no
+							LEFT OUTER JOIN dp_brand BRAND ON A.brand_no = BRAND.brand_no
+							LEFT OUTER JOIN vd_vendor VENDOR ON A.vndr_no = VENDOR.vndr_no
+					) PRODUCT
+		
+					LEFT OUTER JOIN (
+						SELECT
+							prdt_no,
+							NVL(image_name,		'') title_image_name,
+							NVL(image_path_text,	'') title_image_path_text,
+							NVL(image_url,		'') title_image_url,
+							NVL(altrn_text,		'') title_image_altrn_text
+						FROM
+							pd_product_relation_file
+						WHERE
+							prdt_rltn_file_seq = 1
+							AND disp_postn_type = 'P'
+							AND file_type = 'I'
+					) PRODUCT_IMAGE ON PRODUCT.prdt_no = PRODUCT_IMAGE.prdt_no
+		
+					LEFT OUTER JOIN (
+						SELECT
+							PRODUCT_OPTION_AVAILABLE_RATE.prdt_no,
+							SUM(PRODUCT_OPTION_AVAILABLE_RATE.order_psblt_qty) order_psblt_qty,
+							SUM(CASE WHEN (PRODUCT_OPTION_AVAILABLE_RATE.stock_ai_qty + PRODUCT_OPTION_AVAILABLE_RATE.stock_aw_qty + PRODUCT_OPTION_AVAILABLE_RATE.stock_as_qty) > 0 AND PRODUCT_OPTION_AVAILABLE_RATE.use_yn_qty > 0
+								THEN 1
+								ELSE 0
+							END) optn_sell_count_stock_intgr_y,
+							SUM(CASE WHEN (PRODUCT_OPTION_AVAILABLE_RATE.stock_ai_qty) > 0 AND PRODUCT_OPTION_AVAILABLE_RATE.use_yn_qty > 0
+								THEN 1
+								ELSE 0
+							END) optn_sell_count_stock_intgr_n,
+							SUM(CASE WHEN (PRODUCT_OPTION_AVAILABLE_RATE.stock_vd_qty) > 0 AND PRODUCT_OPTION_AVAILABLE_RATE.use_yn_qty > 0
+								THEN 1
+								ELSE 0
+							END) optn_sell_count_stock_vendor,
+							SUM(PRODUCT_OPTION_AVAILABLE_RATE.use_yn_qty) use_yn_qty
+						FROM
+							(
+								SELECT
+									PRODUCT_OPTION_WITH_STOCK.prdt_no,
+									PRODUCT_OPTION_WITH_STOCK.prdt_optn_no,
+									PRODUCT_OPTION_WITH_STOCK.order_psblt_qty,
+									NVL(CASE WHEN SUM(PRODUCT_OPTION_WITH_STOCK.stock_ai_qty) > 0 THEN SUM(PRODUCT_OPTION_WITH_STOCK.stock_ai_qty) ELSE 0 END, 0) stock_ai_qty,
+									NVL(CASE WHEN SUM(PRODUCT_OPTION_WITH_STOCK.stock_aw_qty) > 0 THEN SUM(PRODUCT_OPTION_WITH_STOCK.stock_aw_qty) ELSE 0 END, 0) stock_aw_qty,
+									NVL(CASE WHEN SUM(PRODUCT_OPTION_WITH_STOCK.stock_as_qty) > 0 THEN SUM(PRODUCT_OPTION_WITH_STOCK.stock_as_qty) ELSE 0 END, 0) stock_as_qty,
+									NVL(CASE WHEN SUM(PRODUCT_OPTION_WITH_STOCK.stock_vd_qty) > 0 THEN SUM(PRODUCT_OPTION_WITH_STOCK.stock_vd_qty) ELSE 0 END, 0) stock_vd_qty,
+									SUM(CASE WHEN PRODUCT_OPTION_WITH_STOCK.use_yn = 'Y' THEN 1 ELSE 0 END) use_yn_qty
+								FROM
+									(
+										SELECT
+											PRODUCT_OPTION_WITH_STOCK_PIVOT.prdt_no,
+											PRODUCT_OPTION_WITH_STOCK_PIVOT.prdt_optn_no,
+											PRODUCT_OPTION_WITH_STOCK_PIVOT.order_psblt_qty,
+											PRODUCT_OPTION_WITH_STOCK_PIVOT.total_stock_qty,
+											PRODUCT_OPTION_WITH_STOCK_PIVOT.total_order_qty,
+		
+												PRODUCT_OPTION_WITH_STOCK_PIVOT.[10000] stock_AI_qty
+											 , 
+												PRODUCT_OPTION_WITH_STOCK_PIVOT.[10001] stock_AW_qty
+											 , 
+												PRODUCT_OPTION_WITH_STOCK_PIVOT.[10002] stock_AS_qty
+											 , 
+												PRODUCT_OPTION_WITH_STOCK_PIVOT.[10003] stock_VD_qty
+											 , 
+											PRODUCT_OPTION_WITH_STOCK_PIVOT.use_yn
+										FROM
+											(
+												SELECT
+													PRODUCT_OPTION_STOCK_PIVOT.*
+												FROM
+													(
+														SELECT
+															PRODUCT_OPTION.*,
+															PRODUCT_OPTION_STOCK.stock_gbn_code,
+															PRODUCT_OPTION_STOCK.stock_qty
+														FROM
+															pd_product_option PRODUCT_OPTION
+															LEFT JOIN pd_product_option_stock PRODUCT_OPTION_STOCK ON PRODUCT_OPTION.prdt_no = PRODUCT_OPTION_STOCK.prdt_no AND PRODUCT_OPTION.prdt_optn_no = PRODUCT_OPTION_STOCK.prdt_optn_no
+													) PRODUCT_OPTION_WITH_STOCK
+												PIVOT (
+													SUM(PRODUCT_OPTION_WITH_STOCK.stock_qty) FOR PRODUCT_OPTION_WITH_STOCK.stock_gbn_code IN
+													 (  
+														[10000]
+													 , 
+														[10001]
+													 , 
+														[10002]
+													 , 
+														[10003]
+													 ) 
+												) PRODUCT_OPTION_STOCK_PIVOT
+											) PRODUCT_OPTION_WITH_STOCK_PIVOT
+									) PRODUCT_OPTION_WITH_STOCK
+								GROUP BY
+									PRODUCT_OPTION_WITH_STOCK.prdt_no, PRODUCT_OPTION_WITH_STOCK.prdt_optn_no, PRODUCT_OPTION_WITH_STOCK.order_psblt_qty
+							) PRODUCT_OPTION_AVAILABLE_RATE
+						GROUP BY
+							PRODUCT_OPTION_AVAILABLE_RATE.prdt_no
+					) PRODUCT_OPTION_WITH_STOCK ON PRODUCT.prdt_no = PRODUCT_OPTION_WITH_STOCK.prdt_no
+		
+					LEFT OUTER JOIN (
+						SELECT
+							PRODUCT_PRICE_HISTORY.prdt_no,
+							NVL(PRODUCT_PRICE_HISTORY.normal_amt, 0) normal_amt,
+							NVL(PRODUCT_PRICE_HISTORY.sell_amt, 0) sell_amt,
+							NVL(PRODUCT_PRICE_HISTORY.erp_dscnt_rate, 0) erp_dscnt_rate,
+							NVL(PRODUCT_PRICE_HISTORY.onln_dscnt_rate, 0) onln_dscnt_rate,
+							NVL(PRODUCT_PRICE_HISTORY.emp_dscnt_rate, 0) emp_dscnt_rate
+						FROM
+							(
+								SELECT
+									prdt_no,
+									MAX(prdt_price_hist_seq) max_seq
+								FROM
+									pd_product_price_history
+								WHERE
+									SYSDATE &gt;= apply_start_dtm
+									AND SYSDATE &lt;= apply_end_dtm
+								GROUP BY
+									prdt_no
+							) PRODUCT_PRICE_HISTORY_MAX
+							LEFT JOIN
+							(
+								SELECT
+									prdt_no,
+									prdt_price_hist_seq,
+									apply_start_dtm,
+									apply_end_dtm,
+									normal_amt,
+									sell_amt,
+									erp_dscnt_rate,
+									onln_dscnt_rate,
+									emp_dscnt_rate
+								FROM
+									pd_product_price_history
+								) PRODUCT_PRICE_HISTORY ON PRODUCT_PRICE_HISTORY_MAX.prdt_no = PRODUCT_PRICE_HISTORY.prdt_no AND PRODUCT_PRICE_HISTORY_MAX.max_seq = PRODUCT_PRICE_HISTORY.prdt_price_hist_seq
+					) PRODUCT_PRICE ON PRODUCT.prdt_no = PRODUCT_PRICE.prdt_no
+		
+			) PRODUCT ON A.prdt_no = PRODUCT.prdt_no
+			
+			LEFT OUTER JOIN PR_PROMOTION PP ON PP.PROMO_NO = A.PROMO_NO
+		WHERE 1 = 1
+			AND PP.PROMO_TYPE_CODE = #{promoTypeCode, jdbcType=VARCHAR}
+			AND SYSDATE &lt;= PP.PROMO_END_DTM
+			AND PP.USE_YN = 'Y'
+		
+			ORDER BY PP.PROMO_START_DTM ASC
+	</select>
+	
+	<select id="selectPromotionOfGiftByPrdtNo" parameterType="java.lang.String" resultMap="productGift">
+		/*+ kr.co.shop.web.promotion.repository.master.PrPromotionDao.selectPromotionOfGiftByPrdtNo [상품번호에 해당하는 사은픔 프로모션정보 및 사은품정보 조회 쿼리] [김세훈] */
+		SELECT
+			INNER_PRODUCT.prdt_no						AS prdt_no,
+			INNER_PRODUCT.prdt_name						AS prdt_name,
+			INNER_PRODUCT.eng_prdt_name					AS eng_prdt_name,
+			INNER_PRODUCT_FILE.prdt_no					AS im_prdt_no,
+			INNER_PRODUCT_FILE.prdt_rltn_file_seq		AS im_prdt_rltn_file_seq,
+			INNER_PRODUCT_FILE.image_name				AS im_image_name,
+			INNER_PRODUCT_FILE.image_url				AS im_image_url,
+			INNER_PRODUCT_FILE.altrn_text				AS im_altrn_text
+		FROM
+			(
+				SELECT
+					INNER_PROMOTION_TARGET.prdt_no
+				FROM
+					(
+						SELECT
+							A.promo_no
+						FROM
+							pr_promotion A
+							LEFT JOIN pr_promotion_target_product B ON A.promo_no = B.promo_no
+						WHERE
+							A.promo_type_code = '${@kr.co.shop.constant.CommonCode@PROMO_TYPE_CODE_GIFT_PAYMENT}'<!-- 사은품지급 -->
+							AND SYSDATE BETWEEN A.promo_start_dtm AND A.promo_end_dtm
+							AND B.prdt_no = #{prdtNo, jdbcType=VARCHAR}
+							AND B.prdt_type = 'T'<!-- 프로모션 대상에 포함 -->
+							AND A.use_yn = 'Y'
+						ORDER BY
+							A.promo_start_dtm ASC
+						FETCH FIRST 1 ROWS ONLY
+					) INNER_PROMOTION<!-- 상품번호가 대상상품으로 설정된 사은품 프로모션 번호를 조회 -->
+					LEFT JOIN pr_promotion_target_product INNER_PROMOTION_TARGET ON INNER_PROMOTION.promo_no = INNER_PROMOTION_TARGET.promo_no
+				WHERE
+					INNER_PROMOTION_TARGET.prdt_type = 'G'<!-- 사은품 -->
+			) INNER_PROMOTION_GIFT<!-- 프로모션번호에 해당하는 사은품 목록 조회 -->
+			LEFT JOIN pd_product INNER_PRODUCT ON INNER_PROMOTION_GIFT.prdt_no = INNER_PRODUCT.prdt_no
+			LEFT JOIN pd_product_relation_file INNER_PRODUCT_FILE ON INNER_PRODUCT.prdt_no = INNER_PRODUCT_FILE.prdt_no
+	</select>
+
+</mapper>

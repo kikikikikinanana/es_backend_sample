@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.DpBrandDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.product.model.master.DpBrand">
+     /*+ kr.co.shop.web.product.repository.master.DpBrandDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			dp_brand
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+
+    <select id="getStoreBrandList" parameterType="kr.co.shop.web.product.model.master.DpBrand" resultType="kr.co.shop.web.product.model.master.DpBrand">
+	/*+ kr.co.shop.fo.display.repository.DpBrandDao.selectStoreBrandList [매장전용상품존 브랜드 조회쿼리] [백인천] */
+		SELECT 
+			BRD.*
+		FROM (	SELECT BRAND_NO
+				FROM PD_PRODUCT
+				WHERE 1 = 1
+					AND USE_YN = 'Y'
+					AND DISP_YN = 'Y'
+					AND PRDT_TYPE_CODE = '10002'
+				GROUP BY BRAND_NO
+			) PROD
+			LEFT OUTER JOIN DP_BRAND BRD on PROD.brand_no = BRD.BRAND_NO
+		WHERE 1 = 1
+			AND BRD.USE_YN = 'Y'
+    </select>
+
+    <select id="getBrandPageLoad" parameterType="kr.co.shop.web.product.model.master.DpBrand" resultType="kr.co.shop.web.product.model.master.DpBrand">
+	/*+ kr.co.shop.fo.display.repository.DpBrandDao.getBrandPageLoad [브랜드 페이지 조회쿼리] [백인천] */
+		SELECT 
+			<include refid="select-columns" />
+		FROM DP_BRAND
+		WHERE 1 = 1
+			AND USE_YN = 'Y'
+    </select>
+
+    <select id="getBrandList" parameterType="kr.co.shop.web.product.model.master.DpBrand" resultType="kr.co.shop.web.product.model.master.DpBrand">
+	/*+ kr.co.shop.fo.display.repository.DpBrandDao.getBrandList [브랜드 리스트 조회쿼리] [김영진] */
+	  	SELECT
+				  BRAND_NO
+				, BRAND_NAME
+				, BRAND_EN_NAME
+				, NVL(upper(KOR_INITIAL_TEXT), '0') AS KOR_INITIAL_TEXT
+				, NVL(upper(ENG_INITIAL_TEXT), '1') AS ENG_INITIAL_TEXT
+				, NVL(upper(ETC_INITIAL_TEXT), 'E') AS ETC_INITIAL_TEXT
+				, NVL(count(KOR_INITIAL_TEXT), 0)as korcount
+				, NVL(count(ENG_INITIAL_TEXT), 0)as engcount
+				, NVL(count(ETC_INITIAL_TEXT), 0)as etccount
+		FROM DP_BRAND
+		WHERE USE_YN = 'Y'
+		<if test='siteNo != null and siteNo != ""'>
+		AND SITE_NO = #{siteNo, jdbcType=VARCHAR} OR (SITE_NO IS NULL and USE_YN = 'Y') or (SITE_NO = ''and USE_YN = 'Y')
+		</if>
+		GROUP BY BRAND_NO, KOR_INITIAL_TEXT, ENG_INITIAL_TEXT, ETC_INITIAL_TEXT,BRAND_NAME, BRAND_EN_NAME, SITE_NO    
+	</select>
+    
+    <select id="getBrandListCount" parameterType="kr.co.shop.web.product.model.master.DpBrand" resultType="kr.co.shop.web.product.model.master.DpBrand">
+	/*+ kr.co.shop.fo.display.repository.DpBrandDao.getBrandListCount [브랜드 리스트 카운트 조회쿼리] [김영진] */
+	WITH BRANDCTN AS(
+		SELECT '0' AS 'iniItialText'
+			  ,0 AS [count]
+		UNION ALL
+		SELECT
+			 upper(KOR_INITIAL_TEXT)
+			,count(KOR_INITIAL_TEXT)
+		FROM DP_BRAND
+		WHERE USE_YN = 'Y'
+		GROUP BY KOR_INITIAL_TEXT
+		UNION ALL
+		SELECT
+			 upper(ENG_INITIAL_TEXT)
+			,count(ENG_INITIAL_TEXT)
+		FROM DP_BRAND
+		WHERE USE_YN = 'Y'
+		GROUP BY ENG_INITIAL_TEXT
+		UNION ALL
+		SELECT
+			 upper(ETC_INITIAL_TEXT)
+			,count(ETC_INITIAL_TEXT)
+		FROM DP_BRAND
+		WHERE USE_YN = 'Y'
+		GROUP BY ETC_INITIAL_TEXT
+		)
+		SELECT iniItialText , [count]
+		FROM BRANDCTN
+		ORDER BY iniItialText 
+    </select>
+    
+    <select id="selectBrandSaleList" parameterType="kr.co.shop.web.product.model.master.DpBrand" resultType="kr.co.shop.web.product.model.master.DpBrand">
+	/*+ kr.co.shop.fo.display.repository.DpBrandDao.getBrandListCount [브랜드 세일 리스트] [박민우] */
+		SELECT BRAND_NO, BRAND_NAME
+		FROM (
+		       SELECT P.PRDT_NO,
+		              B.BRAND_NO,
+		              B.BRAND_NAME,
+		              B.SITE_NO,
+		              FN_DISCOUNT_RATE(P.PRDT_NO) AS D_RATE
+		         FROM PD_PRODUCT P,
+		              DP_BRAND B
+		        WHERE P.STDR_CTGR_NO IS NOT NULL
+		          AND P.BRAND_NO = B.BRAND_NO
+		          AND (B.SITE_NO IS NULL  OR B.SITE_NO = '10001')
+		          AND P.CHNNL_NO = '10003'
+		          AND P.USE_YN = 'Y' 
+		          AND P.DISP_YN = 'Y'
+		          AND P.APRV_STAT_CODE = '10004' 
+		          AND P.PRDT_TYPE_CODE IN ('10000', '10001')
+		          AND P.SELL_STAT_CODE IN ('10001', '10002')
+		          AND SYSDATE BETWEEN P.SELL_START_DTM AND P.SELL_END_DTM
+		       ) TEMP
+		WHERE TEMP.D_RATE >= 30
+		GROUP BY TEMP.BRAND_NO, TEMP.BRAND_NAME
+		ORDER BY TEMP.BRAND_NO
+	</select>
+	
+</mapper>

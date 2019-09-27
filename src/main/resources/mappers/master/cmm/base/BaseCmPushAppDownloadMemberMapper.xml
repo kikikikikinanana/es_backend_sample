@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cmm.repository.master.CmPushAppDownloadMemberDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	app_dwld_member_seq, site_no, app_os_code, app_ver_text, fcm_token_text, device_token_text, app_install_dtm, member_no, app_push_recv_yn, app_push_recv_yn_mod_dtm, bio_crtfc_login_use_yn, bio_crtfc_login_use_yn_mod_dtm, night_push_recv_yn
+    </sql>
+    
+    <sql id="pk-columns">
+    	app_dwld_member_seq = #{appDwldMemberSeq, jdbcType=BIGINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.cmm.model.master.CmPushAppDownloadMember" resultType="kr.co.shop.web.cmm.model.master.CmPushAppDownloadMember">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmPushAppDownloadMemberDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			cm_push_app_download_member
+		<where> 
+			<if test="appDwldMemberSeq != null"> 
+				 app_dwld_member_seq = #{appDwldMemberSeq, jdbcType=BIGINT}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="appOsCode != null"> 
+				 AND app_os_code = #{appOsCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="appVerText != null"> 
+				 AND app_ver_text = #{appVerText, jdbcType=VARCHAR}
+			</if> 
+			<if test="fcmTokenText != null"> 
+				 AND fcm_token_text = #{fcmTokenText, jdbcType=VARCHAR}
+			</if> 
+			<if test="deviceTokenText != null"> 
+				 AND device_token_text = #{deviceTokenText, jdbcType=VARCHAR}
+			</if> 
+			<if test="appInstallDtm != null"> 
+				 AND app_install_dtm = #{appInstallDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="memberNo != null"> 
+				 AND member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="appPushRecvYn != null"> 
+				 AND app_push_recv_yn = #{appPushRecvYn, jdbcType=CHAR}
+			</if> 
+			<if test="appPushRecvYnModDtm != null"> 
+				 AND app_push_recv_yn_mod_dtm = #{appPushRecvYnModDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="bioCrtfcLoginUseYn != null"> 
+				 AND bio_crtfc_login_use_yn = #{bioCrtfcLoginUseYn, jdbcType=CHAR}
+			</if> 
+			<if test="bioCrtfcLoginUseYnModDtm != null"> 
+				 AND bio_crtfc_login_use_yn_mod_dtm = #{bioCrtfcLoginUseYnModDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="nightPushRecvYn != null"> 
+				 AND night_push_recv_yn = #{nightPushRecvYn, jdbcType=CHAR}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+	<insert id="insert" useGeneratedKeys="true" keyProperty="appDwldMemberSeq">
+
+     /*+ kr.co.shop.web.cmm.repository.master.CmPushAppDownloadMemberDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO cm_push_app_download_member
+			 ( site_no, app_os_code, app_ver_text, fcm_token_text, device_token_text, app_install_dtm, member_no, app_push_recv_yn, app_push_recv_yn_mod_dtm, bio_crtfc_login_use_yn, bio_crtfc_login_use_yn_mod_dtm, night_push_recv_yn ) 
+
+		VALUES 
+			 ( #{siteNo, jdbcType=VARCHAR}, #{appOsCode, jdbcType=VARCHAR}, #{appVerText, jdbcType=VARCHAR}, #{fcmTokenText, jdbcType=VARCHAR}, #{deviceTokenText, jdbcType=VARCHAR}, <choose><when test="appInstallDtm != null">#{appInstallDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{memberNo, jdbcType=VARCHAR}, #{appPushRecvYn, jdbcType=CHAR}, <choose><when test="appPushRecvYnModDtm != null">#{appPushRecvYnModDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{bioCrtfcLoginUseYn, jdbcType=CHAR}, <choose><when test="bioCrtfcLoginUseYnModDtm != null">#{bioCrtfcLoginUseYnModDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{nightPushRecvYn, jdbcType=CHAR} )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.cmm.model.master.CmPushAppDownloadMember">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmPushAppDownloadMemberDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE cm_push_app_download_member
+		<set> 
+			<if test="appDwldMemberSeq != null"> 
+				app_dwld_member_seq = #{appDwldMemberSeq, jdbcType=BIGINT}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="appOsCode != null"> 
+				app_os_code = #{appOsCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="appVerText != null"> 
+				app_ver_text = #{appVerText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="fcmTokenText != null"> 
+				fcm_token_text = #{fcmTokenText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="deviceTokenText != null"> 
+				device_token_text = #{deviceTokenText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="appInstallDtm != null"> 
+				app_install_dtm = #{appInstallDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="appPushRecvYn != null"> 
+				app_push_recv_yn = #{appPushRecvYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="appPushRecvYnModDtm != null"> 
+				app_push_recv_yn_mod_dtm = #{appPushRecvYnModDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="bioCrtfcLoginUseYn != null"> 
+				bio_crtfc_login_use_yn = #{bioCrtfcLoginUseYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="bioCrtfcLoginUseYnModDtm != null"> 
+				bio_crtfc_login_use_yn_mod_dtm = #{bioCrtfcLoginUseYnModDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="nightPushRecvYn != null"> 
+				night_push_recv_yn = #{nightPushRecvYn, jdbcType=CHAR}, 
+			</if> 
+		</set> 
+		WHERE 
+			 app_dwld_member_seq = #{appDwldMemberSeq, jdbcType=BIGINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.cmm.model.master.CmPushAppDownloadMember">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmPushAppDownloadMemberDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM cm_push_app_download_member
+		WHERE 
+			 app_dwld_member_seq = #{appDwldMemberSeq, jdbcType=BIGINT}  
+    </delete>
+</mapper>

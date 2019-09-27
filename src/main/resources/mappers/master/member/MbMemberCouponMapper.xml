@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.member.repository.master.MbMemberCouponDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.member.model.master.MbMemberCoupon">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberCouponDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			mb_member_coupon
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+
+	<select id="selectAvailableCouponCount" parameterType="String" resultType="int">
+	/*+ kr.co.shop.web.member.repository.master.MbMemberCouponDao.selectAvailableCouponCount [나의 사용가능 쿠폰 갯수] [유성민] */
+		SELECT	COUNT(*)
+		FROM	MB_MEMBER_COUPON
+		WHERE
+			MEMBER_NO = #{value, jdbcType=VARCHAR}
+		AND
+			<![CDATA[
+			(SYSDATE >= VALID_START_DTM AND SYSDATE <= VALID_END_DTM)
+			]]>
+		AND
+			CPN_USE_DTM is null
+		AND
+			CPN_STAT_CODE IN ('10000', '10001')
+	</select>
+	
+	<select id="selectAvailableCouponList" parameterType="String" resultType="kr.co.shop.web.member.model.master.MbMemberCoupon">
+	/*+ kr.co.shop.web.member.repository.master.MbMemberCouponDao.selectAvailableCouponList [나의 사용가능 쿠폰 리스트] [김영현] */
+		SELECT
+			mmc.member_no
+			, mmc.hold_cpn_seq
+			, pc.cpn_name
+			, mmc.cpn_no
+			, mmc.paper_no_text
+			, mmc.event_no
+			, mmc.cpn_issue_dtm
+			, mmc.valid_start_dtm
+			, mmc.valid_end_dtm
+			, mmc.cpn_use_dtm
+			, mmc.re_issue_rsn_text
+			, mmc.cpn_stat_code
+			, mmc.rgster_no
+			, mmc.rgst_dtm
+			, mmc.moder_no
+			, mmc.mod_dtm
+		FROM
+			MB_MEMBER_COUPON mmc
+		LEFT JOIN
+			PR_COUPON pc
+		ON
+			mmc.cpn_no = pc.cpn_no
+		WHERE
+			mmc.MEMBER_NO = #{value, jdbcType=VARCHAR}
+		AND
+			<![CDATA[
+			(SYSDATE >= mmc.VALID_START_DTM AND SYSDATE <= mmc.VALID_END_DTM)
+			]]>
+		AND
+			mmc.CPN_USE_DTM is null
+		AND
+			mmc.CPN_STAT_CODE IN ('10000', '10001')
+	</select>
+	
+	<select id="selectAvailableCouponListForOrder" parameterType="String" resultType="kr.co.shop.web.member.model.master.MbMemberCoupon">
+	/*+ kr.co.shop.web.member.repository.master.MbMemberCouponDao.selectAvailableCouponList [나의 사용가능 쿠폰 리스트] [김영현] */
+		SELECT
+			mmc.member_no
+			, mmc.hold_cpn_seq
+			, pc.cpn_name
+			, pc.cpn_type_code
+			, pc.dscnt_type
+			, pc.dscnt_value
+			, mmc.cpn_no
+			, mmc.paper_no_text
+			, mmc.event_no
+			, mmc.cpn_issue_dtm
+			, mmc.valid_start_dtm
+			, mmc.valid_end_dtm
+			, mmc.cpn_use_dtm
+			, mmc.re_issue_rsn_text
+			, mmc.cpn_stat_code
+			, mmc.rgster_no
+			, mmc.rgst_dtm
+			, mmc.moder_no
+			, mmc.mod_dtm
+		FROM
+			MB_MEMBER_COUPON mmc
+		LEFT JOIN
+			PR_COUPON pc
+		ON
+			mmc.cpn_no = pc.cpn_no
+		WHERE
+			mmc.MEMBER_NO = #{value, jdbcType=VARCHAR}
+		AND
+			<![CDATA[
+			(SYSDATE >= mmc.VALID_START_DTM AND SYSDATE <= mmc.VALID_END_DTM)
+			]]>
+		AND
+			mmc.CPN_USE_DTM is null
+		AND
+			mmc.CPN_STAT_CODE IN ('10000', '10001')
+		AND
+			pc.cpn_type_code in ('10002', '10003', '10004', '10005')
+	</select>
+	
+	<select id="selectMemberCouponHoldSeq" parameterType="String" resultType="int">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberCouponDao.selectMemberCouponHoldSeq [회원 보유쿠폰 시퀀스 조회] [이지훈] */
+      	SELECT NVL(MAX(HOLD_CPN_SEQ), 0)+1 AS HOLD_CPN_SEQ
+          FROM MB_MEMBER_COUPON
+         WHERE MEMBER_NO = #{memberNo}
+    </select>
+    
+    <update id="updateMemberCouponUseInfo" parameterType="kr.co.shop.web.member.model.master.MbMemberCoupon">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberCouponDao.updateMemberCouponUseInfo [회원 보유쿠폰 사용 업데이트] [KTH] */
+    	UPDATE MB_MEMBER_COUPON
+    	   SET CPN_USE_DTM = SYSDATE
+    		 , MODER_NO = #{moderNo}
+    		 , MOD_DTM = SYSDATE
+    	 WHERE MEMBER_NO = #{memberNo}
+    	   AND HOLD_CPN_SEQ = #{holdCpnSeq}
+    </update>
+    
+    <insert id="insertMemberCoupon" parameterType="kr.co.shop.web.member.model.master.MbMemberCoupon">
+    /*+ kr.co.shop.web.member.repository.master.MbMemberCouponDao.insertMemberCoupon [회원 쿠폰 발급 등록] [KTH] */
+		<selectKey resultType="integer" keyProperty="holdCpnSeq" order="BEFORE">
+			SELECT NVL(MAX(HOLD_CPN_SEQ), 0) + 1
+			  FROM MB_MEMBER_COUPON
+			 WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+		</selectKey>
+	    INSERT
+			INTO MB_MEMBER_COUPON
+			( 
+				 MEMBER_NO
+				,HOLD_CPN_SEQ
+				,CPN_NO
+			<if test='paperNoText != null and paperNoText != "" '> 
+				,PAPER_NO_TEXT
+			</if>
+			<if test='eventNo != null and eventNo != "" '> 
+				,EVENT_NO
+			</if>
+				,CPN_ISSUE_DTM
+				,VALID_START_DTM
+				,VALID_END_DTM
+			<if test='cpnUseDtm != null and cpnUseDtm != "" '> 
+				,CPN_USE_DTM
+			</if>
+			<if test='reIssueRsnText != null and reIssueRsnText != "" '> 
+				,RE_ISSUE_RSN_TEXT
+			</if>
+				,CPN_STAT_CODE
+				,RGSTER_NO
+				,RGST_DTM
+				,MODER_NO
+				,MOD_DTM
+			)
+			VALUES 
+			(
+				 #{memberNo, jdbcType=VARCHAR}
+				,#{holdCpnSeq, jdbcType=INTEGER}
+				,#{cpnNo, jdbcType=VARCHAR}
+			<if test='paperNoText != null and paperNoText != "" '> 
+				,#{paperNoText, jdbcType=VARCHAR}
+			</if>	
+			<if test='eventNo != null and eventNo != "" '> 
+				,#{eventNo, jdbcType=VARCHAR}
+			</if>
+				,SYSDATE
+				,#{validStartDtm, jdbcType=TIMESTAMP}
+				,#{validEndDtm, jdbcType=TIMESTAMP}
+			<if test='cpnUseDtm != null and cpnUseDtm != "" '> 
+				,#{cpnUseDtm, jdbcType=TIMESTAMP}
+			</if>
+			<if test='reIssueRsnText != null and reIssueRsnText != "" '> 
+				,#{reIssueRsnText, jdbcType=VARCHAR}
+			</if>
+				,#{cpnStatCode, jdbcType=VARCHAR}
+				,#{rgsterNo, jdbcType=VARCHAR}
+				,SYSDATE
+				,#{moderNo, jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</insert>
+	
+	<insert id="insertMemberCouponReIssue" parameterType="kr.co.shop.web.member.model.master.MbMemberCoupon">
+    /*+ kr.co.shop.web.member.repository.master.MbMemberCouponDao.insertMemberCoupon [회원 쿠폰 재 발급 등록(복원 - 기 사용된 쿠폰 기준)] [KTH] */
+		<selectKey resultType="integer" keyProperty="reIssueHoldCpnSeq" order="BEFORE">
+			SELECT NVL(MAX(HOLD_CPN_SEQ), 0) + 1
+			  FROM MB_MEMBER_COUPON
+			 WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+		</selectKey>
+	    INSERT INTO MB_MEMBER_COUPON
+			 (
+			   MEMBER_NO
+			 , HOLD_CPN_SEQ
+			 , CPN_NO
+			 , PAPER_NO_TEXT
+			 , EVENT_NO
+			 , CPN_ISSUE_DTM
+			 , VALID_START_DTM
+			 , VALID_END_DTM
+			 , RE_ISSUE_RSN_TEXT
+			 , CPN_STAT_CODE
+			 , RGSTER_NO
+			 , RGST_DTM
+			 , MODER_NO
+			 , MOD_DTM
+			 )
+	    SELECT
+			   MEMBER_NO
+			 , #{reIssueHoldCpnSeq, jdbcType=INTEGER}
+			 , CPN_NO
+			 , PAPER_NO_TEXT
+			 , EVENT_NO
+			 , SYSDATE
+			 , VALID_START_DTM
+			 , VALID_END_DTM
+			 , #{reIssueRsnText, jdbcType=VARCHAR}
+			 , #{cpnStatCode, jdbcType=VARCHAR}
+			 , #{rgsterNo, jdbcType=VARCHAR}
+			 , SYSDATE
+			 , #{moderNo, jdbcType=VARCHAR}
+			 , SYSDATE
+		  FROM MB_MEMBER_COUPON
+    	 WHERE MEMBER_NO = #{memberNo}
+    	   AND HOLD_CPN_SEQ = #{holdCpnSeq, jdbcType=INTEGER}
+    	   AND CPN_USE_DTM IS NOT NULL
+	</insert>
+</mapper>

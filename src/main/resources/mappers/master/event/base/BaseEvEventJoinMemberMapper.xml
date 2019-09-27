@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.event.repository.master.EvEventJoinMemberDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	ev_event_join_member_seq, event_no, member_no, prdt_no, add_info1, add_info2, add_info3, add_info4, add_info5, device_code, join_dtm, win_yn
+    </sql>
+    
+    <sql id="pk-columns">
+    	ev_event_join_member_seq = #{evEventJoinMemberSeq, jdbcType=BIGINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.event.model.master.EvEventJoinMember" resultType="kr.co.shop.web.event.model.master.EvEventJoinMember">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventJoinMemberDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			ev_event_join_member
+		<where> 
+			<if test="evEventJoinMemberSeq != null"> 
+				 ev_event_join_member_seq = #{evEventJoinMemberSeq, jdbcType=BIGINT}
+			</if> 
+			<if test="eventNo != null"> 
+				 AND event_no = #{eventNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="memberNo != null"> 
+				 AND member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtNo != null"> 
+				 AND prdt_no = #{prdtNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="addInfo1 != null"> 
+				 AND add_info1 = #{addInfo1, jdbcType=VARCHAR}
+			</if> 
+			<if test="addInfo2 != null"> 
+				 AND add_info2 = #{addInfo2, jdbcType=VARCHAR}
+			</if> 
+			<if test="addInfo3 != null"> 
+				 AND add_info3 = #{addInfo3, jdbcType=VARCHAR}
+			</if> 
+			<if test="addInfo4 != null"> 
+				 AND add_info4 = #{addInfo4, jdbcType=VARCHAR}
+			</if> 
+			<if test="addInfo5 != null"> 
+				 AND add_info5 = #{addInfo5, jdbcType=VARCHAR}
+			</if> 
+			<if test="deviceCode != null"> 
+				 AND device_code = #{deviceCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="joinDtm != null"> 
+				 AND join_dtm = #{joinDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="winYn != null"> 
+				 AND win_yn = #{winYn, jdbcType=CHAR}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+	<insert id="insert" useGeneratedKeys="true" keyProperty="evEventJoinMemberSeq">
+
+     /*+ kr.co.shop.web.event.repository.master.EvEventJoinMemberDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO ev_event_join_member
+			 ( event_no, member_no, prdt_no, add_info1, add_info2, add_info3, add_info4, add_info5, device_code, join_dtm, win_yn ) 
+
+		VALUES 
+			 ( #{eventNo, jdbcType=VARCHAR}, #{memberNo, jdbcType=VARCHAR}, #{prdtNo, jdbcType=VARCHAR}, #{addInfo1, jdbcType=VARCHAR}, #{addInfo2, jdbcType=VARCHAR}, #{addInfo3, jdbcType=VARCHAR}, #{addInfo4, jdbcType=VARCHAR}, #{addInfo5, jdbcType=VARCHAR}, #{deviceCode, jdbcType=VARCHAR}, <choose><when test="joinDtm != null">#{joinDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{winYn, jdbcType=CHAR} )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.event.model.master.EvEventJoinMember">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventJoinMemberDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE ev_event_join_member
+		<set> 
+			<if test="evEventJoinMemberSeq != null"> 
+				ev_event_join_member_seq = #{evEventJoinMemberSeq, jdbcType=BIGINT}, 
+			</if> 
+			<if test="eventNo != null"> 
+				event_no = #{eventNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtNo != null"> 
+				prdt_no = #{prdtNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="addInfo1 != null"> 
+				add_info1 = #{addInfo1, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="addInfo2 != null"> 
+				add_info2 = #{addInfo2, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="addInfo3 != null"> 
+				add_info3 = #{addInfo3, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="addInfo4 != null"> 
+				add_info4 = #{addInfo4, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="addInfo5 != null"> 
+				add_info5 = #{addInfo5, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="deviceCode != null"> 
+				device_code = #{deviceCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="joinDtm != null"> 
+				join_dtm = #{joinDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="winYn != null"> 
+				win_yn = #{winYn, jdbcType=CHAR}, 
+			</if> 
+		</set> 
+		WHERE 
+			 ev_event_join_member_seq = #{evEventJoinMemberSeq, jdbcType=BIGINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.event.model.master.EvEventJoinMember">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventJoinMemberDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM ev_event_join_member
+		WHERE 
+			 ev_event_join_member_seq = #{evEventJoinMemberSeq, jdbcType=BIGINT}  
+    </delete>
+</mapper>

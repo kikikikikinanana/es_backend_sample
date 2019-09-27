@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.PdRelationProductDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.product.model.master.PdRelationProduct">
+    
+     /*+ kr.co.shop.web.product.repository.master.PdRelationProductDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			PD_RELATION_PRODUCT
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+
+    <sql id="where-relation-alias-b">
+    	<where>
+		    AND A.prdt_no != #{prdtNo, jdbcType=VARCHAR}
+		    AND B.prdt_no = #{prdtNo, jdbcType=VARCHAR}
+    	</where>
+    </sql>
+    
+    <resultMap type="kr.co.shop.web.product.model.master.PdProduct" id="relationProductResult">
+    	<collection property="productImage" column="{prdtNo=prdt_no}" ofType="kr.co.shop.web.product.model.master.PdProductRelationFile" select="kr.co.shop.web.product.repository.master.PdProductRelationFileDao.selectProductRelationFile"/>
+    	<collection property="productPrice" column="{prdtNo=prdt_no}" ofType="kr.co.shop.web.product.model.master.PdProductPriceHistory" select="kr.co.shop.web.product.repository.master.PdProductPriceHistoryDao.selectMaxPrdtPriceHistSeq"/>
+    </resultMap>
+    
+    <select id="selectRelationProductTop30List" parameterType="kr.co.shop.web.product.model.master.PdProduct" resultMap="relationProductResult">
+    	/*+ kr.co.shop.web.product.repository.master.PdRelationProductDao.selectRelationProductTop30List [30건의 추천 연관상품 목록 조회] [황성준] */
+    	<!-- 
+    	SELECT TOP 30 
+    		   A.*
+    		 , C.brand_name
+    	FROM pd_product A
+    	JOIN pd_relation_product B
+    	ON A.prdt_no = B.rltn_prdt_no
+    	LEFT JOIN dp_brand C
+    	ON A.brand_no = C.brand_no
+    	<where>
+		    AND B.prdt_no = #{prdtNo, jdbcType=VARCHAR}
+	    	AND B.rltn_prdt_type_code = '10000' 
+    	</where> 
+    	-->
+    	SELECT *
+    	FROM (
+	    	SELECT DISTINCT 
+	    		   A.*
+	    		 , C.brand_name
+	    		 , 'R' type
+	    	FROM pd_product A
+	    	JOIN pd_product B
+	    	ON A.brand_no = B.brand_no
+	    	AND A.stdr_ctgr_no = B.stdr_ctgr_no
+	    	LEFT JOIN dp_brand C
+	    	ON A.brand_no = C.brand_no
+	    	<include refid="where-relation-alias-b" />
+	    	FETCH FIRST 30 ROWS ONLY
+	    )
+    	<!-- 베시트는 매출정보와 결합하여 조회 -->
+    	UNION ALL
+    	SELECT *
+    	FROM (
+	    	SELECT DISTINCT 
+	    		   A.*
+	    		 , C.brand_name
+	    		 , 'B' type
+	    	FROM pd_product A
+	    	JOIN pd_product B
+	    	ON A.brand_no = B.brand_no
+	    	AND A.stdr_ctgr_no = B.stdr_ctgr_no
+	    	LEFT JOIN dp_brand C
+	    	ON A.brand_no = C.brand_no
+	    	<include refid="where-relation-alias-b" />
+	    	FETCH FIRST 30 ROWS ONLY
+	    )
+    	UNION ALL
+    	SELECT *
+    	FROM (
+	    	SELECT DISTINCT 
+	    		   A.*
+	    		 , C.brand_name
+	    		 , 'N' type
+	    	FROM pd_product A
+	    	JOIN pd_product B
+	    	ON A.brand_no = B.brand_no
+	    	AND A.stdr_ctgr_no = B.stdr_ctgr_no
+	    	LEFT JOIN dp_brand C
+	    	ON A.brand_no = C.brand_no
+	    	<include refid="where-relation-alias-b" />
+	    	ORDER BY A.prdt_no DESC
+	    	FETCH FIRST 30 ROWS ONLY
+	    )
+    </select>
+    
+
+    
+    <select id="selectRltnPrdtNo" parameterType="kr.co.shop.web.product.model.master.PdRelationProduct" resultType="java.lang.String">
+    	/*+ kr.co.shop.web.product.repository.master.PdRelationProductDao.selectRltnPrdtNo [연계 상품 번호 조회] [김세훈] */
+    	SELECT
+    		rltn_prdt_no
+    	FROM
+    		pd_relation_product
+    	WHERE
+    		prdt_no = #{prdtNo, jdbcType=VARCHAR}
+    		AND rltn_prdt_type_code = #{rltnPrdtTypeCode, jdbcType=VARCHAR}
+    	ORDER BY
+    		sort_seq ASC
+    </select>
+
+</mapper>

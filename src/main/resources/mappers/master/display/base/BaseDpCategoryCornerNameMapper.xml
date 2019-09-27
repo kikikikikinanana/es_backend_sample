@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.DpCategoryCornerNameDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	ctgr_no, disp_tmpl_no, disp_tmpl_corner_seq, ctgr_corner_name_seq, disp_corner_name, image_name, image_path_text, image_url, altrn_text, disp_start_ymd, disp_end_ymd, sort_seq, disp_yn, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	ctgr_corner_name_seq = #{ctgrCornerNameSeq, jdbcType=INTEGER} AND ctgr_no = #{ctgrNo, jdbcType=VARCHAR} AND disp_tmpl_corner_seq = #{dispTmplCornerSeq, jdbcType=INTEGER} AND disp_tmpl_no = #{dispTmplNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.display.model.master.DpCategoryCornerName" resultType="kr.co.shop.web.display.model.master.DpCategoryCornerName">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpCategoryCornerNameDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			DP_CATEGORY_CORNER_NAME
+		<where> 
+			<if test="ctgrNo != null"> 
+				 ctgr_no = #{ctgrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="dispTmplNo != null"> 
+				 AND disp_tmpl_no = #{dispTmplNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="dispTmplCornerSeq != null"> 
+				 AND disp_tmpl_corner_seq = #{dispTmplCornerSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="ctgrCornerNameSeq != null"> 
+				 AND ctgr_corner_name_seq = #{ctgrCornerNameSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="dispCornerName != null"> 
+				 AND disp_corner_name = #{dispCornerName, jdbcType=VARCHAR}
+			</if> 
+			<if test="imageName != null"> 
+				 AND image_name = #{imageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="imagePathText != null"> 
+				 AND image_path_text = #{imagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="imageUrl != null"> 
+				 AND image_url = #{imageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="altrnText != null"> 
+				 AND altrn_text = #{altrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="dispStartYmd != null"> 
+				 AND disp_start_ymd = #{dispStartYmd, jdbcType=DATE}
+			</if> 
+			<if test="dispEndYmd != null"> 
+				 AND disp_end_ymd = #{dispEndYmd, jdbcType=DATE}
+			</if> 
+			<if test="sortSeq != null"> 
+				 AND sort_seq = #{sortSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="dispYn != null"> 
+				 AND disp_yn = #{dispYn, jdbcType=CHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.display.model.master.DpCategoryCornerName">	
+
+     /*+ kr.co.shop.web.display.repository.master.DpCategoryCornerNameDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO DP_CATEGORY_CORNER_NAME
+			 ( ctgr_no, disp_tmpl_no, disp_tmpl_corner_seq, ctgr_corner_name_seq, disp_corner_name, image_name, image_path_text, image_url, altrn_text, disp_start_ymd, disp_end_ymd, sort_seq, disp_yn, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{ctgrNo, jdbcType=VARCHAR}, #{dispTmplNo, jdbcType=VARCHAR}, #{dispTmplCornerSeq, jdbcType=INTEGER}, #{ctgrCornerNameSeq, jdbcType=INTEGER}, #{dispCornerName, jdbcType=VARCHAR}, #{imageName, jdbcType=VARCHAR}, #{imagePathText, jdbcType=VARCHAR}, #{imageUrl, jdbcType=VARCHAR}, #{altrnText, jdbcType=VARCHAR}, <choose><when test="dispStartYmd != null">#{dispStartYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="dispEndYmd != null">#{dispEndYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, #{sortSeq, jdbcType=INTEGER}, #{dispYn, jdbcType=CHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.display.model.master.DpCategoryCornerName">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpCategoryCornerNameDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE DP_CATEGORY_CORNER_NAME
+		<set> 
+			<if test="ctgrNo != null"> 
+				ctgr_no = #{ctgrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dispTmplNo != null"> 
+				disp_tmpl_no = #{dispTmplNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dispTmplCornerSeq != null"> 
+				disp_tmpl_corner_seq = #{dispTmplCornerSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="ctgrCornerNameSeq != null"> 
+				ctgr_corner_name_seq = #{ctgrCornerNameSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="dispCornerName != null"> 
+				disp_corner_name = #{dispCornerName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="imageName != null"> 
+				image_name = #{imageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="imagePathText != null"> 
+				image_path_text = #{imagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="imageUrl != null"> 
+				image_url = #{imageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="altrnText != null"> 
+				altrn_text = #{altrnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dispStartYmd != null"> 
+				disp_start_ymd = #{dispStartYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="dispEndYmd != null"> 
+				disp_end_ymd = #{dispEndYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="sortSeq != null"> 
+				sort_seq = #{sortSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="dispYn != null"> 
+				disp_yn = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 ctgr_corner_name_seq = #{ctgrCornerNameSeq, jdbcType=INTEGER} AND ctgr_no = #{ctgrNo, jdbcType=VARCHAR} AND disp_tmpl_corner_seq = #{dispTmplCornerSeq, jdbcType=INTEGER} AND disp_tmpl_no = #{dispTmplNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.display.model.master.DpCategoryCornerName">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpCategoryCornerNameDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM DP_CATEGORY_CORNER_NAME
+		WHERE 
+			 ctgr_corner_name_seq = #{ctgrCornerNameSeq, jdbcType=INTEGER} AND ctgr_no = #{ctgrNo, jdbcType=VARCHAR} AND disp_tmpl_corner_seq = #{dispTmplCornerSeq, jdbcType=INTEGER} AND disp_tmpl_no = #{dispTmplNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

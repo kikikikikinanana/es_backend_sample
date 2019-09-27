@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.promotion.repository.master.PrPromotionMultiBuyDiscountDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	promo_no, multi_buy_dscnt_seq, buy_qty, dscnt_rate
+    </sql>
+    
+    <sql id="pk-columns">
+    	multi_buy_dscnt_seq = #{multiBuyDscntSeq, jdbcType=INTEGER} AND promo_no = #{promoNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.promotion.model.master.PrPromotionMultiBuyDiscount" resultType="kr.co.shop.web.promotion.model.master.PrPromotionMultiBuyDiscount">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrPromotionMultiBuyDiscountDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			PR_PROMOTION_MULTI_BUY_DISCOUNT
+		<where> 
+			<if test="promoNo != null"> 
+				 promo_no = #{promoNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="multiBuyDscntSeq != null"> 
+				 AND multi_buy_dscnt_seq = #{multiBuyDscntSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="buyQty != null"> 
+				 AND buy_qty = #{buyQty, jdbcType=INTEGER}
+			</if> 
+			<if test="dscntRate != null"> 
+				 AND dscnt_rate = #{dscntRate, jdbcType=TINYINT}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.promotion.model.master.PrPromotionMultiBuyDiscount">	
+
+     /*+ kr.co.shop.web.promotion.repository.master.PrPromotionMultiBuyDiscountDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO PR_PROMOTION_MULTI_BUY_DISCOUNT
+			 ( promo_no, multi_buy_dscnt_seq, buy_qty, dscnt_rate ) 
+
+		VALUES 
+			 ( #{promoNo, jdbcType=VARCHAR}, #{multiBuyDscntSeq, jdbcType=INTEGER}, #{buyQty, jdbcType=INTEGER}, #{dscntRate, jdbcType=TINYINT} )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.promotion.model.master.PrPromotionMultiBuyDiscount">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrPromotionMultiBuyDiscountDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE PR_PROMOTION_MULTI_BUY_DISCOUNT
+		<set> 
+			<if test="promoNo != null"> 
+				promo_no = #{promoNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="multiBuyDscntSeq != null"> 
+				multi_buy_dscnt_seq = #{multiBuyDscntSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="buyQty != null"> 
+				buy_qty = #{buyQty, jdbcType=INTEGER}, 
+			</if> 
+			<if test="dscntRate != null"> 
+				dscnt_rate = #{dscntRate, jdbcType=TINYINT}, 
+			</if> 
+		</set> 
+		WHERE 
+			 multi_buy_dscnt_seq = #{multiBuyDscntSeq, jdbcType=INTEGER} AND promo_no = #{promoNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.promotion.model.master.PrPromotionMultiBuyDiscount">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrPromotionMultiBuyDiscountDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM PR_PROMOTION_MULTI_BUY_DISCOUNT
+		WHERE 
+			 multi_buy_dscnt_seq = #{multiBuyDscntSeq, jdbcType=INTEGER} AND promo_no = #{promoNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

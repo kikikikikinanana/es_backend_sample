@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderPaymentDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrderPayment">
+    
+     /*+ kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderPaymentDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			oc_gift_card_order_payment
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <insert id="insertGiftCardKcpPayment" parameterType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrderPayment">	
+
+     /*+ kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderPaymentDao.insertGiftCardKcpPayment [kcp payment insert 쿼리] [YSW] */
+    
+		INSERT INTO oc_gift_card_order_payment
+			 ( 
+			 	gift_card_order_no
+			 	, gift_card_order_pymnt_seq
+			 	, pymnt_dtm
+			 	, device_code
+			 	, main_pymnt_means_yn
+			 	, pymnt_means_code
+			 	, pymnt_vndr_code
+			 	, pymnt_organ_code_text
+			 	, pymnt_organ_name
+			 	, pymnt_organ_no_text
+			 	, intrst_free_yn
+			 	, instmt_term_count
+			 	, card_gbn_type
+			 	, card_type
+			 	, pymnt_aprv_no_text
+			 	, pymnt_amt
+			 	, cash_rcpt_issue_yn
+			 	, gift_card_pin_no_text
+			 	, pymnt_stat_code
+			 	, rspns_code_text
+			 	, rspns_mesg_text
+			 	, pymnt_log_info
+			 	, rgster_no
+			 	, rgst_dtm
+			 ) 
+
+		VALUES 
+			 ( 
+			 	#{giftCardOrderNo, jdbcType=VARCHAR}
+			 	, (select count(*) + 1 from oc_gift_card_order_payment where gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR})
+			 	, <choose><when test="pymntDtm != null">#{pymntDtm, jdbcType=TIMESTAMP}</when><otherwise>SYSDATE</otherwise></choose>
+			 	, #{deviceCode, jdbcType=VARCHAR}
+			 	, #{mainPymntMeansYn, jdbcType=CHAR}
+			 	, #{pymntMeansCode, jdbcType=VARCHAR}
+			 	, #{pymntVndrCode, jdbcType=VARCHAR}
+			 	, #{pymntOrganCodeText, jdbcType=VARCHAR}
+			 	, #{pymntOrganName, jdbcType=VARCHAR}
+			 	, #{pymntOrganNoText, jdbcType=VARCHAR}
+			 	, #{intrstFreeYn, jdbcType=CHAR}
+			 	, #{instmtTermCount, jdbcType=TINYINT}
+			 	, #{cardGbnType, jdbcType=CHAR}
+			 	, #{cardType, jdbcType=CHAR}
+			 	, #{pymntAprvNoText, jdbcType=VARCHAR}
+			 	, #{pymntAmt, jdbcType=INTEGER}
+			 	, #{cashRcptIssueYn, jdbcType=CHAR}
+			 	, #{giftCardPinNoText, jdbcType=VARCHAR}
+			 	, #{pymntStatCode, jdbcType=VARCHAR}
+			 	, #{rspnsCodeText, jdbcType=VARCHAR}
+			 	, #{rspnsMesgText, jdbcType=VARCHAR}
+			 	, #{pymntLogInfo, jdbcType=VARCHAR}
+			 	, #{rgsterNo, jdbcType=VARCHAR}
+			 	, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>SYSDATE</otherwise></choose>
+			 )  
+    </insert>
+    
+    <update id="updateGiftCardPaymentCancelStat" parameterType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrderPayment">
+    
+    /*+ kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderPaymentDao.updateGiftCardPaymentCancelStat [kcp payment update 쿼리] [YSW] */
+    
+    	UPDATE oc_gift_card_order_payment
+		<set> 
+			<if test="pymntStatCode != null"> 
+				pymnt_stat_code = #{pymntStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR}   
+    </update>
+
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.PdProductPriceHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.product.model.master.PdProductPriceHistory">
+    
+     /*+ kr.co.shop.web.product.repository.master.PdProductPriceHistoryDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			PD_PRODUCT_PRICE_HISTORY
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+	 <select id="selectMaxPrdtPriceHistSeq" parameterType="kr.co.shop.web.product.model.master.PdProductPriceHistory" resultType="kr.co.shop.web.product.model.master.PdProductPriceHistory">
+    	/*+ kr.co.shop.web.product.repository.master.PdProductPriceHistoryDao.selectMaxPrdtPriceHistSeq [최근 상품 가격 이력 조회] [황성준] */
+    	SELECT A.* 
+    	FROM pd_product_price_history A
+ 	 	WHERE prdt_no = #{prdtNo, jdbcType=VARCHAR} 
+ 	 	AND prdt_price_hist_seq = (SELECT prdt_price_hist_seq 
+								   FROM pd_product_price_history 
+								   WHERE prdt_no = A.prdt_no 
+								   AND APPLY_START_DTM <![CDATA[<=]]> SYSDATE
+								   AND APPLY_END_DTM >= SYSDATE
+								   ORDER BY prdt_price_hist_seq DESC
+								   FETCH FIRST 1 ROWS ONLY)
+	</select>
+</mapper>

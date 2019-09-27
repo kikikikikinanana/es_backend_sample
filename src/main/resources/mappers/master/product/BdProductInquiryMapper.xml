@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.BdProductInquiryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.product.model.master.BdProductInquiry">
+    
+     /*+ kr.co.shop.web.product.repository.master.BdProductInquiryDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			BD_PRODUCT_INQUIRY
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <sql id="select-columns-alias-a">
+    	A.prdt_inqry_seq, A.member_no, A.inqry_dtm, A.site_no, A.cnsl_type_code, A.cnsl_type_dtl_code, A.inqry_title_text, A.inqry_cont_text, A.prdt_no, A.vndr_no, A.pswd_yn, A.sms_send_yn, A.email_send_yn, A.aswr_cont_text, A.aswr_stat_code, A.disp_yn, A.aswr_no, A.aswr_dtm
+    	, TO_CHAR(A.inqry_dtm, 'YYYY.MM.DD') AS str_inqry_dtm
+    	, TO_CHAR(A.aswr_dtm, 'YYYY.MM.DD HH24:MI:SS') AS str_aswr_dtm
+    </sql>
+    
+    <sql id="where-inquiry-search-vo-alias-a">
+    	<where>
+    		<!-- 
+    		<if test='bean.dispYn != null and bean.dispYn != ""'>
+    			AND A.disp_yn = #{bean.dispYn, jdbcType=VARCHAR}
+    		</if>
+    		 -->
+    		AND A.disp_yn = 'Y'
+    		AND A.site_no = #{bean.siteNo, jdbcType=VARCHAR}
+    		<if test='bean.prdtNo != null and bean.prdtNo != ""'>
+				AND A.prdt_no = #{bean.prdtNo, jdbcType=VARCHAR}
+			</if>
+    		<if test='bean.memberNo != null and bean.memberNo != ""'>
+    			AND A.member_no = #{bean.memberNo, jdbcType=VARCHAR}
+    		</if>
+    		<if test='(bean.periodStartDate != null and bean.periodEndDate != null) and (bean.periodStartDate != "" and bean.periodEndDate != "")'>
+    			AND A.inqry_dtm
+					BETWEEN TO_DATE(CONCAT(#{bean.periodStartDate, jdbcType=VARCHAR}, ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') 
+						AND TO_DATE(CONCAT(#{bean.periodEndDate, jdbcType=VARCHAR}, ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS')
+    		</if>
+    	</where>
+    </sql>
+    
+    <sql id="join-inquiry-search-vo-alias-a">
+    	JOIN mb_member C
+    	ON A.member_no = C.member_no
+    	JOIN pd_product D
+    	ON A.prdt_no = D.prdt_no
+    	JOIN dp_brand E
+    	ON D.brand_no = E.brand_no
+    	JOIN pd_product_relation_file F
+    	ON A.prdt_no = F.prdt_no
+    	AND F.prdt_rltn_file_seq = 1
+		AND F.disp_postn_type = 'P'
+		AND F.file_type = 'I'
+    </sql>
+    
+    <select id="selectProductInquiryCount" parameterType="pageable" resultType="Integer">
+      /*+ kr.co.shop.web.product.repository.master.BdProductInquiryDao.selectProductInquiryCount [상품 Q and A 갯수 조회] [황성준] */
+    	SELECT 
+    		<include refid="Paging.totalCount" />
+    	FROM bd_product_inquiry A
+    	<include refid="join-inquiry-search-vo-alias-a" />
+    	<include refid="where-inquiry-search-vo-alias-a" />
+    </select>
+    
+    <select id="selectProductInquiry" parameterType="pageable" resultType="kr.co.shop.web.product.model.master.BdProductInquiry">
+      /*+ kr.co.shop.web.product.repository.master.BdProductInquiryDao.selectProductInquiry [상품 Q and A 목록 조회] [황성준] */
+    	SELECT 
+    		<include refid="select-columns-alias-a" />
+    		, FN_CODE_VALUE('ASWR_STAT_CODE', A.aswr_stat_code) AS aswr_stat_code_name
+    		, FN_CODE_VALUE('CNSL_TYPE_DTL_CODE', A.cnsl_type_dtl_code) AS cnsl_type_dtl_code_name
+    		, C.login_id
+    		, D.prdt_name, D.eng_prdt_name, D.prdt_color_info
+    		, E.brand_name, E.brand_en_name
+    		, F.image_url, F.altrn_text
+    		, #{bean.userMemberNo, jdbcType=VARCHAR} AS user_member_no
+    	FROM bd_product_inquiry A
+    	<include refid="join-inquiry-search-vo-alias-a" />
+    	<include refid="where-inquiry-search-vo-alias-a" />
+    	ORDER BY A.prdt_inqry_seq DESC
+    		<include refid="Paging.mssql" />
+    </select>
+    
+    <insert id="insertProductInquiry" useGeneratedKeys="true" keyProperty="prdtInqrySeq">
+     /*+ kr.co.shop.web.product.repository.master.BdProductInquiryDao.insertProductInquiry [상품 문의 등록] [황성준] */
+		INSERT INTO BD_PRODUCT_INQUIRY
+			 ( member_no, inqry_dtm, site_no, cnsl_type_code, cnsl_type_dtl_code, inqry_title_text, inqry_cont_text, prdt_no, vndr_no, pswd_yn, sms_send_yn, email_send_yn, aswr_cont_text, aswr_stat_code, disp_yn ) 
+
+		VALUES 
+			 ( #{memberNo, jdbcType=VARCHAR}, <choose><when test="inqryDtm != null">#{inqryDtm, jdbcType=TIMESTAMP}</when><otherwise>SYSDATE</otherwise></choose>, #{siteNo, jdbcType=VARCHAR}, #{cnslTypeCode, jdbcType=VARCHAR}, #{cnslTypeDtlCode, jdbcType=VARCHAR}, #{inqryTitleText, jdbcType=VARCHAR}, #{inqryContText, jdbcType=VARCHAR}, #{prdtNo, jdbcType=VARCHAR}, #{vndrNo, jdbcType=VARCHAR}, #{pswdYn, jdbcType=CHAR}, #{smsSendYn, jdbcType=CHAR}, #{emailSendYn, jdbcType=CHAR}, #{aswrContText, jdbcType=VARCHAR}, #{aswrStatCode, jdbcType=VARCHAR}, #{dispYn, jdbcType=CHAR} )  
+    </insert>
+    
+     <update id="updateProductInquiry" parameterType="kr.co.shop.web.product.model.master.BdProductInquiry">
+     	/*+ kr.co.shop.web.product.repository.master.BdProductInquiryDao.updateProductInquiry [상품 문의 수정] [황성준] */
+    
+		UPDATE BD_PRODUCT_INQUIRY
+		<set> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="inqryDtm != null"> 
+				inqry_dtm = #{inqryDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cnslTypeCode != null"> 
+				cnsl_type_code = #{cnslTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cnslTypeDtlCode != null"> 
+				cnsl_type_dtl_code = #{cnslTypeDtlCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="inqryTitleText != null"> 
+				inqry_title_text = #{inqryTitleText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="inqryContText != null"> 
+				inqry_cont_text = #{inqryContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtNo != null"> 
+				prdt_no = #{prdtNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="vndrNo != null"> 
+				vndr_no = #{vndrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pswdYn != null"> 
+				pswd_yn = #{pswdYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="smsSendYn != null"> 
+				sms_send_yn = #{smsSendYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="emailSendYn != null"> 
+				email_send_yn = #{emailSendYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="aswrContText != null"> 
+				aswr_cont_text = #{aswrContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aswrStatCode != null"> 
+				aswr_stat_code = #{aswrStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dispYn != null"> 
+				disp_yn = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="aswrNo != null"> 
+				aswr_no = #{aswrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aswrDtm != null"> 
+				aswr_dtm = #{aswrDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		<where>
+			AND prdt_inqry_seq = #{prdtInqrySeq, jdbcType=INTEGER}  
+			AND member_no = #{memberNo, jdbcType=VARCHAR}
+		</where>
+    </update>
+    
+     <delete id="deleteProductInquiry" parameterType="kr.co.shop.web.product.model.master.BdProductInquiry">
+     	/*+ kr.co.shop.web.product.repository.master.BdProductInquiryDao.deleteProductInquiry [상품 문의 수정] [황성준] */
+     	DELETE FROM BD_PRODUCT_INQUIRY
+     	<where>
+			AND prdt_inqry_seq = #{prdtInqrySeq, jdbcType=INTEGER}
+			AND prdt_no = #{prdtNo, jdbcType=VARCHAR}
+			AND site_no = #{siteNo, jdbcType=VARCHAR}
+			AND member_no = #{memberNo, jdbcType=VARCHAR}
+		</where>
+	</delete>
+</mapper>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cart.repository.master.OcCartBenefitDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.cart.model.master.OcCartBenefit">
+    
+     /*+ kr.co.shop.web.cart.repository.master.OcCartBenefitDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			OC_CART_BENEFIT
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="getCartCoupon" parameterType="kr.co.shop.web.cart.model.master.OcCartBenefit" resultType="kr.co.shop.web.cart.model.master.OcCartBenefit">
+     /*+ kr.co.shop.web.cart.repository.master.OcCartBenefitDao.getCartCoupon [장바구니 상품 적용 쿠폰 조회]  */  
+    
+		SELECT CART_SEQ, CART_BENEFIT_SEQ, MEMBER_NO, HOLD_CPN_SEQ, CPN_NO, CPN_NAME, CPN_TYPE_CODE, PROMO_NO, PROMO_NAME, PROMO_TYPE_CODE, CPN_APPLY_QTY 
+		  FROM OC_CART_BENEFIT
+		 WHERE CART_SEQ = #{cartSeq, jdbcType=VARCHAR }
+			
+    </select>
+    
+    <select id="getCartCouponList" parameterType="kr.co.shop.web.cart.model.master.OcCartBenefit" resultType="kr.co.shop.web.cart.model.master.OcCartBenefit">
+     /*+ kr.co.shop.web.cart.repository.master.OcCartBenefitDao.getCartCouponList [장바구니 상품 적용 쿠폰 조회]  */  
+
+		WITH CART_PRDT AS (
+			SELECT A.CART_SEQ , A.PRDT_NO , A.PRDT_OPTN_NO , B.CPN_NO , B.CART_BENEFIT_SEQ	, B.CPN_APPLY_QTY , A.ORDER_QTY
+			  FROM OC_CART  A 
+			  JOIN OC_CART_BENEFIT  B
+				ON A.CART_SEQ = B.CART_SEQ
+			 WHERE A.CART_SEQ IN 
+				<foreach item="item" index="index" collection="cartSeqs" open="(" close=")" separator="," >
+					#{item}
+				</foreach> 
+		)
+		,  T_COPY AS (
+			  SELECT 1 AS NO
+			  UNION ALL
+			  SELECT NO+1 FROM T_COPY WHERE NO <![CDATA[<=]]> 100 
+		)
+		SELECT T.CART_SEQ , T.CPN_NO , SUM(CPN_APPLY_DC_AMT) AS CPN_APPLY_DC_AMT , MIN(NORMAL_CPN_YN) AS NORMAL_CPN_YN , MAX(CART_BENEFIT_SEQ) AS CART_BENEFIT_SEQ 
+		  FROM ( 		
+			SELECT S.*  
+				 , CASE WHEN S.DSCNT_TYPE = 'R' 
+				 		--THEN CEILING(DSCNTAMT / 100 * S.DSCNT_VALUE / 100.0) * 100
+						THEN FLOOR(DSCNTAMT / 100 * S.DSCNT_VALUE / 100.0) * 100
+						ELSE S.DSCNT_VALUE
+					END CPN_APPLY_DC_AMT
+			  FROM (
+				SELECT A.CART_SEQ , A.PRDT_NO , A.PRDT_OPTN_NO , A.CPN_NO 
+					 , C.DSCNT_TYPE , C.DSCNT_VALUE , C.NORMAL_CPN_YN 
+					 , A.CART_BENEFIT_SEQ 
+					 , A.CPN_APPLY_QTY , A.ORDER_QTY
+					 , FN_PRDT_OPT_PROMO_PRICE(A.PRDT_NO, A.PRDT_OPTN_NO) AS DSCNTAMT
+					 , FN_PRDT_NORMAL_PRICE (A.PRDT_NO)   AS NOMALPRICE
+					 , RANK()OVER( PARTITION BY A.CART_SEQ ORDER BY  A.CART_BENEFIT_SEQ  ASC ) AS RANK_SEQ 
+				  FROM CART_PRDT A 
+				  JOIN T_COPY B
+					ON B.NO <![CDATA[<=]]> A.ORDER_QTY
+				  JOIN PR_COUPON C
+					ON A.CPN_NO  = C.CPN_NO
+				  JOIN PR_COUPON_APPLY_PRODUCT D
+					ON A.CPN_NO = D.CPN_NO
+				   AND D.PRDT_NO = A.PRDT_NO 
+				   AND C.MIN_LIMIT_SELL_AMT <![CDATA[<=]]> FN_PRDT_OPT_PROMO_PRICE(A.PRDT_NO, A.PRDT_OPTN_NO)
+			)S 
+		)T
+		GROUP BY T.CART_SEQ , T.CPN_NO 
+		ORDER BY MAX(T.CART_BENEFIT_SEQ)
+				
+    </select>
+    
+	<select id="getCartCouponPrdtInfo" parameterType="kr.co.shop.web.cart.model.master.OcCartBenefit" resultType="kr.co.shop.web.cart.model.master.OcCartBenefit">
+	/*+ kr.co.shop.web.cart.repository.master.OcCartBenefitDao.getCartCouponPrdtList [장바구니 상품 적용 쿠폰 조회]  */  
+	WITH CART_PRDT AS ( 
+		SELECT A.CART_SEQ , A.PRDT_NO , A.PRDT_OPTN_NO , B.CPN_NO , B.CART_BENEFIT_SEQ	, B.CPN_APPLY_QTY , A.ORDER_QTY , B.HOLD_CPN_SEQ
+		  FROM OC_CART  A 
+		  JOIN OC_CART_BENEFIT  B
+			ON A.CART_SEQ = B.CART_SEQ
+		 WHERE A.CART_SEQ = #{cartSeq, jdbcType=VARCHAR}
+	)
+	,  T_COPY AS (
+		SELECT 1 AS NO
+		UNION ALL
+		SELECT NO+1 FROM T_COPY WHERE NO  <![CDATA[<=]]>  100 
+	)
+		SELECT X.CART_SEQ 
+			, MAX(NOMAL_CPN_NO) NOMAL_CPN_NO 
+			, MAX(NOMAL_HOLD_CPN_SEQ) NOMAL_HOLD_CPN_SEQ 
+			, SUM(NOMAL_CPN_APPLY_DC_AMT) AS NOMAL_CPN_APPLY_DC_AMT
+			, MAX(NOMAL_CPN_APPLY_QTY) NOMAL_CPN_APPLY_QTY
+			 , MAX(PLUS_CPN_NO) PLUS_CPN_NO
+			 , MAX(PLUS_HOLD_CPN_SEQ) PLUS_HOLD_CPN_SEQ 
+			 , SUM(PLUS_CPN_APPLY_DC_AMT) AS PLUS_CPN_APPLY_DC_AMT 
+			 , MAX(PLUS_CPN_APPLY_QTY) PLUS_CPN_APPLY_QTY
+			 , SUM(CPN_APPLY_SELL_AMT) CPN_APPLY_TOT_SELL_AMT , SUM(CPN_APPLY_POINT) CPN_APPLY_TOT_POINT
+		  FROM (
+			SELECT V.* 
+				 , (#{dscntAmt, jdbcType=INTEGER} - NOMAL_CPN_APPLY_DC_AMT - PLUS_CPN_APPLY_DC_AMT) AS CPN_APPLY_SELL_AMT
+				 , CEILING((#{dscntAmt, jdbcType=INTEGER} - NOMAL_CPN_APPLY_DC_AMT - PLUS_CPN_APPLY_DC_AMT) / 100 * 3 / 10.0) * 10 AS CPN_APPLY_POINT
+			  FROM ( 
+				SELECT NO , MAX(CART_SEQ ) AS CART_SEQ 
+					 , MAX( NORMAL_CPN_FLAG )          NORMAL_CPN_FLAG 
+					 , MAX (  CASE WHEN NORMAL_CPN_FLAG = 'Y' THEN CPN_NO ELSE '' END ) AS NOMAL_CPN_NO
+					 , MAX (  CASE WHEN NORMAL_CPN_FLAG = 'Y' THEN HOLD_CPN_SEQ ELSE '' END ) AS NOMAL_HOLD_CPN_SEQ
+					 , MAX (  CASE WHEN NORMAL_CPN_FLAG = 'Y' THEN DSCNT_TYPE ELSE '' END ) AS NOMAL_DSCNT_TYPE
+					 , MAX (  CASE WHEN NORMAL_CPN_FLAG = 'Y' THEN DSCNT_VALUE ELSE '' END ) AS NOMAL_DSCNT_VALUE
+					 , MAX (  CASE WHEN NORMAL_CPN_FLAG = 'Y' THEN CPN_APPLY_YN ELSE '' END ) AS NOMAL_CPN_APPLY_YN
+					 , MAX (  CASE WHEN NORMAL_CPN_FLAG = 'Y' THEN CPN_APPLY_DC_AMT ELSE 0 END ) AS NOMAL_CPN_APPLY_DC_AMT
+					 , MAX (  CASE WHEN NORMAL_CPN_FLAG = 'Y' THEN CPN_APPLY_QTY ELSE 0 END ) AS NOMAL_CPN_APPLY_QTY
+					 , MAX( PLUS_CPN_FLAG )          PLUS_CPN_FLAG   
+					 , MAX (  CASE WHEN PLUS_CPN_FLAG = 'Y' THEN CPN_NO ELSE '' END ) AS PLUS_CPN_NO
+					 , MAX (  CASE WHEN PLUS_CPN_FLAG = 'Y' THEN DSCNT_TYPE ELSE '' END ) AS PLUS_DSCNT_TYPE
+					 , MAX (  CASE WHEN PLUS_CPN_FLAG = 'Y' THEN HOLD_CPN_SEQ ELSE '' END ) AS PLUS_HOLD_CPN_SEQ
+					 , MAX (  CASE WHEN PLUS_CPN_FLAG = 'Y' THEN DSCNT_VALUE ELSE '' END ) AS PLUS_DSCNT_VALUE
+					 , MAX (  CASE WHEN PLUS_CPN_FLAG = 'Y' THEN CPN_APPLY_YN ELSE '' END ) AS PLUS_CPN_APPLY_YN
+					 , MAX (  CASE WHEN PLUS_CPN_FLAG = 'Y' THEN CPN_APPLY_DC_AMT ELSE 0 END ) AS PLUS_CPN_APPLY_DC_AMT
+					 , MAX (  CASE WHEN PLUS_CPN_FLAG = 'Y' THEN CPN_APPLY_QTY ELSE 0 END ) AS PLUS_CPN_APPLY_QTY
+				  FROM ( 
+					SELECT S.* 
+						 , CASE WHEN CPN_APPLY_YN = 'Y' THEN  
+						 		CASE WHEN S.DSCNT_TYPE = 'R' 
+									THEN CEILING(#{dscntAmt, jdbcType=INTEGER} / 100 * S.DSCNT_VALUE / 100.0) * 100
+									
+									ELSE S.DSCNT_VALUE
+								END 
+						   ELSE 0 
+							END CPN_APPLY_DC_AMT
+					FROM ( 
+						SELECT A.* , B.*
+							 , C.DSCNT_TYPE , C.DSCNT_VALUE , C.NORMAL_CPN_YN 
+							 , CASE WHEN C.NORMAL_CPN_YN = 'Y' THEN 'Y' ELSE '' END AS NORMAL_CPN_FLAG
+							 , CASE WHEN C.NORMAL_CPN_YN = 'N' THEN 'Y' ELSE '' END AS PLUS_CPN_FLAG
+							 , CASE WHEN NO <![CDATA[<=]]> CPN_APPLY_QTY THEN 'Y'
+									ELSE 'N'
+								END AS CPN_APPLY_YN 
+							 , RANK()OVER( ORDER BY  B.NO , A.CART_BENEFIT_SEQ  ASC ) AS RANK_SEQ 
+						  FROM CART_PRDT A 
+						  JOIN T_COPY B
+							ON NO <![CDATA[<=]]> A.ORDER_QTY
+						  JOIN PR_COUPON C
+							ON A.CPN_NO  = C.CPN_NO
+						  JOIN PR_COUPON_APPLY_PRODUCT D
+							ON A.CPN_NO = D.CPN_NO
+						   AND D.PRDT_NO = A.PRDT_NO 
+						   AND C.MIN_LIMIT_SELL_AMT  <![CDATA[<=]]>   #{dscntAmt, jdbcType=INTEGER}
+					)S
+				)T
+			GROUP BY NO 
+			)V
+		)X
+		GROUP BY CART_SEQ 
+
+
+		
+    </select>
+
+	<delete id="deleteCartPrdtCouponReset" parameterType="kr.co.shop.web.cart.model.master.OcCartBenefit" >
+		/*+ kr.co.shop.web.cart.repository.master.OcCartBenefitDao.deleteCartPrdtCouponReset [장바구니 상품에 걸린 쿠폰 초기화 ] */  
+		DELETE 
+		  FROM OC_CART_BENEFIT
+		 WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+		   AND CART_SEQ = #{cartSeq, jdbcType=VARCHAR}
+		   <if test="holdCpnSeq != null and holdCpnSeq != ''"> 
+		   AND HOLD_CPN_SEQ = #{holdCpnSeq, jdbcType=VARCHAR}
+		   </if>
+	</delete>  
+
+	<insert id="setCartPrdtCouponInsert" parameterType="kr.co.shop.web.cart.model.master.OcCartBenefit">
+		/*+ kr.co.shop.web.cart.repository.master.OcCartBenefitDao.setCartPrdtCouponInsert [장바구니 상품 쿠폰 등록 ] */ 
+		INSERT INTO OC_CART_BENEFIT(
+			  CART_SEQ
+			, CART_BENEFIT_SEQ
+			, MEMBER_NO
+			, HOLD_CPN_SEQ
+			, CPN_NO
+			, CPN_NAME
+			, CPN_TYPE_CODE
+			, CPN_APPLY_QTY
+			, NORMAL_CPN_YN
+			)
+		SELECT    
+			  #{cartSeq, jdbcType=VARCHAR}
+			 , #{cartBenefitSeq, jdbcType=VARCHAR} 
+			 , #{memberNo, jdbcType=VARCHAR}  
+			 , #{holdCpnSeq, jdbcType=VARCHAR}   
+			 , CPN_NO
+			 , CPN_NAME
+			 , CPN_TYPE_CODE
+			 , #{cpnApplyQty, jdbcType=VARCHAR} CPN_APPLY_QTY  
+			 , NORMAL_CPN_YN
+		  FROM PR_COUPON
+		 WHERE CPN_NO = #{cpnNo, jdbcType=VARCHAR}
+	</insert>
+
+</mapper>

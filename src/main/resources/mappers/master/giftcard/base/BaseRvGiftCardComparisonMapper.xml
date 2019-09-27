@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.giftcard.repository.master.RvGiftCardComparisonDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	nice_service_type, proto_gb, updatecode, tran_dt, tran_hms, sales_dt, catid, store_cd, saler_code, event_code, voucher_from, voucher_to, barcode_from, barcode_to, tran_kd, trans_status, tran_type, purchase_amt, tran_amt, saler_kind, return_type, appr_no, ori_appr_dt, ori_appr_no, pos_no, casher_no, receippt_no, cust_id, img_cd, iss_cd, pay_cd, company_info, filler, mapng_dtm, gift_card_order_no, rsn_cont, rsn_rgster_no, rsn_rgst_dtm, intrlk_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.giftcard.model.master.RvGiftCardComparison" resultType="kr.co.shop.web.giftcard.model.master.RvGiftCardComparison">
+    
+     /*+ kr.co.shop.web.giftcard.repository.master.RvGiftCardComparisonDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			rv_gift_card_comparison
+		<where> 
+			<if test="niceServiceType != null"> 
+				 nice_service_type = #{niceServiceType, jdbcType=VARCHAR}
+			</if> 
+			<if test="protoGb != null"> 
+				 AND proto_gb = #{protoGb, jdbcType=CHAR}
+			</if> 
+			<if test="updatecode != null"> 
+				 AND updatecode = #{updatecode, jdbcType=CHAR}
+			</if> 
+			<if test="tranDt != null"> 
+				 AND tran_dt = #{tranDt, jdbcType=VARCHAR}
+			</if> 
+			<if test="tranHms != null"> 
+				 AND tran_hms = #{tranHms, jdbcType=VARCHAR}
+			</if> 
+			<if test="salesDt != null"> 
+				 AND sales_dt = #{salesDt, jdbcType=VARCHAR}
+			</if> 
+			<if test="catid != null"> 
+				 AND catid = #{catid, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeCd != null"> 
+				 AND store_cd = #{storeCd, jdbcType=VARCHAR}
+			</if> 
+			<if test="salerCode != null"> 
+				 AND saler_code = #{salerCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="eventCode != null"> 
+				 AND event_code = #{eventCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="voucherFrom != null"> 
+				 AND voucher_from = #{voucherFrom, jdbcType=VARCHAR}
+			</if> 
+			<if test="voucherTo != null"> 
+				 AND voucher_to = #{voucherTo, jdbcType=VARCHAR}
+			</if> 
+			<if test="barcodeFrom != null"> 
+				 AND barcode_from = #{barcodeFrom, jdbcType=VARCHAR}
+			</if> 
+			<if test="barcodeTo != null"> 
+				 AND barcode_to = #{barcodeTo, jdbcType=VARCHAR}
+			</if> 
+			<if test="tranKd != null"> 
+				 AND tran_kd = #{tranKd, jdbcType=CHAR}
+			</if> 
+			<if test="transStatus != null"> 
+				 AND trans_status = #{transStatus, jdbcType=CHAR}
+			</if> 
+			<if test="tranType != null"> 
+				 AND tran_type = #{tranType, jdbcType=CHAR}
+			</if> 
+			<if test="purchaseAmt != null"> 
+				 AND purchase_amt = #{purchaseAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="tranAmt != null"> 
+				 AND tran_amt = #{tranAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="salerKind != null"> 
+				 AND saler_kind = #{salerKind, jdbcType=CHAR}
+			</if> 
+			<if test="returnType != null"> 
+				 AND return_type = #{returnType, jdbcType=CHAR}
+			</if> 
+			<if test="apprNo != null"> 
+				 AND appr_no = #{apprNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="oriApprDt != null"> 
+				 AND ori_appr_dt = #{oriApprDt, jdbcType=VARCHAR}
+			</if> 
+			<if test="oriApprNo != null"> 
+				 AND ori_appr_no = #{oriApprNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="posNo != null"> 
+				 AND pos_no = #{posNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="casherNo != null"> 
+				 AND casher_no = #{casherNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="receipptNo != null"> 
+				 AND receippt_no = #{receipptNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="custId != null"> 
+				 AND cust_id = #{custId, jdbcType=VARCHAR}
+			</if> 
+			<if test="imgCd != null"> 
+				 AND img_cd = #{imgCd, jdbcType=VARCHAR}
+			</if> 
+			<if test="issCd != null"> 
+				 AND iss_cd = #{issCd, jdbcType=CHAR}
+			</if> 
+			<if test="payCd != null"> 
+				 AND pay_cd = #{payCd, jdbcType=CHAR}
+			</if> 
+			<if test="companyInfo != null"> 
+				 AND company_info = #{companyInfo, jdbcType=VARCHAR}
+			</if> 
+			<if test="filler != null"> 
+				 AND filler = #{filler, jdbcType=VARCHAR}
+			</if> 
+			<if test="mapngDtm != null"> 
+				 AND mapng_dtm = #{mapngDtm, jdbcType=CHAR}
+			</if> 
+			<if test="giftCardOrderNo != null"> 
+				 AND gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rsnCont != null"> 
+				 AND rsn_cont = #{rsnCont, jdbcType=VARCHAR}
+			</if> 
+			<if test="rsnRgsterNo != null"> 
+				 AND rsn_rgster_no = #{rsnRgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rsnRgstDtm != null"> 
+				 AND rsn_rgst_dtm = #{rsnRgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="intrlkDtm != null"> 
+				 AND intrlk_dtm = #{intrlkDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.giftcard.model.master.RvGiftCardComparison">	
+
+     /*+ kr.co.shop.web.giftcard.repository.master.RvGiftCardComparisonDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO rv_gift_card_comparison
+			 ( nice_service_type, proto_gb, updatecode, tran_dt, tran_hms, sales_dt, catid, store_cd, saler_code, event_code, voucher_from, voucher_to, barcode_from, barcode_to, tran_kd, trans_status, tran_type, purchase_amt, tran_amt, saler_kind, return_type, appr_no, ori_appr_dt, ori_appr_no, pos_no, casher_no, receippt_no, cust_id, img_cd, iss_cd, pay_cd, company_info, filler, mapng_dtm, gift_card_order_no, rsn_cont, rsn_rgster_no, rsn_rgst_dtm, intrlk_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{niceServiceType, jdbcType=VARCHAR}, #{protoGb, jdbcType=CHAR}, #{updatecode, jdbcType=CHAR}, #{tranDt, jdbcType=VARCHAR}, #{tranHms, jdbcType=VARCHAR}, #{salesDt, jdbcType=VARCHAR}, #{catid, jdbcType=VARCHAR}, #{storeCd, jdbcType=VARCHAR}, #{salerCode, jdbcType=VARCHAR}, #{eventCode, jdbcType=VARCHAR}, #{voucherFrom, jdbcType=VARCHAR}, #{voucherTo, jdbcType=VARCHAR}, #{barcodeFrom, jdbcType=VARCHAR}, #{barcodeTo, jdbcType=VARCHAR}, #{tranKd, jdbcType=CHAR}, #{transStatus, jdbcType=CHAR}, #{tranType, jdbcType=CHAR}, #{purchaseAmt, jdbcType=INTEGER}, #{tranAmt, jdbcType=INTEGER}, #{salerKind, jdbcType=CHAR}, #{returnType, jdbcType=CHAR}, #{apprNo, jdbcType=VARCHAR}, #{oriApprDt, jdbcType=VARCHAR}, #{oriApprNo, jdbcType=VARCHAR}, #{posNo, jdbcType=VARCHAR}, #{casherNo, jdbcType=VARCHAR}, #{receipptNo, jdbcType=VARCHAR}, #{custId, jdbcType=VARCHAR}, #{imgCd, jdbcType=VARCHAR}, #{issCd, jdbcType=CHAR}, #{payCd, jdbcType=CHAR}, #{companyInfo, jdbcType=VARCHAR}, #{filler, jdbcType=VARCHAR}, #{mapngDtm, jdbcType=CHAR}, #{giftCardOrderNo, jdbcType=VARCHAR}, #{rsnCont, jdbcType=VARCHAR}, #{rsnRgsterNo, jdbcType=VARCHAR}, <choose><when test="rsnRgstDtm != null">#{rsnRgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="intrlkDtm != null">#{intrlkDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.giftcard.model.master.RvGiftCardComparison">
+    
+     /*+ kr.co.shop.web.giftcard.repository.master.RvGiftCardComparisonDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE rv_gift_card_comparison
+		<set> 
+			<if test="niceServiceType != null"> 
+				nice_service_type = #{niceServiceType, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="protoGb != null"> 
+				proto_gb = #{protoGb, jdbcType=CHAR}, 
+			</if> 
+			<if test="updatecode != null"> 
+				updatecode = #{updatecode, jdbcType=CHAR}, 
+			</if> 
+			<if test="tranDt != null"> 
+				tran_dt = #{tranDt, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="tranHms != null"> 
+				tran_hms = #{tranHms, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="salesDt != null"> 
+				sales_dt = #{salesDt, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="catid != null"> 
+				catid = #{catid, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeCd != null"> 
+				store_cd = #{storeCd, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="salerCode != null"> 
+				saler_code = #{salerCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="eventCode != null"> 
+				event_code = #{eventCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="voucherFrom != null"> 
+				voucher_from = #{voucherFrom, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="voucherTo != null"> 
+				voucher_to = #{voucherTo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="barcodeFrom != null"> 
+				barcode_from = #{barcodeFrom, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="barcodeTo != null"> 
+				barcode_to = #{barcodeTo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="tranKd != null"> 
+				tran_kd = #{tranKd, jdbcType=CHAR}, 
+			</if> 
+			<if test="transStatus != null"> 
+				trans_status = #{transStatus, jdbcType=CHAR}, 
+			</if> 
+			<if test="tranType != null"> 
+				tran_type = #{tranType, jdbcType=CHAR}, 
+			</if> 
+			<if test="purchaseAmt != null"> 
+				purchase_amt = #{purchaseAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="tranAmt != null"> 
+				tran_amt = #{tranAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="salerKind != null"> 
+				saler_kind = #{salerKind, jdbcType=CHAR}, 
+			</if> 
+			<if test="returnType != null"> 
+				return_type = #{returnType, jdbcType=CHAR}, 
+			</if> 
+			<if test="apprNo != null"> 
+				appr_no = #{apprNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="oriApprDt != null"> 
+				ori_appr_dt = #{oriApprDt, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="oriApprNo != null"> 
+				ori_appr_no = #{oriApprNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="posNo != null"> 
+				pos_no = #{posNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="casherNo != null"> 
+				casher_no = #{casherNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="receipptNo != null"> 
+				receippt_no = #{receipptNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="custId != null"> 
+				cust_id = #{custId, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="imgCd != null"> 
+				img_cd = #{imgCd, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="issCd != null"> 
+				iss_cd = #{issCd, jdbcType=CHAR}, 
+			</if> 
+			<if test="payCd != null"> 
+				pay_cd = #{payCd, jdbcType=CHAR}, 
+			</if> 
+			<if test="companyInfo != null"> 
+				company_info = #{companyInfo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="filler != null"> 
+				filler = #{filler, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mapngDtm != null"> 
+				mapng_dtm = #{mapngDtm, jdbcType=CHAR}, 
+			</if> 
+			<if test="giftCardOrderNo != null"> 
+				gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rsnCont != null"> 
+				rsn_cont = #{rsnCont, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rsnRgsterNo != null"> 
+				rsn_rgster_no = #{rsnRgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rsnRgstDtm != null"> 
+				rsn_rgst_dtm = #{rsnRgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="intrlkDtm != null"> 
+				intrlk_dtm = #{intrlkDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.giftcard.model.master.RvGiftCardComparison">
+    
+     /*+ kr.co.shop.web.giftcard.repository.master.RvGiftCardComparisonDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM rv_gift_card_comparison
+  
+    </delete>
+</mapper>

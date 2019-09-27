@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.vendor.repository.master.VdVendorProductAllNoticeDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.vendor.model.master.VdVendorProductAllNotice">
+    
+     /*+ kr.co.shop.web.vendor.repository.master.VdVendorProductAllNoticeDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			vd_vendor_product_all_notice
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <sql id="select-columns-alias-a">
+    	A.vndr_no, A.vndr_prdt_all_notc_seq, A.all_notc_start_ymd, A.all_notc_end_ymd, A.all_notc_title_text, A.all_notc_cont_text, A.disp_yn, A.rgster_no, A.rgst_dtm, A.moder_no, A.mod_dtm
+    </sql>
+
+	<select id="selectVendorProductAllNoticeList" parameterType="kr.co.shop.web.vendor.model.master.VdVendorProductAllNotice" resultType="kr.co.shop.web.vendor.model.master.VdVendorProductAllNotice">
+		/*+ kr.co.shop.web.vendor.repository.master.VdVendorProductAllNoticeDao.selectVendorProductAllNoticeList [업체전체공지 목록조회 쿼리] [황성준] */
+		SELECT
+			<include refid="select-columns-alias-a" />
+		FROM vd_vendor_product_all_notice A
+		<where>
+			AND A.vndr_no = #{vndrNo, jdbcType=VARCHAR }
+			AND A.disp_yn = 'Y'
+			AND A.all_notc_start_ymd &lt;= SYSDATE
+			AND A.all_notc_end_ymd &gt;= SYSDATE
+		</where>
+		ORDER BY A.vndr_prdt_all_notc_seq DESC <!-- A.mod_dtm DESC, A.rgst_dtm DESC -->
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<select id="searchVendorProductAllNoticeList" parameterType="kr.co.shop.web.vendor.model.master.VdVendorProductAllNotice" resultType="kr.co.shop.web.vendor.model.master.VdVendorProductAllNotice">
+		/*+ kr.co.shop.web.vendor.repository.master.VdVendorProductAllNoticeDao.searchVendorProductAllNoticeList [업체전체공지 목록조회 쿼리] [황성준] */
+		SELECT
+			<include refid="select-columns-alias-a" />
+		FROM vd_vendor_product_all_notice A
+		LEFT JOIN pd_product B
+		ON A.vndr_no = B.vndr_no
+		AND B.prdt_no = #{prdtNo, jdbcType=VARCHAR }
+		<where>
+			AND A.disp_yn = 'Y'
+			AND A.all_notc_start_ymd &lt;= SYSDATE
+			AND A.all_notc_end_ymd &gt;= SYSDATE
+		</where>
+		ORDER BY A.vndr_prdt_all_notc_seq DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+</mapper>

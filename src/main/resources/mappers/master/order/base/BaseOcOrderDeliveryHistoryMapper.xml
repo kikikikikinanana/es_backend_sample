@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderDeliveryHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	order_no, order_prdt_seq, order_dlvy_hist_seq, dlvy_dgre_count, stock_gbn_code, store_no, store_chng_dgre_count, dlvy_proc_dtm, logis_vndr_code, waybil_no_text, dlvy_dscntc_yn, dlvy_dscntc_rsn_code, dlvy_dscntc_opetr_no, dlvy_dscntc_accept_dtm, dlvy_dscntc_proc_dtm, pickup_prpare_cmlpt_dtm, pickup_psblt_ymd, miss_proc_yn, miss_proc_type_code, insd_mgmt_info_text, wms_send_yn, dlvy_todo_ymd, dlvy_cmlpt_dtm, rcvr_name, rcvr_tel_no_text, rcvr_hdphn_no_text, rcvr_post_code_text, rcvr_post_addr_text, rcvr_dtl_addr_text, clm_no, clm_prdt_seq, dlvy_memo_text, dlvy_stat_code, logis_cnvrt_send_dtm, rsv_dlvy_dtm, dlvy_id_text, logis_pymnt_prdt_amt, logis_pymnt_dlvy_amt, impsblt_proc_yn, impsblt_proc_accept_dtm, impsblt_proc_cmlpt_dtm, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	order_dlvy_hist_seq = #{orderDlvyHistSeq, jdbcType=TINYINT} AND order_no = #{orderNo, jdbcType=VARCHAR} AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.order.model.master.OcOrderDeliveryHistory" resultType="kr.co.shop.web.order.model.master.OcOrderDeliveryHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderDeliveryHistoryDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			OC_ORDER_DELIVERY_HISTORY
+		<where> 
+			<if test="orderNo != null"> 
+				 order_no = #{orderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				 AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="orderDlvyHistSeq != null"> 
+				 AND order_dlvy_hist_seq = #{orderDlvyHistSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="dlvyDgreCount != null"> 
+				 AND dlvy_dgre_count = #{dlvyDgreCount, jdbcType=TINYINT}
+			</if> 
+			<if test="stockGbnCode != null"> 
+				 AND stock_gbn_code = #{stockGbnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeNo != null"> 
+				 AND store_no = #{storeNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeChngDgreCount != null"> 
+				 AND store_chng_dgre_count = #{storeChngDgreCount, jdbcType=TINYINT}
+			</if> 
+			<if test="dlvyProcDtm != null"> 
+				 AND dlvy_proc_dtm = #{dlvyProcDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="logisVndrCode != null"> 
+				 AND logis_vndr_code = #{logisVndrCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="waybilNoText != null"> 
+				 AND waybil_no_text = #{waybilNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="dlvyDscntcYn != null"> 
+				 AND dlvy_dscntc_yn = #{dlvyDscntcYn, jdbcType=CHAR}
+			</if> 
+			<if test="dlvyDscntcRsnCode != null"> 
+				 AND dlvy_dscntc_rsn_code = #{dlvyDscntcRsnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="dlvyDscntcOpetrNo != null"> 
+				 AND dlvy_dscntc_opetr_no = #{dlvyDscntcOpetrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="dlvyDscntcAcceptDtm != null"> 
+				 AND dlvy_dscntc_accept_dtm = #{dlvyDscntcAcceptDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="dlvyDscntcProcDtm != null"> 
+				 AND dlvy_dscntc_proc_dtm = #{dlvyDscntcProcDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="pickupPrpareCmlptDtm != null"> 
+				 AND pickup_prpare_cmlpt_dtm = #{pickupPrpareCmlptDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="pickupPsbltYmd != null"> 
+				 AND pickup_psblt_ymd = #{pickupPsbltYmd, jdbcType=DATE}
+			</if> 
+			<if test="missProcYn != null"> 
+				 AND miss_proc_yn = #{missProcYn, jdbcType=CHAR}
+			</if> 
+			<if test="missProcTypeCode != null"> 
+				 AND miss_proc_type_code = #{missProcTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="insdMgmtInfoText != null"> 
+				 AND insd_mgmt_info_text = #{insdMgmtInfoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="wmsSendYn != null"> 
+				 AND wms_send_yn = #{wmsSendYn, jdbcType=CHAR}
+			</if> 
+			<if test="dlvyTodoYmd != null"> 
+				 AND dlvy_todo_ymd = #{dlvyTodoYmd, jdbcType=DATE}
+			</if> 
+			<if test="dlvyCmlptDtm != null"> 
+				 AND dlvy_cmlpt_dtm = #{dlvyCmlptDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="rcvrName != null"> 
+				 AND rcvr_name = #{rcvrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrTelNoText != null"> 
+				 AND rcvr_tel_no_text = #{rcvrTelNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrHdphnNoText != null"> 
+				 AND rcvr_hdphn_no_text = #{rcvrHdphnNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrPostCodeText != null"> 
+				 AND rcvr_post_code_text = #{rcvrPostCodeText, jdbcType=CHAR}
+			</if> 
+			<if test="rcvrPostAddrText != null"> 
+				 AND rcvr_post_addr_text = #{rcvrPostAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrDtlAddrText != null"> 
+				 AND rcvr_dtl_addr_text = #{rcvrDtlAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="clmNo != null"> 
+				 AND clm_no = #{clmNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="clmPrdtSeq != null"> 
+				 AND clm_prdt_seq = #{clmPrdtSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="dlvyMemoText != null"> 
+				 AND dlvy_memo_text = #{dlvyMemoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="dlvyStatCode != null"> 
+				 AND dlvy_stat_code = #{dlvyStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="logisCnvrtSendDtm != null"> 
+				 AND logis_cnvrt_send_dtm = #{logisCnvrtSendDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="rsvDlvyDtm != null"> 
+				 AND rsv_dlvy_dtm = #{rsvDlvyDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="dlvyIdText != null"> 
+				 AND dlvy_id_text = #{dlvyIdText, jdbcType=VARCHAR}
+			</if> 
+			<if test="logisPymntPrdtAmt != null"> 
+				 AND logis_pymnt_prdt_amt = #{logisPymntPrdtAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="logisPymntDlvyAmt != null"> 
+				 AND logis_pymnt_dlvy_amt = #{logisPymntDlvyAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="impsbltProcYn != null"> 
+				 AND impsblt_proc_yn = #{impsbltProcYn, jdbcType=CHAR}
+			</if> 
+			<if test="impsbltProcAcceptDtm != null"> 
+				 AND impsblt_proc_accept_dtm = #{impsbltProcAcceptDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="impsbltProcCmlptDtm != null"> 
+				 AND impsblt_proc_cmlpt_dtm = #{impsbltProcCmlptDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.order.model.master.OcOrderDeliveryHistory">	
+
+     /*+ kr.co.shop.web.order.repository.master.OcOrderDeliveryHistoryDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO OC_ORDER_DELIVERY_HISTORY
+			 ( order_no, order_prdt_seq, order_dlvy_hist_seq, dlvy_dgre_count, stock_gbn_code, store_no, store_chng_dgre_count, dlvy_proc_dtm, logis_vndr_code, waybil_no_text, dlvy_dscntc_yn, dlvy_dscntc_rsn_code, dlvy_dscntc_opetr_no, dlvy_dscntc_accept_dtm, dlvy_dscntc_proc_dtm, pickup_prpare_cmlpt_dtm, pickup_psblt_ymd, miss_proc_yn, miss_proc_type_code, insd_mgmt_info_text, wms_send_yn, dlvy_todo_ymd, dlvy_cmlpt_dtm, rcvr_name, rcvr_tel_no_text, rcvr_hdphn_no_text, rcvr_post_code_text, rcvr_post_addr_text, rcvr_dtl_addr_text, clm_no, clm_prdt_seq, dlvy_memo_text, dlvy_stat_code, logis_cnvrt_send_dtm, rsv_dlvy_dtm, dlvy_id_text, logis_pymnt_prdt_amt, logis_pymnt_dlvy_amt, impsblt_proc_yn, impsblt_proc_accept_dtm, impsblt_proc_cmlpt_dtm, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{orderNo, jdbcType=VARCHAR}, #{orderPrdtSeq, jdbcType=TINYINT}, #{orderDlvyHistSeq, jdbcType=TINYINT}, #{dlvyDgreCount, jdbcType=TINYINT}, #{stockGbnCode, jdbcType=VARCHAR}, #{storeNo, jdbcType=VARCHAR}, #{storeChngDgreCount, jdbcType=TINYINT}, <choose><when test="dlvyProcDtm != null">#{dlvyProcDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{logisVndrCode, jdbcType=VARCHAR}, #{waybilNoText, jdbcType=VARCHAR}, #{dlvyDscntcYn, jdbcType=CHAR}, #{dlvyDscntcRsnCode, jdbcType=VARCHAR}, #{dlvyDscntcOpetrNo, jdbcType=VARCHAR}, <choose><when test="dlvyDscntcAcceptDtm != null">#{dlvyDscntcAcceptDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="dlvyDscntcProcDtm != null">#{dlvyDscntcProcDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="pickupPrpareCmlptDtm != null">#{pickupPrpareCmlptDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="pickupPsbltYmd != null">#{pickupPsbltYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, #{missProcYn, jdbcType=CHAR}, #{missProcTypeCode, jdbcType=VARCHAR}, #{insdMgmtInfoText, jdbcType=VARCHAR}, #{wmsSendYn, jdbcType=CHAR}, <choose><when test="dlvyTodoYmd != null">#{dlvyTodoYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="dlvyCmlptDtm != null">#{dlvyCmlptDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{rcvrName, jdbcType=VARCHAR}, #{rcvrTelNoText, jdbcType=VARCHAR}, #{rcvrHdphnNoText, jdbcType=VARCHAR}, #{rcvrPostCodeText, jdbcType=CHAR}, #{rcvrPostAddrText, jdbcType=VARCHAR}, #{rcvrDtlAddrText, jdbcType=VARCHAR}, #{clmNo, jdbcType=VARCHAR}, #{clmPrdtSeq, jdbcType=TINYINT}, #{dlvyMemoText, jdbcType=VARCHAR}, #{dlvyStatCode, jdbcType=VARCHAR}, <choose><when test="logisCnvrtSendDtm != null">#{logisCnvrtSendDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="rsvDlvyDtm != null">#{rsvDlvyDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{dlvyIdText, jdbcType=VARCHAR}, #{logisPymntPrdtAmt, jdbcType=INTEGER}, #{logisPymntDlvyAmt, jdbcType=INTEGER}, #{impsbltProcYn, jdbcType=CHAR}, <choose><when test="impsbltProcAcceptDtm != null">#{impsbltProcAcceptDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="impsbltProcCmlptDtm != null">#{impsbltProcCmlptDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.order.model.master.OcOrderDeliveryHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderDeliveryHistoryDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE OC_ORDER_DELIVERY_HISTORY
+		<set> 
+			<if test="orderNo != null"> 
+				order_no = #{orderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="orderDlvyHistSeq != null"> 
+				order_dlvy_hist_seq = #{orderDlvyHistSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="dlvyDgreCount != null"> 
+				dlvy_dgre_count = #{dlvyDgreCount, jdbcType=TINYINT}, 
+			</if> 
+			<if test="stockGbnCode != null"> 
+				stock_gbn_code = #{stockGbnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeNo != null"> 
+				store_no = #{storeNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeChngDgreCount != null"> 
+				store_chng_dgre_count = #{storeChngDgreCount, jdbcType=TINYINT}, 
+			</if> 
+			<if test="dlvyProcDtm != null"> 
+				dlvy_proc_dtm = #{dlvyProcDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="logisVndrCode != null"> 
+				logis_vndr_code = #{logisVndrCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="waybilNoText != null"> 
+				waybil_no_text = #{waybilNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dlvyDscntcYn != null"> 
+				dlvy_dscntc_yn = #{dlvyDscntcYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="dlvyDscntcRsnCode != null"> 
+				dlvy_dscntc_rsn_code = #{dlvyDscntcRsnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dlvyDscntcOpetrNo != null"> 
+				dlvy_dscntc_opetr_no = #{dlvyDscntcOpetrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dlvyDscntcAcceptDtm != null"> 
+				dlvy_dscntc_accept_dtm = #{dlvyDscntcAcceptDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="dlvyDscntcProcDtm != null"> 
+				dlvy_dscntc_proc_dtm = #{dlvyDscntcProcDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="pickupPrpareCmlptDtm != null"> 
+				pickup_prpare_cmlpt_dtm = #{pickupPrpareCmlptDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="pickupPsbltYmd != null"> 
+				pickup_psblt_ymd = #{pickupPsbltYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="missProcYn != null"> 
+				miss_proc_yn = #{missProcYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="missProcTypeCode != null"> 
+				miss_proc_type_code = #{missProcTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="insdMgmtInfoText != null"> 
+				insd_mgmt_info_text = #{insdMgmtInfoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="wmsSendYn != null"> 
+				wms_send_yn = #{wmsSendYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="dlvyTodoYmd != null"> 
+				dlvy_todo_ymd = #{dlvyTodoYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="dlvyCmlptDtm != null"> 
+				dlvy_cmlpt_dtm = #{dlvyCmlptDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="rcvrName != null"> 
+				rcvr_name = #{rcvrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrTelNoText != null"> 
+				rcvr_tel_no_text = #{rcvrTelNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrHdphnNoText != null"> 
+				rcvr_hdphn_no_text = #{rcvrHdphnNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrPostCodeText != null"> 
+				rcvr_post_code_text = #{rcvrPostCodeText, jdbcType=CHAR}, 
+			</if> 
+			<if test="rcvrPostAddrText != null"> 
+				rcvr_post_addr_text = #{rcvrPostAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrDtlAddrText != null"> 
+				rcvr_dtl_addr_text = #{rcvrDtlAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="clmNo != null"> 
+				clm_no = #{clmNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="clmPrdtSeq != null"> 
+				clm_prdt_seq = #{clmPrdtSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="dlvyMemoText != null"> 
+				dlvy_memo_text = #{dlvyMemoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dlvyStatCode != null"> 
+				dlvy_stat_code = #{dlvyStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="logisCnvrtSendDtm != null"> 
+				logis_cnvrt_send_dtm = #{logisCnvrtSendDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="rsvDlvyDtm != null"> 
+				rsv_dlvy_dtm = #{rsvDlvyDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="dlvyIdText != null"> 
+				dlvy_id_text = #{dlvyIdText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="logisPymntPrdtAmt != null"> 
+				logis_pymnt_prdt_amt = #{logisPymntPrdtAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="logisPymntDlvyAmt != null"> 
+				logis_pymnt_dlvy_amt = #{logisPymntDlvyAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="impsbltProcYn != null"> 
+				impsblt_proc_yn = #{impsbltProcYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="impsbltProcAcceptDtm != null"> 
+				impsblt_proc_accept_dtm = #{impsbltProcAcceptDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="impsbltProcCmlptDtm != null"> 
+				impsblt_proc_cmlpt_dtm = #{impsbltProcCmlptDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 order_dlvy_hist_seq = #{orderDlvyHistSeq, jdbcType=TINYINT} AND order_no = #{orderNo, jdbcType=VARCHAR} AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.order.model.master.OcOrderDeliveryHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderDeliveryHistoryDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM OC_ORDER_DELIVERY_HISTORY
+		WHERE 
+			 order_dlvy_hist_seq = #{orderDlvyHistSeq, jdbcType=TINYINT} AND order_no = #{orderNo, jdbcType=VARCHAR} AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}  
+    </delete>
+</mapper>

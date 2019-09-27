@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderConvenienceStoreDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.order.model.master.OcOrderConvenienceStore">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderConvenienceStoreDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			OC_ORDER_CONVENIENCE_STORE
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+
+	<select id="selectConvenienceStore" parameterType="kr.co.shop.web.order.model.master.OcOrderConvenienceStore" resultType="kr.co.shop.web.order.model.master.OcOrderConvenienceStore">
+	/*+ kr.co.shop.bo.order.repository.master.OcOrderConvenienceStoreDao.selectConvenienceStore [기본 PK 조회 쿼리] [Generator] */  
+		SELECT 
+			<include refid="select-columns" />
+		  FROM OC_ORDER_CONVENIENCE_STORE
+		 WHERE ORDER_NO	= #{orderNo, jdbcType=VARCHAR} 
+			
+	</select>    
+	
+	<insert id="insertCVS" parameterType="kr.co.shop.web.order.model.master.OcOrderConvenienceStore">	
+
+     /*+ kr.co.shop.web.order.repository.master.OcOrderConvenienceStoreDao.insertCVS [편의점 정보 insert 쿼리] [이재영] */
+    
+		INSERT INTO OC_ORDER_CONVENIENCE_STORE
+			 ( 
+			 	order_no
+			 	, cvnstr_seq
+			 	, cvnstr_code
+			 	, cvnstr_no_text
+			 	, cvnstr_name
+			 	, tel_no_text
+			 	, post_code_text
+			 	, post_addr_text
+			 	, dtl_addr_text
+			 	, arvl_store_code_text
+			 	, arvl_store_brcd_text
+			 	, dong_name_code_text
+			 	, arvl_dong_name
+			 ) 
+
+		VALUES 
+			 ( 
+			 	#{orderNo, jdbcType=VARCHAR}
+			 	, #{cvnstrSeq, jdbcType=TINYINT}
+			 	, (
+			 		SELECT 	code_dtl_no
+			 		FROM 	SY_CODE_DETAIL
+					WHERE 	CODE_FIELD='CVNSTR_CODE'
+					AND 	ADD_INFO1 =  #{cvnstrCode, jdbcType=VARCHAR}
+				)
+			 	, #{cvnstrNoText, jdbcType=VARCHAR}
+			 	, #{cvnstrName, jdbcType=VARCHAR}
+			 	, #{telNoText, jdbcType=VARCHAR}
+			 	, #{postCodeText, jdbcType=CHAR}
+			 	, #{postAddrText, jdbcType=VARCHAR}
+			 	, #{dtlAddrText, jdbcType=VARCHAR}
+			 	, #{arvlStoreCodeText, jdbcType=VARCHAR}
+			 	, #{arvlStoreBrcdText, jdbcType=VARCHAR}
+			 	, #{dongNameCodeText, jdbcType=VARCHAR}
+			 	, #{arvlDongName, jdbcType=VARCHAR}
+			  )  
+    </insert>
+
+</mapper>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.giftcard.repository.master.OcKakaoExchangeOrderDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	gift_card_order_no, order_dtm, site_no, member_no, member_type_code, emp_yn, ots_vip_yn, device_code, exchng_amt, rcvr_name, rcvr_hdphn_no_text, card_no_text, card_pin_no_text, tr_id, admit_num, coupon_num, use_amount, order_balance, data_hash, result_code_text, cash_receipt_amount, no_tax_amount, rgster_no, rgst_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.giftcard.model.master.OcKakaoExchangeOrder" resultType="kr.co.shop.web.giftcard.model.master.OcKakaoExchangeOrder">
+    
+     /*+ kr.co.shop.web.giftcard.repository.master.OcKakaoExchangeOrderDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			oc_kakao_exchange_order
+		<where> 
+			<if test="giftCardOrderNo != null"> 
+				 gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderDtm != null"> 
+				 AND order_dtm = #{orderDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="memberNo != null"> 
+				 AND member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="memberTypeCode != null"> 
+				 AND member_type_code = #{memberTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="empYn != null"> 
+				 AND emp_yn = #{empYn, jdbcType=CHAR}
+			</if> 
+			<if test="otsVipYn != null"> 
+				 AND ots_vip_yn = #{otsVipYn, jdbcType=CHAR}
+			</if> 
+			<if test="deviceCode != null"> 
+				 AND device_code = #{deviceCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="exchngAmt != null"> 
+				 AND exchng_amt = #{exchngAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="rcvrName != null"> 
+				 AND rcvr_name = #{rcvrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrHdphnNoText != null"> 
+				 AND rcvr_hdphn_no_text = #{rcvrHdphnNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="cardNoText != null"> 
+				 AND card_no_text = #{cardNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="cardPinNoText != null"> 
+				 AND card_pin_no_text = #{cardPinNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="trId != null"> 
+				 AND tr_id = #{trId, jdbcType=VARCHAR}
+			</if> 
+			<if test="admitNum != null"> 
+				 AND admit_num = #{admitNum, jdbcType=VARCHAR}
+			</if> 
+			<if test="couponNum != null"> 
+				 AND coupon_num = #{couponNum, jdbcType=VARCHAR}
+			</if> 
+			<if test="useAmount != null"> 
+				 AND use_amount = #{useAmount, jdbcType=INTEGER}
+			</if> 
+			<if test="orderBalance != null"> 
+				 AND order_balance = #{orderBalance, jdbcType=INTEGER}
+			</if> 
+			<if test="dataHash != null"> 
+				 AND data_hash = #{dataHash, jdbcType=VARCHAR}
+			</if> 
+			<if test="resultCode != null"> 
+				 AND result_code_text = #{resultCodeText, jdbcType=VARCHAR}
+			</if> 
+			<if test="cashReceiptAmount != null"> 
+				 AND cash_receipt_amount = #{cashReceiptAmount, jdbcType=INTEGER}
+			</if> 
+			<if test="noTaxAmount != null"> 
+				 AND no_tax_amount = #{noTaxAmount, jdbcType=INTEGER}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.giftcard.model.master.OcKakaoExchangeOrder">	
+
+     /*+ kr.co.shop.web.giftcard.repository.master.OcKakaoExchangeOrderDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO oc_kakao_exchange_order
+			 ( gift_card_order_no, order_dtm, site_no, member_no, member_type_code, emp_yn, ots_vip_yn, device_code, exchng_amt, rcvr_name, rcvr_hdphn_no_text, card_no_text, card_pin_no_text, tr_id, admit_num, coupon_num, use_amount, order_balance, data_hash, result_code, cash_receipt_amount, no_tax_amount, rgster_no, rgst_dtm ) 
+
+		VALUES 
+			 ( #{giftCardOrderNo, jdbcType=VARCHAR}, <choose><when test="orderDtm != null">#{orderDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{siteNo, jdbcType=VARCHAR}, #{memberNo, jdbcType=VARCHAR}, #{memberTypeCode, jdbcType=VARCHAR}, #{empYn, jdbcType=CHAR}, #{otsVipYn, jdbcType=CHAR}, #{deviceCode, jdbcType=VARCHAR}, #{exchngAmt, jdbcType=INTEGER}, #{rcvrName, jdbcType=VARCHAR}, #{rcvrHdphnNoText, jdbcType=VARCHAR}, #{cardNoText, jdbcType=VARCHAR}, #{cardPinNoText, jdbcType=VARCHAR}, #{trId, jdbcType=VARCHAR}, #{admitNum, jdbcType=VARCHAR}, #{couponNum, jdbcType=VARCHAR}, #{useAmount, jdbcType=INTEGER}, #{orderBalance, jdbcType=INTEGER}, #{dataHash, jdbcType=VARCHAR}, #{resultCode, jdbcType=VARCHAR}, #{cashReceiptAmount, jdbcType=INTEGER}, #{noTaxAmount, jdbcType=INTEGER}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.giftcard.model.master.OcKakaoExchangeOrder">
+    
+     /*+ kr.co.shop.web.giftcard.repository.master.OcKakaoExchangeOrderDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE oc_kakao_exchange_order
+		<set> 
+			<if test="giftCardOrderNo != null"> 
+				gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderDtm != null"> 
+				order_dtm = #{orderDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="memberTypeCode != null"> 
+				member_type_code = #{memberTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="empYn != null"> 
+				emp_yn = #{empYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="otsVipYn != null"> 
+				ots_vip_yn = #{otsVipYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="deviceCode != null"> 
+				device_code = #{deviceCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="exchngAmt != null"> 
+				exchng_amt = #{exchngAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="rcvrName != null"> 
+				rcvr_name = #{rcvrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrHdphnNoText != null"> 
+				rcvr_hdphn_no_text = #{rcvrHdphnNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cardNoText != null"> 
+				card_no_text = #{cardNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cardPinNoText != null"> 
+				card_pin_no_text = #{cardPinNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="trId != null"> 
+				tr_id = #{trId, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="admitNum != null"> 
+				admit_num = #{admitNum, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="couponNum != null"> 
+				coupon_num = #{couponNum, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="useAmount != null"> 
+				use_amount = #{useAmount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="orderBalance != null"> 
+				order_balance = #{orderBalance, jdbcType=INTEGER}, 
+			</if> 
+			<if test="dataHash != null"> 
+				data_hash = #{dataHash, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="resultCode != null"> 
+				result_code_text = #{resultCodeText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cashReceiptAmount != null"> 
+				cash_receipt_amount = #{cashReceiptAmount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="noTaxAmount != null"> 
+				no_tax_amount = #{noTaxAmount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.giftcard.model.master.OcKakaoExchangeOrder">
+    
+     /*+ kr.co.shop.web.giftcard.repository.master.OcKakaoExchangeOrderDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM oc_kakao_exchange_order
+		WHERE 
+			 gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

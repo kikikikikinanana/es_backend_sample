@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.board.repository.master.BdMemberCounselDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	member_cnsl_seq, cnsl_gbn_code, member_no, inqry_dtm, site_no, cnsl_type_code, cnsl_type_dtl_code, inqry_title_text, inqry_cont_text, order_no, order_prdt_seq, prdt_no, as_accept_no, as_accept_prdt_seq, vndr_assign_yn, vndr_no, vndr_asnr_no, vndr_assign_dtm, cnsl_script_seq, aswr_cont_text, aswr_stat_code, sms_send_yn, email_send_yn, aswr_no, aswr_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	member_cnsl_seq = #{memberCnslSeq, jdbcType=BIGINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.board.model.master.BdMemberCounsel" resultType="kr.co.shop.web.board.model.master.BdMemberCounsel">
+    
+     /*+ kr.co.shop.web.board.repository.master.BdMemberCounselDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			bd_member_counsel WITH (NOLOCK)
+
+		<where> 
+			<if test="memberCnslSeq != null"> 
+				 member_cnsl_seq = #{memberCnslSeq, jdbcType=BIGINT}
+			</if> 
+			<if test="cnslGbnCode != null"> 
+				 AND cnsl_gbn_code = #{cnslGbnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="memberNo != null"> 
+				 AND member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="inqryDtm != null"> 
+				 AND inqry_dtm = #{inqryDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="cnslTypeCode != null"> 
+				 AND cnsl_type_code = #{cnslTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="cnslTypeDtlCode != null"> 
+				 AND cnsl_type_dtl_code = #{cnslTypeDtlCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="inqryTitleText != null"> 
+				 AND inqry_title_text = #{inqryTitleText, jdbcType=VARCHAR}
+			</if> 
+			<if test="inqryContText != null"> 
+				 AND inqry_cont_text = #{inqryContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderNo != null"> 
+				 AND order_no = #{orderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				 AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="prdtNo != null"> 
+				 AND prdt_no = #{prdtNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="asAcceptNo != null"> 
+				 AND as_accept_no = #{asAcceptNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="asAcceptPrdtSeq != null"> 
+				 AND as_accept_prdt_seq = #{asAcceptPrdtSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="vndrAssignYn != null"> 
+				 AND vndr_assign_yn = #{vndrAssignYn, jdbcType=CHAR}
+			</if> 
+			<if test="vndrNo != null"> 
+				 AND vndr_no = #{vndrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="vndrAsnrNo != null"> 
+				 AND vndr_asnr_no = #{vndrAsnrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="vndrAssignDtm != null"> 
+				 AND vndr_assign_dtm = #{vndrAssignDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="cnslScriptSeq != null"> 
+				 AND cnsl_script_seq = #{cnslScriptSeq, jdbcType=VARCHAR}
+			</if> 
+			<if test="aswrContText != null"> 
+				 AND aswr_cont_text = #{aswrContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="aswrStatCode != null"> 
+				 AND aswr_stat_code = #{aswrStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="smsSendYn != null"> 
+				 AND sms_send_yn = #{smsSendYn, jdbcType=CHAR}
+			</if> 
+			<if test="emailSendYn != null"> 
+				 AND email_send_yn = #{emailSendYn, jdbcType=CHAR}
+			</if> 
+			<if test="aswrNo != null"> 
+				 AND aswr_no = #{aswrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="aswrDtm != null"> 
+				 AND aswr_dtm = #{aswrDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+	<insert id="insert" useGeneratedKeys="true" keyProperty="memberCnslSeq">
+
+     /*+ kr.co.shop.web.board.repository.master.BdMemberCounselDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO bd_member_counsel
+			 ( cnsl_gbn_code, member_no, inqry_dtm, site_no, cnsl_type_code, cnsl_type_dtl_code, inqry_title_text, inqry_cont_text, order_no, order_prdt_seq, prdt_no, as_accept_no, as_accept_prdt_seq, vndr_assign_yn, vndr_no, vndr_asnr_no, vndr_assign_dtm, cnsl_script_seq, aswr_cont_text, aswr_stat_code, sms_send_yn, email_send_yn, aswr_no, aswr_dtm ) 
+
+		VALUES 
+			 ( #{cnslGbnCode, jdbcType=VARCHAR}, #{memberNo, jdbcType=VARCHAR}, <choose><when test="inqryDtm != null">#{inqryDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{siteNo, jdbcType=VARCHAR}, #{cnslTypeCode, jdbcType=VARCHAR}, #{cnslTypeDtlCode, jdbcType=VARCHAR}, #{inqryTitleText, jdbcType=VARCHAR}, #{inqryContText, jdbcType=VARCHAR}, #{orderNo, jdbcType=VARCHAR}, #{orderPrdtSeq, jdbcType=TINYINT}, #{prdtNo, jdbcType=VARCHAR}, #{asAcceptNo, jdbcType=VARCHAR}, #{asAcceptPrdtSeq, jdbcType=TINYINT}, #{vndrAssignYn, jdbcType=CHAR}, #{vndrNo, jdbcType=VARCHAR}, #{vndrAsnrNo, jdbcType=VARCHAR}, <choose><when test="vndrAssignDtm != null">#{vndrAssignDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{cnslScriptSeq, jdbcType=VARCHAR}, #{aswrContText, jdbcType=VARCHAR}, #{aswrStatCode, jdbcType=VARCHAR}, #{smsSendYn, jdbcType=CHAR}, #{emailSendYn, jdbcType=CHAR}, #{aswrNo, jdbcType=VARCHAR}, <choose><when test="aswrDtm != null">#{aswrDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.board.model.master.BdMemberCounsel">
+    
+     /*+ kr.co.shop.web.board.repository.master.BdMemberCounselDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE bd_member_counsel
+		<set> 
+			<if test="memberCnslSeq != null"> 
+				member_cnsl_seq = #{memberCnslSeq, jdbcType=BIGINT}, 
+			</if> 
+			<if test="cnslGbnCode != null"> 
+				cnsl_gbn_code = #{cnslGbnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="inqryDtm != null"> 
+				inqry_dtm = #{inqryDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cnslTypeCode != null"> 
+				cnsl_type_code = #{cnslTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cnslTypeDtlCode != null"> 
+				cnsl_type_dtl_code = #{cnslTypeDtlCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="inqryTitleText != null"> 
+				inqry_title_text = #{inqryTitleText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="inqryContText != null"> 
+				inqry_cont_text = #{inqryContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderNo != null"> 
+				order_no = #{orderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="prdtNo != null"> 
+				prdt_no = #{prdtNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asAcceptNo != null"> 
+				as_accept_no = #{asAcceptNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asAcceptPrdtSeq != null"> 
+				as_accept_prdt_seq = #{asAcceptPrdtSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="vndrAssignYn != null"> 
+				vndr_assign_yn = #{vndrAssignYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="vndrNo != null"> 
+				vndr_no = #{vndrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="vndrAsnrNo != null"> 
+				vndr_asnr_no = #{vndrAsnrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="vndrAssignDtm != null"> 
+				vndr_assign_dtm = #{vndrAssignDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="cnslScriptSeq != null"> 
+				cnsl_script_seq = #{cnslScriptSeq, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aswrContText != null"> 
+				aswr_cont_text = #{aswrContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aswrStatCode != null"> 
+				aswr_stat_code = #{aswrStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="smsSendYn != null"> 
+				sms_send_yn = #{smsSendYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="emailSendYn != null"> 
+				email_send_yn = #{emailSendYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="aswrNo != null"> 
+				aswr_no = #{aswrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aswrDtm != null"> 
+				aswr_dtm = #{aswrDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 member_cnsl_seq = #{memberCnslSeq, jdbcType=BIGINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.board.model.master.BdMemberCounsel">
+    
+     /*+ kr.co.shop.web.board.repository.master.BdMemberCounselDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM bd_member_counsel
+		WHERE 
+			 member_cnsl_seq = #{memberCnslSeq, jdbcType=BIGINT}  
+    </delete>
+</mapper>

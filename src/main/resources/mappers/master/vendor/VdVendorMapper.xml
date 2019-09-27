@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.vendor.repository.master.VdVendorDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.vendor.model.master.VdVendor">
+    
+     /*+ kr.co.shop.web.vendor.repository.master.VdVendorDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			vd_vendor
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+
+	<select id="selectVendorInfoList" parameterType="map" resultType="kr.co.shop.web.vendor.model.master.VdVendor">
+		/*+ kr.co.shop.web.vendor.repository.master.VdVendorDao.selectVendorInfoList [업체정보 리스트] [유성민] */  
+		SELECT <include refid="select-columns" />
+		 FROM VD_VENDOR
+		<where>
+			AND VNDR_NO IN 
+			<foreach collection="list" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</where>		 	
+	</select>
+	
+	
+	<resultMap type="kr.co.shop.web.vendor.vo.VendorCommissionVo" id="vendorCommissionMap">
+		<id property="vndrNo" column="VNDR_NO"/>
+		<id property="dfltCmsnRate" column="DFLT_CMSN_RATE"/>
+		<collection property="exceptionCommissionList" ofType="kr.co.shop.web.vendor.model.master.VdVendorExceptionCommission">
+			<id property="stdCtgrNo" column="STD_CTGR_NO" />
+			<id property="brandNo" column="BRAND_NO" />
+			<id property="cmsnRate" column="CMSN_RATE" />
+		</collection>
+	</resultMap>
+
+	<select id="getVendorCommissionList" parameterType="map" resultMap="vendorCommissionMap">
+	/*+ kr.co.shop.web.vendor.repository.master.VdVendorDao.getVendorCommissionList [업체수수료 정보 리스트] [유성민] */
+		SELECT A.VNDR_NO
+			 , B.STD_CTGR_NO
+			 , B.BRAND_NO
+			 , A.DFLT_CMSN_RATE
+			 , B.CMSN_RATE
+		  FROM VD_VENDOR_DEFAULT_COMMISSION A
+	 LEFT OUTER JOIN VD_VENDOR_EXCEPTION_COMMISSION B 
+			ON A.VNDR_NO = B.VNDR_NO 
+		   AND TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') BETWEEN B.APPLY_START_YMD AND B.APPLY_END_YMD 
+		   AND B.DEL_YN = 'N'
+		 WHERE A.VNDR_NO IN 
+			<foreach collection="list" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		   AND TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') BETWEEN A.APPLY_START_YMD AND A.APPLY_END_YMD
+	</select>
+	
+</mapper>

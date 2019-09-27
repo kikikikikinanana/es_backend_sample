@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.BdPopupDeviceDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	popup_seq, device_code, popup_type, popup_width_num, popup_height_num, popup_x_postn, popup_y_postn, image_name, image_path_text, image_url, altrn_text, cnnctn_type, link_info, link_target_type
+    </sql>
+    
+    <sql id="pk-columns">
+    	device_code = #{deviceCode, jdbcType=VARCHAR} AND popup_seq = #{popupSeq, jdbcType=INTEGER}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.display.model.master.BdPopupDevice" resultType="kr.co.shop.web.display.model.master.BdPopupDevice">
+    
+     /*+ kr.co.shop.web.display.repository.master.BdPopupDeviceDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			BD_POPUP_DEVICE
+		<where> 
+			<if test="popupSeq != null"> 
+				 popup_seq = #{popupSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="deviceCode != null"> 
+				 AND device_code = #{deviceCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="popupType != null"> 
+				 AND popup_type = #{popupType, jdbcType=CHAR}
+			</if> 
+			<if test="popupWidthNum != null"> 
+				 AND popup_width_num = #{popupWidthNum, jdbcType=SMALLINT}
+			</if> 
+			<if test="popupHeightNum != null"> 
+				 AND popup_height_num = #{popupHeightNum, jdbcType=SMALLINT}
+			</if> 
+			<if test="popupXPostn != null"> 
+				 AND popup_x_postn = #{popupXPostn, jdbcType=SMALLINT}
+			</if> 
+			<if test="popupYPostn != null"> 
+				 AND popup_y_postn = #{popupYPostn, jdbcType=SMALLINT}
+			</if> 
+			<if test="imageName != null"> 
+				 AND image_name = #{imageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="imagePathText != null"> 
+				 AND image_path_text = #{imagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="imageUrl != null"> 
+				 AND image_url = #{imageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="altrnText != null"> 
+				 AND altrn_text = #{altrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="cnnctnType != null"> 
+				 AND cnnctn_type = #{cnnctnType, jdbcType=CHAR}
+			</if> 
+			<if test="linkInfo != null"> 
+				 AND link_info = #{linkInfo, jdbcType=VARCHAR}
+			</if> 
+			<if test="linkTargetType != null"> 
+				 AND link_target_type = #{linkTargetType, jdbcType=CHAR}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.display.model.master.BdPopupDevice">	
+
+     /*+ kr.co.shop.web.display.repository.master.BdPopupDeviceDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO BD_POPUP_DEVICE
+			 ( popup_seq, device_code, popup_type, popup_width_num, popup_height_num, popup_x_postn, popup_y_postn, image_name, image_path_text, image_url, altrn_text, cnnctn_type, link_info, link_target_type ) 
+
+		VALUES 
+			 ( #{popupSeq, jdbcType=INTEGER}, #{deviceCode, jdbcType=VARCHAR}, #{popupType, jdbcType=CHAR}, #{popupWidthNum, jdbcType=SMALLINT}, #{popupHeightNum, jdbcType=SMALLINT}, #{popupXPostn, jdbcType=SMALLINT}, #{popupYPostn, jdbcType=SMALLINT}, #{imageName, jdbcType=VARCHAR}, #{imagePathText, jdbcType=VARCHAR}, #{imageUrl, jdbcType=VARCHAR}, #{altrnText, jdbcType=VARCHAR}, #{cnnctnType, jdbcType=CHAR}, #{linkInfo, jdbcType=VARCHAR}, #{linkTargetType, jdbcType=CHAR} )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.display.model.master.BdPopupDevice">
+    
+     /*+ kr.co.shop.web.display.repository.master.BdPopupDeviceDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE BD_POPUP_DEVICE
+		<set> 
+			<if test="popupSeq != null"> 
+				popup_seq = #{popupSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="deviceCode != null"> 
+				device_code = #{deviceCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="popupType != null"> 
+				popup_type = #{popupType, jdbcType=CHAR}, 
+			</if> 
+			<if test="popupWidthNum != null"> 
+				popup_width_num = #{popupWidthNum, jdbcType=SMALLINT}, 
+			</if> 
+			<if test="popupHeightNum != null"> 
+				popup_height_num = #{popupHeightNum, jdbcType=SMALLINT}, 
+			</if> 
+			<if test="popupXPostn != null"> 
+				popup_x_postn = #{popupXPostn, jdbcType=SMALLINT}, 
+			</if> 
+			<if test="popupYPostn != null"> 
+				popup_y_postn = #{popupYPostn, jdbcType=SMALLINT}, 
+			</if> 
+			<if test="imageName != null"> 
+				image_name = #{imageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="imagePathText != null"> 
+				image_path_text = #{imagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="imageUrl != null"> 
+				image_url = #{imageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="altrnText != null"> 
+				altrn_text = #{altrnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cnnctnType != null"> 
+				cnnctn_type = #{cnnctnType, jdbcType=CHAR}, 
+			</if> 
+			<if test="linkInfo != null"> 
+				link_info = #{linkInfo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="linkTargetType != null"> 
+				link_target_type = #{linkTargetType, jdbcType=CHAR}, 
+			</if> 
+		</set> 
+		WHERE 
+			 device_code = #{deviceCode, jdbcType=VARCHAR} AND popup_seq = #{popupSeq, jdbcType=INTEGER}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.display.model.master.BdPopupDevice">
+    
+     /*+ kr.co.shop.web.display.repository.master.BdPopupDeviceDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM BD_POPUP_DEVICE
+		WHERE 
+			 device_code = #{deviceCode, jdbcType=VARCHAR} AND popup_seq = #{popupSeq, jdbcType=INTEGER}  
+    </delete>
+</mapper>

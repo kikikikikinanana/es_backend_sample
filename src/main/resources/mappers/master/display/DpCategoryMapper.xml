@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.DpCategoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.display.model.master.DpCategory">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpCategoryDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			DP_CATEGORY
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectDpCategoryList" parameterType="kr.co.shop.web.display.model.master.DpCategory" resultType="kr.co.shop.web.display.model.master.DpCategory">
+    
+    /*+ kr.co.shop.web.display.repository.master.DpCategoryDao.selectDpCategoryList [전시 카테고리 목록 조회] [이가영] */
+		SELECT A.CTGR_NO, A.UP_CTGR_NO, A.SITE_NO, A.CHNNL_NO, A.CTGR_NAME
+             , A.LEAF_CTGR_YN, A.CTGR_LEVEL, A.STD_CTGR_NO, A.PC_DISP_TMPL_NO, A.MOBILE_DISP_TMPL_NO
+             , A.CTGR_NAME_DISP_TYPE, A.PC_IMAGE_NAME, A.PC_IMAGE_PATH_TEXT, A.PC_IMAGE_URL, A.PC_ALTRN_TEXT
+             , A.MOBILE_IMAGE_NAME, A.MOBILE_IMAGE_PATH_TEXT, A.MOBILE_IMAGE_URL, A.MOBILE_ALTRN_TEXT, A.SRCH_FILTER_USE_YN
+             , A.SORT_SEQ, A.DISP_YN, A.USE_YN, A.CTGR_LEVEL AS LEVEL
+		  FROM DP_CATEGORY A
+		<where> 
+			A.use_yn = 'Y'
+			AND A.disp_yn = 'Y'
+			<if test="ctgrNo != null and ctgrNo != ''"> 
+				 A.ctgr_no = #{ctgrNo, jdbcType=VARCHAR}
+			</if>
+			<if test="upCtgrNo != null and upCtgrNo != ''"> 
+				 AND A.up_ctgr_no = #{upCtgrNo, jdbcType=VARCHAR}
+			</if>
+			<if test="chnnlNo != null and chnnlNo != ''"> 
+				 AND A.chnnl_no = #{chnnlNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="leafCtgrYn != null and leafCtgrYn != ''"> 
+				 AND A.leaf_ctgr_yn = #{leafCtgrYn, jdbcType=CHAR}
+			</if> 
+			<if test="ctgrLevel != null and ctgrLevel != ''"> 
+				 AND A.ctgr_level = #{ctgrLevel, jdbcType=TINYINT}
+			</if> 
+			<if test="pcDispTmplNo != null and pcDispTmplNo != ''"> 
+				 AND A.pc_disp_tmpl_no = #{pcDispTmplNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileDispTmplNo != null and mobileDispTmplNo != ''"> 
+				 AND A.mobile_disp_tmpl_no = #{mobileDispTmplNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="ctgrNameDispType != null and ctgrNameDispType != ''"> 
+				 AND A.ctgr_name_disp_type = #{ctgrNameDispType, jdbcType=CHAR}
+			</if> 
+			<if test="srchFilterUseYn != null and srchFilterUseYn != ''"> 
+				 AND A.srch_filter_use_yn = #{srchFilterUseYn, jdbcType=CHAR}
+			</if> 
+			<if test="sortSeq != null and sortSeq != ''"> 
+				 AND A.sort_seq = #{sortSeq, jdbcType=INTEGER}
+			</if> 
+		</where>
+		order by A.sort_seq, CTGR_LEVEL		
+    </select>
+    
+    <select id="selectDpCategory" parameterType="kr.co.shop.web.display.model.master.DpCategory" resultType="kr.co.shop.web.display.model.master.DpCategory">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpCategoryDao.selectDpCategory [전시카테고리 조회] [박민우] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			DP_CATEGORY
+		<where> 
+			<if test="ctgrNo != null"> 
+				 ctgr_no = #{ctgrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="upCtgrNo != null"> 
+				 AND up_ctgr_no = #{upCtgrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="chnnlNo != null"> 
+				 AND chnnl_no = #{chnnlNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="ctgrName != null"> 
+				 AND ctgr_name = #{ctgrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="leafCtgrYn != null"> 
+				 AND leaf_ctgr_yn = #{leafCtgrYn, jdbcType=CHAR}
+			</if> 
+			<if test="ctgrLevel != null"> 
+				 AND ctgr_level = #{ctgrLevel, jdbcType=TINYINT}
+			</if> 
+			<if test="stdCtgrNo != null"> 
+				 AND std_ctgr_no = #{stdCtgrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcDispTmplNo != null"> 
+				 AND pc_disp_tmpl_no = #{pcDispTmplNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcDispImageName != null"> 
+				 AND pc_disp_image_name = #{pcDispImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcDispImagePathText != null"> 
+				 AND pc_disp_image_path_text = #{pcDispImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcDispImageUrl != null"> 
+				 AND pc_disp_image_url = #{pcDispImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileDispTmplNo != null"> 
+				 AND mobile_disp_tmpl_no = #{mobileDispTmplNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileDispTmplImageName != null"> 
+				 AND mobile_disp_tmpl_image_name = #{mobileDispTmplImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileDispTmplImagePathText != null"> 
+				 AND mobile_disp_tmpl_image_path_text = #{mobileDispTmplImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileDispTmplImageUrl != null"> 
+				 AND mobile_disp_tmpl_image_url = #{mobileDispTmplImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="ctgrNameDispType != null"> 
+				 AND ctgr_name_disp_type = #{ctgrNameDispType, jdbcType=CHAR}
+			</if> 
+			<if test="pcImageName != null"> 
+				 AND pc_image_name = #{pcImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcImagePathText != null"> 
+				 AND pc_image_path_text = #{pcImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcImageUrl != null"> 
+				 AND pc_image_url = #{pcImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcAltrnText != null"> 
+				 AND pc_altrn_text = #{pcAltrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileImageName != null"> 
+				 AND mobile_image_name = #{mobileImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileImagePathText != null"> 
+				 AND mobile_image_path_text = #{mobileImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileImageUrl != null"> 
+				 AND mobile_image_url = #{mobileImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileAltrnText != null"> 
+				 AND mobile_altrn_text = #{mobileAltrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="srchFilterUseYn != null"> 
+				 AND srch_filter_use_yn = #{srchFilterUseYn, jdbcType=CHAR}
+			</if> 
+			<if test="sortSeq != null"> 
+				 AND sort_seq = #{sortSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="dispYn != null"> 
+				 AND disp_yn = #{dispYn, jdbcType=CHAR}
+			</if> 
+			<if test="useYn != null"> 
+				 AND use_yn = #{useYn, jdbcType=CHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+                  
+    <select id="selectDpCategorySaleList" parameterType="kr.co.shop.web.display.model.master.DpCategory" resultType="kr.co.shop.web.display.model.master.DpCategory">
+     /*+ kr.co.shop.web.display.repository.master.DpCategoryDao.selectDpCategorySaleList [전시카테고리세일 조회] [박민우] */
+     
+		SELECT DC.CTGR_NAME
+		FROM (
+		       SELECT P.PRDT_NO,
+		              C.CTGR_NO,
+		              A.UP_CTGR_NO,
+		              A.CHNNL_NO,
+		              FN_DISCOUNT_RATE(P.PRDT_NO) AS D_RATE
+		         FROM PD_PRODUCT P,
+		              DP_CATEGORY_PRODUCT C,
+		              DP_CATEGORY A
+		        WHERE P.STDR_CTGR_NO IS NOT NULL
+		          AND P.PRDT_NO = C.PRDT_NO
+		          AND C.CTGR_NO = A.CTGR_NO
+		          AND A.LEAF_CTGR_YN = 'Y'
+		          AND P.CHNNL_NO = #{chnnlNo, jdbcType=VARCHAR}
+		          AND P.USE_YN = 'Y' 
+		          AND P.DISP_YN = 'Y'
+		          AND P.APRV_STAT_CODE = '10004' 
+		          AND P.PRDT_TYPE_CODE IN ('10000', '10001')
+		          AND P.SELL_STAT_CODE IN ('10001', '10002')
+		          AND SYSDATE BETWEEN P.SELL_START_DTM AND P.SELL_END_DTM
+		       ) TEMP, 
+		         DP_CATEGORY DC
+		WHERE TEMP.D_RATE >= 30
+		  AND TEMP.UP_CTGR_NO = DC.CTGR_NO
+		GROUP BY DC.CTGR_NAME
+		ORDER BY DC.CTGR_NAME 
+		
+    </select>
+    
+    <select id="selectDpCategoryNameList" parameterType="kr.co.shop.web.display.model.master.DpCategory" resultType="kr.co.shop.web.display.model.master.DpCategory">
+     /*+ kr.co.shop.web.display.repository.master.DpCategoryDao.selectDpCategoryNameList [전시카테고리이름 조회] [이지훈] */
+     
+	    SELECT CTGR_NAME
+		 FROM DP_CATEGORY
+		WHERE CHNNL_NO = #{chnnlNo, jdbcType=VARCHAR}
+		<if test='chnnlNo != null and chnnlNo != "" '>
+		  <choose>
+		    <when test='chnnlNo == "10000" '>AND CTGR_LEVEL = 2</when>
+		    <otherwise>AND CTGR_LEVEL = 1</otherwise>
+		  </choose>
+		 </if>
+		GROUP BY CTGR_NAME
+		ORDER BY CTGR_NAME
+    </select>
+
+</mapper>

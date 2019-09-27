@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderUseCouponDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.order.model.master.OcOrderUseCoupon">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderUseCouponDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			OC_ORDER_USE_COUPON
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+
+	<select id="selectOrderUserCouponForClaimList" parameterType="kr.co.shop.web.order.model.master.OcOrderUseCoupon" resultType="kr.co.shop.web.order.model.master.OcOrderUseCoupon">
+	/*+ kr.co.shop.web.order.repository.master.OcOrderUseCouponDao.selectOrderClaimCouponList [클레임 처리용 쿠폰 사용 목록 조회] [KTH] */  
+		SELECT A.ORDER_NO
+			 , A.ORDER_USE_CPN_SEQ
+			 , A.ORDER_PRDT_SEQ
+			 , A.MEMBER_NO
+			 , A.HOLD_CPN_SEQ
+			 , A.CPN_NO
+			 , A.VNDR_NO
+			 , A.DSCNT_TYPE
+			 , A.DSCNT_VALUE
+			 , A.DSCNT_AMT
+			 , A.CLM_NO
+			 , C.VALID_START_DTM
+			 , C.VALID_END_DTM
+			 , C.CPN_STAT_CODE
+			 , D.CPN_NAME
+			 , D.CPN_TYPE_CODE
+		  FROM OC_ORDER_USE_COUPON A
+		  JOIN OC_ORDER_PRODUCT B
+		    ON A.ORDER_NO 		= B.ORDER_NO
+		   AND A.ORDER_PRDT_SEQ = B.ORDER_PRDT_SEQ
+		  LEFT OUTER JOIN MB_MEMBER_COUPON C
+		    ON A.HOLD_CPN_SEQ 	= C.HOLD_CPN_SEQ
+		   AND A.MEMBER_NO 		= C.MEMBER_NO
+		  JOIN PR_COUPON D
+			ON D.CPN_NO 		= A.CPN_NO
+		<where>
+			<if test='orgOrderNo != null and orgOrderNo != ""'>
+			   AND A.ORDER_NO IN (SELECT ORDER_NO FROM OC_ORDER WHERE ORG_ORDER_NO = #{orgOrderNo, jdbcType=VARCHAR})
+			</if>
+			<if test='orderNo != null and orderNo != ""'>
+			   AND A.ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="insertList" parameterType="java.util.List">	
+     /*+ kr.co.shop.web.order.repository.master.OcOrderUseCouponDao.insertList [주문 사용 쿠폰정보 insert 쿼리] [Generator] */
+    	WITH ORDER_COUPON AS (
+    		<foreach collection="list" item="item" separator="UNION ALL">
+    			SELECT #{item.orderNo, jdbcType=VARCHAR} orderNo
+				, #{item.orderUseCpnSeq, jdbcType=TINYINT} orderUseCpnSeq
+				, #{item.orderPrdtSeq, jdbcType=TINYINT} orderPrdtSeq
+				, #{item.memberNo, jdbcType=VARCHAR} memberNo
+				, #{item.holdCpnSeq, jdbcType=INTEGER} holdCpnSeq
+				, #{item.cpnNo, jdbcType=VARCHAR} cpnNo
+				<choose>
+					<when test="item.dscntAmt != null">, #{item.dscntAmt, jdbcType=INTEGER}</when>
+					<otherwise>, 0</otherwise>
+				</choose> dscntAmt
+    		</foreach>
+    	)
+		INSERT INTO OC_ORDER_USE_COUPON
+			( 
+			 	order_no
+			 	, order_use_cpn_seq
+			 	, order_prdt_seq
+			 	, member_no
+			 	, hold_cpn_seq
+			 	, cpn_no
+			 	, vndr_no
+			 	, share_rate
+			 	, dscnt_type
+			 	, dscnt_value
+			 	, dscnt_amt
+			 ) 
+		SELECT 	ORDERCOUPON.orderNo
+				, ORDERCOUPON.orderUseCpnSeq
+				, ORDERCOUPON.orderPrdtSeq
+				, ORDERCOUPON.memberNo
+				, ORDERCOUPON.holdCpnSeq
+				, ORDERCOUPON.cpnNo
+				, SHARE.VNDR_NO
+				, NVL(SHARE.SHARE_RATE,0)
+				, COUPON.DSCNT_TYPE
+				, COUPON.DSCNT_VALUE
+				, ORDERCOUPON.dscntAmt
+		FROM 	ORDER_COUPON ORDERCOUPON 
+		JOIN 	PR_COUPON COUPON on ORDERCOUPON.cpnNo = COUPON.CPN_NO    
+		LEFT OUTER JOIN 
+				PR_COUPON_VENDOR_SHARE_RATE SHARE on ORDERCOUPON.cpnNo = SHARE.CPN_NO
+    </insert>
+    
+    <select id="couponListByOrder" parameterType="kr.co.shop.web.order.model.master.OcOrderUseCoupon" resultType="kr.co.shop.web.order.model.master.OcOrderUseCoupon">
+	/*+ kr.co.shop.web.order.repository.master.OcOrderUseCouponDao.selectOrderClaimCouponList [클레임 처리용 쿠폰 사용 목록 조회] [KTH] */  
+		SELECT 	A.ORDER_NO
+				 , A.ORDER_USE_CPN_SEQ
+				 , A.ORDER_PRDT_SEQ
+				 , A.MEMBER_NO
+				 , A.HOLD_CPN_SEQ
+				 , A.CPN_NO
+				 , A.VNDR_NO
+				 , A.DSCNT_TYPE
+				 , A.DSCNT_VALUE
+				 , A.DSCNT_AMT
+				 , A.CLM_NO		
+				 , B.CPN_NAME
+				 , B.CPN_TYPE_CODE	 
+		FROM	OC_ORDER_USE_COUPON A
+		JOIN 	PR_COUPON B ON B.CPN_NO = A.CPN_NO
+		WHERE 	A.ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateOrderUseCouponClmNo" parameterType="kr.co.shop.web.order.model.master.OcOrderUseCoupon">
+    	/*+ kr.co.shop.web.order.repository.master.OcOrderUseCouponDao.updateOrderUseCouponClmNo [주문사용쿠폰 클레임번호 업데이트] [KTH] */
+    	UPDATE OC_ORDER_USE_COUPON
+    	   SET CLM_NO = #{clmNo}
+    	 WHERE ORDER_NO = #{orderNo}
+		<if test='orderUseCpnSeq != null'>
+		   AND ORDER_USE_CPN_SEQ = #{orderUseCpnSeq}
+		</if>
+		<if test='orderPrdtSeq != null'>
+		   AND ORDER_PRDT_SEQ = #{orderPrdtSeq}
+		</if>
+		<if test='holdCpnSeq != null'>
+		   AND HOLD_CPN_SEQ = #{holdCpnSeq}
+		</if>
+    </update>
+    
+</mapper>

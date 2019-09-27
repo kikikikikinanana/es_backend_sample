@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.event.repository.master.EvEventTargetCouponDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	event_no, cpn_no, issue_limit_count, issue_count, sort_seq
+    </sql>
+    
+    <sql id="pk-columns">
+    	cpn_no = #{cpnNo, jdbcType=VARCHAR} AND event_no = #{eventNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.event.model.master.EvEventTargetCoupon" resultType="kr.co.shop.web.event.model.master.EvEventTargetCoupon">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventTargetCouponDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			ev_event_target_coupon
+		<where> 
+			<if test="eventNo != null"> 
+				 event_no = #{eventNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="cpnNo != null"> 
+				 AND cpn_no = #{cpnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="issueLimitCount != null"> 
+				 AND issue_limit_count = #{issueLimitCount, jdbcType=INTEGER}
+			</if> 
+			<if test="issueCount != null"> 
+				 AND issue_count = #{issueCount, jdbcType=INTEGER}
+			</if> 
+			<if test="sortSeq != null"> 
+				 AND sort_seq = #{sortSeq, jdbcType=INTEGER}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.event.model.master.EvEventTargetCoupon">	
+
+     /*+ kr.co.shop.web.event.repository.master.EvEventTargetCouponDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO ev_event_target_coupon
+			 ( event_no, cpn_no, issue_limit_count, issue_count, sort_seq ) 
+
+		VALUES 
+			 ( #{eventNo, jdbcType=VARCHAR}, #{cpnNo, jdbcType=VARCHAR}, #{issueLimitCount, jdbcType=INTEGER}, #{issueCount, jdbcType=INTEGER}, #{sortSeq, jdbcType=INTEGER} )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.event.model.master.EvEventTargetCoupon">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventTargetCouponDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE ev_event_target_coupon
+		<set> 
+			<if test="eventNo != null"> 
+				event_no = #{eventNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cpnNo != null"> 
+				cpn_no = #{cpnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="issueLimitCount != null"> 
+				issue_limit_count = #{issueLimitCount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="issueCount != null"> 
+				issue_count = #{issueCount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="sortSeq != null"> 
+				sort_seq = #{sortSeq, jdbcType=INTEGER}, 
+			</if> 
+		</set> 
+		WHERE 
+			 cpn_no = #{cpnNo, jdbcType=VARCHAR} AND event_no = #{eventNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.event.model.master.EvEventTargetCoupon">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventTargetCouponDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM ev_event_target_coupon
+		WHERE 
+			 cpn_no = #{cpnNo, jdbcType=VARCHAR} AND event_no = #{eventNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

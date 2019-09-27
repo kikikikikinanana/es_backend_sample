@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderTermsAgreeDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.order.model.master.OcOrderTermsAgree">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderTermsAgreeDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			OC_ORDER_TERMS_AGREE
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+	
+	<insert id="insertOrderTermsAgree" parameterType="kr.co.shop.web.order.vo.OrderPaymentVo$OrderTermsAgree">	
+     /*+ kr.co.shop.web.order.repository.master.OcOrderTermsAgreeDao.insert [주문동의 입력] [이재영] */
+    
+		INSERT INTO OC_ORDER_TERMS_AGREE
+			 ( order_no, terms_seq, terms_dtl_seq, terms_agree_yn, terms_agree_dtm ) 
+
+		VALUES 
+			<foreach collection="array" item="item" separator=",">
+				(#{item.orderNo, jdbcType=VARCHAR}
+				, #{item.termsSeq, jdbcType=INTEGER} 
+				, #{item.termsDtlSeq, jdbcType=INTEGER} 
+				, #{item.termsAgreeYn, jdbcType=CHAR} 
+				, SYSDATE )
+			</foreach>
+			   
+    </insert>
+</mapper>

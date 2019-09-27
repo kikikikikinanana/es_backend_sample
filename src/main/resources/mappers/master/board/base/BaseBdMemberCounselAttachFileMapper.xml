@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.board.repository.master.BdMemberCounselAttachFileDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	member_cnsl_seq, atch_file_seq, atch_file_gbn_type, atch_file_name, atch_file_path_text, atch_file_url
+    </sql>
+    
+    <sql id="pk-columns">
+    	atch_file_seq = #{atchFileSeq, jdbcType=INTEGER} AND member_cnsl_seq = #{memberCnslSeq, jdbcType=BIGINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.board.model.master.BdMemberCounselAttachFile" resultType="kr.co.shop.web.board.model.master.BdMemberCounselAttachFile">
+    
+     /*+ kr.co.shop.web.board.repository.master.BdMemberCounselAttachFileDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			bd_member_counsel_attach_file WITH (NOLOCK)
+
+		<where> 
+			<if test="memberCnslSeq != null"> 
+				 member_cnsl_seq = #{memberCnslSeq, jdbcType=BIGINT}
+			</if> 
+			<if test="atchFileSeq != null"> 
+				 AND atch_file_seq = #{atchFileSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="atchFileGbnType != null"> 
+				 AND atch_file_gbn_type = #{atchFileGbnType, jdbcType=CHAR}
+			</if> 
+			<if test="atchFileName != null"> 
+				 AND atch_file_name = #{atchFileName, jdbcType=VARCHAR}
+			</if> 
+			<if test="atchFilePathText != null"> 
+				 AND atch_file_path_text = #{atchFilePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="atchFileUrl != null"> 
+				 AND atch_file_url = #{atchFileUrl, jdbcType=VARCHAR}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.board.model.master.BdMemberCounselAttachFile">	
+
+     /*+ kr.co.shop.web.board.repository.master.BdMemberCounselAttachFileDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO bd_member_counsel_attach_file
+			 ( member_cnsl_seq, atch_file_seq, atch_file_gbn_type, atch_file_name, atch_file_path_text, atch_file_url ) 
+
+		VALUES 
+			 ( #{memberCnslSeq, jdbcType=BIGINT}, #{atchFileSeq, jdbcType=INTEGER}, #{atchFileGbnType, jdbcType=CHAR}, #{atchFileName, jdbcType=VARCHAR}, #{atchFilePathText, jdbcType=VARCHAR}, #{atchFileUrl, jdbcType=VARCHAR} )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.board.model.master.BdMemberCounselAttachFile">
+    
+     /*+ kr.co.shop.web.board.repository.master.BdMemberCounselAttachFileDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE bd_member_counsel_attach_file
+		<set> 
+			<if test="memberCnslSeq != null"> 
+				member_cnsl_seq = #{memberCnslSeq, jdbcType=BIGINT}, 
+			</if> 
+			<if test="atchFileSeq != null"> 
+				atch_file_seq = #{atchFileSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="atchFileGbnType != null"> 
+				atch_file_gbn_type = #{atchFileGbnType, jdbcType=CHAR}, 
+			</if> 
+			<if test="atchFileName != null"> 
+				atch_file_name = #{atchFileName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="atchFilePathText != null"> 
+				atch_file_path_text = #{atchFilePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="atchFileUrl != null"> 
+				atch_file_url = #{atchFileUrl, jdbcType=VARCHAR}, 
+			</if> 
+		</set> 
+		WHERE 
+			 atch_file_seq = #{atchFileSeq, jdbcType=INTEGER} AND member_cnsl_seq = #{memberCnslSeq, jdbcType=BIGINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.board.model.master.BdMemberCounselAttachFile">
+    
+     /*+ kr.co.shop.web.board.repository.master.BdMemberCounselAttachFileDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM bd_member_counsel_attach_file
+		WHERE 
+			 atch_file_seq = #{atchFileSeq, jdbcType=INTEGER} AND member_cnsl_seq = #{memberCnslSeq, jdbcType=BIGINT}  
+    </delete>
+</mapper>

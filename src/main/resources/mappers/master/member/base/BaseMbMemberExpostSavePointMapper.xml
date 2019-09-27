@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.member.repository.master.MbMemberExpostSavePointDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	member_no, expost_save_point_seq, onln_buy_yn, buy_no_text, buy_ymd, pymnt_amt, store_no, pos_no_text, deal_no_text, store_name, crtfc_no_text, admin_rgst_yn, aprv_admin_no, aprv_dtm, rgst_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	expost_save_point_seq = #{expostSavePointSeq, jdbcType=INTEGER} AND member_no = #{memberNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.member.model.master.MbMemberExpostSavePoint" resultType="kr.co.shop.web.member.model.master.MbMemberExpostSavePoint">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberExpostSavePointDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			mb_member_expost_save_point WITH (NOLOCK)
+
+		<where> 
+			<if test="memberNo != null"> 
+				 member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="expostSavePointSeq != null"> 
+				 AND expost_save_point_seq = #{expostSavePointSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="onlnBuyYn != null"> 
+				 AND onln_buy_yn = #{onlnBuyYn, jdbcType=CHAR}
+			</if> 
+			<if test="buyNoText != null"> 
+				 AND buy_no_text = #{buyNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="buyYmd != null"> 
+				 AND buy_ymd = #{buyYmd, jdbcType=DATE}
+			</if> 
+			<if test="pymntAmt != null"> 
+				 AND pymnt_amt = #{pymntAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="storeNo != null"> 
+				 AND store_no = #{storeNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="posNoText != null"> 
+				 AND pos_no_text = #{posNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="dealNoText != null"> 
+				 AND deal_no_text = #{dealNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeName != null"> 
+				 AND store_name = #{storeName, jdbcType=VARCHAR}
+			</if> 
+			<if test="crtfcNoText != null"> 
+				 AND crtfc_no_text = #{crtfcNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="adminRgstYn != null"> 
+				 AND admin_rgst_yn = #{adminRgstYn, jdbcType=CHAR}
+			</if> 
+			<if test="aprvAdminNo != null"> 
+				 AND aprv_admin_no = #{aprvAdminNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="aprvDtm != null"> 
+				 AND aprv_dtm = #{aprvDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.member.model.master.MbMemberExpostSavePoint">	
+
+     /*+ kr.co.shop.web.member.repository.master.MbMemberExpostSavePointDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO mb_member_expost_save_point
+			 ( member_no, expost_save_point_seq, onln_buy_yn, buy_no_text, buy_ymd, pymnt_amt, store_no, pos_no_text, deal_no_text, store_name, crtfc_no_text, admin_rgst_yn, aprv_admin_no, aprv_dtm, rgst_dtm ) 
+
+		VALUES 
+			 ( #{memberNo, jdbcType=VARCHAR}, #{expostSavePointSeq, jdbcType=INTEGER}, #{onlnBuyYn, jdbcType=CHAR}, #{buyNoText, jdbcType=VARCHAR}, <choose><when test="buyYmd != null">#{buyYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, #{pymntAmt, jdbcType=INTEGER}, #{storeNo, jdbcType=VARCHAR}, #{posNoText, jdbcType=VARCHAR}, #{dealNoText, jdbcType=VARCHAR}, #{storeName, jdbcType=VARCHAR}, #{crtfcNoText, jdbcType=VARCHAR}, #{adminRgstYn, jdbcType=CHAR}, #{aprvAdminNo, jdbcType=VARCHAR}, <choose><when test="aprvDtm != null">#{aprvDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.member.model.master.MbMemberExpostSavePoint">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberExpostSavePointDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE mb_member_expost_save_point
+		<set> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="expostSavePointSeq != null"> 
+				expost_save_point_seq = #{expostSavePointSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="onlnBuyYn != null"> 
+				onln_buy_yn = #{onlnBuyYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="buyNoText != null"> 
+				buy_no_text = #{buyNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyYmd != null"> 
+				buy_ymd = #{buyYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="pymntAmt != null"> 
+				pymnt_amt = #{pymntAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="storeNo != null"> 
+				store_no = #{storeNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="posNoText != null"> 
+				pos_no_text = #{posNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dealNoText != null"> 
+				deal_no_text = #{dealNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeName != null"> 
+				store_name = #{storeName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="crtfcNoText != null"> 
+				crtfc_no_text = #{crtfcNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="adminRgstYn != null"> 
+				admin_rgst_yn = #{adminRgstYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="aprvAdminNo != null"> 
+				aprv_admin_no = #{aprvAdminNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aprvDtm != null"> 
+				aprv_dtm = #{aprvDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 expost_save_point_seq = #{expostSavePointSeq, jdbcType=INTEGER} AND member_no = #{memberNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.member.model.master.MbMemberExpostSavePoint">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberExpostSavePointDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM mb_member_expost_save_point
+		WHERE 
+			 expost_save_point_seq = #{expostSavePointSeq, jdbcType=INTEGER} AND member_no = #{memberNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

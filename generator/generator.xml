@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration SYSTEM "dtd/generator.dtd">
+<configuration>
+
+	<properties>
+		<property key="package.base" value="kr.co.shop.web"></property>
+	</properties>
+
+      <!-- db 접속 정보 설정 -->
+	<jdbc
+		url="jdbc:sqlserver://210.122.45.151:1433"
+		driverClass="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+		username="ArtKr"
+		password="ABCmart1220"
+	/>
+
+	<global>
+		<controllerpkg target="${package.base}" />
+		<servicepkg target="${package.base}" />
+		<daopkg target="${package.base}" />
+	</global>
+
+<!-- 	<controllers business="main" suffix-package="controller"> -->
+<!-- 		<controller name="main" type="rest"/> -->
+<!-- 	</controllers> -->
+
+	<!-- 회원 -->
+<!-- 	<controllers business="member" suffix-package="controller"> -->
+<!-- 		<controller name="Member" type="rest"/> -->
+<!-- 	</controllers> -->
+<!-- 	<services business="member" suffix-package="service" proxy-target-class="true">	 -->
+<!-- 		<service name="Member"></service> -->
+<!-- 	</services> -->
+
+<!-- 	<tables business="member" suffix-package="repository"> -->
+<!-- 		<table name="mb_member" lock="select"/> -->
+<!-- 		<table name="mb_member_certification_history" lock="select"/> -->
+<!-- 		<table name="mb_member_change_history" lock="select"/> -->
+<!-- 		<table name="mb_member_coupon" lock="select"/> -->
+<!-- 		<table name="mb_member_delivery_address" lock="select"/> -->
+<!-- 		<table name="mb_member_easy_login" lock="select"/> -->
+<!-- 		<table name="mb_member_expost_save_point" lock="select"/> -->
+<!-- 		<table name="mb_member_gift_card" lock="select"/> -->
+<!-- 		<table name="mb_member_expost_save_point" lock="select"/> -->
+<!-- 		<table name="mb_member_gift_card_balance_transfer_history" lock="select"/> -->
+<!-- 		<table name="mb_member_grade_history" lock="select"/> -->
+<!-- 		<table name="mb_member_interest_brand" lock="select"/> -->
+<!-- 		<table name="mb_member_interest_category" lock="select"/> -->
+<!-- 		<table name="mb_member_interest_product" lock="select"/> -->
+<!-- 		<table name="mb_member_interest_store" lock="select"/> -->
+<!-- 		<table name="mb_member_login_history" lock="select"/> -->
+<!-- 		<table name="mb_member_memo" lock="select"/> -->
+<!-- 		<table name="mb_member_point" lock="select"/> -->
+<!-- 		<table name="mb_member_terms_agree" lock="select"/> -->
+<!-- 		<table name="mb_persistent_logins" lock="select"/> -->
+<!-- 	</tables> -->
+	<!-- // 회원 -->
+
+	<!-- 시스템 -->
+<!-- 	<controllers business="system" suffix-package="controller"> -->
+<!-- 		<controller name="System" type="rest"/> -->
+<!-- 	</controllers> -->
+<!-- 	<services business="system" suffix-package="service" proxy-target-class="true">	 -->
+<!-- 		<service name="System"></service> -->
+<!-- 	</services> -->
+
+<!-- 	<tables business="system" suffix-package="repository"> -->
+<!-- 		<table name="sy_code" lock="select"/> -->
+<!-- 		<table name="sy_code_detail" lock="select"/> -->
+<!-- 		<table name="sy_site" lock="select"/> -->
+<!-- 		<table name="sy_site_apply_sns" lock="select"/> -->
+<!-- 		<table name="sy_site_chnnl" lock="select"/> -->
+<!-- 		<table name="sy_site_delivery_guide" lock="select"/> -->
+<!-- 		<table name="sy_site_delivery_type" lock="select"/> -->
+<!-- 		<table name="sy_site_payment_means" lock="select"/> -->
+<!-- 	</tables> -->
+	<!-- // 시스템 -->
+
+	<!-- 공통 -->
+<!-- 	<controllers business="cmm" suffix-package="controller"> -->
+<!-- 		<controller name="Cmm" type="rest"/> -->
+<!-- 	</controllers> -->
+<!-- 	<services business="cmm" suffix-package="service" proxy-target-class="true">	 -->
+<!-- 		<service name="Cmm"></service> -->
+<!-- 	</services> -->
+
+<!-- 	<tables business="cmm" suffix-package="repository"> -->
+<!-- 		<table name="cm_days_condtn" lock="select"/> -->
+<!-- 		<table name="cm_email_send_history" lock="select"/> -->
+<!-- 		<table name="cm_email_template" lock="select"/> -->
+<!-- 		<table name="cm_message_send_history" lock="select"/> -->
+<!-- 		<table name="cm_message_template" lock="select"/> -->
+<!-- 		<table name="cm_store" lock="select"/> -->
+<!-- 		<table name="cm_store_service" lock="select"/> -->
+<!-- 		<table name="cm_terms" lock="select"/> -->
+<!-- 		<table name="cm_terms_detail" lock="select"/> -->
+<!-- 	</tables> -->
+	<!-- // 시스템 -->
+
+	<!-- 업체 -->
+<!-- 	<controllers business="vendor" suffix-package="controller"> -->
+<!-- 		<controller name="Vendor" type="rest"/> -->
+<!-- 	</controllers> -->
+<!-- 	<services business="vendor" suffix-package="service" proxy-target-class="true">	 -->
+<!-- 		<service name="Vendor"></service> -->
+<!-- 	</services> -->
+<!-- 	<tables business="vendor" suffix-package="repository"> -->
+<!-- 		<table name="vd_vendor" lock="select"/> -->
+<!-- 		<table name="vd_vendor_apply_coupon" lock="select"/> -->
+<!-- 		<table name="vd_vendor_brand" lock="select"/> -->
+<!-- 		<table name="vd_vendor_brand_employee_discount" lock="select"/> -->
+<!-- 		<table name="vd_vendor_default_commission" lock="select"/> -->
+<!-- 		<table name="vd_vendor_delivery_guide" lock="select"/> -->
+<!-- 		<table name="vd_vendor_display_chnnl" lock="select"/> -->
+<!-- 		<table name="vd_vendor_exception_commission" lock="select"/> -->
+<!-- 		<table name="vd_vendor_manager" lock="select"/> -->
+<!-- 		<table name="vd_vendor_product_all_notice" lock="select"/> -->
+<!-- 		<table name="vd_vendor_standard_category" lock="select"/> -->
+<!-- 		<table name="vd_vendor_wrhs_dlvy_address" lock="select"/> -->
+<!-- 	</tables> -->
+	<!-- // 업체 -->
+
+	<!-- start board -->
+<!-- 	<controllers business="board" suffix-package="controller"> -->
+<!-- 		<controller name="Board" type="rest"/> -->
+<!-- 	</controllers> -->
+<!-- 	<services business="board" suffix-package="service" proxy-target-class="true">	 -->
+<!-- 		<service name="Board"></service> -->
+<!-- 	</services> -->
+<!-- 	<tables business="board" suffix-package="repository"> -->
+<!-- 		<table name="bd_admin_notice" lock="select"/> -->
+<!-- 		<table name="bd_admin_notice_attach_file" lock="select"/> -->
+<!-- 		<table name="bd_admin_notice_target_vendor" lock="select"/> -->
+<!-- 		<table name="bd_bulk_buy_inquiry" lock="select"/> -->
+<!-- 		<table name="bd_bulk_buy_inquiry_memo" lock="select"/> -->
+<!-- 		<table name="bd_faq" lock="select"/> -->
+<!-- 		<table name="bd_member_counsel" lock="select"/> -->
+<!-- 		<table name="bd_member_counsel_attach_file" lock="select"/> -->
+<!-- 		<table name="bd_member_counsel_memo" lock="select"/> -->
+<!-- 		<table name="bd_notice" lock="select"/> -->
+<!-- 		<table name="bd_notice_attach_file" lock="select"/> -->
+<!-- 		<table name="bd_contact_us" lock="select"/> -->
+<!-- 		<table name="bd_contact_us_memo" lock="select"/> -->
+<!-- 	</tables> -->
+	<!-- end board -->
+
+	<!-- start board -->
+<!-- 	<controllers business="mypage" suffix-package="controller"> -->
+<!-- 		<controller name="Mypage" type="rest"/> -->
+<!-- 	</controllers> -->
+<!-- 	<services business="mypage" suffix-package="service" proxy-target-class="true">	 -->
+<!-- 		<service name="Mypage"></service> -->
+<!-- 	</services> -->
+	<!-- end board -->
+
+
+<!--   <controllers business="afterService" suffix-package="controller"> -->
+<!--         <controller name="AfterService" /> -->
+<!--     </controllers> -->
+
+<!--     <services business="afterService" suffix-package="service" proxy-target-class="true">     -->
+<!--         <service name="AfterService"></service> -->
+<!--     </services> -->
+
+<!--     <tables business="afterService" suffix-package="repository"> -->
+<!--         <table name="OC_AS_ACCEPT_MEMO" /> -->
+<!--         <table name="OC_AS_PAYMENT" /> -->
+<!--         <table name="OC_AS_ACCEPT_PRODUCT" /> -->
+<!--         <table name="OC_AS_ACCEPT_ATTACH_FILE" /> -->
+<!--         <table name="OC_AS_ACCEPT" /> -->
+<!--         <table name="OC_AS_ACCEPT_PRODUCT_STATUS_HISTORY" /> -->
+<!--     </tables> -->
+
+	<controllers business="app" suffix-package="controller">
+		<controller name="App" type="rest"/>
+	</controllers>
+	<services business="app" suffix-package="service" proxy-target-class="true">
+		<service name="App"></service>
+	</services>
+
+	<tables business="app" suffix-package="repository">
+		<table name="cm_push_app_download_member" lock="select"/>
+	</tables>
+
+</configuration>

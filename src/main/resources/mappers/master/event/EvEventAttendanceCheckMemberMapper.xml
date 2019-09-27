@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.event.repository.master.EvEventAttendanceCheckMemberDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.event.model.master.EvEventAttendanceCheckMember">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventAttendanceCheckMemberDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			ev_event_attendance_check_member
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectAttendanceCheckMemberCnt" parameterType="kr.co.shop.web.event.model.master.EvEventAttendanceCheckMember" resultType="int">
+     /*+ kr.co.shop.web.event.repository.master.EvEventAttendanceCheckMemberDao.selectAttendanceCheckMemberCnt [이벤트 출석체크 회원 카운트 조회 쿼리] [이지훈] */
+       
+		SELECT 
+			COUNT(*)
+		FROM 
+			EV_EVENT_ATTENDANCE_CHECK_MEMBER
+		WHERE
+			EVENT_NO = #{eventNo, jdbcType=VARCHAR}
+		AND 
+			MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+		<if test='atendDtm != null'>
+			AND TO_DATE(TO_CHAR(ATEND_DTM, 'YYYYMMDD'), 'YYYYMMDD') = TO_DATE(#{atendDtm, jdbcType=DATE}, 'YYYYMMDD')
+		</if>
+    </select>
+    
+    <select id="selectAttendanceCheckCalendar" parameterType="kr.co.shop.web.event.model.master.EvEventAttendanceCheckMember" resultType="kr.co.shop.web.event.model.master.EvEventAttendanceCheckMember">
+    /*+ kr.co.shop.web.event.repository.master.EvEventAttendanceCheckMemberDao.selectAttendanceCheckCalendar [이벤트 출석체크 달력 조회] [이지훈] */
+    
+    WITH CAL(DT) AS
+	(
+		SELECT TO_DATE(TO_CHAR(SYSDATE, 'YYYYMM') || '01', 'YYYYMMDD') DT
+		FROM DUAL
+		UNION ALL
+		SELECT DT + 1 DT
+		FROM CAL
+		WHERE DT + 1 <![CDATA[<]]> ADD_MONTHS(TO_CHAR(SYSDATE, 'YYYYMM') || '01', 1)
+	)
+	SELECT 
+		TO_CHAR(DT, 'DD') CAL_DAY 
+		,TO_CHAR(DT, 'D') CAL_WEEK
+		,CASE
+			WHEN EEACM.ATEND_DTM IS NOT NULL THEN 'Y'
+			ELSE 'N'
+		END AS ATTEND_YN
+	FROM CAL
+	LEFT OUTER JOIN EV_EVENT_ATTENDANCE_CHECK_MEMBER EEACM
+		    			ON EEACM.EVENT_NO = #{eventNo, jdbcType=VARCHAR}
+		    			AND EEACM.MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+						AND TO_CHAR(EEACM.ATEND_DTM, 'YYMMDD') = DT
+    </select>
+
+</mapper>

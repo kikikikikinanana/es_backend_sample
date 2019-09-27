@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.vendor.repository.master.VdVendorBrandEmployeeDiscountDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.vendor.model.master.VdVendorBrandEmployeeDiscount">
+    
+     /*+ kr.co.shop.web.vendor.repository.master.VdVendorBrandEmployeeDiscountDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			vd_vendor_brand_employee_discount
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+
+	<select id="getVendorBrandEmployeeDiscountList" parameterType="map" resultType="kr.co.shop.web.vendor.model.master.VdVendorBrandEmployeeDiscount">
+	/*+ kr.co.shop.web.vendor.repository.master.VdVendorBrandEmployeeDiscountDao.getVendorBrandEmployeeDiscountList [업체브랜드입직원할인 조회] [유성민] */
+		SELECT VNDR_NO
+			 , VNDR_BRAND_EMP_DSCNT_SEQ
+			 , BRAND_NO
+			 , DSCNT_RATE
+			 , APPLY_START_YMD
+			 , APPLY_END_YMD
+			 , DEL_YN
+		  FROM VD_VENDOR_BRAND_EMPLOYEE_DISCOUNT
+		 WHERE VNDR_NO IN 
+			<foreach collection="list" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		   AND TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') BETWEEN APPLY_START_YMD AND APPLY_END_YMD
+		   AND DEL_YN = 'N'
+	</select>
+
+</mapper>

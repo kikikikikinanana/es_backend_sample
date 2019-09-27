@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cmm.repository.master.CmEmailSendHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.cmm.model.master.CmEmailSendHistory">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmEmailSendHistoryDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			CM_EMAIL_SEND_HISTORY
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <insert id="insertMail" useGeneratedKeys="true" keyProperty="emailSndrSeq" parameterType="kr.co.shop.web.cmm.model.master.CmEmailSendHistory">
+    /*+ kr.co.shop.web.cmm.repository.master.CmEmailSendHistoryDao.insertMail [insert 쿼리] [김영현] */
+		INSERT INTO cm_email_send_history (
+			sndr_email_addr_text,
+			sndr_name,
+			email_title_text,
+			email_cont_text,
+			rcvr_email_addr_text,
+			rcvr_name,
+			send_yn,
+			send_dtm,
+			site_no,
+			email_tmpl_seq,
+			member_no,
+			rgster_no,
+			rgst_dtm
+		) VALUES (
+			#{sndrEmailAddrText, jdbcType=VARCHAR},
+			#{sndrName, jdbcType=VARCHAR},
+			#{emailTitleText, jdbcType=VARCHAR},
+			#{emailContText, jdbcType=VARCHAR},
+			#{rcvrEmailAddrText, jdbcType=VARCHAR},
+			#{rcvrName, jdbcType=VARCHAR},
+			#{sendYn, jdbcType=CHAR},
+			<choose>
+				<when test='@kr.co.shop.util.UtilsText@isNotBlank(sendYn)
+						and sendYn == "Y"'>
+					SYSDATE
+				</when>
+				<otherwise>
+					null
+				</otherwise>
+			</choose>,
+			#{siteNo, jdbcType=VARCHAR},
+			#{emailTmplSeq, jdbcType=INTEGER},
+			#{memberNo, jdbcType=VARCHAR},
+			#{rgsterNo, jdbcType=VARCHAR},
+			SYSDATE
+		)  
+    </insert>
+    
+    
+
+</mapper>

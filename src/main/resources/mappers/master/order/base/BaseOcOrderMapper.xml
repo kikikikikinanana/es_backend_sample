@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	order_no, order_dtm, site_no, emp_order_yn, member_no, member_type_code, mbshp_grade_code, emp_yn, ots_vip_yn, device_code, pswd_text, pswd_salt_text, rsv_order_yn, dlvy_type_code, store_no, store_name, store_add_info, buyer_name, buyer_email_addr_text, buyer_tel_no_text, buyer_hdphn_no_text, buyer_post_code_text, buyer_post_addr_text, buyer_dtl_addr_text, rcvr_name, rcvr_tel_no_text, rcvr_hdphn_no_text, rcvr_post_code_text, rcvr_post_addr_text, rcvr_dtl_addr_text, order_prdt_info, total_normal_amt, total_sell_amt, total_promo_dscnt_amt, total_cpn_dscnt_amt, total_emp_dscnt_amt, point_use_amt, event_point_use_amt, mmny_dlvy_amt, total_vndr_dlvy_amt, pymnt_todo_amt, pymnt_amt, cncl_amt, cash_rcpt_issue_yn, tax_bill_issue_stat_code, dlvy_memo_text, bank_code, rfnd_acnt_text, acnt_hldr_name, org_order_no, up_order_no, crtfc_no_text, expost_save_member_no, expost_save_point_seq, clm_no, afflts_code, afflts_order_no, un_recpt_term_extsn_yn, sales_cncl_gbn_type, buy_dcsn_dtm, point_save_yn, order_stat_code, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	order_no = #{orderNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.order.model.master.OcOrder" resultType="kr.co.shop.web.order.model.master.OcOrder">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			OC_ORDER
+		<where> 
+			<if test="orderNo != null"> 
+				 order_no = #{orderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderDtm != null"> 
+				 AND order_dtm = #{orderDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="empOrderYn != null"> 
+				 AND emp_order_yn = #{empOrderYn, jdbcType=CHAR}
+			</if> 
+			<if test="memberNo != null"> 
+				 AND member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="memberTypeCode != null"> 
+				 AND member_type_code = #{memberTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="mbshpGradeCode != null"> 
+				 AND mbshp_grade_code = #{mbshpGradeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="empYn != null"> 
+				 AND emp_yn = #{empYn, jdbcType=CHAR}
+			</if> 
+			<if test="otsVipYn != null"> 
+				 AND ots_vip_yn = #{otsVipYn, jdbcType=CHAR}
+			</if> 
+			<if test="deviceCode != null"> 
+				 AND device_code = #{deviceCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="pswdText != null"> 
+				 AND pswd_text = #{pswdText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pswdSaltText != null"> 
+				 AND pswd_salt_text = #{pswdSaltText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rsvOrderYn != null"> 
+				 AND rsv_order_yn = #{rsvOrderYn, jdbcType=CHAR}
+			</if> 
+			<if test="dlvyTypeCode != null"> 
+				 AND dlvy_type_code = #{dlvyTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeNo != null"> 
+				 AND store_no = #{storeNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeName != null"> 
+				 AND store_name = #{storeName, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeAddInfo != null"> 
+				 AND store_add_info = #{storeAddInfo, jdbcType=VARCHAR}
+			</if> 
+			<if test="buyerName != null"> 
+				 AND buyer_name = #{buyerName, jdbcType=VARCHAR}
+			</if> 
+			<if test="buyerEmailAddrText != null"> 
+				 AND buyer_email_addr_text = #{buyerEmailAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="buyerTelNoText != null"> 
+				 AND buyer_tel_no_text = #{buyerTelNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="buyerHdphnNoText != null"> 
+				 AND buyer_hdphn_no_text = #{buyerHdphnNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="buyerPostCodeText != null"> 
+				 AND buyer_post_code_text = #{buyerPostCodeText, jdbcType=CHAR}
+			</if> 
+			<if test="buyerPostAddrText != null"> 
+				 AND buyer_post_addr_text = #{buyerPostAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="buyerDtlAddrText != null"> 
+				 AND buyer_dtl_addr_text = #{buyerDtlAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrName != null"> 
+				 AND rcvr_name = #{rcvrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrTelNoText != null"> 
+				 AND rcvr_tel_no_text = #{rcvrTelNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrHdphnNoText != null"> 
+				 AND rcvr_hdphn_no_text = #{rcvrHdphnNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrPostCodeText != null"> 
+				 AND rcvr_post_code_text = #{rcvrPostCodeText, jdbcType=CHAR}
+			</if> 
+			<if test="rcvrPostAddrText != null"> 
+				 AND rcvr_post_addr_text = #{rcvrPostAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrDtlAddrText != null"> 
+				 AND rcvr_dtl_addr_text = #{rcvrDtlAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderPrdtInfo != null"> 
+				 AND order_prdt_info = #{orderPrdtInfo, jdbcType=VARCHAR}
+			</if> 
+			<if test="totalNormalAmt != null"> 
+				 AND total_normal_amt = #{totalNormalAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="totalSellAmt != null"> 
+				 AND total_sell_amt = #{totalSellAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="totalPromoDscntAmt != null"> 
+				 AND total_promo_dscnt_amt = #{totalPromoDscntAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="totalCpnDscntAmt != null"> 
+				 AND total_cpn_dscnt_amt = #{totalCpnDscntAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="totalEmpDscntAmt != null"> 
+				 AND total_emp_dscnt_amt = #{totalEmpDscntAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="pointUseAmt != null"> 
+				 AND point_use_amt = #{pointUseAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="eventPointUseAmt != null"> 
+				 AND event_point_use_amt = #{eventPointUseAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="mmnyDlvyAmt != null"> 
+				 AND mmny_dlvy_amt = #{mmnyDlvyAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="totalVndrDlvyAmt != null"> 
+				 AND total_vndr_dlvy_amt = #{totalVndrDlvyAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="pymntTodoAmt != null"> 
+				 AND pymnt_todo_amt = #{pymntTodoAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="pymntAmt != null"> 
+				 AND pymnt_amt = #{pymntAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="cnclAmt != null"> 
+				 AND cncl_amt = #{cnclAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="cashRcptIssueYn != null"> 
+				 AND cash_rcpt_issue_yn = #{cashRcptIssueYn, jdbcType=CHAR}
+			</if> 
+			<if test="taxBillIssueStatCode != null"> 
+				 AND tax_bill_issue_stat_code = #{taxBillIssueStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="dlvyMemoText != null"> 
+				 AND dlvy_memo_text = #{dlvyMemoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="bankCode != null"> 
+				 AND bank_code = #{bankCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="rfndAcntText != null"> 
+				 AND rfnd_acnt_text = #{rfndAcntText, jdbcType=VARCHAR}
+			</if> 
+			<if test="acntHldrName != null"> 
+				 AND acnt_hldr_name = #{acntHldrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="orgOrderNo != null"> 
+				 AND org_order_no = #{orgOrderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="upOrderNo != null"> 
+				 AND up_order_no = #{upOrderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="crtfcNoText != null"> 
+				 AND crtfc_no_text = #{crtfcNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="expostSaveMemberNo != null"> 
+				 AND expost_save_member_no = #{expostSaveMemberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="expostSavePointSeq != null"> 
+				 AND expost_save_point_seq = #{expostSavePointSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="clmNo != null"> 
+				 AND clm_no = #{clmNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="affltsCode != null"> 
+				 AND afflts_code = #{affltsCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="affltsOrderNo != null"> 
+				 AND afflts_order_no = #{affltsOrderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="unRecptTermExtsnYn != null"> 
+				 AND un_recpt_term_extsn_yn = #{unRecptTermExtsnYn, jdbcType=CHAR}
+			</if> 
+			<if test="salesCnclGbnType != null"> 
+				 AND sales_cncl_gbn_type = #{salesCnclGbnType, jdbcType=CHAR}
+			</if> 
+			<if test="buyDcsnDtm != null"> 
+				 AND buy_dcsn_dtm = #{buyDcsnDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="pointSaveYn != null"> 
+				 AND point_save_yn = #{pointSaveYn, jdbcType=CHAR}
+			</if> 
+			<if test="orderStatCode != null"> 
+				 AND order_stat_code = #{orderStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.order.model.master.OcOrder">	
+
+     /*+ kr.co.shop.web.order.repository.master.OcOrderDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO OC_ORDER
+			 ( order_no, order_dtm, site_no, emp_order_yn, member_no, member_type_code, mbshp_grade_code, emp_yn, ots_vip_yn, device_code, pswd_text, pswd_salt_text, rsv_order_yn, dlvy_type_code, store_no, store_name, store_add_info, buyer_name, buyer_email_addr_text, buyer_tel_no_text, buyer_hdphn_no_text, buyer_post_code_text, buyer_post_addr_text, buyer_dtl_addr_text, rcvr_name, rcvr_tel_no_text, rcvr_hdphn_no_text, rcvr_post_code_text, rcvr_post_addr_text, rcvr_dtl_addr_text, order_prdt_info, total_normal_amt, total_sell_amt, total_promo_dscnt_amt, total_cpn_dscnt_amt, total_emp_dscnt_amt, point_use_amt, event_point_use_amt, mmny_dlvy_amt, total_vndr_dlvy_amt, pymnt_todo_amt, pymnt_amt, cncl_amt, cash_rcpt_issue_yn, tax_bill_issue_stat_code, dlvy_memo_text, bank_code, rfnd_acnt_text, acnt_hldr_name, org_order_no, up_order_no, crtfc_no_text, expost_save_member_no, expost_save_point_seq, clm_no, afflts_code, afflts_order_no, un_recpt_term_extsn_yn, sales_cncl_gbn_type, buy_dcsn_dtm, point_save_yn, order_stat_code, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{orderNo, jdbcType=VARCHAR}, <choose><when test="orderDtm != null">#{orderDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{siteNo, jdbcType=VARCHAR}, #{empOrderYn, jdbcType=CHAR}, #{memberNo, jdbcType=VARCHAR}, #{memberTypeCode, jdbcType=VARCHAR}, #{mbshpGradeCode, jdbcType=VARCHAR}, #{empYn, jdbcType=CHAR}, #{otsVipYn, jdbcType=CHAR}, #{deviceCode, jdbcType=VARCHAR}, #{pswdText, jdbcType=VARCHAR}, #{pswdSaltText, jdbcType=VARCHAR}, #{rsvOrderYn, jdbcType=CHAR}, #{dlvyTypeCode, jdbcType=VARCHAR}, #{storeNo, jdbcType=VARCHAR}, #{storeName, jdbcType=VARCHAR}, #{storeAddInfo, jdbcType=VARCHAR}, #{buyerName, jdbcType=VARCHAR}, #{buyerEmailAddrText, jdbcType=VARCHAR}, #{buyerTelNoText, jdbcType=VARCHAR}, #{buyerHdphnNoText, jdbcType=VARCHAR}, #{buyerPostCodeText, jdbcType=CHAR}, #{buyerPostAddrText, jdbcType=VARCHAR}, #{buyerDtlAddrText, jdbcType=VARCHAR}, #{rcvrName, jdbcType=VARCHAR}, #{rcvrTelNoText, jdbcType=VARCHAR}, #{rcvrHdphnNoText, jdbcType=VARCHAR}, #{rcvrPostCodeText, jdbcType=CHAR}, #{rcvrPostAddrText, jdbcType=VARCHAR}, #{rcvrDtlAddrText, jdbcType=VARCHAR}, #{orderPrdtInfo, jdbcType=VARCHAR}, #{totalNormalAmt, jdbcType=INTEGER}, #{totalSellAmt, jdbcType=INTEGER}, #{totalPromoDscntAmt, jdbcType=INTEGER}, #{totalCpnDscntAmt, jdbcType=INTEGER}, #{totalEmpDscntAmt, jdbcType=INTEGER}, #{pointUseAmt, jdbcType=INTEGER}, #{eventPointUseAmt, jdbcType=INTEGER}, #{mmnyDlvyAmt, jdbcType=INTEGER}, #{totalVndrDlvyAmt, jdbcType=INTEGER}, #{pymntTodoAmt, jdbcType=INTEGER}, #{pymntAmt, jdbcType=INTEGER}, #{cnclAmt, jdbcType=INTEGER}, #{cashRcptIssueYn, jdbcType=CHAR}, #{taxBillIssueStatCode, jdbcType=VARCHAR}, #{dlvyMemoText, jdbcType=VARCHAR}, #{bankCode, jdbcType=VARCHAR}, #{rfndAcntText, jdbcType=VARCHAR}, #{acntHldrName, jdbcType=VARCHAR}, #{orgOrderNo, jdbcType=VARCHAR}, #{upOrderNo, jdbcType=VARCHAR}, #{crtfcNoText, jdbcType=VARCHAR}, #{expostSaveMemberNo, jdbcType=VARCHAR}, #{expostSavePointSeq, jdbcType=INTEGER}, #{clmNo, jdbcType=VARCHAR}, #{affltsCode, jdbcType=VARCHAR}, #{affltsOrderNo, jdbcType=VARCHAR}, #{unRecptTermExtsnYn, jdbcType=CHAR}, #{salesCnclGbnType, jdbcType=CHAR}, <choose><when test="buyDcsnDtm != null">#{buyDcsnDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{pointSaveYn, jdbcType=CHAR}, #{orderStatCode, jdbcType=VARCHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.order.model.master.OcOrder">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE OC_ORDER
+		<set> 
+			<if test="orderNo != null"> 
+				order_no = #{orderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderDtm != null"> 
+				order_dtm = #{orderDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="empOrderYn != null"> 
+				emp_order_yn = #{empOrderYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="memberTypeCode != null"> 
+				member_type_code = #{memberTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mbshpGradeCode != null"> 
+				mbshp_grade_code = #{mbshpGradeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="empYn != null"> 
+				emp_yn = #{empYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="otsVipYn != null"> 
+				ots_vip_yn = #{otsVipYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="deviceCode != null"> 
+				device_code = #{deviceCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pswdText != null"> 
+				pswd_text = #{pswdText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pswdSaltText != null"> 
+				pswd_salt_text = #{pswdSaltText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rsvOrderYn != null"> 
+				rsv_order_yn = #{rsvOrderYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="dlvyTypeCode != null"> 
+				dlvy_type_code = #{dlvyTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeNo != null"> 
+				store_no = #{storeNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeName != null"> 
+				store_name = #{storeName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeAddInfo != null"> 
+				store_add_info = #{storeAddInfo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerName != null"> 
+				buyer_name = #{buyerName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerEmailAddrText != null"> 
+				buyer_email_addr_text = #{buyerEmailAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerTelNoText != null"> 
+				buyer_tel_no_text = #{buyerTelNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerHdphnNoText != null"> 
+				buyer_hdphn_no_text = #{buyerHdphnNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerPostCodeText != null"> 
+				buyer_post_code_text = #{buyerPostCodeText, jdbcType=CHAR}, 
+			</if> 
+			<if test="buyerPostAddrText != null"> 
+				buyer_post_addr_text = #{buyerPostAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerDtlAddrText != null"> 
+				buyer_dtl_addr_text = #{buyerDtlAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrName != null"> 
+				rcvr_name = #{rcvrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrTelNoText != null"> 
+				rcvr_tel_no_text = #{rcvrTelNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrHdphnNoText != null"> 
+				rcvr_hdphn_no_text = #{rcvrHdphnNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrPostCodeText != null"> 
+				rcvr_post_code_text = #{rcvrPostCodeText, jdbcType=CHAR}, 
+			</if> 
+			<if test="rcvrPostAddrText != null"> 
+				rcvr_post_addr_text = #{rcvrPostAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrDtlAddrText != null"> 
+				rcvr_dtl_addr_text = #{rcvrDtlAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderPrdtInfo != null"> 
+				order_prdt_info = #{orderPrdtInfo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="totalNormalAmt != null"> 
+				total_normal_amt = #{totalNormalAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="totalSellAmt != null"> 
+				total_sell_amt = #{totalSellAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="totalPromoDscntAmt != null"> 
+				total_promo_dscnt_amt = #{totalPromoDscntAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="totalCpnDscntAmt != null"> 
+				total_cpn_dscnt_amt = #{totalCpnDscntAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="totalEmpDscntAmt != null"> 
+				total_emp_dscnt_amt = #{totalEmpDscntAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="pointUseAmt != null"> 
+				point_use_amt = #{pointUseAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="eventPointUseAmt != null"> 
+				event_point_use_amt = #{eventPointUseAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="mmnyDlvyAmt != null"> 
+				mmny_dlvy_amt = #{mmnyDlvyAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="totalVndrDlvyAmt != null"> 
+				total_vndr_dlvy_amt = #{totalVndrDlvyAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="pymntTodoAmt != null"> 
+				pymnt_todo_amt = #{pymntTodoAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="pymntAmt != null"> 
+				pymnt_amt = #{pymntAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="cnclAmt != null"> 
+				cncl_amt = #{cnclAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="cashRcptIssueYn != null"> 
+				cash_rcpt_issue_yn = #{cashRcptIssueYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="taxBillIssueStatCode != null"> 
+				tax_bill_issue_stat_code = #{taxBillIssueStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dlvyMemoText != null"> 
+				dlvy_memo_text = #{dlvyMemoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="bankCode != null"> 
+				bank_code = #{bankCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rfndAcntText != null"> 
+				rfnd_acnt_text = #{rfndAcntText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="acntHldrName != null"> 
+				acnt_hldr_name = #{acntHldrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orgOrderNo != null"> 
+				org_order_no = #{orgOrderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="upOrderNo != null"> 
+				up_order_no = #{upOrderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="crtfcNoText != null"> 
+				crtfc_no_text = #{crtfcNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="expostSaveMemberNo != null"> 
+				expost_save_member_no = #{expostSaveMemberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="expostSavePointSeq != null"> 
+				expost_save_point_seq = #{expostSavePointSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="clmNo != null"> 
+				clm_no = #{clmNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="affltsCode != null"> 
+				afflts_code = #{affltsCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="affltsOrderNo != null"> 
+				afflts_order_no = #{affltsOrderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="unRecptTermExtsnYn != null"> 
+				un_recpt_term_extsn_yn = #{unRecptTermExtsnYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="salesCnclGbnType != null"> 
+				sales_cncl_gbn_type = #{salesCnclGbnType, jdbcType=CHAR}, 
+			</if> 
+			<if test="buyDcsnDtm != null"> 
+				buy_dcsn_dtm = #{buyDcsnDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="pointSaveYn != null"> 
+				point_save_yn = #{pointSaveYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="orderStatCode != null"> 
+				order_stat_code = #{orderStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 order_no = #{orderNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.order.model.master.OcOrder">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM OC_ORDER
+		WHERE 
+			 order_no = #{orderNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

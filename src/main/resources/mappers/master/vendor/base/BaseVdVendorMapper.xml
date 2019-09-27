@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.vendor.repository.master.VdVendorDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	vndr_no, vndr_gbn_type, vndr_name, insd_mgmt_info_text, biz_no_text, admin_memo_text, crprt_type, crprt_no_text, bus_cond_text, bus_type_text, boss_name, rprsnt_tel_no_text, fax_no_text, post_code_text, post_addr_text, dtl_addr_text, mail_biz_no_text, logis_vndr_code, dlvy_day_count, free_dlvy_stdr_amt, dlvy_amt, bank_code, acnt_no_text, acnt_hldr_name, bill_issue_email_addr_text, penlty_levy_rate, penlty_exmt_rate, vndr_stat_code, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	vndr_no = #{vndrNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.vendor.model.master.VdVendor" resultType="kr.co.shop.web.vendor.model.master.VdVendor">
+    
+     /*+ kr.co.shop.web.vendor.repository.master.VdVendorDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			vd_vendor WITH (NOLOCK)
+
+		<where> 
+			<if test="vndrNo != null"> 
+				 vndr_no = #{vndrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="vndrGbnType != null"> 
+				 AND vndr_gbn_type = #{vndrGbnType, jdbcType=CHAR}
+			</if> 
+			<if test="vndrName != null"> 
+				 AND vndr_name = #{vndrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="insdMgmtInfoText != null"> 
+				 AND insd_mgmt_info_text = #{insdMgmtInfoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="bizNoText != null"> 
+				 AND biz_no_text = #{bizNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="adminMemoText != null"> 
+				 AND admin_memo_text = #{adminMemoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="crprtType != null"> 
+				 AND crprt_type = #{crprtType, jdbcType=CHAR}
+			</if> 
+			<if test="crprtNoText != null"> 
+				 AND crprt_no_text = #{crprtNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="busCondText != null"> 
+				 AND bus_cond_text = #{busCondText, jdbcType=VARCHAR}
+			</if> 
+			<if test="busTypeText != null"> 
+				 AND bus_type_text = #{busTypeText, jdbcType=VARCHAR}
+			</if> 
+			<if test="bossName != null"> 
+				 AND boss_name = #{bossName, jdbcType=VARCHAR}
+			</if> 
+			<if test="rprsntTelNoText != null"> 
+				 AND rprsnt_tel_no_text = #{rprsntTelNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="faxNoText != null"> 
+				 AND fax_no_text = #{faxNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="postCodeText != null"> 
+				 AND post_code_text = #{postCodeText, jdbcType=CHAR}
+			</if> 
+			<if test="postAddrText != null"> 
+				 AND post_addr_text = #{postAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="dtlAddrText != null"> 
+				 AND dtl_addr_text = #{dtlAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mailBizNoText != null"> 
+				 AND mail_biz_no_text = #{mailBizNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="logisVndrCode != null"> 
+				 AND logis_vndr_code = #{logisVndrCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="dlvyDayCount != null"> 
+				 AND dlvy_day_count = #{dlvyDayCount, jdbcType=TINYINT}
+			</if> 
+			<if test="freeDlvyStdrAmt != null"> 
+				 AND free_dlvy_stdr_amt = #{freeDlvyStdrAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="dlvyAmt != null"> 
+				 AND dlvy_amt = #{dlvyAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="bankCode != null"> 
+				 AND bank_code = #{bankCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="acntNoText != null"> 
+				 AND acnt_no_text = #{acntNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="acntHldrName != null"> 
+				 AND acnt_hldr_name = #{acntHldrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="billIssueEmailAddrText != null"> 
+				 AND bill_issue_email_addr_text = #{billIssueEmailAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="penltyLevyRate != null"> 
+				 AND penlty_levy_rate = #{penltyLevyRate, jdbcType=TINYINT}
+			</if> 
+			<if test="penltyExmtRate != null"> 
+				 AND penlty_exmt_rate = #{penltyExmtRate, jdbcType=TINYINT}
+			</if> 
+			<if test="vndrStatCode != null"> 
+				 AND vndr_stat_code = #{vndrStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.vendor.model.master.VdVendor">	
+
+     /*+ kr.co.shop.web.vendor.repository.master.VdVendorDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO vd_vendor
+			 ( vndr_no, vndr_gbn_type, vndr_name, insd_mgmt_info_text, biz_no_text, admin_memo_text, crprt_type, crprt_no_text, bus_cond_text, bus_type_text, boss_name, rprsnt_tel_no_text, fax_no_text, post_code_text, post_addr_text, dtl_addr_text, mail_biz_no_text, logis_vndr_code, dlvy_day_count, free_dlvy_stdr_amt, dlvy_amt, bank_code, acnt_no_text, acnt_hldr_name, bill_issue_email_addr_text, penlty_levy_rate, penlty_exmt_rate, vndr_stat_code, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{vndrNo, jdbcType=VARCHAR}, #{vndrGbnType, jdbcType=CHAR}, #{vndrName, jdbcType=VARCHAR}, #{insdMgmtInfoText, jdbcType=VARCHAR}, #{bizNoText, jdbcType=VARCHAR}, #{adminMemoText, jdbcType=VARCHAR}, #{crprtType, jdbcType=CHAR}, #{crprtNoText, jdbcType=VARCHAR}, #{busCondText, jdbcType=VARCHAR}, #{busTypeText, jdbcType=VARCHAR}, #{bossName, jdbcType=VARCHAR}, #{rprsntTelNoText, jdbcType=VARCHAR}, #{faxNoText, jdbcType=VARCHAR}, #{postCodeText, jdbcType=CHAR}, #{postAddrText, jdbcType=VARCHAR}, #{dtlAddrText, jdbcType=VARCHAR}, #{mailBizNoText, jdbcType=VARCHAR}, #{logisVndrCode, jdbcType=VARCHAR}, #{dlvyDayCount, jdbcType=TINYINT}, #{freeDlvyStdrAmt, jdbcType=INTEGER}, #{dlvyAmt, jdbcType=INTEGER}, #{bankCode, jdbcType=VARCHAR}, #{acntNoText, jdbcType=VARCHAR}, #{acntHldrName, jdbcType=VARCHAR}, #{billIssueEmailAddrText, jdbcType=VARCHAR}, #{penltyLevyRate, jdbcType=TINYINT}, #{penltyExmtRate, jdbcType=TINYINT}, #{vndrStatCode, jdbcType=VARCHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.vendor.model.master.VdVendor">
+    
+     /*+ kr.co.shop.web.vendor.repository.master.VdVendorDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE vd_vendor
+		<set> 
+			<if test="vndrNo != null"> 
+				vndr_no = #{vndrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="vndrGbnType != null"> 
+				vndr_gbn_type = #{vndrGbnType, jdbcType=CHAR}, 
+			</if> 
+			<if test="vndrName != null"> 
+				vndr_name = #{vndrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="insdMgmtInfoText != null"> 
+				insd_mgmt_info_text = #{insdMgmtInfoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="bizNoText != null"> 
+				biz_no_text = #{bizNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="adminMemoText != null"> 
+				admin_memo_text = #{adminMemoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="crprtType != null"> 
+				crprt_type = #{crprtType, jdbcType=CHAR}, 
+			</if> 
+			<if test="crprtNoText != null"> 
+				crprt_no_text = #{crprtNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="busCondText != null"> 
+				bus_cond_text = #{busCondText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="busTypeText != null"> 
+				bus_type_text = #{busTypeText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="bossName != null"> 
+				boss_name = #{bossName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rprsntTelNoText != null"> 
+				rprsnt_tel_no_text = #{rprsntTelNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="faxNoText != null"> 
+				fax_no_text = #{faxNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="postCodeText != null"> 
+				post_code_text = #{postCodeText, jdbcType=CHAR}, 
+			</if> 
+			<if test="postAddrText != null"> 
+				post_addr_text = #{postAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dtlAddrText != null"> 
+				dtl_addr_text = #{dtlAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mailBizNoText != null"> 
+				mail_biz_no_text = #{mailBizNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="logisVndrCode != null"> 
+				logis_vndr_code = #{logisVndrCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dlvyDayCount != null"> 
+				dlvy_day_count = #{dlvyDayCount, jdbcType=TINYINT}, 
+			</if> 
+			<if test="freeDlvyStdrAmt != null"> 
+				free_dlvy_stdr_amt = #{freeDlvyStdrAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="dlvyAmt != null"> 
+				dlvy_amt = #{dlvyAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="bankCode != null"> 
+				bank_code = #{bankCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="acntNoText != null"> 
+				acnt_no_text = #{acntNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="acntHldrName != null"> 
+				acnt_hldr_name = #{acntHldrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="billIssueEmailAddrText != null"> 
+				bill_issue_email_addr_text = #{billIssueEmailAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="penltyLevyRate != null"> 
+				penlty_levy_rate = #{penltyLevyRate, jdbcType=TINYINT}, 
+			</if> 
+			<if test="penltyExmtRate != null"> 
+				penlty_exmt_rate = #{penltyExmtRate, jdbcType=TINYINT}, 
+			</if> 
+			<if test="vndrStatCode != null"> 
+				vndr_stat_code = #{vndrStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 vndr_no = #{vndrNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.vendor.model.master.VdVendor">
+    
+     /*+ kr.co.shop.web.vendor.repository.master.VdVendorDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM vd_vendor
+		WHERE 
+			 vndr_no = #{vndrNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.afterService.repository.master.OcAsAcceptDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	as_accept_no, as_accept_dtm, as_gbn_code, site_no, org_order_no, org_order_dtm, order_no, member_no, member_type_code, mbshp_grade_code, emp_yn, ots_vip_yn, device_code, rtrvl_gbn_type, rtrvl_store_no, rtrvl_req_yn, buyer_name, buyer_tel_no_text, buyer_hdphn_no_text, buyer_post_code_text, buyer_post_addr_text, buyer_dtl_addr_text, logis_vndr_code, rtrvl_waybil_no_text, dlvy_type_code, store_no, store_name, store_add_info, rcvr_name, rcvr_tel_no_text, rcvr_hdphn_no_text, rcvr_post_code_text, rcvr_post_addr_text, rcvr_dtl_addr_text, dlvy_memo_text, total_as_amt, add_dlvy_amt, total_pymnt_amt, un_proc_yn, admin_accept_yn, as_wthdraw_rsn_code, as_wthdraw_cont_text, as_wthdraw_dtm, as_stat_code, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	as_accept_no = #{asAcceptNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.afterService.model.master.OcAsAccept" resultType="kr.co.shop.web.afterService.model.master.OcAsAccept">
+    
+     /*+ kr.co.shop.web.afterService.repository.master.OcAsAcceptDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			OC_AS_ACCEPT
+		<where> 
+			<if test="asAcceptNo != null"> 
+				 as_accept_no = #{asAcceptNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="asAcceptDtm != null"> 
+				 AND as_accept_dtm = #{asAcceptDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="asGbnCode != null"> 
+				 AND as_gbn_code = #{asGbnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orgOrderNo != null"> 
+				 AND org_order_no = #{orgOrderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orgOrderDtm != null"> 
+				 AND org_order_dtm = #{orgOrderDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="orderNo != null"> 
+				 AND order_no = #{orderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="memberNo != null"> 
+				 AND member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="memberTypeCode != null"> 
+				 AND member_type_code = #{memberTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="mbshpGradeCode != null"> 
+				 AND mbshp_grade_code = #{mbshpGradeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="empYn != null"> 
+				 AND emp_yn = #{empYn, jdbcType=CHAR}
+			</if> 
+			<if test="otsVipYn != null"> 
+				 AND ots_vip_yn = #{otsVipYn, jdbcType=CHAR}
+			</if> 
+			<if test="deviceCode != null"> 
+				 AND device_code = #{deviceCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="rtrvlGbnType != null"> 
+				 AND rtrvl_gbn_type = #{rtrvlGbnType, jdbcType=CHAR}
+			</if> 
+			<if test="rtrvlStoreNo != null"> 
+				 AND rtrvl_store_no = #{rtrvlStoreNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rtrvlReqYn != null"> 
+				 AND rtrvl_req_yn = #{rtrvlReqYn, jdbcType=CHAR}
+			</if> 
+			<if test="buyerName != null"> 
+				 AND buyer_name = #{buyerName, jdbcType=VARCHAR}
+			</if> 
+			<if test="buyerTelNoText != null"> 
+				 AND buyer_tel_no_text = #{buyerTelNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="buyerHdphnNoText != null"> 
+				 AND buyer_hdphn_no_text = #{buyerHdphnNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="buyerPostCodeText != null"> 
+				 AND buyer_post_code_text = #{buyerPostCodeText, jdbcType=CHAR}
+			</if> 
+			<if test="buyerPostAddrText != null"> 
+				 AND buyer_post_addr_text = #{buyerPostAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="buyerDtlAddrText != null"> 
+				 AND buyer_dtl_addr_text = #{buyerDtlAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="logisVndrCode != null"> 
+				 AND logis_vndr_code = #{logisVndrCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="rtrvlWaybilNoText != null"> 
+				 AND rtrvl_waybil_no_text = #{rtrvlWaybilNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="dlvyTypeCode != null"> 
+				 AND dlvy_type_code = #{dlvyTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeNo != null"> 
+				 AND store_no = #{storeNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeName != null"> 
+				 AND store_name = #{storeName, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeAddInfo != null"> 
+				 AND store_add_info = #{storeAddInfo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrName != null"> 
+				 AND rcvr_name = #{rcvrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrTelNoText != null"> 
+				 AND rcvr_tel_no_text = #{rcvrTelNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrHdphnNoText != null"> 
+				 AND rcvr_hdphn_no_text = #{rcvrHdphnNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrPostCodeText != null"> 
+				 AND rcvr_post_code_text = #{rcvrPostCodeText, jdbcType=CHAR}
+			</if> 
+			<if test="rcvrPostAddrText != null"> 
+				 AND rcvr_post_addr_text = #{rcvrPostAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrDtlAddrText != null"> 
+				 AND rcvr_dtl_addr_text = #{rcvrDtlAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="dlvyMemoText != null"> 
+				 AND dlvy_memo_text = #{dlvyMemoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="totalAsAmt != null"> 
+				 AND total_as_amt = #{totalAsAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="addDlvyAmt != null"> 
+				 AND add_dlvy_amt = #{addDlvyAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="totalPymntAmt != null"> 
+				 AND total_pymnt_amt = #{totalPymntAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="unProcYn != null"> 
+				 AND un_proc_yn = #{unProcYn, jdbcType=CHAR}
+			</if> 
+			<if test="adminAcceptYn != null"> 
+				 AND admin_accept_yn = #{adminAcceptYn, jdbcType=CHAR}
+			</if> 
+			<if test="asWthdrawRsnCode != null"> 
+				 AND as_wthdraw_rsn_code = #{asWthdrawRsnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="asWthdrawContText != null"> 
+				 AND as_wthdraw_cont_text = #{asWthdrawContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="asWthdrawDtm != null"> 
+				 AND as_wthdraw_dtm = #{asWthdrawDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="asStatCode != null"> 
+				 AND as_stat_code = #{asStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.afterService.model.master.OcAsAccept">	
+
+     /*+ kr.co.shop.web.afterService.repository.master.OcAsAcceptDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO OC_AS_ACCEPT
+			 ( as_accept_no, as_accept_dtm, as_gbn_code, site_no, org_order_no, org_order_dtm, order_no, member_no, member_type_code, mbshp_grade_code, emp_yn, ots_vip_yn, device_code, rtrvl_gbn_type, rtrvl_store_no, rtrvl_req_yn, buyer_name, buyer_tel_no_text, buyer_hdphn_no_text, buyer_post_code_text, buyer_post_addr_text, buyer_dtl_addr_text, logis_vndr_code, rtrvl_waybil_no_text, dlvy_type_code, store_no, store_name, store_add_info, rcvr_name, rcvr_tel_no_text, rcvr_hdphn_no_text, rcvr_post_code_text, rcvr_post_addr_text, rcvr_dtl_addr_text, dlvy_memo_text, total_as_amt, add_dlvy_amt, total_pymnt_amt, un_proc_yn, admin_accept_yn, as_wthdraw_rsn_code, as_wthdraw_cont_text, as_wthdraw_dtm, as_stat_code, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{asAcceptNo, jdbcType=VARCHAR}, <choose><when test="asAcceptDtm != null">#{asAcceptDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{asGbnCode, jdbcType=VARCHAR}, #{siteNo, jdbcType=VARCHAR}, #{orgOrderNo, jdbcType=VARCHAR}, <choose><when test="orgOrderDtm != null">#{orgOrderDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{orderNo, jdbcType=VARCHAR}, #{memberNo, jdbcType=VARCHAR}, #{memberTypeCode, jdbcType=VARCHAR}, #{mbshpGradeCode, jdbcType=VARCHAR}, #{empYn, jdbcType=CHAR}, #{otsVipYn, jdbcType=CHAR}, #{deviceCode, jdbcType=VARCHAR}, #{rtrvlGbnType, jdbcType=CHAR}, #{rtrvlStoreNo, jdbcType=VARCHAR}, #{rtrvlReqYn, jdbcType=CHAR}, #{buyerName, jdbcType=VARCHAR}, #{buyerTelNoText, jdbcType=VARCHAR}, #{buyerHdphnNoText, jdbcType=VARCHAR}, #{buyerPostCodeText, jdbcType=CHAR}, #{buyerPostAddrText, jdbcType=VARCHAR}, #{buyerDtlAddrText, jdbcType=VARCHAR}, #{logisVndrCode, jdbcType=VARCHAR}, #{rtrvlWaybilNoText, jdbcType=VARCHAR}, #{dlvyTypeCode, jdbcType=VARCHAR}, #{storeNo, jdbcType=VARCHAR}, #{storeName, jdbcType=VARCHAR}, #{storeAddInfo, jdbcType=VARCHAR}, #{rcvrName, jdbcType=VARCHAR}, #{rcvrTelNoText, jdbcType=VARCHAR}, #{rcvrHdphnNoText, jdbcType=VARCHAR}, #{rcvrPostCodeText, jdbcType=CHAR}, #{rcvrPostAddrText, jdbcType=VARCHAR}, #{rcvrDtlAddrText, jdbcType=VARCHAR}, #{dlvyMemoText, jdbcType=VARCHAR}, #{totalAsAmt, jdbcType=INTEGER}, #{addDlvyAmt, jdbcType=INTEGER}, #{totalPymntAmt, jdbcType=INTEGER}, #{unProcYn, jdbcType=CHAR}, #{adminAcceptYn, jdbcType=CHAR}, #{asWthdrawRsnCode, jdbcType=VARCHAR}, #{asWthdrawContText, jdbcType=VARCHAR}, <choose><when test="asWthdrawDtm != null">#{asWthdrawDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{asStatCode, jdbcType=VARCHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.afterService.model.master.OcAsAccept">
+    
+     /*+ kr.co.shop.web.afterService.repository.master.OcAsAcceptDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE OC_AS_ACCEPT
+		<set> 
+			<if test="asAcceptNo != null"> 
+				as_accept_no = #{asAcceptNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asAcceptDtm != null"> 
+				as_accept_dtm = #{asAcceptDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="asGbnCode != null"> 
+				as_gbn_code = #{asGbnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orgOrderNo != null"> 
+				org_order_no = #{orgOrderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orgOrderDtm != null"> 
+				org_order_dtm = #{orgOrderDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="orderNo != null"> 
+				order_no = #{orderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="memberTypeCode != null"> 
+				member_type_code = #{memberTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mbshpGradeCode != null"> 
+				mbshp_grade_code = #{mbshpGradeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="empYn != null"> 
+				emp_yn = #{empYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="otsVipYn != null"> 
+				ots_vip_yn = #{otsVipYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="deviceCode != null"> 
+				device_code = #{deviceCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rtrvlGbnType != null"> 
+				rtrvl_gbn_type = #{rtrvlGbnType, jdbcType=CHAR}, 
+			</if> 
+			<if test="rtrvlStoreNo != null"> 
+				rtrvl_store_no = #{rtrvlStoreNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rtrvlReqYn != null"> 
+				rtrvl_req_yn = #{rtrvlReqYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="buyerName != null"> 
+				buyer_name = #{buyerName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerTelNoText != null"> 
+				buyer_tel_no_text = #{buyerTelNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerHdphnNoText != null"> 
+				buyer_hdphn_no_text = #{buyerHdphnNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerPostCodeText != null"> 
+				buyer_post_code_text = #{buyerPostCodeText, jdbcType=CHAR}, 
+			</if> 
+			<if test="buyerPostAddrText != null"> 
+				buyer_post_addr_text = #{buyerPostAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="buyerDtlAddrText != null"> 
+				buyer_dtl_addr_text = #{buyerDtlAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="logisVndrCode != null"> 
+				logis_vndr_code = #{logisVndrCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rtrvlWaybilNoText != null"> 
+				rtrvl_waybil_no_text = #{rtrvlWaybilNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dlvyTypeCode != null"> 
+				dlvy_type_code = #{dlvyTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeNo != null"> 
+				store_no = #{storeNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeName != null"> 
+				store_name = #{storeName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeAddInfo != null"> 
+				store_add_info = #{storeAddInfo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrName != null"> 
+				rcvr_name = #{rcvrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrTelNoText != null"> 
+				rcvr_tel_no_text = #{rcvrTelNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrHdphnNoText != null"> 
+				rcvr_hdphn_no_text = #{rcvrHdphnNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrPostCodeText != null"> 
+				rcvr_post_code_text = #{rcvrPostCodeText, jdbcType=CHAR}, 
+			</if> 
+			<if test="rcvrPostAddrText != null"> 
+				rcvr_post_addr_text = #{rcvrPostAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrDtlAddrText != null"> 
+				rcvr_dtl_addr_text = #{rcvrDtlAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dlvyMemoText != null"> 
+				dlvy_memo_text = #{dlvyMemoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="totalAsAmt != null"> 
+				total_as_amt = #{totalAsAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="addDlvyAmt != null"> 
+				add_dlvy_amt = #{addDlvyAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="totalPymntAmt != null"> 
+				total_pymnt_amt = #{totalPymntAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="unProcYn != null"> 
+				un_proc_yn = #{unProcYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="adminAcceptYn != null"> 
+				admin_accept_yn = #{adminAcceptYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="asWthdrawRsnCode != null"> 
+				as_wthdraw_rsn_code = #{asWthdrawRsnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asWthdrawContText != null"> 
+				as_wthdraw_cont_text = #{asWthdrawContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="asWthdrawDtm != null"> 
+				as_wthdraw_dtm = #{asWthdrawDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="asStatCode != null"> 
+				as_stat_code = #{asStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 as_accept_no = #{asAcceptNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.afterService.model.master.OcAsAccept">
+    
+     /*+ kr.co.shop.web.afterService.repository.master.OcAsAcceptDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM OC_AS_ACCEPT
+		WHERE 
+			 as_accept_no = #{asAcceptNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

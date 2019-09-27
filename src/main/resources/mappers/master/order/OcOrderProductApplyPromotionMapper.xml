@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderProductApplyPromotionDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.order.model.master.OcOrderProductApplyPromotion">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderProductApplyPromotionDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			OC_ORDER_PRODUCT_APPLY_PROMOTION
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+	<insert id="insertPromotionList" parameterType="java.util.List">	
+
+     /*+ kr.co.shop.web.order.repository.master.OcOrderProductApplyPromotionDao.insertPromotionList [주문상품 프로모션 저장 쿼리] [이재영] */
+    
+		INSERT INTO OC_ORDER_PRODUCT_APPLY_PROMOTION
+			 ( 
+			 	order_no
+			 	, order_prdt_seq
+			 	, apply_promo_seq
+			 	, promo_no
+			 	, promo_type_code
+			 	, dscnt_type
+			 	, dscnt_value
+			 	, dscnt_amt
+			 ) 
+
+		VALUES 
+			<foreach collection="list" item="item" separator=",">
+			 ( 
+			 	#{item.orderNo, jdbcType=VARCHAR}
+			 	, #{item.orderPrdtSeq, jdbcType=TINYINT}
+			 	, #{item.applyPromoSeq, jdbcType=TINYINT}
+			 	, #{item.promoNo, jdbcType=VARCHAR}
+			 	, #{item.promoTypeCode, jdbcType=VARCHAR}
+			 	, #{item.dscntType, jdbcType=CHAR}
+			 	, #{item.dscntValue, jdbcType=INTEGER}
+			 	<choose>
+			 		<when test="item.dscntAmt != null">
+			 			, #{item.dscntAmt, jdbcType=INTEGER}
+			 		</when>	
+			 		<otherwise>
+			 			, 0
+			 		</otherwise>
+			 	</choose>
+			 				 	 
+			 )  
+			 </foreach>
+    </insert>
+</mapper>

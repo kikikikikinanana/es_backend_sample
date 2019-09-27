@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.DpDisplayPageDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.display.model.master.DpDisplayPage">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpDisplayPageDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			DP_DISPLAY_PAGE
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectDpDisplayPage" parameterType="kr.co.shop.web.display.model.master.DpDisplayPage" resultType="kr.co.shop.web.display.model.master.DpDisplayPage">
+     /*+ kr.co.shop.web.display.repository.master.DpDisplayPageDao.selectDpDisplayPage [전시페이지조회] [박민우] */  
+    
+		SELECT 
+			disp_page_no, 
+			site_no, 
+			chnnl_no, 
+			disp_page_type_code, 
+			disp_page_name, 
+			pc_disp_tmpl_no, 
+			pc_disp_image_name, 
+			pc_disp_image_path_text, 
+			pc_disp_image_url, 
+			mobile_disp_tmpl_no, 
+			mobile_disp_tmpl_image_name, 
+			mobile_disp_tmpl_image_path_text, 
+			mobile_disp_tmpl_image_url, 
+			disp_yn, 
+			use_yn			
+		FROM 
+			DP_DISPLAY_PAGE
+		WHERE 
+			disp_page_no = #{dispPageNo, jdbcType=VARCHAR}
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="chnnlNo != null"> 
+				 AND chnnl_no = #{chnnlNo, jdbcType=VARCHAR}
+			</if>
+			AND DISP_YN = 'Y'
+			AND USE_YN = 'Y'
+    </select>
+
+</mapper>

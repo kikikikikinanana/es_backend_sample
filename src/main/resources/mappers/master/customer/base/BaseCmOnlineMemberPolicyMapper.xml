@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	plcy_seq, plcy_apply_ymd, member_join_point_amt, first_buy_point_amt, buy_point_rate, annvr_first_buy_point_pay_yn, annvr_first_buy_point_mult_count, min_use_point_amt, point_extn_year_count, prdt_rvw_point_amt, photo_prdt_rvw_point_amt, month_best_rvw_count, month_best_rvw_point_amt, onln_save_term_count, ofln_save_term_count, mbshp_member_join_cpn_no, onln_member_join_cpn_no, birth_day_cpn_no, sold_out_cmpns_cpn_no, app_login_cpn_no, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	plcy_seq = #{plcySeq, jdbcType=INTEGER}
+    </sql> 
+    
+    <select id="select" parameterType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicy" resultType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicy">
+    
+     /*+ kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			cm_online_member_policy
+		<where> 
+			<if test="plcySeq != null"> 
+				 plcy_seq = #{plcySeq, jdbcType=INTEGER}
+			</if> 
+			<if test="plcyApplyYmd != null"> 
+				 AND plcy_apply_ymd = #{plcyApplyYmd, jdbcType=DATE}
+			</if> 
+			<if test="memberJoinPointAmt != null"> 
+				 AND member_join_point_amt = #{memberJoinPointAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="firstBuyPointAmt != null"> 
+				 AND first_buy_point_amt = #{firstBuyPointAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="buyPointRate != null"> 
+				 AND buy_point_rate = #{buyPointRate, jdbcType=TINYINT}
+			</if> 
+			<if test="annvrFirstBuyPointPayYn != null"> 
+				 AND annvr_first_buy_point_pay_yn = #{annvrFirstBuyPointPayYn, jdbcType=CHAR}
+			</if> 
+			<if test="annvrFirstBuyPointMultCount != null"> 
+				 AND annvr_first_buy_point_mult_count = #{annvrFirstBuyPointMultCount, jdbcType=TINYINT}
+			</if> 
+			<if test="minUsePointAmt != null"> 
+				 AND min_use_point_amt = #{minUsePointAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="pointExtnYearCount != null"> 
+				 AND point_extn_year_count = #{pointExtnYearCount, jdbcType=INTEGER}
+			</if> 
+			<if test="prdtRvwPointAmt != null"> 
+				 AND prdt_rvw_point_amt = #{prdtRvwPointAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="photoPrdtRvwPointAmt != null"> 
+				 AND photo_prdt_rvw_point_amt = #{photoPrdtRvwPointAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="monthBestRvwCount != null"> 
+				 AND month_best_rvw_count = #{monthBestRvwCount, jdbcType=INTEGER}
+			</if> 
+			<if test="monthBestRvwPointAmt != null"> 
+				 AND month_best_rvw_point_amt = #{monthBestRvwPointAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="onlnSaveTermCount != null"> 
+				 AND onln_save_term_count = #{onlnSaveTermCount, jdbcType=INTEGER}
+			</if> 
+			<if test="oflnSaveTermCount != null"> 
+				 AND ofln_save_term_count = #{oflnSaveTermCount, jdbcType=INTEGER}
+			</if> 
+			<if test="mbshpMemberJoinCpnNo != null"> 
+				 AND mbshp_member_join_cpn_no = #{mbshpMemberJoinCpnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="onlnMemberJoinCpnNo != null"> 
+				 AND onln_member_join_cpn_no = #{onlnMemberJoinCpnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="birthDayCpnNo != null"> 
+				 AND birth_day_cpn_no = #{birthDayCpnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="soldOutCmpnsCpnNo != null"> 
+				 AND sold_out_cmpns_cpn_no = #{soldOutCmpnsCpnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="appLoginCpnNo != null"> 
+				 AND app_login_cpn_no = #{appLoginCpnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+	<insert id="insert" useGeneratedKeys="true" keyProperty="plcySeq">
+
+     /*+ kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO cm_online_member_policy
+			 ( plcy_apply_ymd, member_join_point_amt, first_buy_point_amt, buy_point_rate, annvr_first_buy_point_pay_yn, annvr_first_buy_point_mult_count, min_use_point_amt, point_extn_year_count, prdt_rvw_point_amt, photo_prdt_rvw_point_amt, month_best_rvw_count, month_best_rvw_point_amt, onln_save_term_count, ofln_save_term_count, mbshp_member_join_cpn_no, onln_member_join_cpn_no, birth_day_cpn_no, sold_out_cmpns_cpn_no, app_login_cpn_no, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( <choose><when test="plcyApplyYmd != null">#{plcyApplyYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, #{memberJoinPointAmt, jdbcType=INTEGER}, #{firstBuyPointAmt, jdbcType=INTEGER}, #{buyPointRate, jdbcType=TINYINT}, #{annvrFirstBuyPointPayYn, jdbcType=CHAR}, #{annvrFirstBuyPointMultCount, jdbcType=TINYINT}, #{minUsePointAmt, jdbcType=INTEGER}, #{pointExtnYearCount, jdbcType=INTEGER}, #{prdtRvwPointAmt, jdbcType=INTEGER}, #{photoPrdtRvwPointAmt, jdbcType=INTEGER}, #{monthBestRvwCount, jdbcType=INTEGER}, #{monthBestRvwPointAmt, jdbcType=INTEGER}, #{onlnSaveTermCount, jdbcType=INTEGER}, #{oflnSaveTermCount, jdbcType=INTEGER}, #{mbshpMemberJoinCpnNo, jdbcType=VARCHAR}, #{onlnMemberJoinCpnNo, jdbcType=VARCHAR}, #{birthDayCpnNo, jdbcType=VARCHAR}, #{soldOutCmpnsCpnNo, jdbcType=VARCHAR}, #{appLoginCpnNo, jdbcType=VARCHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicy">
+    
+     /*+ kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE cm_online_member_policy
+		<set> 
+			<if test="plcySeq != null"> 
+				plcy_seq = #{plcySeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="plcyApplyYmd != null"> 
+				plcy_apply_ymd = #{plcyApplyYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="memberJoinPointAmt != null"> 
+				member_join_point_amt = #{memberJoinPointAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="firstBuyPointAmt != null"> 
+				first_buy_point_amt = #{firstBuyPointAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="buyPointRate != null"> 
+				buy_point_rate = #{buyPointRate, jdbcType=TINYINT}, 
+			</if> 
+			<if test="annvrFirstBuyPointPayYn != null"> 
+				annvr_first_buy_point_pay_yn = #{annvrFirstBuyPointPayYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="annvrFirstBuyPointMultCount != null"> 
+				annvr_first_buy_point_mult_count = #{annvrFirstBuyPointMultCount, jdbcType=TINYINT}, 
+			</if> 
+			<if test="minUsePointAmt != null"> 
+				min_use_point_amt = #{minUsePointAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="pointExtnYearCount != null"> 
+				point_extn_year_count = #{pointExtnYearCount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="prdtRvwPointAmt != null"> 
+				prdt_rvw_point_amt = #{prdtRvwPointAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="photoPrdtRvwPointAmt != null"> 
+				photo_prdt_rvw_point_amt = #{photoPrdtRvwPointAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="monthBestRvwCount != null"> 
+				month_best_rvw_count = #{monthBestRvwCount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="monthBestRvwPointAmt != null"> 
+				month_best_rvw_point_amt = #{monthBestRvwPointAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="onlnSaveTermCount != null"> 
+				onln_save_term_count = #{onlnSaveTermCount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="oflnSaveTermCount != null"> 
+				ofln_save_term_count = #{oflnSaveTermCount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="mbshpMemberJoinCpnNo != null"> 
+				mbshp_member_join_cpn_no = #{mbshpMemberJoinCpnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="onlnMemberJoinCpnNo != null"> 
+				onln_member_join_cpn_no = #{onlnMemberJoinCpnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="birthDayCpnNo != null"> 
+				birth_day_cpn_no = #{birthDayCpnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="soldOutCmpnsCpnNo != null"> 
+				sold_out_cmpns_cpn_no = #{soldOutCmpnsCpnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="appLoginCpnNo != null"> 
+				app_login_cpn_no = #{appLoginCpnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 plcy_seq = #{plcySeq, jdbcType=INTEGER}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicy">
+    
+     /*+ kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM cm_online_member_policy
+		WHERE 
+			 plcy_seq = #{plcySeq, jdbcType=INTEGER}  
+    </delete>
+</mapper>

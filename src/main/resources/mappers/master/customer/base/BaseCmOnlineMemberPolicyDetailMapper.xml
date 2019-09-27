@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDetailDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	plcy_seq, plcy_dtl_seq, plcy_type, condtn_apply_yn, buy_amt, buy_qty, sold_out_cmpns_type, cmpns_point_amt, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	plcy_dtl_seq = #{plcyDtlSeq, jdbcType=INTEGER} AND plcy_seq = #{plcySeq, jdbcType=INTEGER}
+    </sql> 
+    
+    <select id="select" parameterType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicyDetail" resultType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicyDetail">
+    
+     /*+ kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDetailDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			cm_online_member_policy_detail
+		<where> 
+			<if test="plcySeq != null"> 
+				 plcy_seq = #{plcySeq, jdbcType=INTEGER}
+			</if> 
+			<if test="plcyDtlSeq != null"> 
+				 AND plcy_dtl_seq = #{plcyDtlSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="plcyType != null"> 
+				 AND plcy_type = #{plcyType, jdbcType=CHAR}
+			</if> 
+			<if test="condtnApplyYn != null"> 
+				 AND condtn_apply_yn = #{condtnApplyYn, jdbcType=CHAR}
+			</if> 
+			<if test="buyAmt != null"> 
+				 AND buy_amt = #{buyAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="buyQty != null"> 
+				 AND buy_qty = #{buyQty, jdbcType=INTEGER}
+			</if> 
+			<if test="soldOutCmpnsType != null"> 
+				 AND sold_out_cmpns_type = #{soldOutCmpnsType, jdbcType=CHAR}
+			</if> 
+			<if test="cmpnsPointAmt != null"> 
+				 AND cmpns_point_amt = #{cmpnsPointAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicyDetail">	
+
+     /*+ kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDetailDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO cm_online_member_policy_detail
+			 ( plcy_seq, plcy_dtl_seq, plcy_type, condtn_apply_yn, buy_amt, buy_qty, sold_out_cmpns_type, cmpns_point_amt, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{plcySeq, jdbcType=INTEGER}, #{plcyDtlSeq, jdbcType=INTEGER}, #{plcyType, jdbcType=CHAR}, #{condtnApplyYn, jdbcType=CHAR}, #{buyAmt, jdbcType=INTEGER}, #{buyQty, jdbcType=INTEGER}, #{soldOutCmpnsType, jdbcType=CHAR}, #{cmpnsPointAmt, jdbcType=INTEGER}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicyDetail">
+    
+     /*+ kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDetailDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE cm_online_member_policy_detail
+		<set> 
+			<if test="plcySeq != null"> 
+				plcy_seq = #{plcySeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="plcyDtlSeq != null"> 
+				plcy_dtl_seq = #{plcyDtlSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="plcyType != null"> 
+				plcy_type = #{plcyType, jdbcType=CHAR}, 
+			</if> 
+			<if test="condtnApplyYn != null"> 
+				condtn_apply_yn = #{condtnApplyYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="buyAmt != null"> 
+				buy_amt = #{buyAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="buyQty != null"> 
+				buy_qty = #{buyQty, jdbcType=INTEGER}, 
+			</if> 
+			<if test="soldOutCmpnsType != null"> 
+				sold_out_cmpns_type = #{soldOutCmpnsType, jdbcType=CHAR}, 
+			</if> 
+			<if test="cmpnsPointAmt != null"> 
+				cmpns_point_amt = #{cmpnsPointAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 plcy_dtl_seq = #{plcyDtlSeq, jdbcType=INTEGER} AND plcy_seq = #{plcySeq, jdbcType=INTEGER}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicyDetail">
+    
+     /*+ kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDetailDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM cm_online_member_policy_detail
+		WHERE 
+			 plcy_dtl_seq = #{plcyDtlSeq, jdbcType=INTEGER} AND plcy_seq = #{plcySeq, jdbcType=INTEGER}  
+    </delete>
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.BdProductReviewEvltDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	prdt_rvw_seq, prdt_rvw_code, evlt_score
+    </sql>
+    
+    <sql id="pk-columns">
+    	prdt_rvw_code = #{prdtRvwCode, jdbcType=VARCHAR} AND prdt_rvw_seq = #{prdtRvwSeq, jdbcType=INTEGER}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.product.model.master.BdProductReviewEvlt" resultType="kr.co.shop.web.product.model.master.BdProductReviewEvlt">
+    
+     /*+ kr.co.shop.web.product.repository.master.BdProductReviewEvltDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			BD_PRODUCT_REVIEW_EVLT WITH (NOLOCK)
+
+		<where> 
+			<if test="prdtRvwSeq != null"> 
+				 prdt_rvw_seq = #{prdtRvwSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="prdtRvwCode != null"> 
+				 AND prdt_rvw_code = #{prdtRvwCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="evltScore != null"> 
+				 AND evlt_score = #{evltScore, jdbcType=INTEGER}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.product.model.master.BdProductReviewEvlt">	
+
+     /*+ kr.co.shop.web.product.repository.master.BdProductReviewEvltDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO BD_PRODUCT_REVIEW_EVLT
+			 ( prdt_rvw_seq, prdt_rvw_code, evlt_score ) 
+
+		VALUES 
+			 ( #{prdtRvwSeq, jdbcType=INTEGER}, #{prdtRvwCode, jdbcType=VARCHAR}, #{evltScore, jdbcType=INTEGER} )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.product.model.master.BdProductReviewEvlt">
+    
+     /*+ kr.co.shop.web.product.repository.master.BdProductReviewEvltDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE BD_PRODUCT_REVIEW_EVLT
+		<set> 
+			<if test="prdtRvwSeq != null"> 
+				prdt_rvw_seq = #{prdtRvwSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="prdtRvwCode != null"> 
+				prdt_rvw_code = #{prdtRvwCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="evltScore != null"> 
+				evlt_score = #{evltScore, jdbcType=INTEGER}, 
+			</if> 
+		</set> 
+		WHERE 
+			 prdt_rvw_code = #{prdtRvwCode, jdbcType=VARCHAR} AND prdt_rvw_seq = #{prdtRvwSeq, jdbcType=INTEGER}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.product.model.master.BdProductReviewEvlt">
+    
+     /*+ kr.co.shop.web.product.repository.master.BdProductReviewEvltDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM BD_PRODUCT_REVIEW_EVLT
+		WHERE 
+			 prdt_rvw_code = #{prdtRvwCode, jdbcType=VARCHAR} AND prdt_rvw_seq = #{prdtRvwSeq, jdbcType=INTEGER}  
+    </delete>
+</mapper>

@@ -1,0 +1,872 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderPaymentDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <sql id="select-columns-without">
+    	order_no, order_pymnt_seq, pymnt_dtm, device_code, main_pymnt_means_yn, pymnt_means_code, pymnt_vndr_code, pymnt_organ_code_text, pymnt_organ_name, pymnt_organ_no_text, intrst_free_yn, instmt_term_count, card_gbn_type, card_type, pymnt_aprv_no_text, pymnt_todo_amt, pymnt_amt, card_part_cncl_psblt_yn, cash_rcpt_issue_yn, cash_rcpt_aprv_no, cash_rcpt_deal_no, escr_apply_yn, escr_aprv_no_text, vrtl_acnt_issue_dtm, vrtl_acnt_expr_dtm, gift_card_pin_no_text, pymnt_means_chng_psblt_yn, pymnt_means_chng_dtm, dpst_press_email_send_yn, pymnt_stat_code, rspns_code_text, rspns_mesg_text, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.order.model.master.OcOrderPayment">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderPaymentDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			OC_ORDER_PAYMENT
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectDetail" parameterType="kr.co.shop.web.order.model.master.OcOrderPayment" resultType="kr.co.shop.web.order.model.master.OcOrderPayment">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderPaymentDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns-without" />
+			 , FN_CODE_VALUE( 'PYMNT_MEANS_CODE' , A.PYMNT_MEANS_CODE ) AS PYMNT_MEANS_CODE_NAME
+		FROM 
+			OC_ORDER_PAYMENT A
+		<where> 
+			<if test="orderNo != null"> 
+				 order_no = #{orderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderPymntSeq != null"> 
+				 AND order_pymnt_seq = #{orderPymntSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="pymntDtm != null"> 
+				 AND pymnt_dtm = #{pymntDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="deviceCode != null"> 
+				 AND device_code = #{deviceCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="mainPymntMeansYn != null"> 
+				 AND main_pymnt_means_yn = #{mainPymntMeansYn, jdbcType=CHAR}
+			</if> 
+			<if test="pymntMeansCode != null"> 
+				 AND pymnt_means_code = #{pymntMeansCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntVndrCode != null"> 
+				 AND pymnt_vndr_code = #{pymntVndrCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntOrganCodeText != null"> 
+				 AND pymnt_organ_code_text = #{pymntOrganCodeText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntOrganName != null"> 
+				 AND pymnt_organ_name = #{pymntOrganName, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntOrganNoText != null"> 
+				 AND pymnt_organ_no_text = #{pymntOrganNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="intrstFreeYn != null"> 
+				 AND intrst_free_yn = #{intrstFreeYn, jdbcType=CHAR}
+			</if> 
+			<if test="instmtTermCount != null"> 
+				 AND instmt_term_count = #{instmtTermCount, jdbcType=TINYINT}
+			</if> 
+			<if test="cardGbnType != null"> 
+				 AND card_gbn_type = #{cardGbnType, jdbcType=CHAR}
+			</if> 
+			<if test="cardType != null"> 
+				 AND card_type = #{cardType, jdbcType=CHAR}
+			</if> 
+			<if test="pymntAprvNoText != null"> 
+				 AND pymnt_aprv_no_text = #{pymntAprvNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntTodoAmt != null"> 
+				 AND pymnt_todo_amt = #{pymntTodoAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="pymntAmt != null"> 
+				 AND pymnt_amt = #{pymntAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="cardPartCnclPsbltYn != null"> 
+				 AND card_part_cncl_psblt_yn = #{cardPartCnclPsbltYn, jdbcType=CHAR}
+			</if> 
+			<if test="cashRcptIssueYn != null"> 
+				 AND cash_rcpt_issue_yn = #{cashRcptIssueYn, jdbcType=CHAR}
+			</if> 
+			<if test="escrApplyYn != null"> 
+				 AND escr_apply_yn = #{escrApplyYn, jdbcType=CHAR}
+			</if> 
+			<if test="escrAprvNoText != null"> 
+				 AND escr_aprv_no_text = #{escrAprvNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="vrtlAcntIssueDtm != null"> 
+				 AND vrtl_acnt_issue_dtm = #{vrtlAcntIssueDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="vrtlAcntExprDtm != null"> 
+				 AND vrtl_acnt_expr_dtm = #{vrtlAcntExprDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="giftCardPinNoText != null"> 
+				 AND gift_card_pin_no_text = #{giftCardPinNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntMeansChngPsbltYn != null"> 
+				 AND pymnt_means_chng_psblt_yn = #{pymntMeansChngPsbltYn, jdbcType=CHAR}
+			</if> 
+			<if test="pymntMeansChngDtm != null"> 
+				 AND pymnt_means_chng_dtm = #{pymntMeansChngDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="dpstPressEmailSendYn != null"> 
+				 AND dpst_press_email_send_yn = #{dpstPressEmailSendYn, jdbcType=CHAR}
+			</if> 
+			<if test="pymntStatCode != null"> 
+				 AND pymnt_stat_code = #{pymntStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="rspnsCodeText != null"> 
+				 AND rspns_code_text = #{rspnsCodeText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rspnsMesgText != null"> 
+				 AND rspns_mesg_text = #{rspnsMesgText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntLogInfo != null"> 
+				 AND pymnt_log_info = #{pymntLogInfo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <select id="selectByReturnRprsntCard" parameterType="kr.co.shop.web.order.model.master.OcOrderPayment" resultType="kr.co.shop.web.order.model.master.OcOrderPayment">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderPaymentDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		WITH CARD_INFO AS (
+							 SELECT  COUNT(MMGC.MEMBER_NO) OVER( PARTITION BY MMGC.MEMBER_NO   ) AS CARD_COUNT 
+							      , CARD_NO_TEXT
+								  ,  CARD_PIN_NO_TEXT
+							FROM MB_MEMBER_GIFT_CARD MMGC
+							WHERE MMGC.RPRSNT_CARD_YN ='Y'  -- 대표카드 여부
+							AND MMGC.DEL_YN ='N'            -- 삭제 여부
+							AND MMGC.MEMBER_NO = #{memberNo, jdbcType=VARCHAR}  -- 회원번호
+			)
+			SELECT 
+					CASE 
+					WHEN CI.CARD_COUNT  > 0  THEN  CI.CARD_NO_TEXT
+					ELSE   #{pymntOrganNoText, jdbcType=VARCHAR}
+					END 	AS PYMNT_ORGAN_NO_TEXT
+					, CASE 
+					WHEN CI.CARD_COUNT  > 0  THEN  CI.CARD_PIN_NO_TEXT
+					ELSE  #{giftCardPinNoText, jdbcType=VARCHAR}
+					END 	AS GIFT_CARD_PIN_NO_TEXT
+			FROM  CARD_INFO CI
+    </select>
+    
+    <select id="selectPaymentList" parameterType="kr.co.shop.web.order.model.master.OcOrderPayment" resultType="kr.co.shop.web.order.model.master.OcOrderPayment">
+		/*+ kr.co.shop.web.order.repository.master.OcOrderPaymentDao.selectPaymentList [ 주문 결제 수단 조회] [KTH] */
+		SELECT <include refid="select-columns-without" />
+		     , FN_CODE_VALUE( 'DEVICE_CODE' , DEVICE_CODE ) AS DEVICE_CODE_NAME
+		     , FN_CODE_VALUE( 'PYMNT_MEANS_CODE' , PYMNT_MEANS_CODE ) AS PYMNT_MEANS_CODE_NAME
+		     , FN_CODE_VALUE( 'PYMNT_VNDR_CODE', PYMNT_VNDR_CODE ) AS PYMNT_VNDR_CODE_NAME
+		     , FN_CODE_VALUE( 'PYMNT_STAT_CODE', PYMNT_STAT_CODE ) AS PYMNT_STAT_CODE_NAME
+		  FROM OC_ORDER_PAYMENT A
+		<where>
+			<choose>
+				<when test="orderNos != null and orderNos !='' and orderNos.length > 0 ">
+					ORDER_NO IN
+					<foreach item="item" index="index" collection="orderNos" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</when>
+				<otherwise>
+					ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+				</otherwise>
+			</choose>
+			
+		</where>  
+		 ORDER BY ORDER_PYMNT_SEQ 
+	</select>
+    
+	<select id="selectPaymentDetail" parameterType="kr.co.shop.web.order.model.master.OcOrderPayment" resultType="kr.co.shop.web.order.model.master.OcOrderPayment">
+	/*+ kr.co.shop.web.order.repository.master.OcOrderPaymentDao.selectByPrimaryKey [결제 방식 조회 마이페이지 상세] [Generator] */  
+		SELECT S.PYMNT_MEANS_CODE_FLAG 
+		     , SUM(S.PYMNT_AMT) AS PYMNT_AMT  -- 결제금액
+		     , SUM(S.PYMNT_TODO_AMT) AS PYMNT_TODO_AMT  -- 결제금액
+		     , MAX(S.PYMNT_ORGAN_NO_TEXT ) AS  PYMNT_ORGAN_NO_TEXT -- 카드번호
+		     , MAX(S.PYMNT_ORGAN_NAME ) AS  PYMNT_ORGAN_NAME
+             , MAX(S.INTRST_FREE_YN ) AS  INTRST_FREE_YN
+             , MAX(S.INSTMT_TERM_COUNT ) AS  INSTMT_TERM_COUNT
+		     , MAX(S.PYMNT_APRV_NO_TEXT) AS PYMNT_APRV_NO_TEXT
+		    -- , MAX( S.PYMNT_MEANS_CODE_NAME ) AS PYMNT_MEANS_CODE_NAME 
+		     , CASE WHEN S.PYMNT_MEANS_CODE_FLAG = '00000' THEN '포인트 사용'
+		            ELSE MAX( S.PYMNT_MEANS_CODE_NAME )
+		        END AS PYMNT_MEANS_CODE_NAME
+		     , MAX(S.PYMNT_MEANS_CODE ) AS PYMNT_MEANS_CODE 
+		     , MAX(S.ESCR_APPLY_YN ) AS ESCR_APPLY_YN
+		     , MAX(S.VRTL_ACNT_ISSUE_DTM ) AS VRTL_ACNT_ISSUE_DTM 
+		     , MAX(S.VRTL_ACNT_EXPR_DTM ) AS VRTL_ACNT_EXPR_DTM 
+		     , MAX(S.GIFT_CARD_PIN_NO_TEXT) AS GIFT_CARD_PIN_NO_TEXT 
+		     , MAX(S.CASH_RCPT_APRV_NO) AS CASH_RCPT_APRV_NO 
+		     , MAX(S.PYMNT_STAT_CODE) AS PYMNT_STAT_CODE 
+		     , TO_CHAR(MAX(S.RGST_DTM ), 'YYYY-MM-DD HH24:MI:SS') AS RGST_DTM 
+		     , MAX(S.ADD_INFO1) AS ADD_INFO1
+		  FROM (
+		SELECT A.PYMNT_AMT 
+			 , A.PYMNT_TODO_AMT 
+			 , A.PYMNT_ORGAN_NO_TEXT
+			 , A.PYMNT_ORGAN_NAME
+             , A.INTRST_FREE_YN
+             , A.INSTMT_TERM_COUNT
+			 , A.PYMNT_APRV_NO_TEXT
+			 , A.PYMNT_MEANS_CODE
+			 , A.ESCR_APPLY_YN
+			 , A.VRTL_ACNT_ISSUE_DTM
+			 , A.VRTL_ACNT_EXPR_DTM
+			 , A.GIFT_CARD_PIN_NO_TEXT
+			 , A.CASH_RCPT_APRV_NO
+			 , A.PYMNT_STAT_CODE
+		     , B.CODE_DTL_NAME AS PYMNT_MEANS_CODE_NAME
+		     , B.ADD_INFO1 
+		     , A.RGST_DTM
+		     , CASE WHEN PYMNT_MEANS_CODE = '10007' OR PYMNT_MEANS_CODE = '10008' THEN '00000' 
+		            ELSE PYMNT_MEANS_CODE
+		        END AS PYMNT_MEANS_CODE_FLAG 
+		  FROM OC_ORDER_PAYMENT A
+		  JOIN SY_CODE_DETAIL B
+		    ON B.CODE_FIELD = 'PYMNT_MEANS_CODE'
+		   AND B.CODE_DTL_NO = A.PYMNT_MEANS_CODE
+		 WHERE ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+		  AND A.PYMNT_MEANS_CHNG_DTM IS NULL 	 --결제수단  변경 요청일 NULL
+		 )S 
+		 GROUP BY PYMNT_MEANS_CODE_FLAG
+		 ORDER BY MAX(S.ADD_INFO1) DESC,  PYMNT_MEANS_CODE_FLAG
+    </select>
+    
+    <update id="updateOrderStat" parameterType="kr.co.shop.web.order.model.master.OcOrder">
+    	/*+ kr.co.shop.web.order.repository.master.OcOrderPaymentDao.updateOrderStat [주문 결제수단 상채 일괄 update 쿼리] [이재영] */
+		UPDATE 	OC_ORDER_PAYMENT
+		SET 	pymnt_stat_code = #{orderStatCode, jdbcType=VARCHAR}
+		WHERE 	order_no = #{orderNo, jdbcType=VARCHAR}
+    </update>
+    <insert id="insertMainPayment" parameterType="kr.co.shop.web.order.model.master.OcOrderPayment">
+    	 /*+ kr.co.shop.web.order.repository.master.OcOrderPaymentDao.insertMainPayment [기프트카드 사용정보 insert 쿼리] [이재영] */
+    	 INSERT INTO OC_ORDER_PAYMENT
+			 ( 
+				order_no
+				, order_pymnt_seq
+				, pymnt_dtm
+				, device_code
+				, main_pymnt_means_yn
+				, pymnt_means_code
+				, pymnt_vndr_code
+				, pymnt_organ_code_text
+				, pymnt_organ_name
+				, pymnt_organ_no_text
+				, pymnt_aprv_no_text
+				, pymnt_todo_amt
+				, pymnt_amt
+				, pymnt_stat_code
+				<choose>
+ 					<when test="intrstFreeYn != null">
+ 						, intrst_free_yn
+ 					</when>				 	
+				</choose>
+				<choose>
+					<when test="instmtTermCount != null">
+						, instmt_term_count
+					</when>				 	
+				</choose>
+				<choose>
+					<when test="cardGbnType != null">
+						, card_gbn_type
+					</when>				 	
+				</choose>
+				<choose>
+					<when test="cardType != null">
+						, card_type
+					</when>				 	
+				</choose>
+				<choose>
+				 	<when test="cardPartCnclPsbltYn != null">
+				  		, card_part_cncl_psblt_yn
+				  	</when>
+				</choose>
+				<choose>
+					<when test="cashRcptIssueYn != null">
+						, cash_rcpt_issue_yn
+					</when>
+				</choose>
+				<choose>
+					<when test="cashRcptAprvNo != null">	 	
+						, cash_rcpt_aprv_no
+					</when>
+				</choose>
+				<choose>
+					<when test="cashRcptDealNo != null">
+			 			, cash_rcpt_deal_no
+			 		</when>
+				</choose>
+				<choose>
+					<when test="escrApplyYn != null">
+			 			, escr_apply_yn
+			 		</when>
+				</choose>
+				<choose>
+					<when test="escrAprvNoText != null">
+			 			, escr_aprv_no_text
+			 		</when>
+				</choose>
+				<choose>
+					<when test="vrtlAcntIssueDtm != null">
+						, vrtl_acnt_issue_dtm
+					</when>
+				</choose>
+				<choose>
+					<when test="vrtlAcntExprDtm != null">
+						, vrtl_acnt_expr_dtm
+					</when>
+				</choose>
+				, pymnt_means_chng_psblt_yn
+				, rspns_code_text
+				, rspns_mesg_text
+				, pymnt_log_info
+				, rgster_no
+				, rgst_dtm
+			  ) 
+
+		VALUES 
+			 ( 
+				#{orderNo, jdbcType=VARCHAR}
+				, #{orderPymntSeq, jdbcType=TINYINT}
+				, <choose>
+					<when test="pymntDtm != null">#{pymntDtm, jdbcType=TIMESTAMP}</when>
+					<otherwise>SYSDATE</otherwise>
+				  </choose>
+				, #{deviceCode, jdbcType=VARCHAR}
+				, #{mainPymntMeansYn, jdbcType=CHAR}
+				, #{pymntMeansCode, jdbcType=VARCHAR}
+				, #{pymntVndrCode, jdbcType=VARCHAR}
+				, #{pymntOrganCodeText, jdbcType=VARCHAR}
+				, #{pymntOrganName, jdbcType=VARCHAR}
+				, #{pymntOrganNoText, jdbcType=VARCHAR}
+				, #{pymntAprvNoText, jdbcType=VARCHAR}
+				, #{pymntTodoAmt, jdbcType=INTEGER}
+				, #{pymntAmt, jdbcType=INTEGER}
+				, #{pymntStatCode, jdbcType=VARCHAR}
+				<choose>
+					<when test="intrstFreeYn != null">
+						 , #{intrstFreeYn, jdbcType=CHAR}
+					</when>				 	
+				</choose>
+				<choose>
+					<when test="instmtTermCount != null">
+						, #{instmtTermCount, jdbcType=TINYINT}
+					</when>				 	
+				</choose>
+				<choose>
+					<when test="cardGbnType != null">
+						, #{cardGbnType, jdbcType=CHAR}
+					</when>				 	
+				</choose>
+				<choose>
+					<when test="cardType != null">
+						, #{cardType, jdbcType=CHAR}
+					</when>				 	
+				</choose>
+				<choose>
+					<when test="cardPartCnclPsbltYn != null">
+				 		, #{cardPartCnclPsbltYn, jdbcType=CHAR}
+				 	</when>
+				</choose>
+				<choose>
+					<when test="cashRcptIssueYn != null">
+						, #{cashRcptIssueYn, jdbcType=CHAR}
+					</when>
+				</choose>
+				<choose>
+					<when test="cashRcptAprvNo != null">	 	
+						, #{cashRcptAprvNo, jdbcType=VARCHAR}
+					</when>
+				</choose>
+				<choose>
+					<when test="cashRcptDealNo != null">
+							 , #{cashRcptDealNo, jdbcType=VARCHAR}
+						</when>
+				</choose>
+				<choose>
+					<when test="escrApplyYn != null">
+							, #{escrApplyYn, jdbcType=CHAR}
+						</when>
+				</choose>
+				<choose>
+					<when test="escrAprvNoText != null">
+							, #{escrAprvNoText, jdbcType=VARCHAR}
+						</when>
+				</choose>
+				<choose>
+					<when test="vrtlAcntIssueDtm != null">
+						, #{vrtlAcntIssueDtm, jdbcType=TIMESTAMP}
+					</when>
+				</choose>
+				<choose>
+					<when test="vrtlAcntExprDtm != null">
+						, #{vrtlAcntExprDtm, jdbcType=TIMESTAMP}
+					</when>
+				</choose>
+				, #{pymntMeansChngPsbltYn, jdbcType=CHAR}
+				, #{rspnsCodeText, jdbcType=VARCHAR}
+				, #{rspnsMesgText, jdbcType=VARCHAR}
+				, #{pymntLogInfo, jdbcType=VARCHAR}
+				, #{rgsterNo, jdbcType=VARCHAR}
+				, SYSDATE
+			  )  
+    </insert>
+    
+    <insert id="insertGiftPayment" parameterType="kr.co.shop.web.order.model.master.OcOrderPayment">	
+
+     /*+ kr.co.shop.web.order.repository.master.OcOrderPaymentDao.insertGiftPayment [기프트카드 사용정보 insert 쿼리] [이재영] */
+    
+		INSERT INTO OC_ORDER_PAYMENT
+			 ( 
+				 order_no
+				 , order_pymnt_seq
+				 , pymnt_dtm
+				 , device_code
+				 , main_pymnt_means_yn
+				 , pymnt_means_code
+				 , pymnt_vndr_code
+				 , pymnt_organ_code_text
+				 , pymnt_organ_name
+				 , pymnt_organ_no_text
+				 , pymnt_aprv_no_text
+				 , pymnt_todo_amt
+				 , pymnt_amt
+				 , gift_card_pin_no_text
+				 , pymnt_stat_code
+				 , rspns_code_text
+				 , rspns_mesg_text
+				 , pymnt_log_info
+				 , rgster_no
+				 , rgst_dtm
+			  ) 
+
+		VALUES 
+			 ( 
+				 #{orderNo, jdbcType=VARCHAR}
+				 , #{orderPymntSeq, jdbcType=TINYINT}
+				 , <choose><when test="pymntDtm != null">#{pymntDtm, jdbcType=TIMESTAMP}</when><otherwise>SYSDATE</otherwise></choose>
+				 , #{deviceCode, jdbcType=VARCHAR}
+				 , #{mainPymntMeansYn, jdbcType=CHAR}
+				 , #{pymntMeansCode, jdbcType=VARCHAR}
+				 , #{pymntVndrCode, jdbcType=VARCHAR}
+				 , #{pymntOrganCodeText, jdbcType=VARCHAR}
+				 , #{pymntOrganName, jdbcType=VARCHAR}
+				 , #{pymntOrganNoText, jdbcType=VARCHAR}
+				 , #{pymntAprvNoText, jdbcType=VARCHAR}
+				 , #{pymntTodoAmt, jdbcType=INTEGER}
+				 , #{pymntAmt, jdbcType=INTEGER}
+				 , #{giftCardPinNoText, jdbcType=VARCHAR}
+				 , #{pymntStatCode, jdbcType=VARCHAR}
+				 , #{rspnsCodeText, jdbcType=VARCHAR}
+				 , #{rspnsMesgText, jdbcType=VARCHAR}
+				 , #{pymntLogInfo, jdbcType=VARCHAR}
+				 , #{rgsterNo, jdbcType=VARCHAR}
+				 , SYSDATE
+			  )  
+    </insert>
+    
+	<insert id="insertPointPayment" parameterType="kr.co.shop.web.order.model.master.OcOrderPayment">
+    /*+ kr.co.shop.web.order.repository.master.OcOrderPaymentDao.insertPointPayment [포인트  사용정보 insert 쿼리] [이재영] */
+		INSERT INTO OC_ORDER_PAYMENT
+			( 
+				 order_no
+				 , order_pymnt_seq
+				 , pymnt_dtm
+				 , device_code
+				 , main_pymnt_means_yn
+				 , pymnt_means_code
+				 , pymnt_todo_amt
+				 , pymnt_amt
+				 , pymnt_stat_code
+				 , rgster_no
+				 , rgst_dtm
+			) 
+		VALUES 
+			( 
+				 #{orderNo, jdbcType=VARCHAR}
+				 , #{orderPymntSeq, jdbcType=TINYINT}
+				 , SYSDATE
+				 , #{deviceCode, jdbcType=VARCHAR}
+				 , #{mainPymntMeansYn, jdbcType=CHAR}
+				 , #{pymntMeansCode, jdbcType=VARCHAR}
+				 , #{pymntTodoAmt, jdbcType=INTEGER}
+				 , #{pymntAmt, jdbcType=INTEGER}
+				 , #{pymntStatCode, jdbcType=VARCHAR}
+				 , #{rgsterNo, jdbcType=VARCHAR}
+				 , SYSDATE
+			)  
+    </insert>
+    
+    
+    <select id="selectPaymentListHistory" parameterType="kr.co.shop.web.order.model.master.OcOrderPayment" resultType="kr.co.shop.web.order.model.master.OcOrderPayment">
+		/*+ kr.co.shop.web.order.repository.master.OcOrderPaymentDao.selectByPrimaryKey [결제 방식 조회 마이페이지 상세] [lsh] */  
+		 SELECT 
+				  TO_CHAR(OOP.PYMNT_DTM, 'YYYY-MM-DD HH24:MI:SS')  AS PYMNT_DTM 		--변경일시
+				, '결제수단 변경' 					AS PYMNT_REASON  	-- 사유
+				, ''  							AS PYMNT_MEANS_CODE_NAME --결제/환불 수단 
+				, OOP.PYMNT_AMT  				AS PYMNT_AMT				--변경 금액
+				, '결제완료'  						AS PYMNT_STAT_CODE_NAME		--결제상태
+				, OOP.ORDER_NO  				AS PAYMNT_NO		-- 사유						
+		 FROM OC_ORDER_PAYMENT OOP
+		 WHERE OOP.PYMNT_MEANS_CHNG_PSBLT_YN ='Y'      -- 결제수단 변경 여부
+			 AND OOP.PYMNT_MEANS_CHNG_DTM  IS NOT NULL      -- 결제수단 변경 일자
+			 AND OOP.PYMNT_MEANS_CODE IN ( '10000','10002' )   --신용카드 , 실시간 계좌이체
+			 AND OOP.PYMNT_STAT_CODE  NOT IN ( '10000' ) 	-- 입금대기 제외
+			 AND OOP.ORDER_NO = #{orderNo, jdbcType=VARCHAR}  --주문번호
+	 UNION ALL
+		SELECT 
+			  TO_CHAR(OCP.PYMNT_DTM, 'YYYY-MM-DD HH24:MI:SS')  AS PYMNT_DTM -- 변경일시
+			, FN_CODE_VALUE('CLM_STAT_CODE',OC.CLM_STAT_CODE ) 			AS PYMNT_REASON  -- 사유
+			, FN_CODE_VALUE('PYMNT_MEANS_CODE',OCP.PYMNT_MEANS_CODE ) 	AS PYMNT_MEANS_CODE_NAME  --결제/환불 수단 
+			, OCP.PYMNT_AMT 												AS PYMNT_AMT --변경 금액
+			, FN_CODE_VALUE('PYMNT_STAT_CODE',OCP.PYMNT_STAT_CODE ) 	AS PYMNT_STAT_CODE_NAME  --결제상태
+			, OC.CLM_NO				AS PAYMNT_NO
+		FROM OC_CLAIM OC
+			, OC_CLAIM_PAYMENT OCP
+		WHERE  OC.CLM_NO = OCP.CLM_NO
+			AND OC.CLM_STAT_CODE IN (
+									 '10005'  -- 주문취소완료
+									,'10026'  -- 반품완료
+								   )
+			AND OCP.REDEMP_RFND_GBN_TYPE ='F'  -- 환불 기준
+			AND OC.ORG_ORDER_NO = #{orderNo, jdbcType=VARCHAR} --원주문기준
+    </select>
+    <select id="selectPaymentInfo" parameterType="kr.co.shop.web.order.model.master.OcOrderPayment" resultType="kr.co.shop.web.order.model.master.OcOrderPayment">
+		/*+ kr.co.shop.web.order.repository.master.OcOrderPaymentDao.selectPaymentInfo [결제수단 변경 ] [lsh] */  
+		 WITH PAYMENT_INFO AS (
+				SELECT 
+				      OOPRD.ORDER_PYMNT_SEQ
+					, OOPRD.PYMNT_AMT	
+					, TO_CHAR(OOPRD.PYMNT_DTM, 'YYYY-MM-DD HH24:MI:SS')  AS PYMNT_DTM		
+					, OOPRD.PYMNT_ORGAN_NO_TEXT -- 카드번호
+			     	, OOPRD.PYMNT_ORGAN_NAME --결제기관명
+	             	, OOPRD.INTRST_FREE_YN -- 무이자 여부
+	             	, OOPRD.INSTMT_TERM_COUNT -- 할부기간 
+			    	, OOPRD.PYMNT_APRV_NO_TEXT -- 겔제승인번호
+			     	, FN_CODE_VALUE('PYMNT_MEANS_CODE', OOPRD.PYMNT_MEANS_CODE ) AS PYMNT_MEANS_CODE_NAME --결제/환불 수단 
+			        , OOPRD.PYMNT_MEANS_CODE --결제수단 
+			     	, OOPRD.ESCR_APPLY_YN --에스크로 적용여부
+			     	, OOPRD.ORDER_NO
+			   FROM OC_ORDER_PAYMENT OOPRD 
+			  WHERE  OOPRD.PYMNT_MEANS_CODE IN ( '10000','10002' )	--신용카드 , 실시간 계좌이체
+			    AND OOPRD.ORDER_NO = #{orderNo, jdbcType=VARCHAR} 	--주문번호
+			    AND OOPRD.PYMNT_MEANS_CHNG_DTM IS NULL 	 --결제수단  변경 요청일 NULL
+				--AND OOPRD.PYMNT_MEANS_CHNG_PSBLT_YN = 'Y' 			 --결제수단 변경 요청
+			  FETCH FIRST 1 ROWS ONLY
+		  )
+		SELECT    OOP.ORDER_NO
+				, SUM (
+					CASE WHEN
+					  (    OOP.PYMNT_MEANS_CODE = '10000'   --카드
+						OR OOP.PYMNT_MEANS_CODE = '10002'   --실시간
+						OR OOP.PYMNT_MEANS_CODE = '10007'  -- 구매포인트
+						OR OOP.PYMNT_MEANS_CODE = '10008'  -- 이벤트 포인트
+					   )
+					THEN 0
+					ELSE 1
+					END  
+					) 												AS  PYMNT_MEANS_CNT		     	-- 카드/실시간포인트 제외한 결제수단이 있는경우  : 0
+				, SUM (
+					CASE WHEN   
+						--결제 수단 변경 접수건도 포함
+						OOP.PYMNT_MEANS_CHNG_PSBLT_YN  = 'Y'   
+					THEN 1
+					ELSE 0
+					END 
+					)  												AS CHANGE_CNT  -- 결제수단 변경 COUNT   :  2  
+				, (SELECT COUNT(OOPRD.ORDER_NO) 
+					FROM OC_ORDER_PRODUCT OOPRD 
+					 --주문번호
+					WHERE OOPRD.ORDER_NO =  #{orderNo, jdbcType=VARCHAR} 
+					AND OOPRD.MMNY_PRDT_YN ='N') 					AS VENDOR_PRDT_CNT  -- 업체 주문 상품건수  :  0
+				, (SELECT COUNT(CLM_NO) 
+					FROM OC_CLAIM OC  
+					 --주문번호
+					WHERE OC.ORDER_NO =  #{orderNo, jdbcType=VARCHAR}    
+					) 												AS CLAIM_CNT  	--클레임 접수 건수 : 0
+			    , MAX(PINFO.ORDER_PYMNT_SEQ) 						AS ORDER_PYMNT_SEQ
+				, MAX(PINFO.PYMNT_AMT) 								AS PYMNT_AMT
+				, MAX(PINFO.PYMNT_DTM) 								AS PYMNT_DTM
+				, MAX(PINFO.PYMNT_ORGAN_NO_TEXT)  					AS PYMNT_ORGAN_NO_TEXT 		-- 카드번호
+				, MAX(PINFO.PYMNT_ORGAN_NAME) 						AS PYMNT_ORGAN_NAME 		--결제기관명
+				, MAX(PINFO.INTRST_FREE_YN) 						AS INTRST_FREE_YN 			-- 무이자 여부
+				, MAX(PINFO.INSTMT_TERM_COUNT) 						AS INSTMT_TERM_COUNT		-- 할부기간 
+				, MAX(PINFO.PYMNT_APRV_NO_TEXT) 					AS PYMNT_APRV_NO_TEXT 		-- 겔제승인번호
+				, MAX(PINFO.PYMNT_MEANS_CODE_NAME) 					AS PYMNT_MEANS_CODE_NAME 	--결제/환불 수단 
+				, MAX(PINFO.PYMNT_MEANS_CODE) 						AS PYMNT_MEANS_CODE 		--결제수단 
+				, MAX(PINFO.ESCR_APPLY_YN) 							AS ESCR_APPLY_YN 			--에스크로 적용여부
+		FROM OC_ORDER_PAYMENT OOP 
+		 LEFT OUTER JOIN PAYMENT_INFO PINFO  --JOIN 변경
+				ON OOP.ORDER_NO	= PINFO.ORDER_NO
+		WHERE OOP.ORDER_NO =  #{orderNo, jdbcType=VARCHAR}  --주문번호
+		  AND OOP.PYMNT_STAT_CODE  NOT IN ( '10000' ) 	-- 입금대기 제외
+		GROUP BY OOP.ORDER_NO
+    </select>
+    
+    <select id="selectReceiptPayment" parameterType="kr.co.shop.web.order.model.master.OcOrderPayment" resultType="kr.co.shop.web.order.model.master.OcOrderPayment">
+		/*+ kr.co.shop.web.order.repository.master.OcOrderPaymentDao.selectReceiptPayment [결제 수단 영수증 조회  ] [lsh] */  
+		 SELECT   PYMNT_AMT	
+				, PYMNT_APRV_NO_TEXT -- 겔제승인번호
+		     	, PYMNT_MEANS_CODE --결제수단 
+		     	, ESCR_APPLY_YN --에스크로 적용여부
+		     	, CASH_RCPT_APRV_NO --현금영수증 번호
+		     	, ORDER_NO --주문번호
+		   FROM OC_ORDER_PAYMENT 
+		  WHERE MAIN_PYMNT_MEANS_YN = 'Y'      -- 주결제 수단 여부 
+		    AND PYMNT_MEANS_CODE NOT IN ( '10007','10008' )--구매포인트 , 이벤트 포인트 제외 
+		    AND PYMNT_STAT_CODE  NOT IN ( '10000','10002' ) 	-- 입금대기 제외
+		    AND PYMNT_MEANS_CHNG_DTM IS NULL 	 --결제수단  변경 요청일 NULL
+		    AND ORDER_NO = #{orderNo, jdbcType=VARCHAR}--주문번호
+    </select>
+    
+    
+     <insert id="insertPaymentChange" parameterType="kr.co.shop.web.order.model.master.OcOrderPayment">
+    	 /*+ kr.co.shop.web.order.repository.master.OcOrderPaymentDao.insertPaymentChange [결제 수단 변경  insert 쿼리] [이상호] */
+    	<selectKey resultType="short" keyProperty="orderPymntSeq" order="BEFORE">
+			 	SELECT NVL(MAX(ORDER_PYMNT_SEQ), 0)+1 
+			  FROM OC_ORDER_PAYMENT
+			 WHERE ORDER_NO =  #{orderNo, jdbcType=VARCHAR}
+		</selectKey>
+		
+    	 INSERT INTO OC_ORDER_PAYMENT
+			 ( 
+				order_no
+				, order_pymnt_seq
+				, pymnt_dtm
+				, device_code
+				, main_pymnt_means_yn
+				, pymnt_means_code
+				, pymnt_vndr_code
+				, pymnt_organ_code_text
+				, pymnt_organ_name
+				, pymnt_organ_no_text
+				, pymnt_aprv_no_text
+				, pymnt_todo_amt
+				, pymnt_amt
+				, pymnt_stat_code
+				<choose>
+ 					<when test="intrstFreeYn != null">
+ 						, intrst_free_yn
+ 					</when>				 	
+				</choose>
+				<choose>
+					<when test="instmtTermCount != null">
+						, instmt_term_count
+					</when>				 	
+				</choose>
+				<choose>
+					<when test="cardGbnType != null">
+						, card_gbn_type
+					</when>				 	
+				</choose>
+				<choose>
+					<when test="cardType != null">
+						, card_type
+					</when>				 	
+				</choose>
+				<choose>
+				 	<when test="cardPartCnclPsbltYn != null">
+				  		, card_part_cncl_psblt_yn
+				  	</when>
+				</choose>
+				<choose>
+					<when test="cashRcptIssueYn != null">
+						, cash_rcpt_issue_yn
+					</when>
+				</choose>
+				<choose>
+					<when test="cashRcptAprvNo != null">	 	
+						, cash_rcpt_aprv_no
+					</when>
+				</choose>
+				<choose>
+					<when test="cashRcptDealNo != null">
+			 			, cash_rcpt_deal_no
+			 		</when>
+				</choose>
+				<choose>
+					<when test="escrApplyYn != null">
+			 			, escr_apply_yn
+			 		</when>
+				</choose>
+				<choose>
+					<when test="escrAprvNoText != null">
+			 			, escr_aprv_no_text
+			 		</when>
+				</choose>
+				<choose>
+					<when test="vrtlAcntIssueDtm != null">
+						, vrtl_acnt_issue_dtm
+					</when>
+				</choose>
+				<choose>
+					<when test="vrtlAcntExprDtm != null">
+						, vrtl_acnt_expr_dtm
+					</when>
+				</choose>
+				, pymnt_means_chng_psblt_yn
+				, rspns_code_text
+				, rspns_mesg_text
+				, pymnt_log_info
+				, rgster_no
+				, rgst_dtm
+			  ) 
+
+		VALUES 
+			 ( 
+				#{orderNo, jdbcType=VARCHAR}
+				, #{orderPymntSeq}
+				, <choose>
+					<when test="pymntDtm != null">#{pymntDtm, jdbcType=TIMESTAMP}</when>
+					<otherwise>SYSDATE</otherwise>
+				  </choose>
+				, #{deviceCode, jdbcType=VARCHAR}
+				, #{mainPymntMeansYn, jdbcType=CHAR}
+				, #{pymntMeansCode, jdbcType=VARCHAR}
+				, #{pymntVndrCode, jdbcType=VARCHAR}
+				, #{pymntOrganCodeText, jdbcType=VARCHAR}
+				, #{pymntOrganName, jdbcType=VARCHAR}
+				, #{pymntOrganNoText, jdbcType=VARCHAR}
+				, #{pymntAprvNoText, jdbcType=VARCHAR}
+				, #{pymntTodoAmt, jdbcType=INTEGER}
+				, #{pymntAmt, jdbcType=INTEGER}
+				, #{pymntStatCode, jdbcType=VARCHAR}
+				<choose>
+					<when test="intrstFreeYn != null">
+						 , #{intrstFreeYn, jdbcType=CHAR}
+					</when>				 	
+				</choose>
+				<choose>
+					<when test="instmtTermCount != null">
+						, #{instmtTermCount, jdbcType=TINYINT}
+					</when>				 	
+				</choose>
+				<choose>
+					<when test="cardGbnType != null">
+						, #{cardGbnType, jdbcType=CHAR}
+					</when>				 	
+				</choose>
+				<choose>
+					<when test="cardType != null">
+						, #{cardType, jdbcType=CHAR}
+					</when>				 	
+				</choose>
+				<choose>
+					<when test="cardPartCnclPsbltYn != null">
+				 		, #{cardPartCnclPsbltYn, jdbcType=CHAR}
+				 	</when>
+				</choose>
+				<choose>
+					<when test="cashRcptIssueYn != null">
+						, #{cashRcptIssueYn, jdbcType=CHAR}
+					</when>
+				</choose>
+				<choose>
+					<when test="cashRcptAprvNo != null">	 	
+						, #{cashRcptAprvNo, jdbcType=VARCHAR}
+					</when>
+				</choose>
+				<choose>
+					<when test="cashRcptDealNo != null">
+							 , #{cashRcptDealNo, jdbcType=VARCHAR}
+						</when>
+				</choose>
+				<choose>
+					<when test="escrApplyYn != null">
+							, #{escrApplyYn, jdbcType=CHAR}
+						</when>
+				</choose>
+				<choose>
+					<when test="escrAprvNoText != null">
+							, #{escrAprvNoText, jdbcType=VARCHAR}
+						</when>
+				</choose>
+				, #{pymntMeansChngPsbltYn, jdbcType=CHAR}
+				, #{rspnsCodeText, jdbcType=VARCHAR}
+				, #{rspnsMesgText, jdbcType=VARCHAR}
+				, #{pymntLogInfo, jdbcType=VARCHAR}
+				, #{rgsterNo, jdbcType=VARCHAR}
+				, SYSDATE
+			  )  
+    </insert>
+    
+    
+    <update id="updateOcOrderPaymentAccount" parameterType="kr.co.shop.web.order.model.master.OcOrderPayment">
+		/*+ kr.co.shop.web.order.model.master.OcOrderPaymentDao.updateOcOrderPaymentAccount [결제수단 변경시 결제 성공시] [이상호] */
+		UPDATE OC_ORDER_PAYMENT
+		   SET PYMNT_DTM = SYSDATE
+		     , PYMNT_ORGAN_CODE_TEXT = #{pymntOrganCodeText}
+			 , PYMNT_ORGAN_NAME = #{pymntOrganName}
+			 , PYMNT_ORGAN_NO_TEXT = #{pymntOrganNoText}
+			 , INSTMT_TERM_COUNT = #{instmtTermCount}
+			 , CARD_GBN_TYPE = #{cardGbnType}
+			 , CARD_TYPE = #{cardType}
+			 , PYMNT_APRV_NO_TEXT = #{pymntAprvNoText}
+			 , CASH_RCPT_ISSUE_YN = #{cashRcptIssueYn}
+			 , CASH_RCPT_APRV_NO = #{cashRcptAprvNo}
+			 , CASH_RCPT_DEAL_NO = #{cashRcptDealNo}
+			 , PYMNT_STAT_CODE = #{pymntStatCode}
+			 , RSPNS_CODE_TEXT = #{rspnsCodeText}
+			 , RSPNS_MESG_TEXT = #{rspnsMesgText}
+			 , PYMNT_LOG_INFO = #{pymntLogInfo}
+			 , MODER_NO = #{moderNo}
+			 , MOD_DTM = SYSDATE
+		 WHERE ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+		   AND ORDER_PYMNT_SEQ = #{orderPymntSeq, jdbcType=TINYINT}
+	</update>
+    
+    
+    <update id="updateOcOrderOldPaymentCancel" parameterType="kr.co.shop.web.order.model.master.OcOrderPayment">
+		/*+ kr.co.shop.web.order.model.master.OcOrderPaymentDao.updateOcOrderOldPaymentCancel [결제수단 변경시 이전 결제 취소 업데이트 ] [이상호] */
+		UPDATE OC_ORDER_PAYMENT
+		   SET PYMNT_MEANS_CHNG_DTM = SYSDATE
+		     , PYMNT_STAT_CODE =  #{pymntStatCode, jdbcType=VARCHAR}
+			 , MODER_NO = #{moderNo}
+			 , MOD_DTM = SYSDATE
+		 WHERE ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+		   AND ORDER_PYMNT_SEQ = #{orderPymntSeq, jdbcType=TINYINT}
+	</update>
+	
+	
+	
+	
+	<update id="updateOcOrderPaymenKcpLog" parameterType="kr.co.shop.web.order.model.master.OcOrderPayment">
+		/*+ kr.co.shop.web.order.model.master.OcOrderPaymentDao.updateOcOrderPaymenKcpLog [결제수단 변경시 결제 취소후 로그 ] [이상호] */
+		UPDATE OC_ORDER_PAYMENT
+		   SET 
+		  	 <if test="rspnsCodeText != null"> 
+			  RSPNS_CODE_TEXT = #{rspnsCodeText}
+			 </if>
+			 <if test="rspnsMesgText != null"> 
+			 , RSPNS_MESG_TEXT = #{rspnsMesgText}
+			 </if>
+			 <if test="pymntLogInfo != null"> 
+			 , PYMNT_LOG_INFO = #{pymntLogInfo}
+			 </if>
+			 <if test="moderNo != null"> 
+			 , MODER_NO = #{moderNo}
+			 </if>
+			 , MOD_DTM = SYSDATE
+		 WHERE ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+		   AND ORDER_PYMNT_SEQ = #{orderPymntSeq, jdbcType=TINYINT}
+	</update>
+	
+	
+	
+    
+    
+</mapper>

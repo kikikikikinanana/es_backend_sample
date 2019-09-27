@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.board.repository.master.BdNoticeDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.board.model.master.BdNotice">
+    
+     /*+ kr.co.shop.web.board.repository.master.BdNoticeDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			bd_notice
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+	<select id="selectNoticeCount" parameterType="pageable" resultType="int">
+		/*+ kr.co.shop.web.board.repository.master.BdNoticeDao.selectNoticeCount [공지사항 조회결과 개수] [신인철] */  
+		SELECT <include refid="Paging.totalCount" />
+		  FROM BD_NOTICE NT
+		 WHERE NT.SITE_NO IN ('10000', 'ALL')
+		   AND NT.DISP_YN = 'Y'
+	</select>
+	
+	
+	<select id="selectNoticeDetail" parameterType="kr.co.shop.web.board.model.master.BdNotice" resultType="kr.co.shop.web.board.model.master.BdNotice">
+		/*+ kr.co.shop.web.board.repository.master.BdNoticeDao.selectNoticeDetail [공지사항 상세 조회] [신인철] */
+		SELECT A.NOTC_SEQ
+			 , A.SITE_NO
+			 , A.NOTC_TITLE_TEXT
+			 , A.NOTC_CONT_TEXT
+			 , A.TOP_NOTC_YN
+			 , A.DISP_YN
+			 , A.RGSTER_NO
+			 , TO_CHAR(A.RGST_DTM, 'YYYY.MM.DD') AS RGST_DT
+			 , A.RGST_DTM
+			 , A.MODER_NO
+			 , A.MOD_DTM
+		  FROM BD_NOTICE A
+		 WHERE A.NOTC_SEQ = #{notcSeq, jdbcType = VARCHAR}
+		   AND A.DISP_YN = 'Y'
+	</select>
+		
+	<select id="selectNoticeList" parameterType="pageable" resultType="kr.co.shop.web.board.model.master.BdNotice"> 
+	/*+ kr.co.shop.web.board.repository.master.BdNoticeDao.selectNoticeList [공지사항 메인 조회] [신인철] */
+		SELECT CASE WHEN NT.TOP_IDX IS NULL
+					THEN TO_CHAR(ROW_NUMBER() OVER(ORDER BY NT.TOP_IDX ,NT.RGST_DTM))  
+					ELSE NT.TOP_IDX
+				END TOP_NOTC_CHECK
+			 , NT.NOTC_SEQ
+			 , CASE WHEN NT.SITE_NO = 'ALL'
+			 		THEN '공통'
+			 		ELSE S.SITE_NAME
+				END SITE_NAME
+			 , NT.SITE_NO
+			 , NT.NOTC_TITLE_TEXT
+			 , NT.NOTC_CONT_TEXT
+			 , NT.TOP_NOTC_YN
+			 , NT.DISP_YN
+			 , NT.RGSTER_NO
+  			 , NT.RGST_DTM
+  			 , TO_CHAR(NT.RGST_DTM, 'YYYY.MM.DD') AS RGST_DT
+	  		 , NT.MODER_NO
+  			 , NT.MOD_DTM
+		  FROM (SELECT CASE WHEN AA.TOP_NOTC_YN = 'Y' 
+		  					THEN '공지' 
+		  				END TOP_IDX
+					 , AA.NOTC_SEQ
+					 , AA.SITE_NO
+					 , AA.NOTC_TITLE_TEXT
+					 , AA.NOTC_CONT_TEXT
+					 , AA.TOP_NOTC_YN
+					 , AA.DISP_YN
+					 , AA.RGSTER_NO
+					 , AA.RGST_DTM
+					 , AA.MODER_NO
+					 , AA.MOD_DTM
+				  FROM BD_NOTICE AA
+				 WHERE AA.SITE_NO IN ('10000', 'ALL') 
+				   AND AA.DISP_YN = 'Y' ) NT
+		  LEFT OUTER JOIN SY_SITE S ON NT.SITE_NO = S.SITE_NO
+		 ORDER BY NT.TOP_NOTC_YN DESC, NT.RGST_DTM DESC
+		 <include refid="Paging.mssql" />
+	</select>
+	
+	<select id="selectPrevNoticeDetail" parameterType="kr.co.shop.web.board.model.master.BdNotice" resultType="kr.co.shop.web.board.model.master.BdNotice">
+	/*+ kr.co.shop.web.board.repository.master.BdNoticeDao.selectPrevNoticeDetail [공지사항 이전 글 조회] [신인철] */
+		SELECT 
+			   A.NOTC_SEQ
+			 , A.NOTC_TITLE_TEXT
+			 , A.RGST_DTM
+			 , TO_CHAR(A.RGST_DTM, 'YYYY.MM.DD') AS RGST_DT
+		  FROM BD_NOTICE A
+		 WHERE A.SITE_NO IN ('10000', 'ALL')
+		   AND <![CDATA[ A.NOTC_SEQ < #{notcSeq, jdbcType = INTEGER}]]>
+		   AND A.DISP_YN = 'Y'
+		 ORDER BY NOTC_SEQ DESC
+		 FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<select id="selectNextNoticeDetail" parameterType="kr.co.shop.web.board.model.master.BdNotice" resultType="kr.co.shop.web.board.model.master.BdNotice">
+	/*+ kr.co.shop.web.board.repository.master.BdNoticeDao.selectNextNoticeDetail [공지사항 다음 글 조회] [신인철] */
+		SELECT 
+			   A.NOTC_SEQ
+			 , A.NOTC_TITLE_TEXT
+			 , A.RGST_DTM
+			 , TO_CHAR(A.RGST_DTM, 'YYYY.MM.DD') AS RGST_DT
+		  FROM BD_NOTICE A
+		 WHERE A.SITE_NO IN ('10000', 'ALL')
+		   AND <![CDATA[ A.NOTC_SEQ > #{notcSeq, jdbcType = INTEGER}]]>
+		   AND A.DISP_YN = 'Y'
+		 ORDER BY NOTC_SEQ
+		 FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<select id="selectFooterNotice" resultType="kr.co.shop.web.board.model.master.BdNotice">
+	/*+ kr.co.shop.web.board.repository.master.BdNoticeDao.selectFooterNotice [푸터 공지사항 노출] [신인철] */
+		SELECT
+			   A.NOTC_SEQ
+			 , A.NOTC_TITLE_TEXT
+		  FROM BD_NOTICE A
+		 WHERE A.SITE_NO IN('10000', 'ALL')
+		   AND A.DISP_YN = 'Y'
+		 ORDER BY RGST_DTM DESC
+		 FETCH FIRST 5 ROWS ONLY
+	</select>
+	
+	<select id="selectNoticeCsMain" resultType="kr.co.shop.web.board.model.master.BdNotice">
+	/*+ kr.co.shop.web.board.repository.master.BdNoticeDao.selectNoticeCsMain [MO 고객센터 공지사항 노출] [신인철] */
+		SELECT
+			   A.NOTC_SEQ
+			 , A.NOTC_TITLE_TEXT
+		  FROM BD_NOTICE A
+		 WHERE A.SITE_NO IN('10000', 'ALL')
+		   AND A.DISP_YN = 'Y'
+		 ORDER BY RGST_DTM DESC
+		 FETCH FIRST 3 ROWS ONLY
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,1079 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Product">
+
+	<!-- 상품목록 조회 select절 -->
+	<sql id="select">
+		<include refid="Product.select-product"/>,
+		FN_PRDT_PROMO_PRICE(INNER_PRODUCT.prdt_no)				AS display_product_price,<!-- 판매가와 프로모션가 중 제일 적은 가격이 조회됨 -->
+		FN_DISCOUNT_RATE(INNER_PRODUCT.prdt_no)					AS display_discount_rate<!-- 최저가에 대한 할인율 -->
+		<if test="useOtherTables">
+			<choose>
+				<when test="type == @kr.co.shop.web.product.model.master.PageableProduct@TYPE_LIST">
+					,
+					<include refid="Product.select-product-option"/>,
+					<include refid="Product.select-product-option-price"/>,
+					<include refid="Product.select-product-price"/>,
+					<include refid="Product.select-product-image-title"/>,
+					<include refid="Product.select-product-review"/>,
+					<include refid="Product.select-icon"/>,
+					<include refid="Product.select-brand"/>
+				</when>
+				<when test="type == @kr.co.shop.web.product.model.master.PageableProduct@TYPE_MAJOR">
+					,
+					<include refid="Product.select-product-option"/>,
+					<include refid="Product.select-product-option-price"/>,
+					<include refid="Product.select-product-price"/>,
+					<include refid="Product.select-product-image-title"/>,
+					<include refid="Product.select-product-image-extra"/>,
+					<include refid="Product.select-product-review"/>,
+					<include refid="Product.select-icon"/>,
+					<include refid="Product.select-brand"/>,
+					<include refid="Product.select-event-draw"/>,
+					<include refid="Product.select-product-type"/>
+				</when>
+				<when test="type == @kr.co.shop.web.product.model.master.PageableProduct@TYPE_DETAIL">
+					,
+					<include refid="Product.select-product-detail"/>,
+					<include refid="Product.select-product-image-detail"/>,
+					<include refid="Product.select-product-notice"/>,
+					<include refid="Product.select-product-precaution"/>,
+					<include refid="Product.select-product-authority"/>,
+					<include refid="Product.select-promotion"/>
+				</when>
+				<when test="type == @kr.co.shop.web.product.model.master.PageableProduct@TYPE_LIST_RELATED_COLOR">
+					,
+					<include refid="Product.select-product-image-title"/>,
+					<include refid="Product.select-product-price"/>
+				</when>
+				<when test="type == @kr.co.shop.web.product.model.master.PageableProduct@TYPE_LIST_RELATED_GOODS">
+					,
+					<include refid="Product.select-product-image-title"/>,
+					<include refid="Product.select-product-price"/>,
+					<include refid="Product.select-product-option"/>,
+					<include refid="Product.select-product-option-price"/>
+				</when>
+			</choose>
+		</if>
+		<if test="memberNo != null and memberNo != ''">
+			,
+			<include refid="Product.select-member-interest-product"/>
+		</if>
+	</sql>
+	
+	<!-- 상품목록 조회 from절 -->
+	<sql id="from">
+		<choose>
+			<when test="mappingType != null and mappingType == @kr.co.shop.web.product.model.master.PageableProduct@MAPPING_TYPE_CUSTOM">
+				${mappingTableName} A
+				LEFT OUTER JOIN pd_product INNER_PRODUCT ON A.prdt_no = INNER_PRODUCT.prdt_no
+			</when>
+			<otherwise>
+				pd_product INNER_PRODUCT
+			</otherwise>
+		</choose>
+		<if test="useOtherTables">
+			<choose>
+				<when test="type == @kr.co.shop.web.product.model.master.PageableProduct@TYPE_LIST">
+					<include refid="Product.from-product-price"/>
+					<include refid="Product.from-product-option"/>
+					<include refid="Product.from-product-option-price"/>
+					<include refid="Product.from-product-image-product-title"/>
+					<include refid="Product.from-product-icon"/>
+					<include refid="Product.from-brand"/>
+					<include refid="Product.from-product-review"/>
+				</when>
+				<when test="type == @kr.co.shop.web.product.model.master.PageableProduct@TYPE_MAJOR">
+					<include refid="Product.from-product-price"/>
+					<include refid="Product.from-product-option"/>
+					<include refid="Product.from-product-option-price"/>
+					<include refid="Product.from-product-image-product-title"/>
+					<include refid="Product.from-product-image-product-extra"/>
+					<include refid="Product.from-product-icon"/>
+					<include refid="Product.from-brand"/>
+					<include refid="Product.from-product-review"/>
+					<include refid="Product.from-event-draw"/>
+				</when>
+				<when test="type == @kr.co.shop.web.product.model.master.PageableProduct@TYPE_DETAIL">
+					<include refid="Product.from-product-detail"/>
+					<include refid="Product.from-product-image-detail"/>
+					<include refid="Product.from-product-notice"/>
+					<include refid="Product.from-product-precaution"/>
+					<include refid="Product.from-product-authority"/>
+					<include refid="Product.from-promotion-discount-multi-shoues"/><!-- 다족구매여부 -->
+				</when>
+				<when test="type == @kr.co.shop.web.product.model.master.PageableProduct@TYPE_LIST_RELATED_COLOR">
+					<include refid="Product.from-product-image-product-title"/>
+					<include refid="Product.from-product-price"/>
+				</when>
+				<when test="type == @kr.co.shop.web.product.model.master.PageableProduct@TYPE_LIST_RELATED_GOODS">
+					<include refid="Product.from-product-image-product-title"/>
+					<include refid="Product.from-product-price"/>
+					<include refid="Product.from-product-option"/>
+					<include refid="Product.from-product-option-price"/>
+				</when>
+			</choose>
+		</if>
+		<if test="memberNo != null and memberNo != ''">
+			<include refid="Product.from-member-interest-product"/>
+		</if>
+	</sql>
+	
+	<!-- 상품목록 조회 where절 -->
+	<sql id="where">
+		<if test="prdtNoList != null"><!-- 상품번호에 의한 조회 -->
+			AND INNER_PRODUCT.prdt_no IN
+			<foreach collection="prdtNoList" item="item" open="(" close=")" separator=",">
+				#{item, jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="prdtTypeCodes != null">
+			AND INNER_PRODUCT.prdt_type_code IN
+			<foreach collection="prdtTypeCodes" item="item" open="(" close=")" separator=",">
+				#{item, jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<choose><!-- 판매상태 -->
+			<when test="conditionLaunchProduct == @kr.co.shop.web.product.model.master.PageableProduct@CONDITION_LAUNCH_PRODUCT_ALL"><!-- 런칭상품조건 - 전체(런칭됨+출시예정상품) -->
+				AND
+					(
+						(
+							INNER_PRODUCT.sell_start_dtm &gt;= ADD_MONTHS(SYSDATE, -6)<!-- 판매시작일이 6개월 이내 -->
+							AND INNER_PRODUCT.sell_stat_code != '${@kr.co.shop.constant.CommonCode@SELL_STAT_CODE_PREPARE}'<!-- 판매상태코드가 판매준비중이 아닌 상품 -->
+						)
+						OR
+						(
+							INNER_PRODUCT.sell_start_dtm &gt;= SYSDATE<!-- 판매시작일이 오늘보다 큼 -->
+							AND INNER_PRODUCT.sell_stat_code = '${@kr.co.shop.constant.CommonCode@SELL_STAT_CODE_PREPARE}'<!-- 판매상태코드가 판매준비중인 상품 -->
+						)
+					)
+			</when>
+			<when test="conditionLaunchProduct == @kr.co.shop.web.product.model.master.PageableProduct@CONDITION_LAUNCH_PRODUCT_LAUNCHED"><!-- 런칭상품조건 - 런칭됨 (조건 : 6개월 이내 판매시작된 상품, 판매대기중이 아닌 상품, 승인완료 상품) -->
+				AND INNER_PRODUCT.sell_start_dtm &gt;= ADD_MONTHS(SYSDATE, -6)<!-- 판매시작일이 6개월 이내 -->
+				AND INNER_PRODUCT.sell_stat_code != '${@kr.co.shop.constant.CommonCode@SELL_STAT_CODE_PREPARE}'<!-- 판매상태코드가 판매준비중이 아닌 상품 -->
+			</when>
+			<when test="conditionLaunchProduct == @kr.co.shop.web.product.model.master.PageableProduct@CONDITION_LAUNCH_PRODUCT_UPCOMMING"><!-- 런칭상품조건 - 출시예정상품 (조건 : 판매시작되지 않은 상품, 판매대기중인 상품, 승인완료 상품) -->
+				AND INNER_PRODUCT.sell_start_dtm &gt;= SYSDATE<!-- 판매시작일이 오늘보다 큼 -->
+				AND INNER_PRODUCT.sell_stat_code = '${@kr.co.shop.constant.CommonCode@SELL_STAT_CODE_PREPARE}'<!-- 판매상태코드가 판매준비중인 상품 -->
+			</when>
+			<otherwise><!-- 런칭상품조건 - 미적용 -->
+				AND INNER_PRODUCT.sell_stat_code != '${@kr.co.shop.constant.CommonCode@SELL_STAT_CODE_STOP}'<!-- 판매상태코드. 판매중지 -->
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="siteNo == '10000'"><!-- 아트사이트인경우 -->
+				<choose>
+					<when test="chnnlNo == '10000'"><!-- ART채널인경우 -->
+						AND INNER_PRODUCT.site_no != '10001'<!-- 사이트번호 != 온더스팟 -->
+						AND INNER_PRODUCT.chnnl_no != '10003'<!-- 채널번호 != 온더스팟 -->
+					</when>
+					<when test="chnnlNo == '10001'"><!-- ABC마트채널인경우 -->
+						AND INNER_PRODUCT.site_no = '10000'<!-- 사이트번호 = 아트 -->
+						AND INNER_PRODUCT.chnnl_no IN ( '10000', '10001' )<!-- 채널번호 = 아트 or ABC -->
+					</when>
+					<when test="chnnlNo == '10002'"><!-- GS채널인경우 -->
+						AND INNER_PRODUCT.site_no = '10000'<!-- 사이트번호 = 아트 -->
+						AND INNER_PRODUCT.chnnl_no IN ( '10000', '10002' )<!-- 채널번호 = 아트 or 그랜드스테이지 -->
+					</when>
+				</choose>
+			</when>
+			<when test="siteNo == '10001' and chnnlNo == '10003'"><!-- OTS사이트이면서 OTS채널인경우 -->
+				AND INNER_PRODUCT.site_no = '10001'<!-- 사이트번호 = 온더스팟 -->
+				AND INNER_PRODUCT.chnnl_no = '10003'<!-- 채널번호 = 온더스팟 -->
+			</when>
+			<otherwise>
+				AND INNER_PRODUCT.site_no = #{siteNo, jdbcType=VARCHAR}<!-- 사이트번호 -->
+				AND INNER_PRODUCT.chnnl_no = #{chnnlNo, jdbcType=VARCHAR}<!-- 채널번호 -->
+			</otherwise>
+		</choose>
+		<if test="conditionSellStartDate != null and conditionSellStartDate != ''">
+			AND INNER_PRODUCT.sell_start_dtm &gt;= TO_DATE(#{conditionSellStartDate, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+		</if>
+		<if test="conditionBrandNo != null and conditionBrandNo != ''">
+			AND INNER_PRODUCT.brand_no = #{conditionBrandNo, jdbcType=VARCHAR}
+		</if>
+		AND INNER_PRODUCT.aprv_stat_code = '${@kr.co.shop.constant.CommonCode@APRV_STAT_CODE_CONFIRM}'<!-- 승인상태 = 승인완료 -->
+		AND INNER_PRODUCT.vndr_suspd_yn = '${@kr.co.shop.common.constant.BaseConst@BOOLEAN_FALSE}'<!-- 입점업체거래중지여부 = 중지안됨 -->
+		AND INNER_PRODUCT.disp_yn = '${@kr.co.shop.common.constant.BaseConst@BOOLEAN_TRUE}'<!-- 전시여부 = 전시중 -->
+		AND INNER_PRODUCT.use_yn = '${@kr.co.shop.common.constant.BaseConst@BOOLEAN_TRUE}'<!-- 사용여부 = 전시중 -->
+		<if test="conditionApprovedProductWithinDateRange != null and conditionApprovedProductWithinDateRange.isEmpty() == false"><!-- 상품승인일자기준 범위 조건 -->
+			<foreach collection="conditionApprovedProductWithinDateRange.entrySet()" index="key" item="value">
+				AND INNER_PRODUCT.aprver_dtm &gt;= DATEADD(${key}, #{value, jdbcType=INTEGER}, SYSDATE)
+			</foreach>
+		</if>
+		<if test="conditionDiscountRateGreaterThan != null and conditionDiscountRateGreaterThan != 0"><!-- 상품할인율기준 조건 -->
+			AND INNER_PRODUCT.display_discount_rate &gt;= #{conditionDiscountRateGreaterThan, jdbcType=INTEGER}
+		</if>
+		<if test="aconnectDispYn != null and aconnectDispYn != ''">
+			AND INNER_PRODUCT.aconnect_disp_yn = #{aconnectDispYn, jdbcType=VARCHAR}<!-- A커텍트 사용여부 -->
+		</if>
+	</sql>
+	
+	<sql id="with-table-ctgr-cte">
+		WITH ctgr_cte (ctgr_no, up_ctgr_no, leaf_ctgr_yn)
+			AS (
+				SELECT
+					A.ctgr_no, 
+					A.up_ctgr_no, 
+					A.leaf_ctgr_yn 
+				FROM
+					dp_category A
+				WHERE
+					<choose>
+						<when test="conditionCategoryRelationBy != null and conditionCategoryRelationBy == @kr.co.shop.web.product.model.master.PageableProduct@CONDITION_CATEGORY_RELATION_BY_ROOT">
+							(A.up_ctgr_no IS NULL OR A.up_ctgr_no = '')<!-- 루트 카테고리에 의한 연결 -->
+						</when>
+						<when test="conditionCategoryRelationBy != null and conditionCategoryRelationBy == @kr.co.shop.web.product.model.master.PageableProduct@CONDITION_CATEGORY_RELATION_BY_NO">
+							A.ctgr_no = #{conditionCategoryRelationValue, jdbcType=VARCHAR}<!-- 카테고리 번호에 의한 연결 -->
+						</when>
+						<when test="conditionCategoryRelationBy != null and conditionCategoryRelationBy == @kr.co.shop.web.product.model.master.PageableProduct@CONDITION_CATEGORY_RELATION_BY_NAME">
+							A.ctgr_name = #{conditionCategoryRelationValue, jdbcType=VARCHAR}<!-- 카테고리 이름에 의한 연결 -->
+						</when>
+					</choose>
+					<if test="siteNo != null and siteNo != ''">
+						AND A.site_no = #{siteNo, jdbcType=VARCHAR}
+					</if>
+					<if test="chnnlNo != null and chnnlNo != ''">
+						AND A.chnnl_no = #{chnnlNo, jdbcType=VARCHAR}
+					</if>
+					AND A.use_yn = 'Y'
+					AND A.disp_yn = 'Y'
+				UNION ALL
+				SELECT
+					B.ctgr_no,
+					B.up_ctgr_no, 
+					B.leaf_ctgr_yn
+				FROM
+					dp_category B, ctgr_cte C
+				WHERE
+					B.up_ctgr_no = C.ctgr_no
+					<if test="siteNo != null and siteNo != ''">
+						AND B.site_no = #{siteNo, jdbcType=VARCHAR}
+					</if>
+					<if test="chnnlNo != null and chnnlNo != ''">
+						AND B.chnnl_no = #{chnnlNo, jdbcType=VARCHAR}
+					</if>
+					AND B.use_yn = 'Y'
+					AND B.disp_yn = 'Y'
+			)
+	</sql>
+	
+	<!-- 상품 목록 전체 갯수 조회 -->
+	<sql id="getTotalCountByPaging">
+		<if test="mappingType != null and mappingType == @kr.co.shop.web.product.model.master.PageableProduct@MAPPING_TYPE_CATEGORY"><!-- 하위카테고리번호 조회용 가상테이블 -->
+			<include refid="Product.with-table-ctgr-cte"/>
+		</if>
+		SELECT
+			COUNT(1) AS total_count
+		FROM
+			(
+				SELECT
+					INNER_PRODUCT_FILTERED.prdt_no
+				FROM
+					(
+						SELECT
+							INNER_PRODUCT.prdt_no,
+							INNER_PRODUCT.display_discount_rate
+						FROM
+							(
+								SELECT
+									INNER_PRODUCT.*,
+									FN_DISCOUNT_RATE(INNER_PRODUCT.prdt_no)					AS display_discount_rate<!-- 최저가에 대한 할인율 -->
+								FROM
+									<choose>
+										<when test="mappingType != null">
+											<choose>
+												<when test="mappingType == @kr.co.shop.web.product.model.master.PageableProduct@MAPPING_TYPE_CUSTOM"><!-- 커스텀 테이블 매핑 -->
+													${mappingTableName} A
+													LEFT OUTER JOIN pd_product INNER_PRODUCT ON A.prdt_no = INNER_PRODUCT.prdt_no
+												</when>
+												<when test="mappingType == @kr.co.shop.web.product.model.master.PageableProduct@MAPPING_TYPE_CATEGORY"><!-- 하위 카테고리들과 연결된 모든 상품을 연결 -->
+													ctgr_cte INNER_CATEGORY
+													LEFT JOIN dp_category_product A ON INNER_CATEGORY.ctgr_no = A.ctgr_no
+													LEFT JOIN pd_product INNER_PRODUCT ON A.prdt_no = INNER_PRODUCT.prdt_no
+												</when>
+											</choose>
+										</when>
+										<otherwise>
+											pd_product INNER_PRODUCT
+										</otherwise>
+									</choose>
+									<where>
+										<if test="mappingType != null and mappingType == @kr.co.shop.web.product.model.master.PageableProduct@MAPPING_TYPE_CUSTOM">
+											<if test="conditionColumnString != null"><!-- 문자열 equal 조건 추가 -->
+												<foreach collection="conditionColumnString.entrySet()" index="key" item="value">
+													AND A.${key} = #{value, jdbcType=VARCHAR}
+												</foreach>
+											</if>
+											<if test="conditionColumnInteger != null"><!-- 숫자형 equal 조건 추가 -->
+												<foreach collection="conditionColumnInteger.entrySet()" index="key" item="value">
+													AND A.${key} = #{value, jdbcType=INTEGER}
+												</foreach>
+											</if>
+										</if>
+									</where>
+							) INNER_PRODUCT
+						<where>
+							<include refid="Product.where"/>
+						</where>
+					) INNER_PRODUCT_FILTERED
+				GROUP BY
+					INNER_PRODUCT_FILTERED.prdt_no
+			) INNER_PRODUCT_GROUPED
+	</sql>
+	
+	<!-- 상품 목록 조회 -->
+	<sql id="getListByPaging">
+		<if test="mappingType != null and mappingType == @kr.co.shop.web.product.model.master.PageableProduct@MAPPING_TYPE_CATEGORY"><!-- 하위카테고리번호 조회용 가상테이블 -->
+			<include refid="Product.with-table-ctgr-cte"/>
+		</if>
+		SELECT
+			<include refid="Product.select-product"/>,
+			<include refid="Product.select-product-applying-price"/>,
+			<include refid="Product.select-product-price"/>,
+			<!-- <include refid="Product.select-product-option"/>, -->
+			<include refid="Product.select-product-option-group"/>,
+			<include refid="Product.select-product-option-price"/>,
+			<include refid="Product.select-product-image-title"/>,
+			<include refid="Product.select-icon"/>,
+			<include refid="Product.select-brand"/>
+			<if test="memberNo != null and memberNo != ''">
+				,
+				<include refid="Product.select-member-interest-product"/>
+			</if>
+		FROM
+			(
+				SELECT
+					INNER_PRODUCT_ORDER.*
+				FROM
+					(
+						SELECT
+							INNER_PRODUCT.*
+						FROM
+							(
+								SELECT
+									<include refid="Product.select-product"/>,
+									<include refid="Product.select-product-review"/>,<!-- 상품평순 정렬을 위해 필요 -->
+									<if test="mappingType != null and mappingType == @kr.co.shop.web.product.model.master.PageableProduct@PAGING_SORT_TYPE_CUSTOM">
+										<if test="sortColumn != null and sortColumn != ''"><!-- 커스텀매핑 시 정렬을 위한 select추가 -->
+											A.${sortColumn},
+										</if>
+									</if>
+									FN_PRDT_PROMO_PRICE(INNER_PRODUCT.prdt_no)				AS display_product_price,<!-- 판매가와 프로모션가 중 제일 적은 가격이 조회됨 -->
+									FN_DISCOUNT_RATE(INNER_PRODUCT.prdt_no)					AS display_discount_rate<!-- 최저가에 대한 할인율 -->
+								FROM
+									<choose>
+										<when test="mappingType != null">
+											<choose>
+												<when test="mappingType == @kr.co.shop.web.product.model.master.PageableProduct@MAPPING_TYPE_CUSTOM"><!-- 커스텀 테이블 매핑 -->
+													${mappingTableName} A
+													LEFT OUTER JOIN pd_product INNER_PRODUCT ON A.prdt_no = INNER_PRODUCT.prdt_no
+												</when>
+												<when test="mappingType == @kr.co.shop.web.product.model.master.PageableProduct@MAPPING_TYPE_CATEGORY"><!-- 하위 카테고리들과 연결된 모든 상품을 연결 -->
+													ctgr_cte INNER_CATEGORY
+													LEFT JOIN dp_category_product A ON INNER_CATEGORY.ctgr_no = A.ctgr_no
+													LEFT JOIN pd_product INNER_PRODUCT ON A.prdt_no = INNER_PRODUCT.prdt_no
+												</when>
+											</choose>
+										</when>
+										<otherwise>
+											pd_product INNER_PRODUCT
+										</otherwise>
+									</choose>
+									<include refid="Product.from-product-review"/><!-- 상품평순 정렬을 위해 필요 -->
+								<where>
+									<if test="mappingType != null and mappingType == @kr.co.shop.web.product.model.master.PageableProduct@MAPPING_TYPE_CUSTOM">
+										<if test="conditionColumnString != null"><!-- 문자열 equal 조건 추가 -->
+											<foreach collection="conditionColumnString.entrySet()" index="key" item="value">
+												AND A.${key} = #{value, jdbcType=VARCHAR}
+											</foreach>
+										</if>
+										<if test="conditionColumnInteger != null"><!-- 숫자형 equal 조건 추가 -->
+											<foreach collection="conditionColumnInteger.entrySet()" index="key" item="value">
+												AND A.${key} = #{value, jdbcType=INTEGER}
+											</foreach>
+										</if>
+									</if>
+								</where>
+							) INNER_PRODUCT
+						<where>
+							<include refid="Product.where"/>
+						</where>
+					) INNER_PRODUCT_ORDER
+				<if test="pagingSortType != null">
+				ORDER BY
+					<choose>
+						<when test="pagingSortType == @kr.co.shop.web.product.model.master.PageableProduct@PAGING_SORT_TYPE_NEWEST">
+							INNER_PRODUCT_ORDER.aprver_dtm DESC<!-- 신상품순 -->
+						</when>
+						<when test="pagingSortType == @kr.co.shop.web.product.model.master.PageableProduct@PAGING_SORT_TYPE_BESTEST">
+							<!-- 베스트상품순 --><!-- TODO 주문 배치테이블 참고해야함. 아직 생성되지 않음. -->
+						</when>
+						<when test="pagingSortType == @kr.co.shop.web.product.model.master.PageableProduct@PAGING_SORT_TYPE_LOW_PRICE">
+							INNER_PRODUCT_ORDER.display_product_price ASC<!-- 낮은가격순 -->
+						</when>
+						<when test="pagingSortType == @kr.co.shop.web.product.model.master.PageableProduct@PAGING_SORT_TYPE_HIGH_PRICE">
+							INNER_PRODUCT_ORDER.display_product_price DESC<!-- 높은가격순 -->
+						</when>
+						<when test="pagingSortType == @kr.co.shop.web.product.model.master.PageableProduct@PAGING_SORT_TYPE_EVALUATION">
+							INNER_PRODUCT_ORDER.bd_rv_review_count DESC<!-- 상품평순 -->
+						</when>
+						<when test="pagingSortType == @kr.co.shop.web.product.model.master.PageableProduct@PAGING_SORT_TYPE_CUSTOM">
+							INNER_PRODUCT_ORDER.${sortColumn} ${sortType}<!-- 커스텀정렬기준순 -->
+						</when>
+						<when test="pagingSortType == @kr.co.shop.web.product.model.master.PageableProduct@PAGING_SORT_TYPE_LOW_DISCOUNT_RATE">
+							INNER_PRODUCT_ORDER.display_product_price ASC<!-- 할인율낮은순 -->
+						</when>
+						<when test="pagingSortType == @kr.co.shop.web.product.model.master.PageableProduct@PAGING_SORT_TYPE_HIGH_DISCOUNT_RATE">
+							INNER_PRODUCT_ORDER.display_product_price DESC<!-- 할인율높은순 -->
+						</when>
+						<when test="pagingSortType == @kr.co.shop.web.product.model.master.PageableProduct@PAGING_SORT_TYPE_PAST_APPROVAL_DATE">
+							INNER_PRODUCT_ORDER.aprver_dtm ASC<!-- 승인일자과거순 -->
+						</when>
+						<when test="pagingSortType == @kr.co.shop.web.product.model.master.PageableProduct@PAGING_SORT_TYPE_RECENT_APPROVAL_DATE">
+							INNER_PRODUCT_ORDER.aprver_dtm DESC<!-- 승인일자최근순 -->
+						</when>
+						<otherwise><!-- 기본 값 -->
+							INNER_PRODUCT_ORDER.rgst_dtm DESC
+						</otherwise>
+					</choose>
+					OFFSET (#{pageNum, jdbcType=INTEGER} - 1) * #{rowsPerPage, jdbcType=INTEGER} ROWS FETCH NEXT #{rowsPerPage, jdbcType=INTEGER} ROWS ONLY
+				</if>
+			) INNER_PRODUCT
+			<include refid="Product.from-product-price"/>
+			<!-- <include refid="Product.from-product-option"/> -->
+			<include refid="Product.from-product-option-group"/>
+			<include refid="Product.from-product-option-price"/>
+			<include refid="Product.from-product-image-product-title"/>
+			<include refid="Product.from-product-icon"/>
+			<include refid="Product.from-brand"/>
+			<if test="memberNo != null and memberNo != ''">
+				<include refid="Product.from-member-interest-product"/>
+			</if>
+	</sql>
+	
+	<sql id="select-product">
+		INNER_PRODUCT.prdt_no									AS prdt_no,
+		INNER_PRODUCT.prdt_type_code							AS prdt_type_code,
+		INNER_PRODUCT.site_no									AS site_no,
+		INNER_PRODUCT.chnnl_no									AS chnnl_no,
+		INNER_PRODUCT.prdt_name									AS prdt_name,
+		INNER_PRODUCT.eng_prdt_name								AS eng_prdt_name,
+		INNER_PRODUCT.vndr_no									AS vndr_no,
+		INNER_PRODUCT.vndr_prdt_no_text							AS vndr_prdt_no_text,
+		INNER_PRODUCT.mmny_prdt_yn								AS mmny_prdt_yn,
+		INNER_PRODUCT.brand_no									AS brand_no,
+		INNER_PRODUCT.brand_sort_seq							AS brand_sort_seq,
+		INNER_PRODUCT.org_place_code							AS org_place_code,
+		INNER_PRODUCT.style_info								AS style_info,
+		INNER_PRODUCT.prdt_color_info							AS prdt_color_info,
+		INNER_PRODUCT.mnftr_name								AS mnftr_name,
+		INNER_PRODUCT.std_ctgr_no								AS std_ctgr_no,
+		INNER_PRODUCT.stdr_ctgr_no								AS stdr_ctgr_no,
+		INNER_PRODUCT.cntc_prdt_setup_yn						AS cntc_prdt_setup_yn,
+		INNER_PRODUCT.rltn_goods_setup_yn						AS rltn_goods_setup_yn,
+		INNER_PRODUCT.add_optn_setup_yn							AS add_optn_setup_yn,
+		INNER_PRODUCT.size_chart_disp_yn						AS size_chart_disp_yn,
+		INNER_PRODUCT.size_chart_seq							AS size_chart_seq,
+		INNER_PRODUCT.emp_dscnt_yn								AS emp_dscnt_yn,
+		INNER_PRODUCT.order_mnfct_yn							AS order_mnfct_yn,
+		INNER_PRODUCT.dprc_except_yn							AS dprc_except_yn,
+		INNER_PRODUCT.store_pickup_psblt_yn						AS store_pickup_psblt_yn,
+		INNER_PRODUCT.free_dlvy_yn								AS free_dlvy_yn,
+		INNER_PRODUCT.stock_intgr_yn							AS stock_intgr_yn,
+		INNER_PRODUCT.stock_un_intgr_rsn_code					AS stock_un_intgr_rsn_code,
+		INNER_PRODUCT.stock_mgmt_yn								AS stock_mgmt_yn,
+		INNER_PRODUCT.buy_limit_yn								AS buy_limit_yn,
+		INNER_PRODUCT.min_buy_psblt_qty							AS min_buy_psblt_qty,
+		INNER_PRODUCT.day_max_buy_psblt_qty						AS day_max_buy_psblt_qty,
+		INNER_PRODUCT.max_buy_psblt_qty							AS max_buy_psblt_qty,
+		INNER_PRODUCT.item_code									AS item_code,
+		INNER_PRODUCT.gender_gbn_code							AS gender_gbn_code,
+		INNER_PRODUCT.disp_flag_text								AS disp_flag_text,
+		INNER_PRODUCT.srch_psblt_yn								AS srch_psblt_yn,
+		INNER_PRODUCT.srch_key_word_text						AS srch_key_word_text,
+		INNER_PRODUCT.wrhs_alert_yn								AS wrhs_alert_yn,
+		INNER_PRODUCT.sell_start_dtm							AS sell_start_dtm,
+		INNER_PRODUCT.sell_end_dtm								AS sell_end_dtm,
+		INNER_PRODUCT.rsv_prdt_yn								AS rsv_prdt_yn,
+		INNER_PRODUCT.rsv_dlvy_ymd								AS rsv_dlvy_ymd,
+		INNER_PRODUCT.afflts_send_yn								AS afflts_send_yn,
+		INNER_PRODUCT.aconnect_disp_yn							AS aconnect_disp_yn,
+		INNER_PRODUCT.disp_yn									AS disp_yn,
+		INNER_PRODUCT.igrmall_disp_except_yn					AS igrmall_disp_except_yn,
+		INNER_PRODUCT.vndr_suspd_yn								AS vndr_suspd_yn,
+		INNER_PRODUCT.aprv_stat_code							AS aprv_stat_code,
+		INNER_PRODUCT.sell_stat_code							AS sell_stat_code,
+		INNER_PRODUCT.use_yn									AS use_yn,
+		-- INNER_PRODUCT.rgster_no								AS rgster_no,
+		INNER_PRODUCT.rgst_dtm									AS rgst_dtm,
+		-- INNER_PRODUCT.aprver_no								AS aprver_no,
+		INNER_PRODUCT.aprver_dtm								AS aprver_dtm,
+		-- INNER_PRODUCT.moder_no								AS moder_no,
+		INNER_PRODUCT.mod_dtm									AS mod_dtm
+	</sql>
+	<sql id="select-product-applying-price">
+		INNER_PRODUCT.display_product_price						AS display_product_price,<!-- 판매가와 프로모션가 중 제일 적은 가격이 조회됨 -->
+		INNER_PRODUCT.display_discount_rate						AS display_discount_rate<!-- 최저가에 대한 할인율 -->
+	</sql>
+	<sql id="select-product-price">
+		INNER_PRODUCT_PRICE.prdt_no								AS pc_prdt_no,
+		INNER_PRODUCT_PRICE.prdt_price_hist_seq					AS pc_prdt_price_hist_seq,
+		INNER_PRODUCT_PRICE.normal_amt							AS pc_normal_amt,
+		INNER_PRODUCT_PRICE.sell_amt							AS pc_sell_amt,
+		INNER_PRODUCT_PRICE.erp_dscnt_rate						AS pc_erp_dscnt_rate,
+		INNER_PRODUCT_PRICE.onln_dscnt_rate						AS pc_onln_dscnt_rate,
+		INNER_PRODUCT_PRICE.emp_dscnt_rate						AS pc_emp_dscnt_rate
+	</sql>
+	<sql id="select-product-option">
+		INNER_PRODUCT_OPTION.prdt_no							AS po_prdt_no,
+		INNER_PRODUCT_OPTION.prdt_optn_no						AS po_prdt_optn_no,
+		INNER_PRODUCT_OPTION.optn_name							AS po_optn_name,
+		INNER_PRODUCT_OPTION.add_optn1_text						AS po_add_optn1_text,
+		INNER_PRODUCT_OPTION.add_optn2_text						AS po_add_optn2_text,
+		INNER_PRODUCT_OPTION.total_stock_qty					AS po_total_stock_qty,
+		INNER_PRODUCT_OPTION.total_order_qty					AS po_total_order_qty,
+		INNER_PRODUCT_OPTION.order_psblt_qty					AS po_order_psblt_qty,
+		INNER_PRODUCT_OPTION.vndr_prdt_no_text					AS po_vndr_prdt_no_text,
+		INNER_PRODUCT_OPTION.sell_stat_code						AS po_sell_stat_code,
+		INNER_PRODUCT_OPTION.sold_out_rsn_text					AS po_sold_out_rsn_text,
+		INNER_PRODUCT_OPTION.sort_seq							AS po_sort_seq,
+		INNER_PRODUCT_OPTION.use_yn								AS po_use_yn,
+		-- INNER_PRODUCT_OPTION.rgster_no						AS po_rgster_no,
+		-- INNER_PRODUCT_OPTION.rgst_dtm						AS po_rgst_dtm,
+		-- INNER_PRODUCT_OPTION.moder_no						AS po_moder_no,
+		-- INNER_PRODUCT_OPTION.mod_dtm							AS po_mod_dtm,
+		INNER_PRODUCT_OPTION.stock_qty							AS po_stock_qty
+	</sql>
+	<sql id="select-product-option-group"><!-- 상품 목록 조회 시에 사용 -->
+		INNER_PRODUCT_OPTION.prdt_no							AS po_prdt_no,
+		INNER_PRODUCT_OPTION.optn_name							AS po_optn_name,
+		INNER_PRODUCT_OPTION.order_psblt_qty					AS po_order_psblt_qty,
+		INNER_PRODUCT_OPTION.sell_stat_code						AS po_sell_stat_code,
+		INNER_PRODUCT_OPTION.stock_qty							AS po_stock_qty
+	</sql>
+	<sql id="select-product-option-price">
+		INNER_PRODUCT_OPTION_PRICE.prdt_no						AS po_pc_prdt_no,
+		INNER_PRODUCT_OPTION_PRICE.prdt_optn_no					AS po_pc_prdt_optn_no,
+		INNER_PRODUCT_OPTION_PRICE.sell_price_hist_seq			AS po_pc_sell_price_hist_seq,
+		NVL(INNER_PRODUCT_OPTION_PRICE.optn_add_amt, 0)		AS po_pc_optn_add_amt
+		-- INNER_PRODUCT_OPTION_PRICE.apply_start_dtm			AS po_pc_apply_start_dtm
+		-- INNER_PRODUCT_OPTION_PRICE.apply_end_dtm				AS po_pc_apply_end_dtm
+		-- INNER_PRODUCT_OPTION_PRICE.rgster_no					AS po_pc_rgster_no
+		-- INNER_PRODUCT_OPTION_PRICE.rgst_dtm					AS po_pc_rgst_dtm
+	</sql>
+	<sql id="select-product-detail">
+		INNER_PRODUCT_DETAIL.prdt_no							AS pd_prdt_no,
+		INNER_PRODUCT_DETAIL.device_code						AS pd_device_code,
+		INNER_PRODUCT_DETAIL.prdt_dtl_info						AS pd_prdt_dtl_info,
+		INNER_PRODUCT_DETAIL.sort_seq							AS pd_sort_seq
+		-- INNER_PRODUCT_DETAIL.rgster_no						AS pd_rgster_no
+		-- INNER_PRODUCT_DETAIL.rgst_dtm						AS pd_rgst_dtm
+		-- INNER_PRODUCT_DETAIL.moder_no						AS pd_moder_no
+		-- INNER_PRODUCT_DETAIL.mod_dtm							AS pd_mod_dtm
+	</sql>
+	<sql id="select-product-image-title">
+		INNER_PRODUCT_IMAGE.prdt_no								AS pi_prdt_no,
+		INNER_PRODUCT_IMAGE.prdt_rltn_file_seq					AS pi_prdt_rltn_file_seq,
+		INNER_PRODUCT_IMAGE.disp_postn_type						AS pi_disp_postn_type,
+		INNER_PRODUCT_IMAGE.file_type							AS pi_file_type,
+		INNER_PRODUCT_IMAGE.image_name							AS pi_image_name,
+		INNER_PRODUCT_IMAGE.image_path_text						AS pi_image_path_text,
+		INNER_PRODUCT_IMAGE.image_url							AS pi_image_url,
+		INNER_PRODUCT_IMAGE.altrn_text							AS pi_altrn_text,
+		INNER_PRODUCT_IMAGE.cnnctn_type							AS pi_cnnctn_type,
+		INNER_PRODUCT_IMAGE.link_target_type					AS pi_link_target_type,
+		INNER_PRODUCT_IMAGE.link_info							AS pi_link_info,
+		INNER_PRODUCT_IMAGE.upload_yn							AS pi_upload_yn,
+		INNER_PRODUCT_IMAGE.movie_name							AS pi_movie_name,
+		INNER_PRODUCT_IMAGE.movie_path_text						AS pi_movie_path_text,
+		INNER_PRODUCT_IMAGE.movie_url							AS pi_movie_url,
+		INNER_PRODUCT_IMAGE.sort_seq							AS pi_sort_seq
+		-- INNER_PRODUCT_IMAGE.rgster_no						AS pi_rgster_no,
+		-- INNER_PRODUCT_IMAGE.rgst_dtm							AS pi_rgst_dtm,
+		-- INNER_PRODUCT_IMAGE.moder_no							AS pi_moder_no,
+		-- INNER_PRODUCT_IMAGE.mod_dtm							AS pi_mod_dtm
+	</sql>
+	<sql id="select-product-image-extra">
+		INNER_PRODUCT_IMAGE_EXTRA.prdt_no						AS pe_prdt_no,
+		INNER_PRODUCT_IMAGE_EXTRA.prdt_rltn_file_seq				AS pe_prdt_rltn_file_seq,
+		INNER_PRODUCT_IMAGE_EXTRA.disp_postn_type				AS pe_disp_postn_type,
+		INNER_PRODUCT_IMAGE_EXTRA.file_type						AS pe_file_type,
+		INNER_PRODUCT_IMAGE_EXTRA.image_name					AS pe_image_name,
+		INNER_PRODUCT_IMAGE_EXTRA.image_path_text				AS pe_image_path_text,
+		INNER_PRODUCT_IMAGE_EXTRA.image_url						AS pe_image_url,
+		INNER_PRODUCT_IMAGE_EXTRA.altrn_text					AS pe_altrn_text,
+		INNER_PRODUCT_IMAGE_EXTRA.cnnctn_type					AS pe_cnnctn_type,
+		INNER_PRODUCT_IMAGE_EXTRA.link_target_type				AS pe_link_target_type,
+		INNER_PRODUCT_IMAGE_EXTRA.link_info						AS pe_link_info,
+		INNER_PRODUCT_IMAGE_EXTRA.upload_yn						AS pe_upload_yn,
+		INNER_PRODUCT_IMAGE_EXTRA.movie_name					AS pe_movie_name,
+		INNER_PRODUCT_IMAGE_EXTRA.movie_path_text				AS pe_movie_path_text,
+		INNER_PRODUCT_IMAGE_EXTRA.movie_url						AS pe_movie_url,
+		INNER_PRODUCT_IMAGE_EXTRA.sort_seq						AS pe_sort_seq
+		-- INNER_PRODUCT_IMAGE_EXTRA.rgster_no					AS pe_rgster_no,
+		-- INNER_PRODUCT_IMAGE_EXTRA.rgst_dtm					AS pe_rgst_dtm,
+		-- INNER_PRODUCT_IMAGE_EXTRA.moder_no					AS pe_moder_no,
+		-- INNER_PRODUCT_IMAGE_EXTRA.mod_dtm					AS pe_mod_dtm
+	</sql>
+	<sql id="select-product-image-detail">
+		INNER_PRODUCT_IMAGE_DETAIL.prdt_no						AS di_prdt_no,
+		INNER_PRODUCT_IMAGE_DETAIL.prdt_rltn_file_seq			AS di_prdt_rltn_file_seq,
+		INNER_PRODUCT_IMAGE_DETAIL.disp_postn_type				AS di_disp_postn_type,
+		INNER_PRODUCT_IMAGE_DETAIL.file_type						AS di_file_type,
+		INNER_PRODUCT_IMAGE_DETAIL.image_name					AS di_image_name,
+		INNER_PRODUCT_IMAGE_DETAIL.image_path_text				AS di_image_path_text,
+		INNER_PRODUCT_IMAGE_DETAIL.image_url					AS di_image_url,
+		INNER_PRODUCT_IMAGE_DETAIL.altrn_text					AS di_altrn_text,
+		INNER_PRODUCT_IMAGE_DETAIL.cnnctn_type					AS di_cnnctn_type,
+		INNER_PRODUCT_IMAGE_DETAIL.link_target_type				AS di_link_target_type,
+		INNER_PRODUCT_IMAGE_DETAIL.link_info					AS di_link_info,
+		INNER_PRODUCT_IMAGE_DETAIL.upload_yn					AS di_upload_yn,
+		INNER_PRODUCT_IMAGE_DETAIL.movie_name					AS di_movie_name,
+		INNER_PRODUCT_IMAGE_DETAIL.movie_path_text				AS di_movie_path_text,
+		INNER_PRODUCT_IMAGE_DETAIL.movie_url					AS di_movie_url,
+		INNER_PRODUCT_IMAGE_DETAIL.sort_seq						AS di_sort_seq
+		-- INNER_PRODUCT_IMAGE_DETAIL.rgster_no					AS di_rgster_no,
+		-- INNER_PRODUCT_IMAGE_DETAIL.rgst_dtm					AS di_rgst_dtm,
+		-- INNER_PRODUCT_IMAGE_DETAIL.moder_no					AS di_moder_no,
+		-- INNER_PRODUCT_IMAGE_DETAIL.mod_dtm					AS di_mod_dtm
+	</sql>
+	<sql id="select-product-notice">
+		INNER_PRODUCT_NOTICE.prdt_no							AS pn_prdt_no,
+		INNER_PRODUCT_NOTICE.add_info_type						AS pn_add_info_type,
+		INNER_PRODUCT_NOTICE.prdt_add_info_seq					AS pn_prdt_add_info_seq,
+		INNER_PRODUCT_NOTICE.prdt_add_info_rltn_seq				AS pn_prdt_add_info_rltn_seq,
+		INNER_PRODUCT_NOTICE.disp_yn							AS pn_disp_yn,
+		INNER_PRODUCT_NOTICE.prdt_materl_text					AS pn_prdt_materl_text,
+		INNER_PRODUCT_NOTICE.prdt_add_info						AS pn_prdt_add_info,
+		INNER_PRODUCT_NOTICE.prdt_safe_type_code				AS pn_prdt_safe_type_code,
+		INNER_PRODUCT_NOTICE.safe_crtfc_no_text					AS pn_safe_crtfc_no_text,
+		INNER_PRODUCT_NOTICE.safe_crtfc_image_name				AS pn_safe_crtfc_image_name,
+		INNER_PRODUCT_NOTICE.safe_crtfc_image_path_text			AS pn_safe_crtfc_image_path_text,
+		INNER_PRODUCT_NOTICE.safe_crtfc_image_url				AS pn_safe_crtfc_image_url,
+		INNER_PRODUCT_NOTICE.sort_seq							AS pn_sort_seq,
+		-- INNER_PRODUCT_NOTICE.rgster_no						AS pn_rgster_no
+		-- INNER_PRODUCT_NOTICE.rgst_dtm						AS pn_rgst_dtm
+		-- INNER_PRODUCT_NOTICE.moder_no						AS pn_moder_no
+		-- INNER_PRODUCT_NOTICE.mod_dtm							AS pn_mod_dtm
+		INNER_PRODUCT_NOTICE.info_notc_name						AS pn_info_notc_name
+	</sql>
+	<sql id="select-product-precaution">
+		INNER_PRODUCT_PRECAUTION.prdt_no						AS pp_prdt_no,
+		INNER_PRODUCT_PRECAUTION.add_info_type					AS pp_add_info_type,
+		INNER_PRODUCT_PRECAUTION.prdt_add_info_seq				AS pp_prdt_add_info_seq,
+		INNER_PRODUCT_PRECAUTION.prdt_add_info_rltn_seq			AS pp_prdt_add_info_rltn_seq,
+		INNER_PRODUCT_PRECAUTION.disp_yn						AS pp_disp_yn,
+		INNER_PRODUCT_PRECAUTION.prdt_materl_text				AS pp_prdt_materl_text,
+		INNER_PRODUCT_PRECAUTION.prdt_add_info					AS pp_prdt_add_info,
+		INNER_PRODUCT_PRECAUTION.prdt_safe_type_code			AS pp_prdt_safe_type_code,
+		INNER_PRODUCT_PRECAUTION.safe_crtfc_no_text				AS pp_safe_crtfc_no_text,
+		INNER_PRODUCT_PRECAUTION.safe_crtfc_image_name			AS pp_safe_crtfc_image_name,
+		INNER_PRODUCT_PRECAUTION.safe_crtfc_image_path_text		AS pp_safe_crtfc_image_path_text,
+		INNER_PRODUCT_PRECAUTION.safe_crtfc_image_url			AS pp_safe_crtfc_image_url,
+		INNER_PRODUCT_PRECAUTION.sort_seq						AS pp_sort_seq
+		-- INNER_PRODUCT_PRECAUTION.rgster_no					AS pp_rgster_no
+		-- INNER_PRODUCT_PRECAUTION.rgst_dtm					AS pp_rgst_dtm
+		-- INNER_PRODUCT_PRECAUTION.moder_no					AS pp_moder_no
+		-- INNER_PRODUCT_PRECAUTION.mod_dtm						AS pp_mod_dtm
+	</sql>
+	<sql id="select-product-authority">
+		INNER_PRODUCT_AUTHORITY.prdt_no							AS pa_prdt_no,
+		INNER_PRODUCT_AUTHORITY.add_info_type					AS pa_add_info_type,
+		INNER_PRODUCT_AUTHORITY.prdt_add_info_seq				AS pa_prdt_add_info_seq,
+		INNER_PRODUCT_AUTHORITY.prdt_add_info_rltn_seq			AS pa_prdt_add_info_rltn_seq,
+		INNER_PRODUCT_AUTHORITY.disp_yn							AS pa_disp_yn,
+		INNER_PRODUCT_AUTHORITY.prdt_materl_text				AS pa_prdt_materl_text,
+		INNER_PRODUCT_AUTHORITY.prdt_add_info					AS pa_prdt_add_info,
+		INNER_PRODUCT_AUTHORITY.prdt_safe_type_code				AS pa_prdt_safe_type_code,
+		INNER_PRODUCT_AUTHORITY.safe_crtfc_no_text				AS pa_safe_crtfc_no_text,
+		INNER_PRODUCT_AUTHORITY.safe_crtfc_image_name			AS pa_safe_crtfc_image_name,
+		INNER_PRODUCT_AUTHORITY.safe_crtfc_image_path_text		AS pa_safe_crtfc_image_path_text,
+		INNER_PRODUCT_AUTHORITY.safe_crtfc_image_url			AS pa_safe_crtfc_image_url,
+		INNER_PRODUCT_AUTHORITY.sort_seq						AS pa_sort_seq
+		-- INNER_PRODUCT_AUTHORITY.rgster_no					AS pa_rgster_no
+		-- INNER_PRODUCT_AUTHORITY.rgst_dtm						AS pa_rgst_dtm
+		-- INNER_PRODUCT_AUTHORITY.moder_no						AS pa_moder_no
+		-- INNER_PRODUCT_AUTHORITY.mod_dtm						AS pa_mod_dtm
+	</sql>
+	<sql id="select-product-review">
+		INNER_PRODUCT_REVIEW.review_count						AS bd_rv_review_count
+	</sql>
+	<sql id="select-brand">
+		INNER_BRAND.brand_no									AS dp_br_brand_no,
+		INNER_BRAND.brand_name									AS dp_br_brand_name
+	</sql>
+	<sql id="select-icon">
+		INNER_ICON.prdt_icon_seq								AS ic_prdt_icon_seq,
+		INNER_ICON.site_no										AS ic_site_no,
+		INNER_ICON.disp_icon_name								AS ic_disp_icon_name,
+		INNER_ICON.icon_name									AS ic_icon_name,
+		INNER_ICON.icon_path_text								AS ic_icon_path_text,
+		INNER_ICON.icon_url										AS ic_icon_url,
+		INNER_ICON.altrn_text									AS ic_altrn_text,
+		INNER_ICON.apply_prior									AS ic_apply_prior,
+		INNER_ICON.auto_apply_yn								AS ic_auto_apply_yn,
+		INNER_ICON.insd_mgmt_info_text							AS ic_insd_mgmt_info_text
+		-- INNER_ICON.use_yn									AS ic_use_yn
+		-- INNER_ICON.rgster_no									AS ic_rgster_no
+		-- INNER_ICON.rgst_dtm									AS ic_rgst_dtm
+		-- INNER_ICON.moder_no									AS ic_moder_no
+		-- INNER_ICON.mod_dtm									AS ic_mod_dtm
+	</sql>
+	<sql id="select-promotion">
+		INNER_PROMOTION.promotion_count_discount_multi_shoues	AS promotion_count_discount_multi_shoues
+	</sql>
+	<sql id="select-event-draw">
+		INNER_EVENT.event_no									AS ed_event_no,
+		INNER_EVENT.event_type_code								AS ed_event_type_code,
+		INNER_EVENT.event_name									AS ed_event_name,
+		INNER_EVENT.event_term_setup_yn							AS ed_event_term_setup_yn,
+		INNER_EVENT.event_start_dtm								AS ed_event_start_dtm,
+		INNER_EVENT.event_end_dtm								AS ed_event_end_dtm,
+		INNER_EVENT.przwr_mgmt_yn								AS ed_przwr_mgmt_yn,
+		INNER_EVENT.przwr_pblc_todo_ymd							AS ed_przwr_pblc_todo_ymd,
+		INNER_EVENT.przwr_order_start_ymd						AS ed_przwr_order_start_ymd,
+		INNER_EVENT.przwr_order_end_ymd							AS ed_przwr_order_end_ymd
+		--INNER_EVENT.pickup_start_ymd							AS ed_pickup_start_ymd,
+		--INNER_EVENT.pickup_end_ymd							AS ed_pickup_end_ymd,
+		--INNER_EVENT.przwr_pblc_yn								AS ed_przwr_pblc_yn,
+		--INNER_EVENT.point_ddct_yn								AS ed_point_ddct_yn,
+		--INNER_EVENT.ddct_point_amt							AS ed_ddct_point_amt,
+		--INNER_EVENT.event_stplat_use_yn						AS ed_event_stplat_use_yn,
+		--INNER_EVENT.event_stplat_cont_text					AS ed_event_stplat_cont_text,
+		--INNER_EVENT.event_join_type							AS ed_event_join_type,
+		--INNER_EVENT.login_id_dup_perm_yn						AS ed_login_id_dup_perm_yn,
+		--INNER_EVENT.prdt_recpt_store_type						AS ed_prdt_recpt_store_type,
+		--INNER_EVENT.insd_mgmt_info_text						AS ed_insd_mgmt_info_text,
+		--INNER_EVENT.pc_event_cont_text						AS ed_pc_event_cont_text,
+		--INNER_EVENT.mobile_event_cont_text					AS ed_mobile_event_cont_text,
+		--INNER_EVENT.srch_key_word								AS ed_srch_key_word,
+		--INNER_EVENT.note_text									AS ed_note_text,
+		--INNER_EVENT.use_yn									AS ed_use_yn,
+		--INNER_EVENT.disp_yn									AS ed_disp_yn,
+		--INNER_EVENT.tmpr_save_yn								AS ed_tmpr_save_yn,
+		--INNER_EVENT.rgster_no									AS ed_rgster_no,
+		--INNER_EVENT.rgst_dtm									AS ed_rgst_dtm,
+		--INNER_EVENT.moder_no									AS ed_moder_no,
+		--INNER_EVENT.mod_dtm									AS ed_mod_dtm
+	</sql>
+	<sql id="select-product-type">
+		CASE
+			WHEN INNER_EVENT.event_no IS NOT NULL THEN 'D'<!-- draw이벤트 상품 -->
+			WHEN (INNER_PRODUCT.sell_stat_code = '${@kr.co.shop.constant.CommonCode@SELL_STAT_CODE_PREPARE}') AND (SYSDATE &lt; INNER_PRODUCT.sell_start_dtm) THEN 'L'<!-- 런칭예정상품 -->
+			WHEN INNER_PRODUCT.rsv_prdt_yn = 'Y' THEN 'B'<!-- 예약상품 -->
+			WHEN INNER_PRODUCT.prdt_type_code = '${@kr.co.shop.constant.CommonCode@PRDT_TYPE_CODE_ONLY_OFFLINE}' THEN 'O'<!-- 오프라인상품 -->
+			ELSE 'N'<!-- 일반상품 -->
+		END AS product_kind
+	</sql>
+	<sql id="select-member-interest-product">
+		INNER_MEMBER_INTEREST_PRODUCT.member_no					AS mp_member_no,
+		INNER_MEMBER_INTEREST_PRODUCT.intrst_prdt_seq			AS mp_intrst_prdt_seq,
+		INNER_MEMBER_INTEREST_PRODUCT.site_no					AS mp_site_no,
+		INNER_MEMBER_INTEREST_PRODUCT.chnnl_no					AS mp_chnnl_no,
+		INNER_MEMBER_INTEREST_PRODUCT.ctgr_no					AS mp_ctgr_no,
+		INNER_MEMBER_INTEREST_PRODUCT.prdt_no					AS mp_prdt_no,
+		INNER_MEMBER_INTEREST_PRODUCT.prdt_optn_no				AS mp_prdt_optn_no,
+		INNER_MEMBER_INTEREST_PRODUCT.optn_name					AS mp_optn_name,
+		INNER_MEMBER_INTEREST_PRODUCT.wrhs_alert_req_yn			AS mp_wrhs_alert_req_yn,
+		INNER_MEMBER_INTEREST_PRODUCT.hdphn_no_text				AS mp_hdphn_no_text,
+		INNER_MEMBER_INTEREST_PRODUCT.rgst_dtm					AS mp_rgst_dtm,
+		INNER_MEMBER_INTEREST_PRODUCT.wrhs_alert_send_yn		AS mp_wrhs_alert_send_yn,
+		INNER_MEMBER_INTEREST_PRODUCT.wrhs_alert_send_dtm		AS mp_wrhs_alert_send_dtm
+	</sql>
+	
+	<sql id="from-product-price">
+		LEFT OUTER JOIN (
+			SELECT
+				PRODUCT_PRICE_HISTORY.prdt_no,
+				PRODUCT_PRICE_HISTORY.prdt_price_hist_seq,
+				NVL(PRODUCT_PRICE_HISTORY.normal_amt, 0) normal_amt,
+				NVL(PRODUCT_PRICE_HISTORY.sell_amt, 0) sell_amt,
+				NVL(PRODUCT_PRICE_HISTORY.erp_dscnt_rate, 0) erp_dscnt_rate,
+				NVL(PRODUCT_PRICE_HISTORY.onln_dscnt_rate, 0) onln_dscnt_rate,
+				NVL(PRODUCT_PRICE_HISTORY.emp_dscnt_rate, 0) emp_dscnt_rate
+			FROM
+				(
+					SELECT
+						prdt_no,
+						MAX(prdt_price_hist_seq) max_seq
+					FROM
+						pd_product_price_history
+					WHERE
+						SYSDATE &gt;= apply_start_dtm
+						AND SYSDATE &lt;= apply_end_dtm
+					GROUP BY
+						prdt_no
+				) PRODUCT_PRICE_HISTORY_MAX
+				LEFT OUTER JOIN
+				(
+					SELECT
+						*
+					FROM
+						pd_product_price_history
+					) PRODUCT_PRICE_HISTORY ON PRODUCT_PRICE_HISTORY_MAX.prdt_no = PRODUCT_PRICE_HISTORY.prdt_no AND PRODUCT_PRICE_HISTORY_MAX.max_seq = PRODUCT_PRICE_HISTORY.prdt_price_hist_seq
+		) INNER_PRODUCT_PRICE ON INNER_PRODUCT.prdt_no = INNER_PRODUCT_PRICE.prdt_no
+	</sql>
+	<sql id="from-product-option">
+		LEFT OUTER JOIN (
+			SELECT
+				PRODUCT_OPTION.*,
+				STOCK.stock_qty
+			FROM
+				pd_product_option PRODUCT_OPTION
+				LEFT OUTER JOIN (
+					SELECT
+						prdt_no,
+						prdt_optn_no,
+						SUM(stock_qty) AS stock_qty
+					FROM
+						pd_product_option_stock
+					GROUP BY
+						prdt_no, prdt_optn_no
+				) STOCK ON PRODUCT_OPTION.prdt_no = STOCK.prdt_no AND PRODUCT_OPTION.prdt_optn_no = STOCK.prdt_optn_no
+			WHERE
+				PRODUCT_OPTION.sell_stat_code IN ('${@kr.co.shop.constant.CommonCode@SELL_STAT_CODE_SALE}', '${@kr.co.shop.constant.CommonCode@SELL_STAT_CODE_INSTANT_OUT_OF_STOCK}')
+				AND PRODUCT_OPTION.use_yn = 'Y'
+		) INNER_PRODUCT_OPTION ON INNER_PRODUCT.prdt_no = INNER_PRODUCT_OPTION.prdt_no
+	</sql>
+	<sql id="from-product-option-group"><!-- 상품 목록 조회 시에 사용 -->
+		LEFT OUTER JOIN (
+			SELECT
+				PRODUCT_OPTION.prdt_no,
+				PRODUCT_OPTION.optn_name,
+				PRODUCT_OPTION.order_psblt_qty,
+				PRODUCT_OPTION.sell_stat_code,
+				STOCK.stock_qty
+			FROM
+				pd_product_option PRODUCT_OPTION
+				LEFT OUTER JOIN (
+					SELECT
+						prdt_no,
+						prdt_optn_no,
+						SUM(stock_qty) AS stock_qty
+					FROM
+						pd_product_option_stock
+					GROUP BY
+						prdt_no, prdt_optn_no
+				) STOCK ON PRODUCT_OPTION.prdt_no = STOCK.prdt_no AND PRODUCT_OPTION.prdt_optn_no = STOCK.prdt_optn_no
+			WHERE
+				PRODUCT_OPTION.sell_stat_code IN ('${@kr.co.shop.constant.CommonCode@SELL_STAT_CODE_SALE}', '${@kr.co.shop.constant.CommonCode@SELL_STAT_CODE_INSTANT_OUT_OF_STOCK}')
+				AND PRODUCT_OPTION.use_yn = 'Y'
+			GROUP BY
+				PRODUCT_OPTION.prdt_no, PRODUCT_OPTION.optn_name, PRODUCT_OPTION.order_psblt_qty, PRODUCT_OPTION.sell_stat_code, STOCK.stock_qty
+		) INNER_PRODUCT_OPTION ON INNER_PRODUCT.prdt_no = INNER_PRODUCT_OPTION.prdt_no
+	</sql>
+	<sql id="from-product-option-price">
+		LEFT OUTER JOIN (
+			SELECT
+				PRODUCT_OPTION_PRICE_HISTORY.prdt_no,
+				PRODUCT_OPTION_PRICE_HISTORY.prdt_optn_no,
+				PRODUCT_OPTION_PRICE_HISTORY.sell_price_hist_seq,
+				NVL(PRODUCT_OPTION_PRICE_HISTORY.optn_add_amt, 0) optn_add_amt
+			FROM
+				(
+					SELECT
+						prdt_no,
+						prdt_optn_no,
+						MAX(sell_price_hist_seq) max_seq
+					FROM
+						pd_product_option_price_history
+					WHERE
+						SYSDATE &gt;= apply_start_dtm
+						AND SYSDATE &lt;= apply_end_dtm
+					GROUP BY
+						prdt_no, prdt_optn_no
+				) PRODUCT_OPTION_PRICE_HISTORY_MAX
+				LEFT OUTER JOIN (
+					SELECT
+						*
+					FROM
+						pd_product_option_price_history
+				) PRODUCT_OPTION_PRICE_HISTORY ON PRODUCT_OPTION_PRICE_HISTORY_MAX.prdt_no = PRODUCT_OPTION_PRICE_HISTORY.prdt_no AND PRODUCT_OPTION_PRICE_HISTORY_MAX.prdt_optn_no = PRODUCT_OPTION_PRICE_HISTORY.prdt_optn_no AND PRODUCT_OPTION_PRICE_HISTORY_MAX.max_seq = PRODUCT_OPTION_PRICE_HISTORY.sell_price_hist_seq
+		) INNER_PRODUCT_OPTION_PRICE ON INNER_PRODUCT_OPTION.prdt_no = INNER_PRODUCT_OPTION_PRICE.prdt_no
+	</sql>
+	<sql id="from-product-image-product-title">
+		LEFT OUTER JOIN (
+			SELECT
+				*
+			FROM
+				pd_product_relation_file
+			WHERE
+				prdt_rltn_file_seq = 1<!-- 대표이미지 -->
+				AND disp_postn_type = 'P'
+		) INNER_PRODUCT_IMAGE ON INNER_PRODUCT.prdt_no = INNER_PRODUCT_IMAGE.prdt_no
+	</sql>
+	<sql id="from-product-image-product-extra">
+		LEFT OUTER JOIN (
+			SELECT <!-- 상품에 등록되는 이미지는 최대 12개(대표이미지 1개, 추가이미지 9개, 3D이미지 1개, 동영상 1개) -->
+				*
+			FROM
+				pd_product_relation_file
+			WHERE
+				prdt_no = #{bean.prdtNo, jdbcType=VARCHAR}
+				AND prdt_rltn_file_seq != 1<!-- 추가이미지/3D이미지/동영상 -->
+				AND disp_postn_type = 'P'
+			ORDER BY
+				sort_seq
+			FETCH FIRST 11 ROWS ONLY
+		) INNER_PRODUCT_IMAGE_EXTRA ON INNER_PRODUCT.prdt_no = INNER_PRODUCT_IMAGE_EXTRA.prdt_no
+	</sql>
+	<sql id="from-product-review">
+		LEFT OUTER JOIN (
+			SELECT
+				prdt_no,
+				COUNT(*) review_count
+			FROM
+				bd_product_review
+			GROUP BY
+				prdt_no
+		) INNER_PRODUCT_REVIEW ON INNER_PRODUCT.prdt_no = INNER_PRODUCT_REVIEW.prdt_no
+	</sql>
+	<sql id="from-product-detail">
+		LEFT OUTER JOIN (
+			SELECT
+				*
+			FROM
+				pd_product_detail
+			WHERE
+				device_code = #{deviceCode, jdbcType=VARCHAR}
+		) INNER_PRODUCT_DETAIL ON INNER_PRODUCT.prdt_no = INNER_PRODUCT_DETAIL.prdt_no
+	</sql>
+	<sql id="from-product-image-detail">
+		LEFT OUTER JOIN (
+			SELECT <!-- 상품상세에 등록되는 이미지는 최대 2개(3D이미지 1개, 동영상 1개) -->
+				*
+			FROM
+				pd_product_relation_file
+			WHERE
+				prdt_no = #{bean.prdtNo, jdbcType=VARCHAR}
+				AND disp_postn_type = 'D'
+			ORDER BY
+				sort_seq
+			FETCH FIRST 2 ROWS ONLY
+		) INNER_PRODUCT_IMAGE_DETAIL ON INNER_PRODUCT.prdt_no = INNER_PRODUCT_IMAGE_DETAIL.prdt_no
+	</sql>
+	<sql id="from-product-notice">
+		LEFT OUTER JOIN (
+			SELECT
+				A.*,
+				B.info_notc_name
+			FROM
+				pd_product_add_info A
+				LEFT JOIN cm_product_info_notice B ON A.prdt_add_info_rltn_seq = B.prdt_info_notc_seq
+			WHERE
+				A.disp_yn = 'Y'
+				AND A.add_info_type = 'I'
+		) INNER_PRODUCT_NOTICE ON INNER_PRODUCT.prdt_no = INNER_PRODUCT_NOTICE.prdt_no
+	</sql>
+	<sql id="from-product-precaution">
+		LEFT OUTER JOIN (
+			SELECT
+				*
+			FROM
+				pd_product_add_info
+			WHERE
+				disp_yn = 'Y'
+				AND add_info_type = 'P'
+		) INNER_PRODUCT_PRECAUTION ON INNER_PRODUCT.prdt_no = INNER_PRODUCT_PRECAUTION.prdt_no
+	</sql>
+	<sql id="from-product-authority">
+		LEFT OUTER JOIN (
+			SELECT
+				*
+			FROM
+				pd_product_add_info
+			WHERE
+				disp_yn = 'Y'
+				AND add_info_type = 'A'
+		) INNER_PRODUCT_AUTHORITY ON INNER_PRODUCT.prdt_no = INNER_PRODUCT_AUTHORITY.prdt_no
+	</sql>
+	<sql id="from-promotion-discount-multi-shoues">
+		LEFT OUTER JOIN (
+			SELECT
+				INNER_PROMOTION_PRODUCT.prdt_no,
+				COUNT(*) AS promotion_count_discount_multi_shoues
+			FROM
+				pr_promotion INNER_PROMOTION
+				LEFT JOIN pr_promotion_target_product INNER_PROMOTION_PRODUCT ON INNER_PROMOTION.promo_no = INNER_PROMOTION_PRODUCT.promo_no
+			WHERE
+				INNER_PROMOTION.promo_type_code = '${@kr.co.shop.constant.CommonCode@PROMO_TYPE_CODE_DISCOUNT_MULTI_SHOUES}'<!-- 다족구매할인 -->
+				AND SYSDATE BETWEEN INNER_PROMOTION.promo_start_dtm AND INNER_PROMOTION.promo_end_dtm
+				AND INNER_PROMOTION_PRODUCT.prdt_no = #{bean.prdtNo, jdbcType=VARCHAR}
+			GROUP BY
+				INNER_PROMOTION_PRODUCT.prdt_no
+		) INNER_PROMOTION ON INNER_PRODUCT.prdt_no = INNER_PROMOTION.prdt_no
+	</sql>
+	
+	<sql id="from-event-draw">
+		LEFT OUTER JOIN (
+			SELECT
+				INNER_EVENT.*
+			FROM
+				(
+					SELECT
+						INNER_EVENT.*,
+						INNER_EVENT_PRODUCT.prdt_no
+					FROM
+						ev_event INNER_EVENT
+						LEFT JOIN ev_event_target_device INNER_EVENT_DEVICE ON INNER_EVENT.event_no = INNER_EVENT_DEVICE.event_no
+						LEFT JOIN ev_event_target_channel INNER_EVENT_CHANNEL ON INNER_EVENT.event_no = INNER_EVENT_CHANNEL.event_no
+						LEFT JOIN ev_event_target_product INNER_EVENT_PRODUCT ON INNER_EVENT.event_no = INNER_EVENT_PRODUCT.event_no
+					WHERE
+						INNER_EVENT.event_type_code = '${@kr.co.shop.constant.CommonCode@EVENT_TYPE_CODE_PARTICIPATION_TYPE_DRAW}'<!-- DRAW이벤트 -->
+						--AND SYSDATE &lt; INNER_EVENT.event_end_dtm<!-- 응모기간보다 작은 경우만 조회 -->
+						AND INNER_EVENT.disp_yn = 'Y'<!-- 전시여부 -->
+						AND INNER_EVENT.use_yn = 'Y'<!-- 사용여부 -->
+						AND INNER_EVENT_DEVICE.device_code = #{deviceCode, jdbcType=VARCHAR}<!-- 장치코드 -->
+						AND INNER_EVENT_CHANNEL.chnnl_no = #{chnnlNo, jdbcType=VARCHAR}<!-- 채널번호 -->
+						AND INNER_EVENT_PRODUCT.prdt_no = #{bean.prdtNo, jdbcType=VARCHAR}<!-- 상품번호 -->
+				) INNER_EVENT
+			ORDER BY
+				INNER_EVENT.event_end_dtm ASC
+			FETCH FIRST 1 ROWS ONLY			
+		) INNER_EVENT ON INNER_PRODUCT.prdt_no = INNER_EVENT.prdt_no
+	</sql>
+	<sql id="from-brand">
+		LEFT OUTER JOIN dp_brand INNER_BRAND ON INNER_PRODUCT.brand_no = INNER_BRAND.brand_no
+	</sql>
+	<sql id="from-product-icon">
+		LEFT OUTER JOIN (
+			SELECT
+				INNER_PRODUCT_ICON.prdt_no,
+				INNER_ICON.*
+			FROM
+				pd_product_icon INNER_PRODUCT_ICON
+				LEFT OUTER JOIN (
+					SELECT
+						*
+					FROM
+						cm_product_icon INNER_ICON
+					WHERE
+						INNER_ICON.use_yn = 'Y'
+						<if test="siteNo != null and siteNo != ''">
+							AND INNER_ICON.site_no = #{siteNo, jdbcType=VARCHAR}
+						</if>
+					ORDER BY
+						INNER_ICON.apply_prior ASC
+					FETCH FIRST 100 PERCENT ROWS ONLY
+				) INNER_ICON ON INNER_PRODUCT_ICON.prdt_icon_seq = INNER_ICON.prdt_icon_seq
+		) INNER_ICON ON INNER_PRODUCT.prdt_no = INNER_ICON.prdt_no
+	</sql>
+	<sql id="from-member-interest-product">
+		LEFT OUTER JOIN (
+			SELECT
+				  A.*
+				, B.optn_name
+			FROM
+				mb_member_interest_product A
+				LEFT JOIN pd_product_option B ON A.prdt_no = B.prdt_no AND A.prdt_optn_no = B.prdt_optn_no
+			WHERE
+				A.member_no = #{memberNo, jdbcType=VARCHAR}
+				AND A.wrhs_alert_req_yn = #{wrhsAlertReqYn, jdbcType=VARCHAR}
+				<if test="wrhsAlertReqYn != null and wrhsAlertReqYn == &quot;N&quot;">
+					AND A.prdt_optn_no IS NULL<!-- 찜상품인 경우, 옵션번호 없음 -->
+				</if>
+		) INNER_MEMBER_INTEREST_PRODUCT ON INNER_PRODUCT.prdt_no = INNER_MEMBER_INTEREST_PRODUCT.prdt_no
+	</sql>
+	
+</mapper>

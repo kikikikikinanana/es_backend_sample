@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.member.repository.master.MbMemberInterestProductDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.member.model.master.MbMemberInterestProduct">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberInterestProductDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			mb_member_interest_product
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <insert id="insertWithPrimaryKey" parameterType="kr.co.shop.web.member.model.master.MbMemberInterestProduct">
+    	<selectKey resultType="java.lang.Short" keyProperty="intrstPrdtSeq" order="BEFORE">
+    		SELECT
+    			NVL(MAX(A.intrst_prdt_seq) + 1, 1) AS intrst_prdt_seq
+    		FROM
+    			mb_member_interest_product A
+    		WHERE 
+    			A.member_no = #{memberNo, jdbcType=VARCHAR} 
+    	</selectKey>
+    	 /*+ kr.co.shop.web.member.repository.master.MbMemberInterestProductDao.insertWithPrimaryKey [PK와 insert 쿼리] [황성준] */
+    
+		INSERT INTO mb_member_interest_product
+			 ( member_no, intrst_prdt_seq, site_no, chnnl_no, ctgr_no, prdt_no, prdt_optn_no, wrhs_alert_req_yn, hdphn_no_text, rgst_dtm, wrhs_alert_send_yn ) 
+
+		VALUES 
+			 ( #{memberNo, jdbcType=VARCHAR}, #{intrstPrdtSeq, jdbcType=TINYINT}, #{siteNo, jdbcType=VARCHAR}, #{chnnlNo, jdbcType=VARCHAR}, #{ctgrNo, jdbcType=VARCHAR}, #{prdtNo, jdbcType=VARCHAR}, #{prdtOptnNo, jdbcType=VARCHAR}, #{wrhsAlertReqYn, jdbcType=CHAR}, #{hdphnNoText, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>SYSDATE</otherwise></choose>, #{wrhsAlertSendYn, jdbcType=CHAR} )
+    </insert>
+    
+    <select id="selectMemberInterestProductCount" parameterType="kr.co.shop.web.member.model.master.MbMemberInterestProduct" resultType="Integer">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberInterestProductDao.selectMemberInterestProductCount [회원 관심상품 갯수 조회] [황성준] */
+    	SELECT <include refid="Paging.totalCount" />
+    	FROM mb_member_interest_product A
+    	<where>
+    		AND A.member_no = #{memberNo, jdbcType=VARCHAR}
+    		AND A.wrhs_alert_req_yn = #{wrhsAlertReqYn, jdbcType=VARCHAR}
+    		<if test='wrhsAlertReqYn == "Y" and status == "C"'>
+    			AND A.wrhs_alert_send_dtm IS NULL
+    		</if>
+    		<if test='prdtOptnNo != null and prdtOptnNo != ""'>
+    			AND A.prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}
+    		</if>
+    	</where>
+    </select>
+    
+    <select id="selectMemberInterestProductList" parameterType="kr.co.shop.web.member.model.master.MbMemberInterestProduct" resultType="kr.co.shop.web.member.model.master.MbMemberInterestProduct">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberInterestProductDao.selectMemberInterestProductList [회원 관심상품 목록 조회] [황성준] */
+    	SELECT <include refid="select-columns" />
+    	FROM mb_member_interest_product A
+    	<where>
+    		AND A.member_no = #{memberNo, jdbcType=VARCHAR}
+    		AND A.prdt_no = #{prdtNo, jdbcType=VARCHAR}
+    		AND A.wrhs_alert_req_yn = #{wrhsAlertReqYn, jdbcType=VARCHAR}
+    		<if test='wrhsAlertReqYn == "Y" and status == "C"'>
+    			AND A.wrhs_alert_send_dtm IS NULL
+    		</if>
+    		<if test='prdtOptnNo != null and prdtOptnNo != ""'>
+    			AND A.prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}
+    		</if>
+    	</where>
+    </select>
+
+	<delete id="deleteInterestProduct" parameterType="kr.co.shop.web.member.model.master.MbMemberInterestProduct">
+		/*+ kr.co.shop.web.member.repository.master.MbMemberInterestProductDao.deleteInterestProduct [해당 회원관심상품 선택상품 삭제] [황성준] */
+		DELETE A FROM mb_member_interest_product A
+		<where>
+			AND A.member_no = #{memberNo, jdbcType=VARCHAR}
+    		AND A.prdt_no = #{prdtNo, jdbcType=VARCHAR}
+    		AND A.wrhs_alert_req_yn = #{wrhsAlertReqYn, jdbcType=VARCHAR}
+    		<if test='prdtOptnNo != null and prdtOptnNo != ""'>
+    			AND A.prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}
+    		</if>
+    		<if test='intrstPrdtSeq != null and intrstPrdtSeq != ""'>
+    			AND A.intrst_prdt_seq = #{intrstPrdtSeq, jdbcType=VARCHAR}
+    		</if>
+		</where>
+	</delete>
+	
+	<select id="selectMemberInterestProductYnList" parameterType="kr.co.shop.web.member.model.master.MbMemberInterestProduct" resultType="kr.co.shop.web.member.model.master.MbMemberInterestProduct">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberInterestProductDao.selectMemberInterestProductYnList [회원 관심상품 여부 목록 조회] [이가영] */
+    	
+    	WITH product (PRDT_NO, interestYn) AS (
+			SELECT
+				PRDT_NO,
+				'N' from pd_product where PRDT_NO in
+				<foreach collection="prdtNoArr" item="item" open="(" close=")" separator=",">
+					#{item}
+				</foreach>
+		)
+		SELECT
+			p.prdt_no,
+			CASE
+				WHEN mp.INTRST_PRDT_SEQ is null THEN 'N'
+				ELSE 'Y'
+			END AS interestYn
+		FROM product p
+		LEFT OUTER JOIN MB_MEMBER_INTEREST_PRODUCT mp ON p.PRDT_NO = mp.PRDT_NO
+		WHERE
+			mp.MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+    </select>
+    
+	<select id="getWishProdutListTopFive" parameterType="kr.co.shop.web.cart.vo.OcCartInfo" resultType="kr.co.shop.web.cart.vo.OcCartInfo">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberInterestProductDao.getWishProdutListTopFive [회원 관심상품 TOP5 목록 조회] */
+		WITH INTEREST_PRODUCT AS (
+		SELECT  
+			   MEMBER_NO
+			 , INTRST_PRDT_SEQ
+			 , SITE_NO
+			 , CHNNL_NO
+			 , CTGR_NO
+			 , PRDT_NO
+			 , PRDT_OPTN_NO
+			 , WRHS_ALERT_REQ_YN
+			 , HDPHN_NO_TEXT
+			 , RGST_DTM
+			 , WRHS_ALERT_SEND_YN
+			 , WRHS_ALERT_SEND_DTM
+		  FROM MB_MEMBER_INTEREST_PRODUCT
+		 WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+		   AND SITE_NO = #{siteNo, jdbcType=VARCHAR}
+		 ORDER BY RGST_DTM DESC
+		 FETCH FIRST 5 ROWS ONLY
+		)
+		SELECT B.PRDT_NO, B.PRDT_TYPE_CODE, B.SITE_NO, B.CHNNL_NO, B.PRDT_NAME, B.ENG_PRDT_NAME
+		     , B.VNDR_NO, B.VNDR_PRDT_NO_TEXT, B.MMNY_PRDT_YN, B.BRAND_NO, B.STYLE_INFO, B.PRDT_COLOR_INFO, B.MNFTR_NAME, B.STD_CTGR_NO
+		     , B.STDR_CTGR_NO 
+		     , B.MIN_BUY_PSBLT_QTY, B.DAY_MAX_BUY_PSBLT_QTY, B.MAX_BUY_PSBLT_QTY, B.ITEM_CODE
+		     , B.GENDER_GBN_CODE, B.DISP_FLAG_TEXT, B.SRCH_PSBLT_YN, B.SRCH_KEY_WORD_TEXT, B.WRHS_ALERT_YN
+		     , B.SELL_START_DTM, B.SELL_END_DTM, B.RSV_PRDT_YN, B.RSV_DLVY_YMD, B.AFFLTS_SEND_YN
+		     , B.ACONNECT_DISP_YN, B.DISP_YN, B.IGRMALL_DISP_EXCEPT_YN, B.VNDR_SUSPD_YN, B.APRV_STAT_CODE
+		     , B.SELL_STAT_CODE , B.USE_YN, B.RGSTER_NO, B.RGST_DTM, B.APRVER_NO
+		     , B.APRVER_DTM , B.MODER_NO , B.MOD_DTM
+		     , C.PRDT_OPTN_NO, C.OPTN_NAME, C.TOTAL_STOCK_QTY, C.TOTAL_ORDER_QTY, C.ORDER_PSBLT_QTY
+		     , C.VNDR_PRDT_NO_TEXT, C.SELL_STAT_CODE AS OPTN_SELL_STAT_CODE, C.SOLD_OUT_RSN_TEXT
+		     , C.SORT_SEQ, C.USE_YN AS OPTN_USE_YN, C.ADD_OPTN1_TEXT, C.ADD_OPTN2_TEXT
+		     , D.STOCK_AI_QTY, D.STOCK_AW_QTY, D.STOCK_AS_QTY, D.STOCK_VD_QTY
+		     , CASE WHEN B.MMNY_PRDT_YN = 'Y' THEN  D.STOCK_AI_QTY + D.STOCK_AW_QTY + D.STOCK_AS_QTY
+					ELSE  D.STOCK_VD_QTY
+				END AS TOT_STOCK_QTY 
+		     , E.PRDT_PRICE_HIST_SEQ
+		     , E.NORMAL_AMT
+		     , E.SELL_AMT
+		     , NVL(F.OPTN_ADD_AMT, 0) AS OPTN_ADD_AMT
+		     , G.BRAND_NAME
+		     , H.IMAGE_PATH_TEXT, H.IMAGE_URL
+			 , FN_PRDT_PROMO_PRICE(C.PRDT_NO) AS DSCNTAMT
+			 , FLOOR((E.SELL_AMT - FN_PRDT_PROMO_PRICE(c.PRDT_NO)) / (E.SELL_AMT * 1.0) * 100.0) AS DCRATE
+		  FROM INTEREST_PRODUCT A
+		INNER JOIN PD_PRODUCT B ON A.PRDT_NO = B.PRDT_NO AND A.SITE_NO = B.SITE_NO
+		INNER JOIN PD_PRODUCT_OPTION C ON A.PRDT_NO = C.PRDT_NO AND A.PRDT_OPTN_NO = C.PRDT_OPTN_NO
+		LEFT OUTER JOIN (
+		                    SELECT Y.PRDT_NO, Y.PRDT_OPTN_NO
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10000' THEN X.STOCK_QTY ELSE 0 END) AS STOCK_AI_QTY
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10001' THEN X.STOCK_QTY ELSE 0 END) AS STOCK_AW_QTY
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10002' THEN X.STOCK_QTY ELSE 0 END) AS STOCK_AS_QTY
+		                         , SUM(CASE WHEN STOCK_GBN_CODE = '10003' THEN X.STOCK_QTY ELSE 0 END) AS STOCK_VD_QTY
+		                      FROM PD_PRODUCT_OPTION_STOCK X
+		                RIGHT OUTER JOIN INTEREST_PRODUCT Y ON Y.PRDT_NO = X.PRDT_NO AND Y.PRDT_OPTN_NO = X.PRDT_OPTN_NO
+		                  GROUP BY Y.PRDT_NO, Y.PRDT_OPTN_NO
+		                ) D ON A.PRDT_NO = D.PRDT_NO AND A.PRDT_OPTN_NO = D.PRDT_OPTN_NO
+				INNER JOIN (
+		                SELECT X.PRDT_NO, X.PRDT_PRICE_HIST_SEQ, X.NORMAL_AMT, X.SELL_AMT
+		                  FROM PD_PRODUCT_PRICE_HISTORY X
+		            INNER JOIN INTEREST_PRODUCT Y ON Y.PRDT_NO = X.PRDT_NO
+		                 WHERE X.PRDT_PRICE_HIST_SEQ = ( SELECT MAX(Z.PRDT_PRICE_HIST_SEQ)
+		                                                    FROM PD_PRODUCT_PRICE_HISTORY Z
+		                                                   WHERE Z.PRDT_NO = Y.PRDT_NO
+		                                                   GROUP BY Z.PRDT_NO
+		                                                )
+		           ) E ON A.PRDT_NO = E.PRDT_NO 
+		LEFT OUTER JOIN (
+		                SELECT X.PRDT_NO, X.PRDT_OPTN_NO, X.SELL_PRICE_HIST_SEQ, X.OPTN_ADD_AMT
+		                  FROM PD_PRODUCT_OPTION_PRICE_HISTORY X
+		            INNER JOIN INTEREST_PRODUCT Y ON Y.PRDT_NO = X.PRDT_NO AND Y.PRDT_OPTN_NO = X.PRDT_OPTN_NO
+		                 WHERE X.SELL_PRICE_HIST_SEQ = ( SELECT MAX(Z.SELL_PRICE_HIST_SEQ)
+		                                                    FROM PD_PRODUCT_OPTION_PRICE_HISTORY Z
+		                                                   WHERE Z.PRDT_NO = Y.PRDT_NO
+                                                         AND Z.PRDT_OPTN_NO = Y.PRDT_OPTN_NO
+		                                                   GROUP BY Z.PRDT_NO
+		                                                )
+		           ) F ON A.PRDT_NO = F.PRDT_NO AND A.PRDT_OPTN_NO = F.PRDT_OPTN_NO 
+		INNER JOIN DP_BRAND G ON B.BRAND_NO = G.BRAND_NO
+		LEFT OUTER JOIN PD_PRODUCT_RELATION_FILE H ON A.PRDT_NO = H.PRDT_NO AND H.DISP_POSTN_TYPE = 'P' AND H.FILE_TYPE = 'I' AND H.PRDT_RLTN_FILE_SEQ = ( SELECT MIN(Z.PRDT_RLTN_FILE_SEQ) FROM PD_PRODUCT_RELATION_FILE Z WHERE Z.PRDT_NO = H.PRDT_NO AND Z.DISP_POSTN_TYPE = H.DISP_POSTN_TYPE AND Z.FILE_TYPE = H.FILE_TYPE)
+ 
+    </select>
+    
+    <resultMap type="kr.co.shop.web.product.model.master.MbMemberInterestProductWrapper" id="interestProductWrapper" autoMapping="true">
+    	<id property="prdtNo" column="prdt_no" />
+    	<id property="prdtOptnNo" column="prdt_optn_no" />
+    	<!-- <association property="eventDraw" javaType="kr.co.shop.web.event.model.master.EvEvent" columnPrefix="ed_" autoMapping="true"/> -->
+    	<collection property="brand" ofType="kr.co.shop.web.product.model.master.DpBrand" columnPrefix="dp_br_" autoMapping="true"/>
+    	<collection property="productPrice" ofType="kr.co.shop.web.product.model.master.PdProductPriceHistory" columnPrefix="pc_" autoMapping="true"/>
+    	<collection property="productOption" ofType="kr.co.shop.web.product.model.master.PdProductOption" resultMap="kr.co.shop.web.product.repository.master.PdProductDao.productOption" columnPrefix="po_"/>
+    	<collection property="productImage" ofType="kr.co.shop.web.product.model.master.PdProductRelationFile" columnPrefix="pi_" autoMapping="true"/>
+    	<!-- <collection property="productImageExtra" ofType="kr.co.shop.web.product.model.master.PdProductRelationFile" columnPrefix="pe_" autoMapping="true"/> -->
+    	<!-- <collection property="productDetailImage" ofType="kr.co.shop.web.product.model.master.PdProductRelationFile" columnPrefix="di_" autoMapping="true"/> -->
+    	<!-- <collection property="productNotice" ofType="kr.co.shop.web.product.model.master.PdProductAddInfo" columnPrefix="pn_" autoMapping="true"/> -->
+    	<!-- <collection property="productPrecaution" ofType="kr.co.shop.web.product.model.master.PdProductAddInfo" columnPrefix="pp_" autoMapping="true"/> -->
+    	<!-- <collection property="productAuthority" ofType="kr.co.shop.web.product.model.master.PdProductAddInfo" columnPrefix="pa_" autoMapping="true"/> -->
+    	<!-- <collection property="productDetail" ofType="kr.co.shop.web.product.model.master.PdProductDetail" columnPrefix="dt_" autoMapping="true"/> -->
+    	<!-- <collection property="productIcon" ofType="kr.co.shop.web.product.model.master.PdProductIcon" resultMap="kr.co.shop.web.product.repository.master.PdProductDao.productIcon" columnPrefix="ic_"/> -->
+    	<!-- <collection property="productGift" ofType="kr.co.shop.web.product.model.master.PdProduct" columnPrefix="pg_" autoMapping="true"/> -->
+    	<collection property="memberInterest" ofType="kr.co.shop.web.member.model.master.MbMemberInterestProduct" columnPrefix="mp_" autoMapping="true"/>
+    </resultMap>
+    
+    <select id="selectDisplayInterestProductList" parameterType="pageableProduct" resultMap="interestProductWrapper">
+    	/*+ kr.co.shop.web.member.repository.master.MbMemberInterestProductDao.selectDisplayInterestProductList [상품 전시 목록 조회] [황성준] */
+		SELECT
+			INNER_PRODUCT.prdt_optn_no AS prdt_optn_no,
+			INNER_PRODUCT.intrst_prdt_seq AS intrst_prdt_seq,
+			<include refid="Product.select-product"/>,
+			<include refid="Product.select-product-price"/>,
+			<include refid="Product.select-product-option"/>,
+			<include refid="Product.select-product-option-price"/>,
+			<include refid="Product.select-product-image-title"/>,
+			<!-- <include refid="Product.select-product-icon"/>, -->
+			<!-- <include refid="Product.select-icon"/>, -->
+			<!-- <include refid="Product.select-brand"/>, -->
+			<include refid="Product.select-member-interest-product"/>,
+			INNER_PRODUCT.str_rgst_dtm AS mp_str_rgst_dtm,
+			TO_CHAR(INNER_PRODUCT.sell_start_dtm, 'YYYY.MM.DD') AS str_sell_start_dtm
+		FROM
+			(
+				SELECT
+					INNER_PRODUCT_ORDERED.*
+				FROM
+					(
+						SELECT
+							INNER_PRODUCT_BASE.*
+						FROM
+							(
+								SELECT
+									<include refid="Product.select-product"/>,
+									A.intrst_prdt_seq,
+									NVL(A.prdt_optn_no, '') AS prdt_optn_no,
+									TO_CHAR(A.rgst_dtm, 'YYYY.MM.DD') AS str_rgst_dtm,
+									FN_PRDT_PROMO_PRICE(INNER_PRODUCT.prdt_no) AS display_price
+								FROM
+									${mappingTableName} A
+									LEFT OUTER JOIN pd_product INNER_PRODUCT ON A.prdt_no = INNER_PRODUCT.prdt_no
+								<where>
+									<foreach collection="conditionColumnString.entrySet()" index="key" item="value">
+										AND A.${key} = #{value, jdbcType=VARCHAR}
+									</foreach>
+									<if test="prdtNoList != null"><!-- 상품번호에 의한 조회 -->
+										AND INNER_PRODUCT.prdt_no IN
+										<foreach collection="prdtNoList" item="item" open="(" close=")" separator=",">
+											#{item, jdbcType=VARCHAR}
+										</foreach>
+									</if>
+									<if test="prdtTypeCodes != null">
+										AND INNER_PRODUCT.prdt_type_code IN
+										<foreach collection="prdtTypeCodes" item="item" open="(" close=")" separator=",">
+											#{item, jdbcType=VARCHAR}
+										</foreach>
+									</if>
+									<choose>
+										<when test="siteNo == '10000'"><!-- 아트사이트인경우 -->
+											<choose>
+												<when test="chnnlNo == '10000'"><!-- ART채널인경우 -->
+													AND INNER_PRODUCT.site_no != '10001'<!-- 사이트번호 != 온더스팟 -->
+													AND INNER_PRODUCT.chnnl_no != '10003'<!-- 채널번호 != 온더스팟 -->
+												</when>
+												<when test="chnnlNo == '10001'"><!-- ABC마트채널인경우 -->
+													AND INNER_PRODUCT.site_no = '10000'<!-- 사이트번호 = 아트 -->
+													AND INNER_PRODUCT.chnnl_no IN ( '10000', '10001' )<!-- 채널번호 = 아트 or ABC -->
+												</when>
+												<when test="chnnlNo == '10002'"><!-- GS채널인경우 -->
+													AND INNER_PRODUCT.site_no = '10000'<!-- 사이트번호 = 아트 -->
+													AND INNER_PRODUCT.chnnl_no IN ( '10000', '10002' )<!-- 채널번호 = 아트 or 그랜드스테이지 -->
+												</when>
+											</choose>
+										</when>
+										<when test="siteNo == '10001' and chnnlNo == '10003'"><!-- OTS사이트이면서 OTS채널인경우 -->
+											AND INNER_PRODUCT.site_no = '10001'<!-- 사이트번호 = 온더스팟 -->
+											AND INNER_PRODUCT.chnnl_no = '10003'<!-- 채널번호 = 온더스팟 -->
+										</when>
+										<otherwise>
+											AND INNER_PRODUCT.site_no = #{siteNo, jdbcType=VARCHAR}<!-- 사이트번호 -->
+											AND INNER_PRODUCT.chnnl_no = #{chnnlNo, jdbcType=VARCHAR}<!-- 채널번호 -->
+										</otherwise>
+									</choose>
+									<if test="conditionBrandNo != null and conditionBrandNo != ''">
+										AND INNER_PRODUCT.brand_no = #{conditionBrandNo, jdbcType=VARCHAR}
+									</if>
+									AND INNER_PRODUCT.aprv_stat_code = '${@kr.co.shop.constant.CommonCode@APRV_STAT_CODE_CONFIRM}'<!-- 승인상태 = 승인완료 -->
+									AND INNER_PRODUCT.vndr_suspd_yn = '${@kr.co.shop.common.constant.BaseConst@BOOLEAN_FALSE}'<!-- 입점업체거래중지여부 = 중지안됨 -->
+									AND INNER_PRODUCT.disp_yn = '${@kr.co.shop.common.constant.BaseConst@BOOLEAN_TRUE}'<!-- 전시여부 = 전시중 -->
+									AND INNER_PRODUCT.use_yn = '${@kr.co.shop.common.constant.BaseConst@BOOLEAN_TRUE}'<!-- 사용여부 = 전시중 -->
+								</where>
+							) INNER_PRODUCT_BASE
+					) INNER_PRODUCT_ORDERED
+				<if test="pagingSortType != null">
+				ORDER BY INNER_PRODUCT_ORDERED.rgst_dtm DESC
+					OFFSET (#{pageNum, jdbcType=INTEGER} - 1) * #{rowsPerPage, jdbcType=INTEGER} ROWS FETCH NEXT #{rowsPerPage, jdbcType=INTEGER} ROWS ONLY
+				</if>
+			) INNER_PRODUCT
+			<include refid="Product.from-product-price"/>
+			<include refid="Product.from-product-option"/>
+			<include refid="Product.from-product-option-price"/>
+			<include refid="Product.from-product-image-product-title"/>
+			<!-- <include refid="Product.from-product-icon"/>
+			<include refid="Product.from-cm-product-icon"/> -->
+			<include refid="Product.from-brand"/>
+			<include refid="Product.from-member-interest-product"/>
+    </select>
+    
+    <select id="selectDisplayProductTotalCount" parameterType="pageableProduct" resultType="java.util.HashMap">
+    	/*+ kr.co.shop.web.product.repository.master.PdProductDao.selectDisplayProductTotalCount [상품 전시 목록 전체갯수 조회 쿼리] [김세훈] */
+		<if test="mappingType != null and mappingType == @kr.co.shop.web.product.model.master.PageableProduct@MAPPING_TYPE_CATEGORY"><!-- 하위카테고리번호 조회용 가상테이블 -->
+			<include refid="Product.with-table-ctgr-cte"/>
+		</if>
+		SELECT
+			COUNT(1) AS total_count
+		FROM
+			(
+				SELECT
+					INNER_PRODUCT_FILTERED.prdt_no,
+					INNER_PRODUCT_FILTERED.prdt_optn_no
+				FROM
+					(
+						SELECT
+							INNER_PRODUCT.prdt_no,
+							INNER_PRODUCT.prdt_optn_no
+						FROM
+							(
+								SELECT
+									INNER_PRODUCT.*,
+									NVL(A.prdt_optn_no, '') AS prdt_optn_no
+								FROM
+									<choose>
+										<when test="mappingType != null">
+											${mappingTableName} A
+											LEFT OUTER JOIN pd_product INNER_PRODUCT ON A.prdt_no = INNER_PRODUCT.prdt_no
+										</when>
+										<otherwise>
+											pd_product INNER_PRODUCT
+										</otherwise>
+									</choose>
+									<where>
+										<if test="mappingType != null and mappingType == @kr.co.shop.web.product.model.master.PageableProduct@MAPPING_TYPE_CUSTOM">
+											<if test="conditionColumnString != null"><!-- 문자열 equal 조건 추가 -->
+												<foreach collection="conditionColumnString.entrySet()" index="key" item="value">
+													AND A.${key} = #{value, jdbcType=VARCHAR}
+												</foreach>
+											</if>
+											<if test="conditionColumnInteger != null"><!-- 숫자형 equal 조건 추가 -->
+												<foreach collection="conditionColumnInteger.entrySet()" index="key" item="value">
+													AND A.${key} = #{value, jdbcType=INTEGER}
+												</foreach>
+											</if>
+										</if>
+									</where>
+							) INNER_PRODUCT
+						<where>
+							<include refid="Product.where"/>
+						</where>
+					) INNER_PRODUCT_FILTERED
+				GROUP BY
+					INNER_PRODUCT_FILTERED.prdt_no, INNER_PRODUCT_FILTERED.prdt_optn_no
+			) INNER_PRODUCT_GROUPED
+	</select>
+	
+</mapper>

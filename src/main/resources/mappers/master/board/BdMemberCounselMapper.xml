@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.board.repository.master.BdMemberCounselDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.board.model.master.BdMemberCounsel">
+    
+     /*+ kr.co.shop.web.board.repository.master.BdMemberCounselDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			bd_member_counsel
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+
+	<select id="selectInqryCount" parameterType="pageable" resultType="int">
+		/*+ kr.co.shop.web.board.repository.master.BdMemberCounselDao.selectInqryCount [나의 상담내역 리스트 카운트] [신인철] */
+		SELECT <include refid="Paging.totalCount" />
+		  FROM BD_MEMBER_COUNSEL A
+		 WHERE A.MEMBER_NO = #{bean.memberNo, jdbcType = VARCHAR}
+		   AND A.CNSL_GBN_CODE = #{bean.cnslGbnCode, jdbcType = VARCHAR}
+		<choose>
+			<when test="('' != bean.toDate and bean.toDate != null) and (bean.fromDate != null and '' != bean.fromDate)">
+		   AND A.INQRY_DTM BETWEEN TO_DATE(CONCAT(#{bean.fromDate, jdbcType=VARCHAR}, ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(CONCAT(#{bean.toDate, jdbcType=VARCHAR}, ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS')
+			</when>
+			<otherwise>
+		   AND A.INQRY_DTM BETWEEN SYSDATE-30 AND SYSDATE 
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="selectInqryList" parameterType="pageable" resultType="kr.co.shop.web.board.model.master.BdMemberCounsel">
+	/*+ kr.co.shop.web.board.repository.master.BdMemberCounselDao.selectInqryList [마이페이지 나의 상담내역 리스트] [신인철] */ 
+		SELECT V_T.MEMBER_CNSL_SEQ
+			 , V_T.MEMBER_NO
+			 , V_T.CNSL_GBN_CODE
+			 , V_T.DP_INQRY_DTM
+			 , V_T.CNSL_TYPE_NAME
+			 , V_T.INQRY_TITLE_TEXT
+			 , V_T.INQRY_CONT_TEXT
+			 , V_T.ORDER_NO
+			 , V_T.AS_ACCEPT_NO
+			 , V_T.ASWR_CONT_TEXT
+			 , V_T.ASWR_STAT_CODE
+			 , V_T.ASWR_STAT_NAME
+			 , V_T.DP_ASWR_DTM
+			 , V_T.DP_ASWR_CONT_TEXT
+			 , NVL(V_T.ORDER_PRDT_NAME, V_T.AS_PRDT_NAME) AS PRDT_NAME
+			 , NVL(V_T.ORDER_PRDT_COLOR_CODE, V_T.AS_PRDT_COLOR_CODE) AS PRDT_COLOR_CODE
+			 , NVL(V_T.ORDER_OPTN_NAME, V_T.AS_OPTN_NAME) AS OPTN_NAME
+			 , (SELECT DPBR.BRAND_NAME
+				  FROM DP_BRAND DPBR
+				 WHERE DPBR.BRAND_NO = NVL(V_T.ORDER_BRAND_NO, V_T.AS_BRAND_NO)) AS BRAND_NAME
+		  FROM (
+				SELECT A.MEMBER_CNSL_SEQ
+					 , A.CNSL_GBN_CODE
+					 , A.MEMBER_NO
+					 , A.INQRY_DTM
+					 , A.CNSL_TYPE_CODE
+					 , A.CNSL_TYPE_DTL_CODE
+					 , A.INQRY_TITLE_TEXT
+					 , A.INQRY_CONT_TEXT
+					 , A.ORDER_NO
+					 , A.ORDER_PRDT_SEQ
+					 , A.PRDT_NO
+					 , A.AS_ACCEPT_NO
+					 , A.AS_ACCEPT_PRDT_SEQ
+					 , A.ASWR_CONT_TEXT
+					 , A.ASWR_STAT_CODE
+					 , A.ASWR_NO
+					 , A.ASWR_DTM
+					 , CASE WHEN A.CNSL_GBN_CODE = '10000'
+					 		THEN U.CODE_DTL_NAME || ' > ' || V.CODE_DTL_NAME 
+					 		ELSE V.CODE_DTL_NAME
+						END CNSL_TYPE_NAME
+					 , CASE WHEN T.CODE_DTL_NO = '10001'
+					 		THEN '답변대기'
+					 		ELSE T.CODE_DTL_NAME
+						END ASWR_STAT_NAME
+					 , TO_CHAR(A.INQRY_DTM, 'YYYY.MM.DD') AS DP_INQRY_DTM
+					 , CASE WHEN A.ASWR_STAT_CODE = '10000' THEN '-'
+							WHEN A.ASWR_STAT_CODE = '10002' THEN A.ASWR_CONT_TEXT
+							ELSE '빠른 시일내로 답변 드리겠습니다'
+						END DP_ASWR_CONT_TEXT
+					 , TO_CHAR(A.ASWR_DTM, 'YYYY-MM-DD HH24:MI:SS') AS DP_ASWR_DTM  
+					 , OP.PRDT_NAME AS ORDER_PRDT_NAME
+					 , OP.PRDT_COLOR_CODE AS ORDER_PRDT_COLOR_CODE
+					 , OP.OPTN_NAME AS ORDER_OPTN_NAME
+					 , AP.PRDT_NAME AS AS_PRDT_NAME
+					 , AP.PRDT_COLOR_CODE AS AS_PRDT_COLOR_CODE
+					 , AP.OPTN_NAME AS AS_OPTN_NAME
+					 , OP.BRAND_NO AS ORDER_BRAND_NO
+					 , AP.BRAND_NO AS AS_BRAND_NO
+				  FROM BD_MEMBER_COUNSEL A
+				  JOIN SY_CODE_DETAIL T ON A.ASWR_STAT_CODE = T.CODE_DTL_NO AND T.CODE_FIELD = 'ASWR_STAT_CODE'
+				  LEFT OUTER JOIN SY_CODE_DETAIL U ON A.CNSL_TYPE_CODE = U.CODE_DTL_NO AND U.CODE_FIELD = 'CNSL_TYPE_CODE'
+				  LEFT OUTER JOIN SY_CODE_DETAIL V ON A.CNSL_TYPE_DTL_CODE = V.CODE_DTL_NO AND V.CODE_FIELD = 'CNSL_TYPE_DTL_CODE'
+				  LEFT OUTER JOIN OC_ORDER_PRODUCT OP ON A.ORDER_NO = OP.ORDER_NO AND A.ORDER_PRDT_SEQ = OP.ORDER_PRDT_SEQ
+				  LEFT OUTER JOIN OC_AS_ACCEPT_PRODUCT AP ON A.AS_ACCEPT_NO = AP.AS_ACCEPT_NO AND A.AS_ACCEPT_PRDT_SEQ = AP.AS_ACCEPT_PRDT_SEQ
+				 WHERE A.MEMBER_NO = #{bean.memberNo, jdbcType = VARCHAR}
+				   AND A.CNSL_GBN_CODE = #{bean.cnslGbnCode, jdbcType = VARCHAR}
+				<choose>
+					<when test="('' != bean.toDate and bean.toDate != null) and (bean.fromDate != null and '' != bean.fromDate)">
+				   AND A.INQRY_DTM BETWEEN TO_DATE(CONCAT(#{bean.fromDate, jdbcType=VARCHAR}, ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(CONCAT(#{bean.toDate, jdbcType=VARCHAR}, ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS')
+					</when>
+					<otherwise>
+				   AND A.INQRY_DTM BETWEEN SYSDATE-30 AND SYSDATE 
+					</otherwise>
+				</choose>
+				 ORDER BY A.INQRY_DTM DESC
+				 <include refid="Paging.mssql" />
+				)V_T
+	</select>
+	
+	<select id="selectInqryDetail" parameterType="kr.co.shop.web.board.model.master.BdMemberCounsel" resultType="kr.co.shop.web.board.model.master.BdMemberCounsel">
+	/*+ kr.co.shop.web.board.repository.master.BdMemberCounselDao.selectInqryList [1:1상담 상세 ] [신인철] */ 
+		SELECT A.MEMBER_CNSL_SEQ
+			 , A.CNSL_GBN_CODE
+			 , A.MEMBER_NO
+			 , A.INQRY_DTM
+			 , A.INQRY_TITLE_TEXT
+			 , A.INQRY_CONT_TEXT
+			 , A.CNSL_TYPE_CODE
+			 , A.CNSL_TYPE_DTL_CODE
+			 , A.ORDER_NO
+			 , A.ORDER_PRDT_SEQ
+			 , A.PRDT_NO
+			 , A.AS_ACCEPT_NO
+			 , A.AS_ACCEPT_PRDT_SEQ
+		  FROM BD_MEMBER_COUNSEL A
+		 WHERE A.MEMBER_CNSL_SEQ = #{memberCnslSeq, jdbcType = INTEGER}
+	</select>
+	
+	<insert id="insertInqryDetail" useGeneratedKeys="true" keyProperty="memberCnslSeq" parameterType="kr.co.shop.web.board.model.master.BdMemberCounsel">
+	/*+ kr.co.shop.web.board.repository.master.BdMemberCounselDao.insertInqryDetail [1:1상담 등록] [신인철] */ 
+		INSERT INTO BD_MEMBER_COUNSEL( 
+			   CNSL_GBN_CODE
+			 , MEMBER_NO
+			 , INQRY_DTM
+			 , SITE_NO
+			 , CNSL_TYPE_CODE
+			 , CNSL_TYPE_DTL_CODE
+			 , INQRY_TITLE_TEXT
+			 , INQRY_CONT_TEXT
+			 , ORDER_NO
+			 , ORDER_PRDT_SEQ
+			 , PRDT_NO
+			 , AS_ACCEPT_NO
+			 , AS_ACCEPT_PRDT_SEQ
+			 , VNDR_NO
+			 , CNSL_SCRIPT_SEQ
+			 , ASWR_CONT_TEXT
+			 , ASWR_STAT_CODE
+			 , ASWR_NO
+			 , ASWR_DTM ) 
+		VALUES 
+			 ( #{cnslGbnCode, jdbcType=VARCHAR}
+			 , #{memberNo, jdbcType=VARCHAR}
+			 , SYSDATE
+			 , #{siteNo, jdbcType=VARCHAR}
+			 , #{cnslTypeCode, jdbcType=VARCHAR}
+			 , #{cnslTypeDtlCode, jdbcType=VARCHAR}
+			 , #{inqryTitleText, jdbcType=VARCHAR}
+			 , #{inqryContText, jdbcType=VARCHAR}
+			 , #{orderNo, jdbcType=VARCHAR}
+			 , #{orderPrdtSeq, jdbcType=TINYINT}
+			 , #{prdtNo, jdbcType=VARCHAR}
+			 , #{asAcceptNo, jdbcType=VARCHAR}
+			 , #{asAcceptPrdtSeq, jdbcType=INTEGER}
+			 , #{vndrNo, jdbcType=VARCHAR}
+			 , #{cnslScriptSeq, jdbcType=VARCHAR}
+			 , #{aswrContText, jdbcType=VARCHAR}
+			 , #{aswrStatCode, jdbcType=VARCHAR}
+			 , #{aswrNo, jdbcType=VARCHAR}
+			 , #{aswrDtm, jdbcType=TIMESTAMP} )  
+	</insert>
+	
+	<update id="updateInqryDetail" parameterType="kr.co.shop.web.board.model.master.BdMemberCounsel">
+		/*+ kr.co.shop.web.board.repository.master.BdMemberCounselDao.updateInqryDetail [1:1문의 수정] [신인철] */
+			UPDATE BD_MEMBER_COUNSEL
+			   SET INQRY_DTM = SYSDATE
+			<if test ="cnslTypeCode != null and cnslTypeCode != ''">
+				 , CNSL_TYPE_CODE = #{cnslTypeCode, jdbcType=VARCHAR}
+			</if>
+			<if test ="cnslTypeDtlCode != null and cnslTypeDtlCode != ''">
+				 , CNSL_TYPE_DTL_CODE 	= #{cnslTypeDtlCode, jdbcType=VARCHAR}
+			</if>
+				 , ORDER_NO = #{orderNo, jdbcType=VARCHAR} 
+				 , ORDER_PRDT_SEQ = #{orderPrdtSeq, jdbcType=TINYINT} 
+				 , PRDT_NO = #{prdtNo, jdbcType=VARCHAR} 
+				 , AS_ACCEPT_NO = #{asAcceptNo, jdbcType=VARCHAR} 
+				 , VNDR_NO = #{vndrNo, jdbcType=VARCHAR} 
+				 , AS_ACCEPT_PRDT_SEQ = #{asAcceptPrdtSeq, jdbcType=TINYINT} 
+				 , INQRY_TITLE_TEXT	= #{inqryTitleText, jdbcType=VARCHAR}
+				 , INQRY_CONT_TEXT	= #{inqryContText, jdbcType=VARCHAR}
+			 WHERE MEMBER_CNSL_SEQ = #{memberCnslSeq, jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateVocDetail" parameterType="kr.co.shop.web.board.model.master.BdMemberCounsel">
+		/*+ kr.co.shop.web.board.repository.master.BdMemberCounselDao.updateInqryDetail [고객의소리 수정] [신인철] */
+			UPDATE BD_MEMBER_COUNSEL
+			   SET INQRY_DTM = SYSDATE
+			<if test ="cnslTypeCode != null and cnslTypeCode != ''">
+				 , CNSL_TYPE_CODE = #{cnslTypeCode, jdbcType=VARCHAR}
+			</if>
+			<if test ="cnslTypeDtlCode != null and cnslTypeDtlCode != ''">
+				 , CNSL_TYPE_DTL_CODE 	= #{cnslTypeDtlCode, jdbcType=VARCHAR}
+			</if>
+				 , INQRY_TITLE_TEXT	= #{inqryTitleText, jdbcType=VARCHAR}
+				 , INQRY_CONT_TEXT	= #{inqryContText, jdbcType=VARCHAR}
+			 WHERE MEMBER_CNSL_SEQ = #{memberCnslSeq, jdbcType=INTEGER}
+	</update>
+	
+	<insert id="insertVocDetail" useGeneratedKeys="true" keyProperty="memberCnslSeq" parameterType="kr.co.shop.web.board.model.master.BdMemberCounsel">
+	/*+ kr.co.shop.web.board.repository.master.BdMemberCounselDao.insertVocDetail [고객의 소리 문의 등록] [신인철] */ 
+		INSERT INTO BD_MEMBER_COUNSEL( 
+			   CNSL_GBN_CODE
+			 , MEMBER_NO
+			 , INQRY_DTM
+			 , SITE_NO
+			 , CNSL_TYPE_CODE
+			 , CNSL_TYPE_DTL_CODE
+			 , INQRY_TITLE_TEXT
+			 , INQRY_CONT_TEXT
+			 , ORDER_NO
+			 , ORDER_PRDT_SEQ
+			 , PRDT_NO
+			 , AS_ACCEPT_NO
+			 , AS_ACCEPT_PRDT_SEQ
+			 , VNDR_NO
+			 , CNSL_SCRIPT_SEQ
+			 , ASWR_CONT_TEXT
+			 , ASWR_STAT_CODE
+			 , ASWR_NO
+			 , ASWR_DTM ) 
+		VALUES 
+			 ( #{cnslGbnCode, jdbcType=VARCHAR}
+			 , #{memberNo, jdbcType=VARCHAR}
+			 , SYSDATE
+			 , #{siteNo, jdbcType=VARCHAR}
+			 , #{cnslTypeCode, jdbcType=VARCHAR}
+			 , #{cnslTypeDtlCode, jdbcType=VARCHAR}
+			 , #{inqryTitleText, jdbcType=VARCHAR}
+			 , #{inqryContText, jdbcType=VARCHAR}
+			 , #{orderNo, jdbcType=VARCHAR}
+			 , #{orderPrdtSeq, jdbcType=TINYINT}
+			 , #{prdtNo, jdbcType=VARCHAR}
+			 , #{asAcceptNo, jdbcType=VARCHAR}
+			 , #{asAcceptPrdtSeq, jdbcType=INTEGER}
+			 , #{vndrNo, jdbcType=VARCHAR}
+			 , #{cnslScriptSeq, jdbcType=VARCHAR}
+			 , #{aswrContText, jdbcType=VARCHAR}
+			 , #{aswrStatCode, jdbcType=VARCHAR}
+			 , #{aswrNo, jdbcType=VARCHAR}
+			 , #{aswrDtm, jdbcType=TIMESTAMP} )  
+	</insert>
+	
+	<delete id="deleteAdminMemo" parameterType="kr.co.shop.web.board.model.master.BdMemberCounsel">
+	/*+ kr.co.shop.web.board.repository.master.BdMemberCounselDao.deleteAdminMemo [고객의 소리 문의 등록] [신인철] */
+		DELETE FROM BD_MEMBER_COUNSEL_MEMO
+		 WHERE MEMBER_CNSL_SEQ = #{memberCnslSeq, jdbcType=INTEGER}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.DpSearchWordHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.display.model.master.DpSearchWordHistory">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpSearchWordHistoryDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			DP_SEARCH_WORD_HISTORY
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectPopularSearchWordList" parameterType="kr.co.shop.web.display.model.master.DpSearchWordHistory" resultType="kr.co.shop.web.display.model.master.DpSearchWordHistory">
+    /*+ kr.co.shop.web.display.repository.master.DpSearchWordHistoryDao.selectPopularSearchWordList [인기 검색어 리스트 조회] [이가영] */
+    	
+    	SELECT
+			SRCH_WORD1_TEXT+','+SRCH_WORD2_TEXT+','+SRCH_WORD3_TEXT+','+SRCH_WORD4_TEXT+','+SRCH_WORD5_TEXT+','+SRCH_WORD6_TEXT+','+SRCH_WORD7_TEXT+','+SRCH_WORD8_TEXT+','+SRCH_WORD9_TEXT+','+SRCH_WORD10_TEXT AS RANK_ARR
+		FROM
+			DP_SEARCH_WORD_HISTORY
+		WHERE
+			SRCH_WORD_GBN_TYPE = 'P'
+		ORDER BY apply_dtm DESC
+		FETCH FIRST 2 ROWS ONLY
+    </select>
+
+</mapper>

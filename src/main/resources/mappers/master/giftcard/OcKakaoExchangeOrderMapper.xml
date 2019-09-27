@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.giftcard.repository.master.OcKakaoExchangeOrderDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.giftcard.model.master.OcKakaoExchangeOrder">
+    
+     /*+ kr.co.shop.web.giftcard.repository.master.OcKakaoExchangeOrderDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			oc_kakao_exchange_order
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <insert id="insertKakaoCouponExchange" parameterType="kr.co.shop.web.giftcard.model.master.OcKakaoExchangeOrder">	
+
+     /*+ kr.co.shop.web.giftcard.repository.master.OcKakaoExchangeOrderDao.insertKakaoCouponExchange [교환정보 insert 쿼리] [YSW] */
+    
+		INSERT INTO oc_kakao_exchange_order
+			 ( 
+			 	gift_card_order_no
+			 	, order_dtm
+			 	, site_no
+			 	, member_no
+			 	, member_type_code
+			 	, emp_yn, ots_vip_yn
+			 	, device_code
+			 	, exchng_amt
+			 	, rcvr_name
+			 	, rcvr_hdphn_no_text
+			 	, card_no_text
+			 	, card_pin_no_text
+			 	, tr_id
+			 	, admit_num
+			 	, coupon_num
+			 	, use_amount
+			 	, order_balance
+			 	, data_hash
+			 	, result_code_text
+			 	, cash_receipt_amount
+			 	, no_tax_amount
+			 	, rgster_no
+			 	, rgst_dtm 
+			 ) 
+
+		VALUES 
+			 ( 
+			 	#{giftCardOrderNo, jdbcType=VARCHAR}
+			 	, <choose><when test="orderDtm != null">#{orderDtm, jdbcType=TIMESTAMP}</when><otherwise>SYSDATE</otherwise></choose>
+			 	, #{siteNo, jdbcType=VARCHAR}
+			 	, #{memberNo, jdbcType=VARCHAR}
+			 	, #{memberTypeCode, jdbcType=VARCHAR}
+			 	, #{empYn, jdbcType=CHAR}
+			 	, #{otsVipYn, jdbcType=CHAR}
+			 	, #{deviceCode, jdbcType=VARCHAR}
+			 	, #{exchngAmt, jdbcType=INTEGER}
+			 	, #{rcvrName, jdbcType=VARCHAR}
+			 	, #{rcvrHdphnNoText, jdbcType=VARCHAR}
+			 	, #{cardNoText, jdbcType=VARCHAR}
+			 	, #{cardPinNoText, jdbcType=VARCHAR}
+			 	, #{trId, jdbcType=VARCHAR}
+			 	, #{admitNum, jdbcType=VARCHAR}
+			 	, #{couponNum, jdbcType=VARCHAR}
+			 	, #{useAmount, jdbcType=INTEGER}
+			 	, #{orderBalance, jdbcType=INTEGER}
+			 	, #{dataHash, jdbcType=VARCHAR}
+			 	, #{resultCodeText, jdbcType=VARCHAR}
+			 	, #{cashReceiptAmount, jdbcType=INTEGER}
+			 	, #{noTaxAmount, jdbcType=INTEGER}
+			 	, #{rgsterNo, jdbcType=VARCHAR}
+			 	, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>SYSDATE</otherwise></choose> 
+			 )  
+    </insert>
+    
+    <select id="selectKakaoExchangeInfo" parameterType="kr.co.shop.web.giftcard.model.master.OcKakaoExchangeOrder" resultType="kr.co.shop.web.giftcard.model.master.OcKakaoExchangeOrder">
+    
+     /*+ kr.co.shop.web.giftcard.repository.master.OcKakaoExchangeOrderDao.selectKakaoExchangeInfo [카카오톡 쿠폰 교환 정보 조회 쿼리] [YSW] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			oc_kakao_exchange_order
+		<where> 
+			<if test="giftCardOrderNo != null"> 
+				 gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR}
+			</if> 
+		</where>  
+    </select>
+
+</mapper>

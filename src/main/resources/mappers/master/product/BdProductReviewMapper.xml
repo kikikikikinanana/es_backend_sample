@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.BdProductReviewDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.product.model.master.BdProductReview">
+    
+     /*+ kr.co.shop.web.product.repository.master.BdProductReviewDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			BD_PRODUCT_REVIEW
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <resultMap type="kr.co.shop.web.product.model.master.BdProductReview" id="productReviewResult">
+    	<collection property="productReviewImages" column="{prdtRvwSeq=prdt_rvw_seq}" ofType="kr.co.shop.web.product.model.master.BdProductReviewImage" select="kr.co.shop.web.product.repository.master.BdProductReviewImageDao.selectProductReviewImage"/>
+    	<collection property="productReviewEvlts" column="{prdtRvwSeq=prdt_rvw_seq}" ofType="kr.co.shop.web.product.model.master.BdProductReviewEvlt" select="kr.co.shop.web.product.repository.master.BdProductReviewEvltDao.selectProductReviewEvlt"/>
+    	<collection property="orderProduct" column="{orderNo=order_no,orderPrdtSeq=order_prdt_seq}" ofType="kr.co.shop.web.order.model.master.OcOrderProduct" select="kr.co.shop.web.order.repository.master.OcOrderProductDao.selectOrderProductDetail"/>
+    	<collection property="offDealHistory" column="{safeKey=safe_key,safeKeySeq=safe_key_seq,saleDate=sale_date,storeCd=store_cd,posNo=pos_no,dealNo=deal_no,productCd=product_cd,sizeCd=size_cd}" ofType="kr.co.shop.web.order.model.master.IfOffDealHistory" select="kr.co.shop.web.order.repository.master.IfOffDealHistoryDao.selectOffDealHistory"/>
+    </resultMap>
+    
+    <sql id="select-columns-alias-a">
+    	A.prdt_rvw_seq, A.write_dtm, A.rvw_type, A.member_no, A.prdt_no, A.onln_buy_yn, A.vndr_no, A.site_no, A.chnnl_no, A.order_no, A.order_prdt_seq, A.safe_key, A.safe_key_seq, A.sale_date, A.store_cd, A.pos_no, A.deal_no, A.product_cd, A.size_cd, A.rvw_cont_text, A.aswr_cont_text, A.point_pay_yn, A.pay_point_amt, A.point_pay_dtm, A.point_pay_cncl_yn, A.point_pay_cncl_dtm, A.point_pay_cnclr_no, A.point_pay_impsblt_yn, A.best_yn, A.cnfrm_yn, A.cnfrmr_no, A.cnfrm_dtm, A.disp_yn, A.aswr_stat_code, A.aswr_no, A.aswr_dtm, A.moder_no, A.mod_dtm
+    	, TO_CHAR(A.write_dtm, 'YYYY.MM.DD HH24:MI:SS') AS str_write_dtm
+    	, TO_CHAR(A.aswr_dtm, 'YYYY.MM.DD HH24:MI:SS') AS str_aswr_dtm
+    </sql>
+    
+    <sql id="where-review-search-vo-alias-a">
+    	<where>
+    		<!-- 
+    		<if test='bean.dispYn != null and bean.dispYn != ""'>
+    			AND A.disp_yn = #{bean.dispYn, jdbcType=VARCHAR}
+    		</if>
+    		 -->
+   			AND A.disp_yn = 'Y'
+			AND A.site_no = #{bean.siteNo, jdbcType=VARCHAR}
+   			AND A.chnnl_no = #{bean.chnnlNo, jdbcType=VARCHAR}
+   			<if test='bean.prdtNo != null and bean.prdtNo != ""'>
+				AND A.prdt_no = #{bean.prdtNo, jdbcType=VARCHAR}
+			</if>
+			<if test='bean.rvwType != null and bean.rvwType != ""'>
+				AND A.rvw_type = #{bean.rvwType, jdbcType=VARCHAR}
+			</if>
+			<if test='bean.bestYn != null and bean.bestYn != ""'>
+				AND A.best_yn = #{bean.bestYn, jdbcType=VARCHAR}
+			</if>
+			<if test='bean.memberNo != null and bean.memberNo != ""'>
+    			AND A.member_no = #{bean.memberNo, jdbcType=VARCHAR}
+    		</if>
+    		<if test='(bean.periodStartDate != null and bean.periodEndDate != null) and (bean.periodStartDate != "" and bean.periodEndDate != "")'>
+    			AND A.write_dtm
+					BETWEEN TO_DATE(CONCAT(#{bean.periodStartDate, jdbcType=VARCHAR}, ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') 
+						AND TO_DATE(CONCAT(#{bean.periodEndDate, jdbcType=VARCHAR}, ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS')
+    		</if>
+    			
+    	</where>
+    </sql>
+    
+    <sql id="join-review-search-vo-alias-b">
+    	JOIN bd_product_review B
+		ON A.prdt_rvw_seq = B.prdt_rvw_seq
+		AND B.prdt_no = #{prdtNo, jdbcType=VARCHAR}
+		<!-- AND B.ASWR_STAT_CODE = '10002' -->
+    </sql>
+   
+    <select id="selectProductReviewCount" parameterType="pageable" resultType="Integer">
+     /*+ kr.co.shop.web.product.repository.master.BdProductReviewDao.selectProductReviewCount [상품 후기 갯수 조회] [황성준] */
+    	SELECT 
+    		<include refid="Paging.totalCount" />
+    	FROM bd_product_review A
+    	LEFT JOIN bd_product_review_evlt B
+    	ON A.prdt_rvw_seq = B.prdt_rvw_seq
+    	AND B.prdt_rvw_code IN (10000, 10018, 10036)
+    	JOIN mb_member C
+    	ON A.member_no = C.member_no
+    	LEFT JOIN pd_product_color D
+    	ON A.prdt_no = D.prdt_no
+    	LEFT JOIN oc_order_product E
+    	ON A.order_no = E.order_no
+    	AND A.order_prdt_seq = E.order_prdt_seq
+    	LEFT JOIN pd_product_option F
+    	ON A.prdt_no = F.prdt_no
+    	AND E.prdt_optn_no = F.prdt_optn_no
+    		<include refid="where-review-search-vo-alias-a"/>
+    </select>
+    
+    <select id="selectProductReview" parameterType="pageable" resultMap="productReviewResult">
+      /*+ kr.co.shop.web.product.repository.master.BdProductReviewDao.selectProductReview [상품 후기 목록 조회] [황성준] */
+    	SELECT 
+    		<include refid="select-columns-alias-a" />
+    		, C.login_id
+    		, FN_CODE_VALUE('PRDT_COLOR_CODE',  D.prdt_color_code) AS prdt_color_code_name
+    		, E.prdt_name
+    		, F.optn_name
+    	FROM bd_product_review A
+    	LEFT JOIN bd_product_review_evlt B
+    	ON A.prdt_rvw_seq = B.prdt_rvw_seq
+    	AND B.prdt_rvw_code IN (10000, 10018, 10036)
+    	JOIN mb_member C
+    	ON A.member_no = C.member_no
+    	LEFT JOIN pd_product_color D
+    	ON A.prdt_no = D.prdt_no
+    	LEFT JOIN oc_order_product E
+    	ON A.order_no = E.order_no
+    	AND A.order_prdt_seq = E.order_prdt_seq
+    	LEFT JOIN pd_product_option F
+    	ON A.prdt_no = F.prdt_no
+    	AND E.prdt_optn_no = F.prdt_optn_no
+    		<include refid="where-review-search-vo-alias-a"/>
+    		<choose>
+    			<when test="bean.orderKeyword == 'recent-write-dtm'">
+    				ORDER BY A.write_dtm DESC
+    			</when>
+    			<when test="bean.orderKeyword == 'evlt-score-high'">
+    				ORDER BY B.evlt_score DESC, A.write_dtm DESC 
+    			</when>
+    			<when test="bean.orderKeyword == 'evlt-score-row'">
+    				ORDER BY B.evlt_score ASC, A.write_dtm DESC
+    			</when>
+    			<otherwise>
+    				ORDER BY A.prdt_rvw_seq DESC
+    			</otherwise>
+    		</choose>
+    		<if test='bean.bestYn != "Y"'>
+	    		<include refid="Paging.mssql" />
+    		</if>
+    </select>
+      
+    <select id="selectProductReviewPercentageList" parameterType="kr.co.shop.web.product.model.master.BdProductReview" resultType="hashMap">
+    	/*+ kr.co.shop.web.product.repository.master.BdProductReviewDao.selectProductReviewPercentageList [상품 후기 비율 조회] [황성준] */
+    	SELECT RA.*, ROW_NUMBER() OVER(ORDER BY RA.percentage DESC) AS rowNum
+		FROM (
+			SELECT 
+				  A.prdt_rvw_code AS prdtRvwCode
+				, NULL AS evltScore
+				, AVG(CAST(A.evlt_score AS FLOAT)) AS avgScore
+				, CAST(CAST(AVG(CAST(A.evlt_score AS FLOAT)) AS FLOAT)/CAST(5 AS FLOAT) * 100 AS DECIMAL) AS percentage
+			FROM bd_product_review_evlt A
+			<include refid="join-review-search-vo-alias-b"/>
+			AND A.prdt_rvw_code = #{prdtRvwCode1, jdbcType=VARCHAR}
+			GROUP BY A.prdt_rvw_code
+		) RA
+		UNION ALL
+		SELECT RB.*, ROW_NUMBER() OVER(ORDER BY RB.percentage DESC) AS rowNum
+		FROM (
+			SELECT 
+				  A.prdt_rvw_code AS prdtRvwCode
+				, A.evlt_score AS evltScore
+				, AVG(CAST(A.evlt_score AS FLOAT)) AS avgScore
+				, CAST(CAST(COUNT(A.evlt_score) AS FLOAT)/CAST((SELECT COUNT(evlt_score) FROM bd_product_review_evlt WHERE prdt_rvw_seq IN ((SELECT prdt_rvw_seq FROM bd_product_review WHERE prdt_no = #{prdtNo, jdbcType=VARCHAR} AND prdt_rvw_code = A.prdt_rvw_code)) GROUP BY prdt_rvw_code) AS FLOAT) * 100 AS DECIMAL) AS PERCENTAGE
+			FROM bd_product_review_evlt A
+			<include refid="join-review-search-vo-alias-b"/>
+			AND A.PRDT_RVW_CODE = #{prdtRvwCode2, jdbcType=VARCHAR}
+			GROUP BY A.prdt_rvw_code, A.evlt_score
+		) RB
+		UNION ALL
+		SELECT RC.*, ROW_NUMBER() OVER(ORDER BY RC.percentage DESC) AS rowNum
+		FROM (
+			SELECT
+				  A.prdt_rvw_code AS prdtRvwCode
+				, A.evlt_score AS evltScore
+				, AVG(CAST(A.evlt_score AS FLOAT)) AS avgScore
+				, CAST(CAST(COUNT(A.evlt_score) AS FLOAT)/CAST((SELECT COUNT(evlt_score) FROM bd_product_review_evlt WHERE prdt_rvw_seq IN ((SELECT prdt_rvw_seq FROM bd_product_review WHERE prdt_no = #{prdtNo, jdbcType=VARCHAR} AND prdt_rvw_code = A.prdt_rvw_code)) GROUP BY prdt_rvw_code) AS FLOAT) * 100 AS DECIMAL) AS PERCENTAGE
+			FROM bd_product_review_evlt A
+			<include refid="join-review-search-vo-alias-b"/>
+			AND A.prdt_rvw_code = #{prdtRvwCode3, jdbcType=VARCHAR}
+			GROUP BY A.prdt_rvw_code, A.evlt_score
+		) RC
+		
+		<!-- 
+    	SELECT A.prdt_rvw_code
+		  	 , 5 AS evlt_score
+		  	 , AVG(A.evlt_score) AS avgScore
+		 	 , CAST(CAST(AVG(A.evlt_score) AS FLOAT)/CAST(5 AS FLOAT) * 100 AS DECIMAL) AS percentage
+		FROM bd_product_review_evlt A
+		<include refid="join-review-search-vo-alias-b"/>
+		WHERE A.prdt_rvw_code = #{prdtRvwCode1, jdbcType=VARCHAR}
+		GROUP BY A.prdt_rvw_code
+		UNION ALL
+    	SELECT A.prdt_rvw_code
+    		 , A.evlt_score
+		  	 , AVG(A.evlt_score) AS avgScore
+		 	 , CAST(CAST(COUNT(A.evlt_score) AS FLOAT)/CAST((SELECT COUNT(evlt_score) FROM bd_product_review_evlt WHERE prdt_rvw_seq IN ((SELECT prdt_rvw_seq FROM bd_product_review WHERE prdt_no = #{prdtNo, jdbcType=VARCHAR} AND prdt_rvw_code = A.prdt_rvw_code)) GROUP BY prdt_rvw_code) AS FLOAT) * 100 AS DECIMAL) AS percentage
+		FROM bd_product_review_evlt A
+		<include refid="join-review-search-vo-alias-b"/>
+		WHERE A.prdt_rvw_code IN (#{prdtRvwCode2, jdbcType=VARCHAR}, #{prdtRvwCode3, jdbcType=VARCHAR})
+		GROUP BY A.prdt_rvw_code, A.evlt_score
+		ORDER BY A.prdt_rvw_code, A.evlt_score
+		-->
+    </select>
+
+</mapper>

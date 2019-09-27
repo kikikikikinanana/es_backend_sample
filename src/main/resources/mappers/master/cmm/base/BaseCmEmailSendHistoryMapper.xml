@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cmm.repository.master.CmEmailSendHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	email_sndr_seq, sndr_email_addr_text, sndr_name, email_title_text, email_cont_text, rcvr_email_addr_text, rcvr_name, send_yn, send_dtm, site_no, email_tmpl_seq, member_no, admin_send_yn, rgster_no, rgst_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	email_sndr_seq = #{emailSndrSeq, jdbcType=INTEGER}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.cmm.model.master.CmEmailSendHistory" resultType="kr.co.shop.web.cmm.model.master.CmEmailSendHistory">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmEmailSendHistoryDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			cm_email_send_history WITH (NOLOCK)
+
+		<where> 
+			<if test="emailSndrSeq != null"> 
+				 email_sndr_seq = #{emailSndrSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="sndrEmailAddrText != null"> 
+				 AND sndr_email_addr_text = #{sndrEmailAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="sndrName != null"> 
+				 AND sndr_name = #{sndrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="emailTitleText != null"> 
+				 AND email_title_text = #{emailTitleText, jdbcType=VARCHAR}
+			</if> 
+			<if test="emailContText != null"> 
+				 AND email_cont_text = #{emailContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrEmailAddrText != null"> 
+				 AND rcvr_email_addr_text = #{rcvrEmailAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rcvrName != null"> 
+				 AND rcvr_name = #{rcvrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="sendYn != null"> 
+				 AND send_yn = #{sendYn, jdbcType=CHAR}
+			</if> 
+			<if test="sendDtm != null"> 
+				 AND send_dtm = #{sendDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="emailTmplSeq != null"> 
+				 AND email_tmpl_seq = #{emailTmplSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="memberNo != null"> 
+				 AND member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="adminSendYn != null"> 
+				 AND admin_send_yn = #{adminSendYn, jdbcType=CHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+	<insert id="insert" useGeneratedKeys="true" keyProperty="emailSndrSeq">
+
+     /*+ kr.co.shop.web.cmm.repository.master.CmEmailSendHistoryDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO cm_email_send_history
+			 ( sndr_email_addr_text, sndr_name, email_title_text, email_cont_text, rcvr_email_addr_text, rcvr_name, send_yn, send_dtm, site_no, email_tmpl_seq, member_no, admin_send_yn, rgster_no, rgst_dtm ) 
+
+		VALUES 
+			 ( #{sndrEmailAddrText, jdbcType=VARCHAR}, #{sndrName, jdbcType=VARCHAR}, #{emailTitleText, jdbcType=VARCHAR}, #{emailContText, jdbcType=VARCHAR}, #{rcvrEmailAddrText, jdbcType=VARCHAR}, #{rcvrName, jdbcType=VARCHAR}, #{sendYn, jdbcType=CHAR}, <choose><when test="sendDtm != null">#{sendDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{siteNo, jdbcType=VARCHAR}, #{emailTmplSeq, jdbcType=INTEGER}, #{memberNo, jdbcType=VARCHAR}, #{adminSendYn, jdbcType=CHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.cmm.model.master.CmEmailSendHistory">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmEmailSendHistoryDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE cm_email_send_history
+		<set> 
+			<if test="emailSndrSeq != null"> 
+				email_sndr_seq = #{emailSndrSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="sndrEmailAddrText != null"> 
+				sndr_email_addr_text = #{sndrEmailAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="sndrName != null"> 
+				sndr_name = #{sndrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="emailTitleText != null"> 
+				email_title_text = #{emailTitleText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="emailContText != null"> 
+				email_cont_text = #{emailContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrEmailAddrText != null"> 
+				rcvr_email_addr_text = #{rcvrEmailAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrName != null"> 
+				rcvr_name = #{rcvrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="sendYn != null"> 
+				send_yn = #{sendYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="sendDtm != null"> 
+				send_dtm = #{sendDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="emailTmplSeq != null"> 
+				email_tmpl_seq = #{emailTmplSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="adminSendYn != null"> 
+				admin_send_yn = #{adminSendYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 email_sndr_seq = #{emailSndrSeq, jdbcType=INTEGER}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.cmm.model.master.CmEmailSendHistory">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmEmailSendHistoryDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM cm_email_send_history
+		WHERE 
+			 email_sndr_seq = #{emailSndrSeq, jdbcType=INTEGER}  
+    </delete>
+</mapper>

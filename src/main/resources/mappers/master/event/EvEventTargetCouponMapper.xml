@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.event.repository.master.EvEventTargetCouponDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.event.model.master.EvEventTargetCoupon">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventTargetCouponDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			ev_event_target_coupon
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="getEventTargetCouponListByEventNo" parameterType="String" resultType="kr.co.shop.web.event.model.master.EvEventTargetCoupon">
+    
+    /*+ kr.co.shop.web.event.repository.master.EvEventTargetCouponDao.getEventTargetCouponListByEventNo [이벤트 상세 쿠폰 리스트 조회 쿼리] [이지훈] */  
+    	
+    	SELECT
+    		EETC.EVENT_NO
+    		,EETC.CPN_NO
+    		,EETC.ISSUE_LIMIT_COUNT
+    		,EETC.ISSUE_COUNT
+    		,EETC.SORT_SEQ
+    		,(SELECT LISTAGG(FN_CODE_VALUE('DEVICE_CODE', PCAD.DEVICE_CODE),',') WITHIN GROUP(ORDER BY FN_CODE_VALUE('DEVICE_CODE', PCAD.DEVICE_CODE)) FROM PR_COUPON_APPLY_DEVICE PCAD WHERE PC.CPN_NO = PCAD.CPN_NO) AS DEVICE_CODE_NAME
+    		,PC.CPN_NAME
+    		,PC.USE_PLACE_GBN_TYPE
+    		,PC.DSCNT_TYPE
+			,PC.DSCNT_VALUE
+			,PC.MIN_LIMIT_SELL_AMT
+    	FROM
+    		EV_EVENT_TARGET_COUPON EETC
+    	INNER JOIN PR_COUPON PC
+    				ON EETC.CPN_NO = PC.CPN_NO
+    	WHERE EETC.EVENT_NO = #{eventNo, jdbcType=VARCHAR}
+	    	AND PC.DISP_YN = 'Y'
+	  		AND PC.DWLD_PSBLT_YN = 'Y'
+	 		AND PC.USE_PLACE_GBN_TYPE != 'F'
+			<!-- AND DWLD_START_TIME <![CDATA[<=]]> CONVERT(VARCHAR(8), SYSDATE, 108)
+			AND DWLD_END_TIME <![CDATA[>=]]> CONVERT(VARCHAR(8), SYSDATE, 108) -->
+	  		AND 'Y' = CASE 
+						  	  WHEN TO_CHAR(SYSDATE, 'D') = 1 THEN PC.SUN_YN
+							  WHEN TO_CHAR(SYSDATE, 'D') = 2 THEN PC.MON_YN 
+							  WHEN TO_CHAR(SYSDATE, 'D') = 3 THEN PC.TUE_YN
+							  WHEN TO_CHAR(SYSDATE, 'D') = 4 THEN PC.WED_YN 
+							  WHEN TO_CHAR(SYSDATE, 'D') = 5 THEN PC.THU_YN 
+							  WHEN TO_CHAR(SYSDATE, 'D') = 6 THEN PC.FRI_YN 
+							  WHEN TO_CHAR(SYSDATE, 'D') = 7 THEN PC.SAT_YN 
+						  END
+    	ORDER BY EETC.SORT_SEQ ASC
+    </select>
+
+</mapper>

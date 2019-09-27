@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.BdProductInquiryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	prdt_inqry_seq, member_no, inqry_dtm, site_no, cnsl_type_code, cnsl_type_dtl_code, inqry_title_text, inqry_cont_text, prdt_no, vndr_no, pswd_yn, sms_send_yn, email_send_yn, aswr_cont_text, aswr_stat_code, disp_yn, aswr_no, aswr_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	prdt_inqry_seq = #{prdtInqrySeq, jdbcType=INTEGER}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.product.model.master.BdProductInquiry" resultType="kr.co.shop.web.product.model.master.BdProductInquiry">
+    
+     /*+ kr.co.shop.web.product.repository.master.BdProductInquiryDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			BD_PRODUCT_INQUIRY WITH (NOLOCK)
+
+		<where> 
+			<if test="prdtInqrySeq != null"> 
+				 prdt_inqry_seq = #{prdtInqrySeq, jdbcType=INTEGER}
+			</if> 
+			<if test="memberNo != null"> 
+				 AND member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="inqryDtm != null"> 
+				 AND inqry_dtm = #{inqryDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="cnslTypeCode != null"> 
+				 AND cnsl_type_code = #{cnslTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="cnslTypeDtlCode != null"> 
+				 AND cnsl_type_dtl_code = #{cnslTypeDtlCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="inqryTitleText != null"> 
+				 AND inqry_title_text = #{inqryTitleText, jdbcType=VARCHAR}
+			</if> 
+			<if test="inqryContText != null"> 
+				 AND inqry_cont_text = #{inqryContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtNo != null"> 
+				 AND prdt_no = #{prdtNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="vndrNo != null"> 
+				 AND vndr_no = #{vndrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="pswdYn != null"> 
+				 AND pswd_yn = #{pswdYn, jdbcType=CHAR}
+			</if> 
+			<if test="smsSendYn != null"> 
+				 AND sms_send_yn = #{smsSendYn, jdbcType=CHAR}
+			</if> 
+			<if test="emailSendYn != null"> 
+				 AND email_send_yn = #{emailSendYn, jdbcType=CHAR}
+			</if> 
+			<if test="aswrContText != null"> 
+				 AND aswr_cont_text = #{aswrContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="aswrStatCode != null"> 
+				 AND aswr_stat_code = #{aswrStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="dispYn != null"> 
+				 AND disp_yn = #{dispYn, jdbcType=CHAR}
+			</if> 
+			<if test="aswrNo != null"> 
+				 AND aswr_no = #{aswrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="aswrDtm != null"> 
+				 AND aswr_dtm = #{aswrDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+	<insert id="insert" useGeneratedKeys="true" keyProperty="prdtInqrySeq">
+
+     /*+ kr.co.shop.web.product.repository.master.BdProductInquiryDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO BD_PRODUCT_INQUIRY
+			 ( member_no, inqry_dtm, site_no, cnsl_type_code, cnsl_type_dtl_code, inqry_title_text, inqry_cont_text, prdt_no, vndr_no, pswd_yn, sms_send_yn, email_send_yn, aswr_cont_text, aswr_stat_code, disp_yn, aswr_no, aswr_dtm ) 
+
+		VALUES 
+			 ( #{memberNo, jdbcType=VARCHAR}, <choose><when test="inqryDtm != null">#{inqryDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{siteNo, jdbcType=VARCHAR}, #{cnslTypeCode, jdbcType=VARCHAR}, #{cnslTypeDtlCode, jdbcType=VARCHAR}, #{inqryTitleText, jdbcType=VARCHAR}, #{inqryContText, jdbcType=VARCHAR}, #{prdtNo, jdbcType=VARCHAR}, #{vndrNo, jdbcType=VARCHAR}, #{pswdYn, jdbcType=CHAR}, #{smsSendYn, jdbcType=CHAR}, #{emailSendYn, jdbcType=CHAR}, #{aswrContText, jdbcType=VARCHAR}, #{aswrStatCode, jdbcType=VARCHAR}, #{dispYn, jdbcType=CHAR}, #{aswrNo, jdbcType=VARCHAR}, <choose><when test="aswrDtm != null">#{aswrDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.product.model.master.BdProductInquiry">
+    
+     /*+ kr.co.shop.web.product.repository.master.BdProductInquiryDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE BD_PRODUCT_INQUIRY
+		<set> 
+			<if test="prdtInqrySeq != null"> 
+				prdt_inqry_seq = #{prdtInqrySeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="inqryDtm != null"> 
+				inqry_dtm = #{inqryDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cnslTypeCode != null"> 
+				cnsl_type_code = #{cnslTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cnslTypeDtlCode != null"> 
+				cnsl_type_dtl_code = #{cnslTypeDtlCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="inqryTitleText != null"> 
+				inqry_title_text = #{inqryTitleText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="inqryContText != null"> 
+				inqry_cont_text = #{inqryContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtNo != null"> 
+				prdt_no = #{prdtNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="vndrNo != null"> 
+				vndr_no = #{vndrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pswdYn != null"> 
+				pswd_yn = #{pswdYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="smsSendYn != null"> 
+				sms_send_yn = #{smsSendYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="emailSendYn != null"> 
+				email_send_yn = #{emailSendYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="aswrContText != null"> 
+				aswr_cont_text = #{aswrContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aswrStatCode != null"> 
+				aswr_stat_code = #{aswrStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dispYn != null"> 
+				disp_yn = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="aswrNo != null"> 
+				aswr_no = #{aswrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aswrDtm != null"> 
+				aswr_dtm = #{aswrDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 prdt_inqry_seq = #{prdtInqrySeq, jdbcType=INTEGER}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.product.model.master.BdProductInquiry">
+    
+     /*+ kr.co.shop.web.product.repository.master.BdProductInquiryDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM BD_PRODUCT_INQUIRY
+		WHERE 
+			 prdt_inqry_seq = #{prdtInqrySeq, jdbcType=INTEGER}  
+    </delete>
+</mapper>

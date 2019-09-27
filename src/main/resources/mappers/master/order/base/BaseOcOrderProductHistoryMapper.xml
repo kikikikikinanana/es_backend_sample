@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderProductHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	order_no, order_prdt_seq, order_prdt_chng_hist_seq, prdt_no, prdt_optn_no, prdt_name, eng_prdt_name, optn_name, order_prdt_stat_code, note_text, rgster_no, rgst_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	order_no = #{orderNo, jdbcType=VARCHAR} AND order_prdt_chng_hist_seq = #{orderPrdtChngHistSeq, jdbcType=SMALLINT} AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.order.model.master.OcOrderProductHistory" resultType="kr.co.shop.web.order.model.master.OcOrderProductHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderProductHistoryDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			OC_ORDER_PRODUCT_HISTORY
+		<where> 
+			<if test="orderNo != null"> 
+				 order_no = #{orderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				 AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="orderPrdtChngHistSeq != null"> 
+				 AND order_prdt_chng_hist_seq = #{orderPrdtChngHistSeq, jdbcType=SMALLINT}
+			</if> 
+			<if test="prdtNo != null"> 
+				 AND prdt_no = #{prdtNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtOptnNo != null"> 
+				 AND prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtName != null"> 
+				 AND prdt_name = #{prdtName, jdbcType=VARCHAR}
+			</if> 
+			<if test="engPrdtName != null"> 
+				 AND eng_prdt_name = #{engPrdtName, jdbcType=VARCHAR}
+			</if> 
+			<if test="optnName != null"> 
+				 AND optn_name = #{optnName, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderPrdtStatCode != null"> 
+				 AND order_prdt_stat_code = #{orderPrdtStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="noteText != null"> 
+				 AND note_text = #{noteText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.order.model.master.OcOrderProductHistory">	
+
+     /*+ kr.co.shop.web.order.repository.master.OcOrderProductHistoryDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO OC_ORDER_PRODUCT_HISTORY
+			 ( order_no, order_prdt_seq, order_prdt_chng_hist_seq, prdt_no, prdt_optn_no, prdt_name, eng_prdt_name, optn_name, order_prdt_stat_code, note_text, rgster_no, rgst_dtm ) 
+
+		VALUES 
+			 ( #{orderNo, jdbcType=VARCHAR}, #{orderPrdtSeq, jdbcType=TINYINT}, #{orderPrdtChngHistSeq, jdbcType=SMALLINT}, #{prdtNo, jdbcType=VARCHAR}, #{prdtOptnNo, jdbcType=VARCHAR}, #{prdtName, jdbcType=VARCHAR}, #{engPrdtName, jdbcType=VARCHAR}, #{optnName, jdbcType=VARCHAR}, #{orderPrdtStatCode, jdbcType=VARCHAR}, #{noteText, jdbcType=VARCHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.order.model.master.OcOrderProductHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderProductHistoryDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE OC_ORDER_PRODUCT_HISTORY
+		<set> 
+			<if test="orderNo != null"> 
+				order_no = #{orderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="orderPrdtChngHistSeq != null"> 
+				order_prdt_chng_hist_seq = #{orderPrdtChngHistSeq, jdbcType=SMALLINT}, 
+			</if> 
+			<if test="prdtNo != null"> 
+				prdt_no = #{prdtNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtOptnNo != null"> 
+				prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtName != null"> 
+				prdt_name = #{prdtName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="engPrdtName != null"> 
+				eng_prdt_name = #{engPrdtName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="optnName != null"> 
+				optn_name = #{optnName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderPrdtStatCode != null"> 
+				order_prdt_stat_code = #{orderPrdtStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="noteText != null"> 
+				note_text = #{noteText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 order_no = #{orderNo, jdbcType=VARCHAR} AND order_prdt_chng_hist_seq = #{orderPrdtChngHistSeq, jdbcType=SMALLINT} AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.order.model.master.OcOrderProductHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderProductHistoryDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM OC_ORDER_PRODUCT_HISTORY
+		WHERE 
+			 order_no = #{orderNo, jdbcType=VARCHAR} AND order_prdt_chng_hist_seq = #{orderPrdtChngHistSeq, jdbcType=SMALLINT} AND order_prdt_seq = #{orderPrdtSeq, jdbcType=TINYINT}  
+    </delete>
+</mapper>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.DpSearchWordHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	srch_word_hist_seq, site_no, srch_word_gbn_type, apply_dtm, srch_word1_text, srch_word2_text, srch_word3_text, srch_word4_text, srch_word5_text, srch_word6_text, srch_word7_text, srch_word8_text, srch_word9_text, srch_word10_text
+    </sql>
+    
+    <sql id="pk-columns">
+    	srch_word_hist_seq = #{srchWordHistSeq, jdbcType=BIGINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.display.model.master.DpSearchWordHistory" resultType="kr.co.shop.web.display.model.master.DpSearchWordHistory">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpSearchWordHistoryDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			DP_SEARCH_WORD_HISTORY
+		<where> 
+			<if test="srchWordHistSeq != null"> 
+				 srch_word_hist_seq = #{srchWordHistSeq, jdbcType=BIGINT}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="srchWordGbnType != null"> 
+				 AND srch_word_gbn_type = #{srchWordGbnType, jdbcType=CHAR}
+			</if> 
+			<if test="applyDtm != null"> 
+				 AND apply_dtm = #{applyDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="srchWord1Text != null"> 
+				 AND srch_word1_text = #{srchWord1Text, jdbcType=VARCHAR}
+			</if> 
+			<if test="srchWord2Text != null"> 
+				 AND srch_word2_text = #{srchWord2Text, jdbcType=VARCHAR}
+			</if> 
+			<if test="srchWord3Text != null"> 
+				 AND srch_word3_text = #{srchWord3Text, jdbcType=VARCHAR}
+			</if> 
+			<if test="srchWord4Text != null"> 
+				 AND srch_word4_text = #{srchWord4Text, jdbcType=VARCHAR}
+			</if> 
+			<if test="srchWord5Text != null"> 
+				 AND srch_word5_text = #{srchWord5Text, jdbcType=VARCHAR}
+			</if> 
+			<if test="srchWord6Text != null"> 
+				 AND srch_word6_text = #{srchWord6Text, jdbcType=VARCHAR}
+			</if> 
+			<if test="srchWord7Text != null"> 
+				 AND srch_word7_text = #{srchWord7Text, jdbcType=VARCHAR}
+			</if> 
+			<if test="srchWord8Text != null"> 
+				 AND srch_word8_text = #{srchWord8Text, jdbcType=VARCHAR}
+			</if> 
+			<if test="srchWord9Text != null"> 
+				 AND srch_word9_text = #{srchWord9Text, jdbcType=VARCHAR}
+			</if> 
+			<if test="srchWord10Text != null"> 
+				 AND srch_word10_text = #{srchWord10Text, jdbcType=VARCHAR}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+	<insert id="insert" useGeneratedKeys="true" keyProperty="srchWordHistSeq">
+
+     /*+ kr.co.shop.web.display.repository.master.DpSearchWordHistoryDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO DP_SEARCH_WORD_HISTORY
+			 ( site_no, srch_word_gbn_type, apply_dtm, srch_word1_text, srch_word2_text, srch_word3_text, srch_word4_text, srch_word5_text, srch_word6_text, srch_word7_text, srch_word8_text, srch_word9_text, srch_word10_text ) 
+
+		VALUES 
+			 ( #{siteNo, jdbcType=VARCHAR}, #{srchWordGbnType, jdbcType=CHAR}, <choose><when test="applyDtm != null">#{applyDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{srchWord1Text, jdbcType=VARCHAR}, #{srchWord2Text, jdbcType=VARCHAR}, #{srchWord3Text, jdbcType=VARCHAR}, #{srchWord4Text, jdbcType=VARCHAR}, #{srchWord5Text, jdbcType=VARCHAR}, #{srchWord6Text, jdbcType=VARCHAR}, #{srchWord7Text, jdbcType=VARCHAR}, #{srchWord8Text, jdbcType=VARCHAR}, #{srchWord9Text, jdbcType=VARCHAR}, #{srchWord10Text, jdbcType=VARCHAR} )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.display.model.master.DpSearchWordHistory">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpSearchWordHistoryDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE DP_SEARCH_WORD_HISTORY
+		<set> 
+			<if test="srchWordHistSeq != null"> 
+				srch_word_hist_seq = #{srchWordHistSeq, jdbcType=BIGINT}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="srchWordGbnType != null"> 
+				srch_word_gbn_type = #{srchWordGbnType, jdbcType=CHAR}, 
+			</if> 
+			<if test="applyDtm != null"> 
+				apply_dtm = #{applyDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="srchWord1Text != null"> 
+				srch_word1_text = #{srchWord1Text, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="srchWord2Text != null"> 
+				srch_word2_text = #{srchWord2Text, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="srchWord3Text != null"> 
+				srch_word3_text = #{srchWord3Text, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="srchWord4Text != null"> 
+				srch_word4_text = #{srchWord4Text, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="srchWord5Text != null"> 
+				srch_word5_text = #{srchWord5Text, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="srchWord6Text != null"> 
+				srch_word6_text = #{srchWord6Text, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="srchWord7Text != null"> 
+				srch_word7_text = #{srchWord7Text, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="srchWord8Text != null"> 
+				srch_word8_text = #{srchWord8Text, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="srchWord9Text != null"> 
+				srch_word9_text = #{srchWord9Text, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="srchWord10Text != null"> 
+				srch_word10_text = #{srchWord10Text, jdbcType=VARCHAR}, 
+			</if> 
+		</set> 
+		WHERE 
+			 srch_word_hist_seq = #{srchWordHistSeq, jdbcType=BIGINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.display.model.master.DpSearchWordHistory">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpSearchWordHistoryDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM DP_SEARCH_WORD_HISTORY
+		WHERE 
+			 srch_word_hist_seq = #{srchWordHistSeq, jdbcType=BIGINT}  
+    </delete>
+</mapper>

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.DpBrandPageDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	brand_no, disp_gbn_type, device_code, brand_page_seq, site_no, file_type, title_text, image_name, image_path_text, image_url, altrn_text, cnnctn_type, link_target_type, link_info, text_color_type, bckg_color_yn, bckg_color_value, upload_yn, movie_play_type, movie_name, movie_path_text, movie_url, disp_yn, disp_start_ymd, disp_end_ymd, sort_seq, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	    brand_no = #{brandNo, jdbcType=VARCHAR} 
+    	AND brand_page_seq = #{brandPageSeq, jdbcType=INTEGER} 
+    	AND device_code = #{deviceCode, jdbcType=VARCHAR} 
+    	AND disp_gbn_type = #{dispGbnType, jdbcType=CHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.product.model.master.DpBrandPage" resultType="kr.co.shop.web.product.model.master.DpBrandPage">
+    
+     /*+ kr.co.shop.bo.product.repository.master.DpBrandPageDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			dp_brand_page
+		<where> 
+			<if test="brandNo != null"> 
+				 brand_no = #{brandNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="dispGbnType != null"> 
+				 AND disp_gbn_type = #{dispGbnType, jdbcType=CHAR}
+			</if> 
+			<if test="deviceCode != null"> 
+				 AND device_code = #{deviceCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="brandPageSeq != null"> 
+				 AND brand_page_seq = #{brandPageSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="fileType != null"> 
+				 AND file_type = #{fileType, jdbcType=CHAR}
+			</if> 
+			<if test="titleText != null"> 
+				 AND title_text = #{titleText, jdbcType=VARCHAR}
+			</if> 
+			<if test="imageName != null"> 
+				 AND image_name = #{imageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="imagePathText != null"> 
+				 AND image_path_text = #{imagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="imageUrl != null"> 
+				 AND image_url = #{imageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="altrnText != null"> 
+				 AND altrn_text = #{altrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="cnnctnType != null"> 
+				 AND cnnctn_type = #{cnnctnType, jdbcType=CHAR}
+			</if> 
+			<if test="linkTargetType != null"> 
+				 AND link_target_type = #{linkTargetType, jdbcType=CHAR}
+			</if> 
+			<if test="linkInfo != null"> 
+				 AND link_info = #{linkInfo, jdbcType=VARCHAR}
+			</if> 
+			<if test="textColorType != null"> 
+				 AND text_color_type = #{textColorType, jdbcType=CHAR}
+			</if> 
+			<if test="bckgColorYn != null"> 
+				 AND bckg_color_yn = #{bckgColorYn, jdbcType=CHAR}
+			</if> 
+			<if test="bckgColorValue != null"> 
+				 AND bckg_color_value = #{bckgColorValue, jdbcType=VARCHAR}
+			</if> 
+			<if test="uploadYn != null"> 
+				 AND upload_yn = #{uploadYn, jdbcType=CHAR}
+			</if> 
+			<if test="moviePlayType != null"> 
+				 AND movie_play_type = #{moviePlayType, jdbcType=CHAR}
+			</if> 
+			<if test="movieName != null"> 
+				 AND movie_name = #{movieName, jdbcType=VARCHAR}
+			</if> 
+			<if test="moviePathText != null"> 
+				 AND movie_path_text = #{moviePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="movieUrl != null"> 
+				 AND movie_url = #{movieUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="dispYn != null"> 
+				 AND disp_yn = #{dispYn, jdbcType=CHAR}
+			</if> 
+			<if test="dispStartYmd != null"> 
+				 AND disp_start_ymd = #{dispStartYmd, jdbcType=DATE}
+			</if> 
+			<if test="dispEndYmd != null"> 
+				 AND disp_end_ymd = #{dispEndYmd, jdbcType=DATE}
+			</if> 
+			<if test="sortSeq != null"> 
+				 AND sort_seq = #{sortSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.product.model.master.DpBrandPage">	
+
+     /*+ kr.co.shop.bo.product.repository.master.DpBrandPageDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO dp_brand_page
+			 ( brand_no, disp_gbn_type, device_code, brand_page_seq, site_no, file_type, title_text, image_name, image_path_text, image_url, altrn_text, cnnctn_type, link_target_type, link_info, text_color_type, bckg_color_yn, bckg_color_value, upload_yn, movie_play_type, movie_name, movie_path_text, movie_url, disp_yn, disp_start_ymd, disp_end_ymd, sort_seq, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{brandNo, jdbcType=VARCHAR}, #{dispGbnType, jdbcType=CHAR}, #{deviceCode, jdbcType=VARCHAR}, #{brandPageSeq, jdbcType=INTEGER}, #{siteNo, jdbcType=VARCHAR}, #{fileType, jdbcType=CHAR}, #{titleText, jdbcType=VARCHAR}, #{imageName, jdbcType=VARCHAR}, #{imagePathText, jdbcType=VARCHAR}, #{imageUrl, jdbcType=VARCHAR}, #{altrnText, jdbcType=VARCHAR}, #{cnnctnType, jdbcType=CHAR}, #{linkTargetType, jdbcType=CHAR}, #{linkInfo, jdbcType=VARCHAR}, #{textColorType, jdbcType=CHAR}, #{bckgColorYn, jdbcType=CHAR}, #{bckgColorValue, jdbcType=VARCHAR}, #{uploadYn, jdbcType=CHAR}, #{moviePlayType, jdbcType=CHAR}, #{movieName, jdbcType=VARCHAR}, #{moviePathText, jdbcType=VARCHAR}, #{movieUrl, jdbcType=VARCHAR}, #{dispYn, jdbcType=CHAR}, <choose><when test="dispStartYmd != null">#{dispStartYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="dispEndYmd != null">#{dispEndYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, #{sortSeq, jdbcType=INTEGER}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.product.model.master.DpBrandPage">
+    
+     /*+ kr.co.shop.bo.product.repository.master.DpBrandPageDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE dp_brand_page
+		<set> 
+			<if test="brandNo != null"> 
+				brand_no = #{brandNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dispGbnType != null"> 
+				disp_gbn_type = #{dispGbnType, jdbcType=CHAR}, 
+			</if> 
+			<if test="deviceCode != null"> 
+				device_code = #{deviceCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="brandPageSeq != null"> 
+				brand_page_seq = #{brandPageSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="fileType != null"> 
+				file_type = #{fileType, jdbcType=CHAR}, 
+			</if> 
+			<if test="titleText != null"> 
+				title_text = #{titleText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="imageName != null"> 
+				image_name = #{imageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="imagePathText != null"> 
+				image_path_text = #{imagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="imageUrl != null"> 
+				image_url = #{imageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="altrnText != null"> 
+				altrn_text = #{altrnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cnnctnType != null"> 
+				cnnctn_type = #{cnnctnType, jdbcType=CHAR}, 
+			</if> 
+			<if test="linkTargetType != null"> 
+				link_target_type = #{linkTargetType, jdbcType=CHAR}, 
+			</if> 
+			<if test="linkInfo != null"> 
+				link_info = #{linkInfo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="textColorType != null"> 
+				text_color_type = #{textColorType, jdbcType=CHAR}, 
+			</if> 
+			<if test="bckgColorYn != null"> 
+				bckg_color_yn = #{bckgColorYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="bckgColorValue != null"> 
+				bckg_color_value = #{bckgColorValue, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="uploadYn != null"> 
+				upload_yn = #{uploadYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="moviePlayType != null"> 
+				movie_play_type = #{moviePlayType, jdbcType=CHAR}, 
+			</if> 
+			<if test="movieName != null"> 
+				movie_name = #{movieName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="moviePathText != null"> 
+				movie_path_text = #{moviePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="movieUrl != null"> 
+				movie_url = #{movieUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dispYn != null"> 
+				disp_yn = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="dispStartYmd != null"> 
+				disp_start_ymd = #{dispStartYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="dispEndYmd != null"> 
+				disp_end_ymd = #{dispEndYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="sortSeq != null"> 
+				sort_seq = #{sortSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 brand_no = #{brandNo, jdbcType=VARCHAR} AND brand_page_seq = #{brandPageSeq, jdbcType=INTEGER} AND device_code = #{deviceCode, jdbcType=VARCHAR} AND disp_gbn_type = #{dispGbnType, jdbcType=CHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.product.model.master.DpBrandPage">
+    
+     /*+ kr.co.shop.bo.product.repository.master.DpBrandPageDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM dp_brand_page
+		WHERE 
+			 brand_no = #{brandNo, jdbcType=VARCHAR} AND brand_page_seq = #{brandPageSeq, jdbcType=INTEGER} AND device_code = #{deviceCode, jdbcType=VARCHAR} AND disp_gbn_type = #{dispGbnType, jdbcType=CHAR}  
+    </delete>
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.event.repository.master.EvEventAttendanceCheckBenefitDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.event.model.master.EvEventAttendanceCheckBenefit">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventAttendanceCheckBenefitDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			ev_event_attendance_check_benefit
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectAttendanceBenefitByEventNo" parameterType="String" resultType="kr.co.shop.web.event.model.master.EvEventAttendanceCheckBenefit">
+    /*+ kr.co.shop.web.event.repository.master.EvEventAttendanceCheckBenefitDao.selectAttendanceBenefitByEventNo [이벤트 출석 혜택 조회 쿼리] [이지훈] */  
+   		SELECT
+   			EEACB.EVENT_NO
+   			,EEACB.ATEND_DAY_COUNT
+   			,EEACB.BENEFIT_TYPE
+   			,EEACB.BENEFIT_VALUE
+   			,CASE
+				WHEN EEACB.BENEFIT_TYPE = 'C' THEN (SELECT PC.CPN_NAME FROM PR_COUPON PC WHERE PC.CPN_NO = EEACB.BENEFIT_VALUE)
+				ELSE ''
+			 END AS CPN_NAME
+		FROM 
+			EV_EVENT_ATTENDANCE_CHECK_BENEFIT EEACB
+		WHERE 
+			EVENT_NO = #{eventNo, jdbcType=VARCHAR}
+		ORDER BY EEACB.ATEND_DAY_COUNT ASC
+    </select>
+
+</mapper>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicy">
+    
+     /*+ kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			cm_online_member_policy
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectOnlineMemberPolicySeq" resultType="String">
+     /*+ kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDao.selectOnlineMemberPolicySeq [현재 시행중인 온라인 회원의 정책 plcy_seq를 리턴한다.] [최경호] */
+		SELECT
+			   A.PLCY_SEQ
+			FROM CM_ONLINE_MEMBER_POLICY A
+		  WHERE A.PLCY_APPLY_YMD <![CDATA[<=]]> SYSDATE
+		ORDER BY A.PLCY_APPLY_YMD DESC, A.MOD_DTM DESC
+		FETCH FIRST 1 ROWS ONLY  
+	</select>
+
+    <select id="selectOnlinePolicy" parameterType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicy" resultType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicy">
+	/*+ kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDao.selectOnlinePolicy [현재 시행중인 온라인 회원의 기본 정책을 리턴한다.] [최경호] */
+		SELECT A.PLCY_SEQ
+		     , A.PLCY_START_YMD
+		     , A.PLCY_END_YMD
+		     , A.USE_YN
+		     , A.RGSTER_NO
+		     , A.RGST_DTM
+		     , A.MODER_NO
+		     , A.MOD_DTM
+		    FROM CM_ONLINE_MEMBER_POLICY A
+		  WHERE A.PLCY_SEQ = #{plcySeq}
+	</select>
+
+	<select id="selectOnlinePolicyCoupon" parameterType="String" resultType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicy">
+		/*+ kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDao.selectOnlinePolicyCoupon [현재 시행중인 온라인 회원의 기본 정책을 리턴한다.] [최경호] */
+		SELECT A.PLCY_SEQ
+		     , B.PLCY_DTL_SEQ
+			 , B.BUY_AMT
+		     , B.BUY_QTY
+		     , C.CPN_NO
+		     , C.PAY_QTY
+		     , D.CPN_NAME
+		    FROM CM_ONLINE_MEMBER_POLICY A
+		         LEFT JOIN CM_ONLINE_MEMBER_POLICY_DETAIL B ON A.PLCY_SEQ = B.PLCY_SEQ
+		         LEFT JOIN CM_ONLINE_MEMBER_POLICY_COUPON C ON B.PLCY_DTL_SEQ = C.PLCY_DTL_SEQ AND A.PLCY_SEQ  = C.PLCY_SEQ
+		         LEFT JOIN PR_COUPON D ON C.CPN_NO = D.CPN_NO
+		WHERE A.PLCY_SEQ  =  #{plcySeq}
+		ORDER BY B.PLCY_DTL_SEQ
+	</select>
+
+	<select id="selectPolicyData" resultType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicy">
+		/*+ kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDao.selectPolicyData [현재 시행중인 온라인 회원의 기본 정책을 리턴한다.] [최경호] */
+		SELECT A.PLCY_SEQ
+		     , B.PLCY_DTL_SEQ
+		     , B.BUY_AMT
+		     , B.BUY_QTY
+		    FROM CM_ONLINE_MEMBER_POLICY A
+		    INNER JOIN CM_ONLINE_MEMBER_POLICY_DETAIL B ON A.PLCY_SEQ = B.PLCY_SEQ
+		  WHERE A.PLCY_SEQ = (SELECT
+				                             A.PLCY_SEQ
+				                          FROM CM_ONLINE_MEMBER_POLICY A
+				                        WHERE A.PLCY_APPLY_YMD <![CDATA[<=]]> SYSDATE
+				                      ORDER BY A.PLCY_APPLY_YMD DESC, A.MOD_DTM DESC
+				                      FETCH FIRST 1 ROWS ONLY)
+		ORDER BY B.BUY_AMT DESC, B.BUY_QTY DESC
+		FETCH FIRST 3 ROWS ONLY
+	</select>
+	
+	<select id="selectOnlinePolicyData" resultType="kr.co.shop.web.customer.model.master.CmOnlineMemberPolicy">
+	/*+ kr.co.shop.web.customer.repository.master.CmOnlineMemberPolicyDao.selectOnlinePolicyData [현재 시행중인 온라인 회원의 기본 정책을 리턴한다.] [최경호] */
+		SELECT <include refid="select-columns" />
+		    FROM CM_ONLINE_MEMBER_POLICY A
+		  WHERE A.PLCY_SEQ = #{plcySeq} 
+	</select>
+
+</mapper>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.afterService.repository.master.OcAsPaymentDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.afterService.model.master.OcAsPayment">
+    
+     /*+ kr.co.shop.web.afterService.repository.master.OcAsPaymentDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			OC_AS_PAYMENT
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    
+    <insert id="insertOcAsPayment" parameterType="kr.co.shop.web.afterService.model.master.OcAsPayment">
+		/*+ kr.co.shop.web.afterService.model.master.OcAsPaymentDao.insertOcAsPayment [AS결제 등록] [이상호] */
+		<selectKey resultType="short" keyProperty="asPymntSeq" order="BEFORE">
+			SELECT NVL(MAX(AS_PYMNT_SEQ), 0) + 1
+			  FROM OC_AS_PAYMENT
+			 WHERE AS_ACCEPT_NO = #{asAcceptNo}
+		</selectKey>
+			INSERT INTO OC_AS_PAYMENT(
+			   AS_ACCEPT_NO        
+			  ,AS_PYMNT_SEQ
+			  ,PYMNT_DTM
+			  ,DEVICE_CODE
+			  ,MAIN_PYMNT_MEANS_YN
+			  ,PYMNT_MEANS_CODE
+			  ,PYMNT_VNDR_CODE
+			  ,PYMNT_ORGAN_CODE_TEXT
+			  ,PYMNT_ORGAN_NAME
+			  ,PYMNT_ORGAN_NO_TEXT
+			  ,INSTMT_TERM_COUNT
+			  ,PYMNT_APRV_NO_TEXT
+			  ,PYMNT_TODO_AMT
+			  ,PYMNT_AMT
+			  ,CARD_PART_CNCL_PSBLT_YN
+			  ,CASH_RCPT_ISSUE_YN
+			  ,ESCR_APPLY_YN
+			  ,ESCR_APRV_NO_TEXT
+			  ,BANK_CODE
+			  ,ACNT_NO_TEXT
+			  ,ACNT_HLDR_NAME
+			  ,VRTL_ACNT_ISSUE_DTM
+			  ,VRTL_ACNT_EXPR_DTM
+			  ,RSPNS_CODE_TEXT
+			  ,RSPNS_MESG_TEXT
+			  ,PYMNT_CMLPT_DTM
+			  ,REDEMP_RFND_OPETR_NO
+			  ,REDEMP_RFND_OPETR_DTM
+			  ,REDEMP_RFND_GBN_TYPE
+			  ,MMNY_PROC_TRGT_YN
+			  ,OCRNC_RSN_CODE
+			  ,PYMNT_STAT_CODE
+			  ,PYMNT_LOG_INFO
+			  ,MODER_NO
+			  ,MOD_DTM
+			) VALUES (
+			    #{asAcceptNo}  -- AS_ACCEPT_NO - varchar(13)               --AS접수번호          
+			  , #{asPymntSeq}   -- AS_PYMNT_SEQ - tinyint                   --AS결제순번          
+			  , SYSDATE -- PYMNT_DTM - datetime               --결제일시            
+			  , #{deviceCode}  -- DEVICE_CODE - varchar(5)                 --디바이스코드        
+			  , #{mainPymntMeansYn}  -- MAIN_PYMNT_MEANS_YN - char(1)            --주결제수단여부      
+			  , #{pymntMeansCode}  -- PYMNT_MEANS_CODE - varchar(5)            --결제수단코드        
+			  , #{pymntVndrCode} -- PYMNT_VNDR_CODE - varchar(5)            --결제업체코드        
+			  , #{pymntOrganCodeText} -- PYMNT_ORGAN_CODE_TEXT - varchar(10)     --결제기관코드        
+			  , #{pymntOrganName} -- PYMNT_ORGAN_NAME - varchar(50)          --결제기관명          
+			  , #{pymntOrganNoText} -- PYMNT_ORGAN_NO_TEXT - varchar(30)       --결제기관번호        
+			  , #{instmtTermCount}   -- INSTMT_TERM_COUNT - tinyint              --할부기간            
+			  , #{pymntAprvNoText} -- PYMNT_APRV_NO_TEXT - varchar(50)        --결제승인번호        
+			  , #{pymntTodoAmt}   -- PYMNT_TODO_AMT - int                     --결제예정금액        
+			  , #{pymntAmt}   -- PYMNT_AMT - int                          --결제금액            
+			  , #{cardPartCnclPsbltYn}  -- CARD_PART_CNCL_PSBLT_YN - char(1)        --카드부분취소가능여부
+			  , #{cashRcptIssueYn}  -- CASH_RCPT_ISSUE_YN - char(1)             --현금영수증발급여부  
+			  , #{escrApplyYn}  -- ESCR_APPLY_YN - char(1)                  --에스크로적용여부    
+			  , #{escrAprvNoText} -- ESCR_APRV_NO_TEXT - varchar(30)         --에스크로승인번호    
+			  , #{bankCode} -- BANK_CODE - varchar(5)                  --은행코드            
+			  , #{acntNoText} -- ACNT_NO_TEXT - varchar(30)              --계좌번호            
+			  , #{acntHldrName} -- ACNT_HLDR_NAME - varchar(100)           --예금주명            
+			  , #{vrtlAcntIssueDtm} -- VRTL_ACNT_ISSUE_DTM - datetime          --가상계좌발급일시    
+			  , #{vrtlAcntExprDtm} -- VRTL_ACNT_EXPR_DTM - datetime           --가상계좌만료일시    
+			  , #{rspnsCodeText} -- RSPNS_CODE_TEXT - varchar(10)           --응답코드            
+			  , #{rspnsMesgText} -- RSPNS_MESG_TEXT - varchar(100)          --응답메시지          
+			  , SYSDATE -- PYMNT_CMLPT_DTM - datetime              --결제완료일시        
+			  , #{redempRfndOpetrNo} -- REDEMP_RFND_OPETR_NO - varchar(10)      --환수환불처리자번호  
+			  , #{redempRfndOpetrDtm} -- REDEMP_RFND_OPETR_DTM - datetime        --환수환불처리일시    
+			  , #{redempRfndGbnType}  -- REDEMP_RFND_GBN_TYPE - char(1)           --환수환불구분        
+			  , #{mmnyProcTrgtYn}  -- MMNY_PROC_TRGT_YN - char(1)              --자사처리대상여부    
+			  , #{ocrncRsnCode} -- OCRNC_RSN_CODE - varchar(5)             --발생사유코드        
+			  , #{pymntStatCode} -- PYMNT_STAT_CODE - varchar(5)            --결제상태코드        
+			  , #{pymntLogInfo} -- PYMNT_LOG_INFO - varchar(8000)          --결제로그            
+			  , #{moderNo} -- MODER_NO - varchar(10)                  --수정자번호          
+			  , #{modDtm} -- MOD_DTM - datetime                      --수정일시            
+			)
+	</insert>
+	
+	<update id="updateOcAsPaymentAccount" parameterType="kr.co.shop.web.afterService.model.master.OcAsPayment">
+		/*+ kr.co.shop.web.afterService.model.master.OcAsPaymentDao.updateOcAsPaymentAccount [AS결제] [이상호] */
+		UPDATE OC_AS_PAYMENT
+		   SET PYMNT_DTM = SYSDATE
+			 , PYMNT_ORGAN_CODE_TEXT = #{pymntOrganCodeText}
+			 , PYMNT_ORGAN_NAME = #{pymntOrganName}
+			 , PYMNT_ORGAN_NO_TEXT = #{pymntOrganNoText}
+			 , PYMNT_APRV_NO_TEXT = #{pymntAprvNoText}
+			 , INSTMT_TERM_COUNT = #{instmtTermCount}
+			 , CARD_GBN_TYPE = #{cardGbnType}
+			 , CARD_TYPE = #{cardType}
+			 , CASH_RCPT_ISSUE_YN = #{cashRcptIssueYn}
+			 , CASH_RCPT_APRV_NO = #{cashRcptAprvNo}
+			 , CASH_RCPT_DEAL_NO = #{cashRcptDealNo}
+			 , PYMNT_STAT_CODE = #{pymntStatCode}
+			 , RSPNS_CODE_TEXT = #{rspnsCodeText}
+			 , RSPNS_MESG_TEXT = #{rspnsMesgText}
+			 , REDEMP_RFND_OPETR_NO = #{redempRfndOpetrNo}
+			 , REDEMP_RFND_OPETR_DTM = SYSDATE
+			 , PYMNT_LOG_INFO = #{pymntLogInfo}
+			 , MODER_NO = #{moderNo}
+			 , MOD_DTM = SYSDATE
+		 WHERE AS_ACCEPT_NO = #{asAcceptNo}
+		   AND AS_PYMNT_SEQ = #{asPymntSeq}
+	</update>
+	
+	  <select id="selectAsPymntDetailInfo" parameterType="kr.co.shop.web.afterService.model.master.OcAsPayment" resultType="kr.co.shop.web.afterService.model.master.OcAsPayment">
+    
+     /*+ kr.co.shop.web.afterService.repository.master.OcAsPaymentDao.selectAsPymntDetailInfo [결제정보 상세] [이상호] */  
+		      SELECT DEVICE_CODE
+			       , FN_CODE_VALUE('DEVICE_CODE',DEVICE_CODE) AS DEVICE_CODE_NAME
+			       , MAIN_PYMNT_MEANS_YN
+			       , PYMNT_MEANS_CODE
+			       , FN_CODE_VALUE('PYMNT_MEANS_CODE',PYMNT_MEANS_CODE) AS PYMNT_MEANS_CODE_NAME
+			       , PYMNT_VNDR_CODE
+			       , FN_CODE_VALUE('PYMNT_VNDR_CODE',PYMNT_VNDR_CODE) AS PYMNT_VNDR_CODE_NAME
+			       , PYMNT_ORGAN_CODE_TEXT
+			       , PYMNT_ORGAN_NAME
+			       , PYMNT_ORGAN_NO_TEXT
+			       , INSTMT_TERM_COUNT
+			       , CARD_GBN_TYPE
+			       , CARD_TYPE
+			       , PYMNT_APRV_NO_TEXT
+			       , PYMNT_TODO_AMT
+			       , PYMNT_AMT
+			       , CARD_PART_CNCL_PSBLT_YN
+			       , CASH_RCPT_ISSUE_YN
+			       , RSPNS_CODE_TEXT
+			       , RSPNS_MESG_TEXT
+			       , TO_CHAR(PYMNT_CMLPT_DTM, 'YYYY.MM.DD HH24:MI:SS') AS PYMNT_CMLPT_DATE
+			       , REDEMP_RFND_OPETR_NO
+			       , REDEMP_RFND_OPETR_DTM
+			       , REDEMP_RFND_GBN_TYPE
+			       , MMNY_PROC_TRGT_YN
+			       , OCRNC_RSN_CODE
+			       , FN_CODE_VALUE('OCRNC_RSN_CODE',OCRNC_RSN_CODE) AS OCRNC_RSN_CODE_NAME
+			       , PYMNT_STAT_CODE
+			       , FN_CODE_VALUE('PYMNT_STAT_CODE',PYMNT_STAT_CODE) AS PYMNT_STAT_CODE_NAME
+			       , MODER_NO
+			       , MOD_DTM 
+		  	 FROM OC_AS_PAYMENT
+		 	WHERE AS_ACCEPT_NO = #{asAcceptNo, jdbcType=VARCHAR}
+			  AND AS_PYMNT_SEQ = #{asPymntSeq, jdbcType=TINYINT}
+    </select>
+    
+    <update id="updateOcAsPaymentAmtCancel" parameterType="kr.co.shop.web.afterService.model.master.OcAsPayment">
+    
+     /*+kr.co.shop.web.afterService.model.master.OcAsPaymentDao.updateOcAsPaymentAmtCancel [결제 취소 ] [이상호] */
+    
+		UPDATE OC_AS_PAYMENT
+		<set> 
+			<if test="rspnsCodeText != null"> 
+				rspns_code_text = #{rspnsCodeText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rspnsMesgText != null"> 
+				rspns_mesg_text = #{rspnsMesgText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="redempRfndOpetrNo != null"> 
+				redemp_rfnd_opetr_no = #{redempRfndOpetrNo, jdbcType=VARCHAR}, 
+			</if> 
+			redemp_rfnd_opetr_dtm = SYSDATE, 
+			<if test="redempRfndGbnType != null"> 
+				 redemp_rfnd_gbn_type = #{redempRfndGbnType, jdbcType=CHAR},
+			</if> 
+			<if test="pymntStatCode != null"> 
+				 pymnt_stat_code = #{pymntStatCode, jdbcType=VARCHAR},
+			</if> 
+			<if test="pymntLogInfo != null"> 
+				 pymnt_log_info = #{pymntLogInfo, jdbcType=VARCHAR},
+			</if> 
+		moder_no = #{moderNo, jdbcType=VARCHAR},  
+		mod_dtm = SYSDATE  
+		</set> 
+		WHERE 
+			 AS_ACCEPT_NO = #{asAcceptNo, jdbcType=VARCHAR} AND AS_PYMNT_SEQ = #{asPymntSeq, jdbcType=INTEGER}   
+    </update>
+
+</mapper>

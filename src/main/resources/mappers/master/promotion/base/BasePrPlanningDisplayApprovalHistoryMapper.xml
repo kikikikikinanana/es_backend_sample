@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.promotion.repository.master.PrPlanningDisplayApprovalHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	plndp_no, plndp_aprv_hist_seq, reqtr_no, req_dtm, plndp_stat_code, return_rsn_text, aprver_no, aprver_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	plndp_aprv_hist_seq = #{plndpAprvHistSeq, jdbcType=INTEGER} AND plndp_no = #{plndpNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.promotion.model.master.PrPlanningDisplayApprovalHistory" resultType="kr.co.shop.web.promotion.model.master.PrPlanningDisplayApprovalHistory">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrPlanningDisplayApprovalHistoryDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			PR_PLANNING_DISPLAY_APPROVAL_HISTORY
+		<where> 
+			<if test="plndpNo != null"> 
+				 plndp_no = #{plndpNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="plndpAprvHistSeq != null"> 
+				 AND plndp_aprv_hist_seq = #{plndpAprvHistSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="reqtrNo != null"> 
+				 AND reqtr_no = #{reqtrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="reqDtm != null"> 
+				 AND req_dtm = #{reqDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="plndpStatCode != null"> 
+				 AND plndp_stat_code = #{plndpStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="returnRsnText != null"> 
+				 AND return_rsn_text = #{returnRsnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="aprverNo != null"> 
+				 AND aprver_no = #{aprverNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="aprverDtm != null"> 
+				 AND aprver_dtm = #{aprverDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.promotion.model.master.PrPlanningDisplayApprovalHistory">	
+
+     /*+ kr.co.shop.web.promotion.repository.master.PrPlanningDisplayApprovalHistoryDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO PR_PLANNING_DISPLAY_APPROVAL_HISTORY
+			 ( plndp_no, plndp_aprv_hist_seq, reqtr_no, req_dtm, plndp_stat_code, return_rsn_text, aprver_no, aprver_dtm ) 
+
+		VALUES 
+			 ( #{plndpNo, jdbcType=VARCHAR}, #{plndpAprvHistSeq, jdbcType=INTEGER}, #{reqtrNo, jdbcType=VARCHAR}, <choose><when test="reqDtm != null">#{reqDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{plndpStatCode, jdbcType=VARCHAR}, #{returnRsnText, jdbcType=VARCHAR}, #{aprverNo, jdbcType=VARCHAR}, <choose><when test="aprverDtm != null">#{aprverDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.promotion.model.master.PrPlanningDisplayApprovalHistory">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrPlanningDisplayApprovalHistoryDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE PR_PLANNING_DISPLAY_APPROVAL_HISTORY
+		<set> 
+			<if test="plndpNo != null"> 
+				plndp_no = #{plndpNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="plndpAprvHistSeq != null"> 
+				plndp_aprv_hist_seq = #{plndpAprvHistSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="reqtrNo != null"> 
+				reqtr_no = #{reqtrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="reqDtm != null"> 
+				req_dtm = #{reqDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="plndpStatCode != null"> 
+				plndp_stat_code = #{plndpStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="returnRsnText != null"> 
+				return_rsn_text = #{returnRsnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aprverNo != null"> 
+				aprver_no = #{aprverNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aprverDtm != null"> 
+				aprver_dtm = #{aprverDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 plndp_aprv_hist_seq = #{plndpAprvHistSeq, jdbcType=INTEGER} AND plndp_no = #{plndpNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.promotion.model.master.PrPlanningDisplayApprovalHistory">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrPlanningDisplayApprovalHistoryDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM PR_PLANNING_DISPLAY_APPROVAL_HISTORY
+		WHERE 
+			 plndp_aprv_hist_seq = #{plndpAprvHistSeq, jdbcType=INTEGER} AND plndp_no = #{plndpNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

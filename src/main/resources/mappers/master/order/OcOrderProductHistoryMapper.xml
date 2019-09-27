@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderProductHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.order.model.master.OcOrderProductHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderProductHistoryDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			OC_ORDER_PRODUCT_HISTORY
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+
+	  <insert id="insertProductHistory" parameterType="kr.co.shop.web.order.model.master.OcOrderProductHistory">
+     	/*+ kr.co.shop.web.order.repository.master.OcOrderProductHistoryDao.insertProductHistory [주문 상품 상태 변경] [insert] */  
+		<selectKey keyProperty="orderPrdtChngHistSeq" resultType="short" order="BEFORE">
+			SELECT NVL(MAX(ORDER_PRDT_CHNG_HIST_SEQ) + 1, 1) AS orderPrdtChngHistSeq
+    		  FROM OC_ORDER_PRODUCT_HISTORY
+    		 WHERE ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+    		   AND ORDER_PRDT_SEQ = #{orderPrdtSeq, 	jdbcType=TINYINT }
+		</selectKey>
+		
+		INSERT INTO OC_ORDER_PRODUCT_HISTORY (
+			   ORDER_NO 
+			 , ORDER_PRDT_SEQ
+			 , ORDER_PRDT_CHNG_HIST_SEQ
+			 , PRDT_NO
+			 , PRDT_OPTN_NO
+			 , PRDT_NAME
+			 , ENG_PRDT_NAME
+			 , OPTN_NAME
+			 , ORDER_PRDT_STAT_CODE
+			 , NOTE_TEXT
+			 , RGSTER_NO
+			 , RGST_DTM
+		) VALUES (
+			  #{orderNo, 		jdbcType=VARCHAR } 
+			 , #{orderPrdtSeq, 	jdbcType=TINYINT }
+			 , #{orderPrdtChngHistSeq, jdbcType=SMALLINT }
+			 , #{prdtNo, jdbcType=VARCHAR }
+			 , #{prdtOptnNo, jdbcType=VARCHAR }
+			 , #{prdtName, jdbcType=VARCHAR }
+			 , #{engPrdtName, jdbcType=VARCHAR }
+			 , #{optnName, jdbcType=VARCHAR }
+			 , #{orderPrdtStatCode, jdbcType=VARCHAR }
+			 , #{noteText, jdbcType=VARCHAR }
+			 , #{rgsterNo, jdbcType=VARCHAR }
+			 , SYSDATE
+		)
+	</insert  >
+
+
+</mapper>

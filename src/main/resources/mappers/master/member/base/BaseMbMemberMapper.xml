@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.member.repository.master.MbMemberDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	member_no, login_id, member_name, pswd_text, pswd_salt_text, member_type_code, mbshp_grade_code, emp_yn, ots_vip_yn, email_addr_text, hdphn_no_text, gender_type, birth_ymd, annvr_name, annvr_ymd, annvr_ymd_mod_dtm, shoes_size, point_pswd_text, point_pswd_salt_text, bank_code, acnt_no_text, acnt_hldr_name, acnt_crtfc_yn, local_yn, sms_recv_yn, sms_recv_yn_mod_dtm, email_recv_yn, email_recv_yn_mod_dtm, night_sms_recv_yn, night_sms_recv_yn_mod_dtm, night_email_recv_yn, night_email_recv_yn_mod_dtm, join_dtm, device_code, member_cnvrt_dtm, mbshp_cnvrt_dtm, safe_key, safe_key_seq, ci_value, pswd_chng_dtm, pswd_init_yn, first_order_dtm, last_order_dtm, last_login_dtm, last_login_ip_text, last_ofln_use_dtm, pswd_error_count, mbshp_card_no, pymnt_means_code, reseller_doubt_yn, black_list_yn, black_list_type_code, leave_yn, inact_member_alert_yn, leave_gbn_code, leave_rsn_code, leave_etc_rsn, leave_dtm, before_member_type, recmd_store_no, info_mod_yn, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	member_no = #{memberNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.member.model.master.MbMember" resultType="kr.co.shop.web.member.model.master.MbMember">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			mb_member WITH (NOLOCK)
+
+		<where> 
+			<if test="memberNo != null"> 
+				 member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="loginId != null"> 
+				 AND login_id = #{loginId, jdbcType=VARCHAR}
+			</if> 
+			<if test="memberName != null"> 
+				 AND member_name = #{memberName, jdbcType=VARCHAR}
+			</if> 
+			<if test="pswdText != null"> 
+				 AND pswd_text = #{pswdText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pswdSaltText != null"> 
+				 AND pswd_salt_text = #{pswdSaltText, jdbcType=VARCHAR}
+			</if> 
+			<if test="memberTypeCode != null"> 
+				 AND member_type_code = #{memberTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="mbshpGradeCode != null"> 
+				 AND mbshp_grade_code = #{mbshpGradeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="empYn != null"> 
+				 AND emp_yn = #{empYn, jdbcType=CHAR}
+			</if> 
+			<if test="otsVipYn != null"> 
+				 AND ots_vip_yn = #{otsVipYn, jdbcType=CHAR}
+			</if> 
+			<if test="emailAddrText != null"> 
+				 AND email_addr_text = #{emailAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="hdphnNoText != null"> 
+				 AND hdphn_no_text = #{hdphnNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="genderType != null"> 
+				 AND gender_type = #{genderType, jdbcType=CHAR}
+			</if> 
+			<if test="birthYmd != null"> 
+				 AND birth_ymd = #{birthYmd, jdbcType=DATE}
+			</if> 
+			<if test="annvrName != null"> 
+				 AND annvr_name = #{annvrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="annvrYmd != null"> 
+				 AND annvr_ymd = #{annvrYmd, jdbcType=DATE}
+			</if> 
+			<if test="annvrYmdModDtm != null"> 
+				 AND annvr_ymd_mod_dtm = #{annvrYmdModDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="shoesSize != null"> 
+				 AND shoes_size = #{shoesSize, jdbcType=INTEGER}
+			</if> 
+			<if test="pointPswdText != null"> 
+				 AND point_pswd_text = #{pointPswdText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pointPswdSaltText != null"> 
+				 AND point_pswd_salt_text = #{pointPswdSaltText, jdbcType=VARCHAR}
+			</if> 
+			<if test="bankCode != null"> 
+				 AND bank_code = #{bankCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="acntNoText != null"> 
+				 AND acnt_no_text = #{acntNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="acntHldrName != null"> 
+				 AND acnt_hldr_name = #{acntHldrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="acntCrtfcYn != null"> 
+				 AND acnt_crtfc_yn = #{acntCrtfcYn, jdbcType=CHAR}
+			</if> 
+			<if test="localYn != null"> 
+				 AND local_yn = #{localYn, jdbcType=CHAR}
+			</if> 
+			<if test="smsRecvYn != null"> 
+				 AND sms_recv_yn = #{smsRecvYn, jdbcType=CHAR}
+			</if> 
+			<if test="smsRecvYnModDtm != null"> 
+				 AND sms_recv_yn_mod_dtm = #{smsRecvYnModDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="emailRecvYn != null"> 
+				 AND email_recv_yn = #{emailRecvYn, jdbcType=CHAR}
+			</if> 
+			<if test="emailRecvYnModDtm != null"> 
+				 AND email_recv_yn_mod_dtm = #{emailRecvYnModDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="nightSmsRecvYn != null"> 
+				 AND night_sms_recv_yn = #{nightSmsRecvYn, jdbcType=CHAR}
+			</if> 
+			<if test="nightSmsRecvYnModDtm != null"> 
+				 AND night_sms_recv_yn_mod_dtm = #{nightSmsRecvYnModDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="nightEmailRecvYn != null"> 
+				 AND night_email_recv_yn = #{nightEmailRecvYn, jdbcType=CHAR}
+			</if> 
+			<if test="nightEmailRecvYnModDtm != null"> 
+				 AND night_email_recv_yn_mod_dtm = #{nightEmailRecvYnModDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="joinDtm != null"> 
+				 AND join_dtm = #{joinDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="deviceCode != null"> 
+				 AND device_code = #{deviceCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="memberCnvrtDtm != null"> 
+				 AND member_cnvrt_dtm = #{memberCnvrtDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="mbshpCnvrtDtm != null"> 
+				 AND mbshp_cnvrt_dtm = #{mbshpCnvrtDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="safeKey != null"> 
+				 AND safe_key = #{safeKey, jdbcType=VARCHAR}
+			</if> 
+			<if test="safeKeySeq != null"> 
+				 AND safe_key_seq = #{safeKeySeq, jdbcType=VARCHAR}
+			</if> 
+			<if test="ciValue != null"> 
+				 AND ci_value = #{ciValue, jdbcType=VARCHAR}
+			</if> 
+			<if test="pswdChngDtm != null"> 
+				 AND pswd_chng_dtm = #{pswdChngDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="pswdInitYn != null"> 
+				 AND pswd_init_yn = #{pswdInitYn, jdbcType=CHAR}
+			</if> 
+			<if test="firstOrderDtm != null"> 
+				 AND first_order_dtm = #{firstOrderDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="lastOrderDtm != null"> 
+				 AND last_order_dtm = #{lastOrderDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="lastLoginDtm != null"> 
+				 AND last_login_dtm = #{lastLoginDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="lastLoginIpText != null"> 
+				 AND last_login_ip_text = #{lastLoginIpText, jdbcType=VARCHAR}
+			</if> 
+			<if test="lastOflnUseDtm != null"> 
+				 AND last_ofln_use_dtm = #{lastOflnUseDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="pswdErrorCount != null"> 
+				 AND pswd_error_count = #{pswdErrorCount, jdbcType=INTEGER}
+			</if> 
+			<if test="mbshpCardNo != null"> 
+				 AND mbshp_card_no = #{mbshpCardNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="pymntMeansCode != null"> 
+				 AND pymnt_means_code = #{pymntMeansCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="resellerDoubtYn != null"> 
+				 AND reseller_doubt_yn = #{resellerDoubtYn, jdbcType=CHAR}
+			</if> 
+			<if test="blackListYn != null"> 
+				 AND black_list_yn = #{blackListYn, jdbcType=CHAR}
+			</if> 
+			<if test="blackListTypeCode != null"> 
+				 AND black_list_type_code = #{blackListTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="leaveYn != null"> 
+				 AND leave_yn = #{leaveYn, jdbcType=CHAR}
+			</if> 
+			<if test="inactMemberAlertYn != null"> 
+				 AND inact_member_alert_yn = #{inactMemberAlertYn, jdbcType=CHAR}
+			</if> 
+			<if test="leaveGbnCode != null"> 
+				 AND leave_gbn_code = #{leaveGbnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="leaveRsnCode != null"> 
+				 AND leave_rsn_code = #{leaveRsnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="leaveEtcRsn != null"> 
+				 AND leave_etc_rsn = #{leaveEtcRsn, jdbcType=VARCHAR}
+			</if> 
+			<if test="leaveDtm != null"> 
+				 AND leave_dtm = #{leaveDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="beforeMemberType != null"> 
+				 AND before_member_type = #{beforeMemberType, jdbcType=CHAR}
+			</if> 
+			<if test="recmdStoreNo != null"> 
+				 AND recmd_store_no = #{recmdStoreNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="infoModYn != null"> 
+				 AND info_mod_yn = #{infoModYn, jdbcType=CHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.member.model.master.MbMember">	
+
+     /*+ kr.co.shop.web.member.repository.master.MbMemberDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO mb_member
+			 ( member_no, login_id, member_name, pswd_text, pswd_salt_text, member_type_code, mbshp_grade_code, emp_yn, ots_vip_yn, email_addr_text, hdphn_no_text, gender_type, birth_ymd, annvr_name, annvr_ymd, annvr_ymd_mod_dtm, shoes_size, point_pswd_text, point_pswd_salt_text, bank_code, acnt_no_text, acnt_hldr_name, acnt_crtfc_yn, local_yn, sms_recv_yn, sms_recv_yn_mod_dtm, email_recv_yn, email_recv_yn_mod_dtm, night_sms_recv_yn, night_sms_recv_yn_mod_dtm, night_email_recv_yn, night_email_recv_yn_mod_dtm, join_dtm, device_code, member_cnvrt_dtm, mbshp_cnvrt_dtm, safe_key, safe_key_seq, ci_value, pswd_chng_dtm, pswd_init_yn, first_order_dtm, last_order_dtm, last_login_dtm, last_login_ip_text, last_ofln_use_dtm, pswd_error_count, mbshp_card_no, pymnt_means_code, reseller_doubt_yn, black_list_yn, black_list_type_code, leave_yn, inact_member_alert_yn, leave_gbn_code, leave_rsn_code, leave_etc_rsn, leave_dtm, before_member_type, recmd_store_no, info_mod_yn, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{memberNo, jdbcType=VARCHAR}, #{loginId, jdbcType=VARCHAR}, #{memberName, jdbcType=VARCHAR}, #{pswdText, jdbcType=VARCHAR}, #{pswdSaltText, jdbcType=VARCHAR}, #{memberTypeCode, jdbcType=VARCHAR}, #{mbshpGradeCode, jdbcType=VARCHAR}, #{empYn, jdbcType=CHAR}, #{otsVipYn, jdbcType=CHAR}, #{emailAddrText, jdbcType=VARCHAR}, #{hdphnNoText, jdbcType=VARCHAR}, #{genderType, jdbcType=CHAR}, <choose><when test="birthYmd != null">#{birthYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, #{annvrName, jdbcType=VARCHAR}, <choose><when test="annvrYmd != null">#{annvrYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="annvrYmdModDtm != null">#{annvrYmdModDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{shoesSize, jdbcType=INTEGER}, #{pointPswdText, jdbcType=VARCHAR}, #{pointPswdSaltText, jdbcType=VARCHAR}, #{bankCode, jdbcType=VARCHAR}, #{acntNoText, jdbcType=VARCHAR}, #{acntHldrName, jdbcType=VARCHAR}, #{acntCrtfcYn, jdbcType=CHAR}, #{localYn, jdbcType=CHAR}, #{smsRecvYn, jdbcType=CHAR}, <choose><when test="smsRecvYnModDtm != null">#{smsRecvYnModDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{emailRecvYn, jdbcType=CHAR}, <choose><when test="emailRecvYnModDtm != null">#{emailRecvYnModDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{nightSmsRecvYn, jdbcType=CHAR}, <choose><when test="nightSmsRecvYnModDtm != null">#{nightSmsRecvYnModDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{nightEmailRecvYn, jdbcType=CHAR}, <choose><when test="nightEmailRecvYnModDtm != null">#{nightEmailRecvYnModDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="joinDtm != null">#{joinDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{deviceCode, jdbcType=VARCHAR}, <choose><when test="memberCnvrtDtm != null">#{memberCnvrtDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="mbshpCnvrtDtm != null">#{mbshpCnvrtDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{safeKey, jdbcType=VARCHAR}, #{safeKeySeq, jdbcType=VARCHAR}, #{ciValue, jdbcType=VARCHAR}, <choose><when test="pswdChngDtm != null">#{pswdChngDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{pswdInitYn, jdbcType=CHAR}, <choose><when test="firstOrderDtm != null">#{firstOrderDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="lastOrderDtm != null">#{lastOrderDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="lastLoginDtm != null">#{lastLoginDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{lastLoginIpText, jdbcType=VARCHAR}, <choose><when test="lastOflnUseDtm != null">#{lastOflnUseDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{pswdErrorCount, jdbcType=INTEGER}, #{mbshpCardNo, jdbcType=VARCHAR}, #{pymntMeansCode, jdbcType=VARCHAR}, #{resellerDoubtYn, jdbcType=CHAR}, #{blackListYn, jdbcType=CHAR}, #{blackListTypeCode, jdbcType=VARCHAR}, #{leaveYn, jdbcType=CHAR}, #{inactMemberAlertYn, jdbcType=CHAR}, #{leaveGbnCode, jdbcType=VARCHAR}, #{leaveRsnCode, jdbcType=VARCHAR}, #{leaveEtcRsn, jdbcType=VARCHAR}, <choose><when test="leaveDtm != null">#{leaveDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{beforeMemberType, jdbcType=CHAR}, #{recmdStoreNo, jdbcType=VARCHAR}, #{infoModYn, jdbcType=CHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.member.model.master.MbMember">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE mb_member
+		<set> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="loginId != null"> 
+				login_id = #{loginId, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="memberName != null"> 
+				member_name = #{memberName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pswdText != null"> 
+				pswd_text = #{pswdText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pswdSaltText != null"> 
+				pswd_salt_text = #{pswdSaltText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="memberTypeCode != null"> 
+				member_type_code = #{memberTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mbshpGradeCode != null"> 
+				mbshp_grade_code = #{mbshpGradeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="empYn != null"> 
+				emp_yn = #{empYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="otsVipYn != null"> 
+				ots_vip_yn = #{otsVipYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="emailAddrText != null"> 
+				email_addr_text = #{emailAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="hdphnNoText != null"> 
+				hdphn_no_text = #{hdphnNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="genderType != null"> 
+				gender_type = #{genderType, jdbcType=CHAR}, 
+			</if> 
+			<if test="birthYmd != null"> 
+				birth_ymd = #{birthYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="annvrName != null"> 
+				annvr_name = #{annvrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="annvrYmd != null"> 
+				annvr_ymd = #{annvrYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="annvrYmdModDtm != null"> 
+				annvr_ymd_mod_dtm = #{annvrYmdModDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="shoesSize != null"> 
+				shoes_size = #{shoesSize, jdbcType=INTEGER}, 
+			</if> 
+			<if test="pointPswdText != null"> 
+				point_pswd_text = #{pointPswdText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pointPswdSaltText != null"> 
+				point_pswd_salt_text = #{pointPswdSaltText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="bankCode != null"> 
+				bank_code = #{bankCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="acntNoText != null"> 
+				acnt_no_text = #{acntNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="acntHldrName != null"> 
+				acnt_hldr_name = #{acntHldrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="acntCrtfcYn != null"> 
+				acnt_crtfc_yn = #{acntCrtfcYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="localYn != null"> 
+				local_yn = #{localYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="smsRecvYn != null"> 
+				sms_recv_yn = #{smsRecvYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="smsRecvYnModDtm != null"> 
+				sms_recv_yn_mod_dtm = #{smsRecvYnModDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="emailRecvYn != null"> 
+				email_recv_yn = #{emailRecvYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="emailRecvYnModDtm != null"> 
+				email_recv_yn_mod_dtm = #{emailRecvYnModDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="nightSmsRecvYn != null"> 
+				night_sms_recv_yn = #{nightSmsRecvYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="nightSmsRecvYnModDtm != null"> 
+				night_sms_recv_yn_mod_dtm = #{nightSmsRecvYnModDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="nightEmailRecvYn != null"> 
+				night_email_recv_yn = #{nightEmailRecvYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="nightEmailRecvYnModDtm != null"> 
+				night_email_recv_yn_mod_dtm = #{nightEmailRecvYnModDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="joinDtm != null"> 
+				join_dtm = #{joinDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="deviceCode != null"> 
+				device_code = #{deviceCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="memberCnvrtDtm != null"> 
+				member_cnvrt_dtm = #{memberCnvrtDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="mbshpCnvrtDtm != null"> 
+				mbshp_cnvrt_dtm = #{mbshpCnvrtDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="safeKey != null"> 
+				safe_key = #{safeKey, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="safeKeySeq != null"> 
+				safe_key_seq = #{safeKeySeq, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="ciValue != null"> 
+				ci_value = #{ciValue, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pswdChngDtm != null"> 
+				pswd_chng_dtm = #{pswdChngDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="pswdInitYn != null"> 
+				pswd_init_yn = #{pswdInitYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="firstOrderDtm != null"> 
+				first_order_dtm = #{firstOrderDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="lastOrderDtm != null"> 
+				last_order_dtm = #{lastOrderDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="lastLoginDtm != null"> 
+				last_login_dtm = #{lastLoginDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="lastLoginIpText != null"> 
+				last_login_ip_text = #{lastLoginIpText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="lastOflnUseDtm != null"> 
+				last_ofln_use_dtm = #{lastOflnUseDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="pswdErrorCount != null"> 
+				pswd_error_count = #{pswdErrorCount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="mbshpCardNo != null"> 
+				mbshp_card_no = #{mbshpCardNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pymntMeansCode != null"> 
+				pymnt_means_code = #{pymntMeansCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="resellerDoubtYn != null"> 
+				reseller_doubt_yn = #{resellerDoubtYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="blackListYn != null"> 
+				black_list_yn = #{blackListYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="blackListTypeCode != null"> 
+				black_list_type_code = #{blackListTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="leaveYn != null"> 
+				leave_yn = #{leaveYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="inactMemberAlertYn != null"> 
+				inact_member_alert_yn = #{inactMemberAlertYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="leaveGbnCode != null"> 
+				leave_gbn_code = #{leaveGbnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="leaveRsnCode != null"> 
+				leave_rsn_code = #{leaveRsnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="leaveEtcRsn != null"> 
+				leave_etc_rsn = #{leaveEtcRsn, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="leaveDtm != null"> 
+				leave_dtm = #{leaveDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="beforeMemberType != null"> 
+				before_member_type = #{beforeMemberType, jdbcType=CHAR}, 
+			</if> 
+			<if test="recmdStoreNo != null"> 
+				recmd_store_no = #{recmdStoreNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="infoModYn != null"> 
+				info_mod_yn = #{infoModYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 member_no = #{memberNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.member.model.master.MbMember">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM mb_member
+		WHERE 
+			 member_no = #{memberNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.promotion.repository.master.PrPlanningDisplayDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	plndp_no, plndp_name, plndp_start_dtm, plndp_end_dtm, chnnl_no, vndr_gbn_type, vndr_no, srch_word_text, plndp_cont_text, pc_plndp_url, mobile_plndp_url, pc_banner_image_name, pc_banner_image_path_text, pc_banner_image_url, pc_banner_image_altrn_text, mobile_banner_image_name, mobile_banner_image_path_text, mobile_banner_image_url, mobile_banner_image_altrn_text, threed_image_name, threed_image_path_text, threed_image_disp_seq, movie_upload_yn, disp_movie_name, movie_name, movie_path_text, movie_url, movie_image_name, movie_image_path_text, movie_image_url, movie_image_altrn_text, movie_disp_seq, pc_dtl_desc_text, mobile_dtl_desc_text, dtl_desc_disp_seq, disp_type, corner_apply_yn, corner_disp_type, disp_yn, use_yn, plndp_stat_code, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	plndp_no = #{plndpNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.promotion.model.master.PrPlanningDisplay" resultType="kr.co.shop.web.promotion.model.master.PrPlanningDisplay">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrPlanningDisplayDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			PR_PLANNING_DISPLAY
+		<where> 
+			<if test="plndpNo != null"> 
+				 plndp_no = #{plndpNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="plndpName != null"> 
+				 AND plndp_name = #{plndpName, jdbcType=VARCHAR}
+			</if> 
+			<if test="plndpStartDtm != null"> 
+				 AND plndp_start_dtm = #{plndpStartDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="plndpEndDtm != null"> 
+				 AND plndp_end_dtm = #{plndpEndDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="chnnlNo != null"> 
+				 AND chnnl_no = #{chnnlNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="vndrGbnType != null"> 
+				 AND vndr_gbn_type = #{vndrGbnType, jdbcType=CHAR}
+			</if> 
+			<if test="vndrNo != null"> 
+				 AND vndr_no = #{vndrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="srchWordText != null"> 
+				 AND srch_word_text = #{srchWordText, jdbcType=VARCHAR}
+			</if> 
+			<if test="plndpContText != null"> 
+				 AND plndp_cont_text = #{plndpContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcPlndpUrl != null"> 
+				 AND pc_plndp_url = #{pcPlndpUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobilePlndpUrl != null"> 
+				 AND mobile_plndp_url = #{mobilePlndpUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcBannerImageName != null"> 
+				 AND pc_banner_image_name = #{pcBannerImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcBannerImagePathText != null"> 
+				 AND pc_banner_image_path_text = #{pcBannerImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcBannerImageUrl != null"> 
+				 AND pc_banner_image_url = #{pcBannerImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcBannerImageAltrnText != null"> 
+				 AND pc_banner_image_altrn_text = #{pcBannerImageAltrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileBannerImageName != null"> 
+				 AND mobile_banner_image_name = #{mobileBannerImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileBannerImagePathText != null"> 
+				 AND mobile_banner_image_path_text = #{mobileBannerImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileBannerImageUrl != null"> 
+				 AND mobile_banner_image_url = #{mobileBannerImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileBannerImageAltrnText != null"> 
+				 AND mobile_banner_image_altrn_text = #{mobileBannerImageAltrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="threedImageName != null"> 
+				 AND threed_image_name = #{threedImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="threedImagePathText != null"> 
+				 AND threed_image_path_text = #{threedImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="threedImageDispSeq != null"> 
+				 AND threed_image_disp_seq = #{threedImageDispSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="movieUploadYn != null"> 
+				 AND movie_upload_yn = #{movieUploadYn, jdbcType=CHAR}
+			</if> 
+			<if test="dispMovieName != null"> 
+				 AND disp_movie_name = #{dispMovieName, jdbcType=VARCHAR}
+			</if> 
+			<if test="movieName != null"> 
+				 AND movie_name = #{movieName, jdbcType=VARCHAR}
+			</if> 
+			<if test="moviePathText != null"> 
+				 AND movie_path_text = #{moviePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="movieUrl != null"> 
+				 AND movie_url = #{movieUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="movieImageName != null"> 
+				 AND movie_image_name = #{movieImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="movieImagePathText != null"> 
+				 AND movie_image_path_text = #{movieImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="movieImageUrl != null"> 
+				 AND movie_image_url = #{movieImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="movieImageAltrnText != null"> 
+				 AND movie_image_altrn_text = #{movieImageAltrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="movieDispSeq != null"> 
+				 AND movie_disp_seq = #{movieDispSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="pcDtlDescText != null"> 
+				 AND pc_dtl_desc_text = #{pcDtlDescText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileDtlDescText != null"> 
+				 AND mobile_dtl_desc_text = #{mobileDtlDescText, jdbcType=VARCHAR}
+			</if> 
+			<if test="dtlDescDispSeq != null"> 
+				 AND dtl_desc_disp_seq = #{dtlDescDispSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="dispType != null"> 
+				 AND disp_type = #{dispType, jdbcType=CHAR}
+			</if> 
+			<if test="cornerApplyYn != null"> 
+				 AND corner_apply_yn = #{cornerApplyYn, jdbcType=CHAR}
+			</if> 
+			<if test="cornerDispType != null"> 
+				 AND corner_disp_type = #{cornerDispType, jdbcType=CHAR}
+			</if> 
+			<if test="dispYn != null"> 
+				 AND disp_yn = #{dispYn, jdbcType=CHAR}
+			</if> 
+			<if test="useYn != null"> 
+				 AND use_yn = #{useYn, jdbcType=CHAR}
+			</if> 
+			<if test="plndpStatCode != null"> 
+				 AND plndp_stat_code = #{plndpStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.promotion.model.master.PrPlanningDisplay">	
+
+     /*+ kr.co.shop.web.promotion.repository.master.PrPlanningDisplayDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO PR_PLANNING_DISPLAY
+			 ( plndp_no, plndp_name, plndp_start_dtm, plndp_end_dtm, chnnl_no, vndr_gbn_type, vndr_no, srch_word_text, plndp_cont_text, pc_plndp_url, mobile_plndp_url, pc_banner_image_name, pc_banner_image_path_text, pc_banner_image_url, pc_banner_image_altrn_text, mobile_banner_image_name, mobile_banner_image_path_text, mobile_banner_image_url, mobile_banner_image_altrn_text, threed_image_name, threed_image_path_text, threed_image_disp_seq, movie_upload_yn, disp_movie_name, movie_name, movie_path_text, movie_url, movie_image_name, movie_image_path_text, movie_image_url, movie_image_altrn_text, movie_disp_seq, pc_dtl_desc_text, mobile_dtl_desc_text, dtl_desc_disp_seq, disp_type, corner_apply_yn, corner_disp_type, disp_yn, use_yn, plndp_stat_code, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{plndpNo, jdbcType=VARCHAR}, #{plndpName, jdbcType=VARCHAR}, <choose><when test="plndpStartDtm != null">#{plndpStartDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="plndpEndDtm != null">#{plndpEndDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{chnnlNo, jdbcType=VARCHAR}, #{vndrGbnType, jdbcType=CHAR}, #{vndrNo, jdbcType=VARCHAR}, #{srchWordText, jdbcType=VARCHAR}, #{plndpContText, jdbcType=VARCHAR}, #{pcPlndpUrl, jdbcType=VARCHAR}, #{mobilePlndpUrl, jdbcType=VARCHAR}, #{pcBannerImageName, jdbcType=VARCHAR}, #{pcBannerImagePathText, jdbcType=VARCHAR}, #{pcBannerImageUrl, jdbcType=VARCHAR}, #{pcBannerImageAltrnText, jdbcType=VARCHAR}, #{mobileBannerImageName, jdbcType=VARCHAR}, #{mobileBannerImagePathText, jdbcType=VARCHAR}, #{mobileBannerImageUrl, jdbcType=VARCHAR}, #{mobileBannerImageAltrnText, jdbcType=VARCHAR}, #{threedImageName, jdbcType=VARCHAR}, #{threedImagePathText, jdbcType=VARCHAR}, #{threedImageDispSeq, jdbcType=INTEGER}, #{movieUploadYn, jdbcType=CHAR}, #{dispMovieName, jdbcType=VARCHAR}, #{movieName, jdbcType=VARCHAR}, #{moviePathText, jdbcType=VARCHAR}, #{movieUrl, jdbcType=VARCHAR}, #{movieImageName, jdbcType=VARCHAR}, #{movieImagePathText, jdbcType=VARCHAR}, #{movieImageUrl, jdbcType=VARCHAR}, #{movieImageAltrnText, jdbcType=VARCHAR}, #{movieDispSeq, jdbcType=INTEGER}, #{pcDtlDescText, jdbcType=VARCHAR}, #{mobileDtlDescText, jdbcType=VARCHAR}, #{dtlDescDispSeq, jdbcType=INTEGER}, #{dispType, jdbcType=CHAR}, #{cornerApplyYn, jdbcType=CHAR}, #{cornerDispType, jdbcType=CHAR}, #{dispYn, jdbcType=CHAR}, #{useYn, jdbcType=CHAR}, #{plndpStatCode, jdbcType=VARCHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.promotion.model.master.PrPlanningDisplay">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrPlanningDisplayDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE PR_PLANNING_DISPLAY
+		<set> 
+			<if test="plndpNo != null"> 
+				plndp_no = #{plndpNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="plndpName != null"> 
+				plndp_name = #{plndpName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="plndpStartDtm != null"> 
+				plndp_start_dtm = #{plndpStartDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="plndpEndDtm != null"> 
+				plndp_end_dtm = #{plndpEndDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="chnnlNo != null"> 
+				chnnl_no = #{chnnlNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="vndrGbnType != null"> 
+				vndr_gbn_type = #{vndrGbnType, jdbcType=CHAR}, 
+			</if> 
+			<if test="vndrNo != null"> 
+				vndr_no = #{vndrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="srchWordText != null"> 
+				srch_word_text = #{srchWordText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="plndpContText != null"> 
+				plndp_cont_text = #{plndpContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcPlndpUrl != null"> 
+				pc_plndp_url = #{pcPlndpUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobilePlndpUrl != null"> 
+				mobile_plndp_url = #{mobilePlndpUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcBannerImageName != null"> 
+				pc_banner_image_name = #{pcBannerImageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcBannerImagePathText != null"> 
+				pc_banner_image_path_text = #{pcBannerImagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcBannerImageUrl != null"> 
+				pc_banner_image_url = #{pcBannerImageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcBannerImageAltrnText != null"> 
+				pc_banner_image_altrn_text = #{pcBannerImageAltrnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileBannerImageName != null"> 
+				mobile_banner_image_name = #{mobileBannerImageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileBannerImagePathText != null"> 
+				mobile_banner_image_path_text = #{mobileBannerImagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileBannerImageUrl != null"> 
+				mobile_banner_image_url = #{mobileBannerImageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileBannerImageAltrnText != null"> 
+				mobile_banner_image_altrn_text = #{mobileBannerImageAltrnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="threedImageName != null"> 
+				threed_image_name = #{threedImageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="threedImagePathText != null"> 
+				threed_image_path_text = #{threedImagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="threedImageDispSeq != null"> 
+				threed_image_disp_seq = #{threedImageDispSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="movieUploadYn != null"> 
+				movie_upload_yn = #{movieUploadYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="dispMovieName != null"> 
+				disp_movie_name = #{dispMovieName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="movieName != null"> 
+				movie_name = #{movieName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="moviePathText != null"> 
+				movie_path_text = #{moviePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="movieUrl != null"> 
+				movie_url = #{movieUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="movieImageName != null"> 
+				movie_image_name = #{movieImageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="movieImagePathText != null"> 
+				movie_image_path_text = #{movieImagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="movieImageUrl != null"> 
+				movie_image_url = #{movieImageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="movieImageAltrnText != null"> 
+				movie_image_altrn_text = #{movieImageAltrnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="movieDispSeq != null"> 
+				movie_disp_seq = #{movieDispSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="pcDtlDescText != null"> 
+				pc_dtl_desc_text = #{pcDtlDescText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileDtlDescText != null"> 
+				mobile_dtl_desc_text = #{mobileDtlDescText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dtlDescDispSeq != null"> 
+				dtl_desc_disp_seq = #{dtlDescDispSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="dispType != null"> 
+				disp_type = #{dispType, jdbcType=CHAR}, 
+			</if> 
+			<if test="cornerApplyYn != null"> 
+				corner_apply_yn = #{cornerApplyYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="cornerDispType != null"> 
+				corner_disp_type = #{cornerDispType, jdbcType=CHAR}, 
+			</if> 
+			<if test="dispYn != null"> 
+				disp_yn = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="useYn != null"> 
+				use_yn = #{useYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="plndpStatCode != null"> 
+				plndp_stat_code = #{plndpStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 plndp_no = #{plndpNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.promotion.model.master.PrPlanningDisplay">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrPlanningDisplayDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM PR_PLANNING_DISPLAY
+		WHERE 
+			 plndp_no = #{plndpNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.board.repository.master.BdFaqDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.board.model.master.BdFaq">
+    
+     /*+ kr.co.shop.web.board.repository.master.BdFaqDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			bd_faq
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select> 
+	
+	<select id="selectFaqByCnslTypeCount" parameterType="pageable" resultType="int">
+		/*+ kr.co.shop.web.board.repository.master.BdFaqDao.selectFaqByCnslTypeCount [FAQ 조회결과 개수] [신인철] */  
+		SELECT <include refid="Paging.totalCount" />
+		  FROM BD_FAQ A
+		 WHERE A.CNSL_TYPE_CODE = #{bean.cnslTypeCode, jdbcType = VARCHAR}
+		   AND A.CNSL_TYPE_DTL_CODE = #{bean.cnslTypeDtlCode, jdbcType = VARCHAR}
+		   AND A.DISP_YN='Y'
+	</select>
+	
+	
+	<select id="selectBySearchValueCount" parameterType="pageable" resultType="int">
+	/*+ kr.co.shop.web.board.repository.master.BdFaqDao.selectBySearchValueCount [FAQ 검색 조회결과 개수] [신인철] */
+		SELECT <include refid="Paging.totalCount" />
+		  FROM BD_FAQ A
+		 WHERE (A.FAQ_TITLE_TEXT LIKE '%' || #{bean.searchValue, jdbcType = VARCHAR} || '%' AND A.DISP_YN='Y')
+			OR (A.FAQ_CONT_TEXT LIKE '%' || #{bean.searchValue, jdbcType = VARCHAR} || '%' AND A.DISP_YN='Y')
+	</select>
+	
+	<select id="selectTop10List" resultType="kr.co.shop.web.board.model.master.BdFaq">
+	/*+ kr.co.shop.web.board.repository.master.BdFaqDao.selectTop10List [자주 묻는 질문 BEST10 리스트] [신인철] */
+		SELECT A.FAQ_SEQ
+			 , A.CNSL_TYPE_CODE
+			 , A.CNSL_TYPE_DTL_CODE
+			 , A.FAQ_TITLE_TEXT
+			 , A.FAQ_CONT_TEXT
+			 , A.TOP10_SETUP_YN
+			 , A.TOP10_SORT_SEQ
+			 , A.DISP_YN
+		  FROM BD_FAQ A
+		 WHERE (A.TOP10_SETUP_YN = 'Y' AND A.TOP10_SORT_SEQ BETWEEN 1 AND 10) 
+		   AND A.DISP_YN = 'Y'
+		 ORDER BY A.TOP10_SORT_SEQ
+	</select>
+	
+	<select id="selectFaqByCnslDtlCode" parameterType="pageable" resultType="kr.co.shop.web.board.model.master.BdFaq">
+	/*+ kr.co.shop.web.board.repository.master.BdFaqDao.selectFaqCnslType [상담 유형에 따른 FAQ리스트] [신인철] */
+		SELECT A.FAQ_SEQ
+			 , A.CNSL_TYPE_CODE
+			 , A.CNSL_TYPE_DTL_CODE
+			 , A.FAQ_TITLE_TEXT
+			 , A.FAQ_CONT_TEXT
+			 , A.TOP10_SETUP_YN
+			 , A.TOP10_SORT_SEQ
+			 , A.DISP_YN
+		  FROM BD_FAQ A
+		 WHERE A.CNSL_TYPE_CODE = #{bean.cnslTypeCode, jdbcType = VARCHAR}
+		   AND A.CNSL_TYPE_DTL_CODE = #{bean.cnslTypeDtlCode, jdbcType = VARCHAR}
+		   AND A.DISP_YN='Y'
+		 ORDER BY FAQ_SEQ
+		 <include refid="Paging.mssql" />
+	</select>
+	
+	<select id="selectFaqBySearchValue" parameterType="pageable" resultType="kr.co.shop.web.board.model.master.BdFaq">
+	/*+ kr.co.shop.web.board.repository.master.BdFaqDao.selectFaqBySearchValue [검색어에 따른 FAQ리스트] [신인철] */
+		SELECT A.FAQ_SEQ
+			 , A.CNSL_TYPE_CODE
+			 , A.CNSL_TYPE_DTL_CODE
+			 , <![CDATA[ REPLACE(A.FAQ_TITLE_TEXT, #{bean.searchValue, jdbcType = VARCHAR}, '<span class="spot">' || #{bean.searchValue, jdbcType = VARCHAR} || '</span>' ) ]]> AS FAQ_TITLE_TEXT
+			 , <![CDATA[ REPLACE(A.FAQ_CONT_TEXT, #{bean.searchValue, jdbcType = VARCHAR}, '<span class="spot">' || #{bean.searchValue, jdbcType = VARCHAR} || '</span>' ) ]]> AS FAQ_CONT_TEXT
+			 , A.TOP10_SETUP_YN
+			 , A.TOP10_SORT_SEQ
+			 , A.DISP_YN
+		  FROM BD_FAQ A
+		 WHERE (A.FAQ_TITLE_TEXT LIKE '%' || #{bean.searchValue, jdbcType = VARCHAR} || '%' AND A.DISP_YN='Y')
+			OR (A.FAQ_CONT_TEXT LIKE '%' || #{bean.searchValue, jdbcType = VARCHAR} || '%' AND A.DISP_YN='Y')
+		 ORDER BY FAQ_SEQ
+		 <include refid="Paging.mssql" />
+	</select>
+	
+</mapper>

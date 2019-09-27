@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.member.repository.master.MbMemberGiftCardDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	member_no, gift_card_seq, gift_card_no, gift_card_name, card_no_text, card_pin_no_text, card_amt, rprsnt_card_yn, del_yn, del_dtm, rgst_dtm, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	gift_card_seq = #{giftCardSeq, jdbcType=INTEGER} AND member_no = #{memberNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard" resultType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			mb_member_gift_card WITH (NOLOCK)
+
+		<where> 
+			<if test="memberNo != null"> 
+				 member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="giftCardSeq != null"> 
+				 AND gift_card_seq = #{giftCardSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="giftCardNo != null"> 
+				 AND gift_card_no = #{giftCardNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="giftCardName != null"> 
+				 AND gift_card_name = #{giftCardName, jdbcType=VARCHAR}
+			</if> 
+			<if test="cardNoText != null"> 
+				 AND card_no_text = #{cardNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="cardPinNoText != null"> 
+				 AND card_pin_no_text = #{cardPinNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="cardAmt != null"> 
+				 AND card_amt = #{cardAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="rprsntCardYn != null"> 
+				 AND rprsnt_card_yn = #{rprsntCardYn, jdbcType=CHAR}
+			</if> 
+			<if test="delYn != null"> 
+				 AND del_yn = #{delYn, jdbcType=CHAR}
+			</if> 
+			<if test="delDtm != null"> 
+				 AND del_dtm = #{delDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard">	
+
+     /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO mb_member_gift_card
+			 ( member_no, gift_card_seq, gift_card_no, gift_card_name, card_no_text, card_pin_no_text, card_amt, rprsnt_card_yn, del_yn, del_dtm, rgst_dtm, mod_dtm ) 
+
+		VALUES 
+			 ( #{memberNo, jdbcType=VARCHAR}, #{giftCardSeq, jdbcType=INTEGER}, #{giftCardNo, jdbcType=VARCHAR}, #{giftCardName, jdbcType=VARCHAR}, #{cardNoText, jdbcType=VARCHAR}, #{cardPinNoText, jdbcType=VARCHAR}, #{cardAmt, jdbcType=INTEGER}, #{rprsntCardYn, jdbcType=CHAR}, #{delYn, jdbcType=CHAR}, <choose><when test="delDtm != null">#{delDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE mb_member_gift_card
+		<set> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="giftCardSeq != null"> 
+				gift_card_seq = #{giftCardSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="giftCardNo != null"> 
+				gift_card_no = #{giftCardNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="giftCardName != null"> 
+				gift_card_name = #{giftCardName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cardNoText != null"> 
+				card_no_text = #{cardNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cardPinNoText != null"> 
+				card_pin_no_text = #{cardPinNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cardAmt != null"> 
+				card_amt = #{cardAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="rprsntCardYn != null"> 
+				rprsnt_card_yn = #{rprsntCardYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="delYn != null"> 
+				del_yn = #{delYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="delDtm != null"> 
+				del_dtm = #{delDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 gift_card_seq = #{giftCardSeq, jdbcType=INTEGER} AND member_no = #{memberNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.member.model.master.MbMemberGiftCard">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberGiftCardDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM mb_member_gift_card
+		WHERE 
+			 gift_card_seq = #{giftCardSeq, jdbcType=INTEGER} AND member_no = #{memberNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

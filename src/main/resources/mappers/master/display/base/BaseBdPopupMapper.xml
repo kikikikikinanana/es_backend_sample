@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.BdPopupDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	popup_seq, site_no, popup_title_text, disp_yn, disp_start_dtm, disp_end_dtm, disp_day_setup_yn, mon_yn, tue_yn, wed_yn, thu_yn, fri_yn, sat_yn, sun_yn, disp_day_start_time, disp_day_end_time, prior_seq, disp_limit_type, device_code, popup_type, use_yn, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	popup_seq = #{popupSeq, jdbcType=INTEGER}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.display.model.master.BdPopup" resultType="kr.co.shop.web.display.model.master.BdPopup">
+    
+     /*+ kr.co.shop.web.display.repository.master.BdPopupDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			BD_POPUP
+		<where> 
+			<if test="popupSeq != null"> 
+				 popup_seq = #{popupSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="popupTitleText != null"> 
+				 AND popup_title_text = #{popupTitleText, jdbcType=VARCHAR}
+			</if> 
+			<if test="dispYn != null"> 
+				 AND disp_yn = #{dispYn, jdbcType=CHAR}
+			</if> 
+			<if test="dispStartDtm != null"> 
+				 AND disp_start_dtm = #{dispStartDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="dispEndDtm != null"> 
+				 AND disp_end_dtm = #{dispEndDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="dispDaySetupYn != null"> 
+				 AND disp_day_setup_yn = #{dispDaySetupYn, jdbcType=CHAR}
+			</if> 
+			<if test="monYn != null"> 
+				 AND mon_yn = #{monYn, jdbcType=CHAR}
+			</if> 
+			<if test="tueYn != null"> 
+				 AND tue_yn = #{tueYn, jdbcType=CHAR}
+			</if> 
+			<if test="wedYn != null"> 
+				 AND wed_yn = #{wedYn, jdbcType=CHAR}
+			</if> 
+			<if test="thuYn != null"> 
+				 AND thu_yn = #{thuYn, jdbcType=CHAR}
+			</if> 
+			<if test="friYn != null"> 
+				 AND fri_yn = #{friYn, jdbcType=CHAR}
+			</if> 
+			<if test="satYn != null"> 
+				 AND sat_yn = #{satYn, jdbcType=CHAR}
+			</if> 
+			<if test="sunYn != null"> 
+				 AND sun_yn = #{sunYn, jdbcType=CHAR}
+			</if> 
+			<if test="dispDayStartTime != null"> 
+				 AND disp_day_start_time = #{dispDayStartTime, jdbcType=TIME}
+			</if> 
+			<if test="dispDayEndTime != null"> 
+				 AND disp_day_end_time = #{dispDayEndTime, jdbcType=TIME}
+			</if> 
+			<if test="priorSeq != null"> 
+				 AND prior_seq = #{priorSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="dispLimitType != null"> 
+				 AND disp_limit_type = #{dispLimitType, jdbcType=CHAR}
+			</if> 
+			<if test="deviceCode != null"> 
+				 AND device_code = #{deviceCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="popupType != null"> 
+				 AND popup_type = #{popupType, jdbcType=CHAR}
+			</if> 
+			<if test="useYn != null"> 
+				 AND use_yn = #{useYn, jdbcType=CHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+	<insert id="insert" useGeneratedKeys="true" keyProperty="popupSeq">
+
+     /*+ kr.co.shop.web.display.repository.master.BdPopupDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO BD_POPUP
+			 ( site_no, popup_title_text, disp_yn, disp_start_dtm, disp_end_dtm, disp_day_setup_yn, mon_yn, tue_yn, wed_yn, thu_yn, fri_yn, sat_yn, sun_yn, disp_day_start_time, disp_day_end_time, prior_seq, disp_limit_type, device_code, popup_type, use_yn, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{siteNo, jdbcType=VARCHAR}, #{popupTitleText, jdbcType=VARCHAR}, #{dispYn, jdbcType=CHAR}, <choose><when test="dispStartDtm != null">#{dispStartDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="dispEndDtm != null">#{dispEndDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{dispDaySetupYn, jdbcType=CHAR}, #{monYn, jdbcType=CHAR}, #{tueYn, jdbcType=CHAR}, #{wedYn, jdbcType=CHAR}, #{thuYn, jdbcType=CHAR}, #{friYn, jdbcType=CHAR}, #{satYn, jdbcType=CHAR}, #{sunYn, jdbcType=CHAR}, #{dispDayStartTime, jdbcType=TIME}, #{dispDayEndTime, jdbcType=TIME}, #{priorSeq, jdbcType=INTEGER}, #{dispLimitType, jdbcType=CHAR}, #{deviceCode, jdbcType=VARCHAR}, #{popupType, jdbcType=CHAR}, #{useYn, jdbcType=CHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.display.model.master.BdPopup">
+    
+     /*+ kr.co.shop.web.display.repository.master.BdPopupDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE BD_POPUP
+		<set> 
+			<if test="popupSeq != null"> 
+				popup_seq = #{popupSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="popupTitleText != null"> 
+				popup_title_text = #{popupTitleText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dispYn != null"> 
+				disp_yn = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="dispStartDtm != null"> 
+				disp_start_dtm = #{dispStartDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="dispEndDtm != null"> 
+				disp_end_dtm = #{dispEndDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="dispDaySetupYn != null"> 
+				disp_day_setup_yn = #{dispDaySetupYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="monYn != null"> 
+				mon_yn = #{monYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="tueYn != null"> 
+				tue_yn = #{tueYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="wedYn != null"> 
+				wed_yn = #{wedYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="thuYn != null"> 
+				thu_yn = #{thuYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="friYn != null"> 
+				fri_yn = #{friYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="satYn != null"> 
+				sat_yn = #{satYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="sunYn != null"> 
+				sun_yn = #{sunYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="dispDayStartTime != null"> 
+				disp_day_start_time = #{dispDayStartTime, jdbcType=TIME}, 
+			</if> 
+			<if test="dispDayEndTime != null"> 
+				disp_day_end_time = #{dispDayEndTime, jdbcType=TIME}, 
+			</if> 
+			<if test="priorSeq != null"> 
+				prior_seq = #{priorSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="dispLimitType != null"> 
+				disp_limit_type = #{dispLimitType, jdbcType=CHAR}, 
+			</if> 
+			<if test="deviceCode != null"> 
+				device_code = #{deviceCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="popupType != null"> 
+				popup_type = #{popupType, jdbcType=CHAR}, 
+			</if> 
+			<if test="useYn != null"> 
+				use_yn = #{useYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 popup_seq = #{popupSeq, jdbcType=INTEGER}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.display.model.master.BdPopup">
+    
+     /*+ kr.co.shop.web.display.repository.master.BdPopupDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM BD_POPUP
+		WHERE 
+			 popup_seq = #{popupSeq, jdbcType=INTEGER}  
+    </delete>
+</mapper>

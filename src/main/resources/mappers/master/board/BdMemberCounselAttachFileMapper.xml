@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.board.repository.master.BdMemberCounselAttachFileDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.board.model.master.BdMemberCounselAttachFile">
+    
+     /*+ kr.co.shop.web.board.repository.master.BdMemberCounselAttachFileDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			bd_member_counsel_attach_file
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+	
+	<select id="selectInqryFileDetail" parameterType="kr.co.shop.web.board.model.master.BdMemberCounsel" resultType="kr.co.shop.web.board.model.master.BdMemberCounselAttachFile">
+	/*+ kr.co.shop.web.board.repository.master.BdMemberCounselAttachFileDao.selectInqryFileDetail [마이페이지 상담내역 상세 파일 조회] [신인철] */
+		SELECT MEMBER_CNSL_SEQ
+			 , ATCH_FILE_SEQ
+			 , ATCH_FILE_GBN_TYPE
+			 , ATCH_FILE_NAME
+			 , ATCH_FILE_PATH_TEXT
+			 , ATCH_FILE_URL
+		  FROM BD_MEMBER_COUNSEL_ATTACH_FILE
+		 WHERE MEMBER_CNSL_SEQ = #{memberCnslSeq, jdbcType = INTEGER}
+		 ORDER BY ATCH_FILE_GBN_TYPE DESC
+	</select>
+	
+	<insert id="insertInqryFile" parameterType="kr.co.shop.web.board.model.master.BdMemberCounselAttachFile">	
+     	/*+ kr.co.shop.bo.board.repository.master.BdMemberCounselAttachFileDao.insert [상담 첨부파일 db저장] [신인철] */
+     	<selectKey keyProperty="atchFileSeq" resultType="Int" order="BEFORE">
+     		SELECT NVL(MAX(ATCH_FILE_SEQ), 0)+1
+			  FROM BD_MEMBER_COUNSEL_ATTACH_FILE
+			 WHERE MEMBER_CNSL_SEQ=#{memberCnslSeq, jdbcType=INTEGER}
+     	</selectKey>
+		INSERT INTO BD_MEMBER_COUNSEL_ATTACH_FILE
+			 ( MEMBER_CNSL_SEQ
+			 , ATCH_FILE_SEQ
+			 , ATCH_FILE_GBN_TYPE
+			 , ATCH_FILE_NAME
+			 , ATCH_FILE_PATH_TEXT
+			 , ATCH_FILE_URL ) 
+		VALUES 
+			 ( #{memberCnslSeq, jdbcType=INTEGER}
+			 , #{atchFileSeq, jdbcType=INTEGER}
+			 , #{atchFileGbnType, jdbcType=CHAR}
+			 , #{atchFileName, jdbcType=VARCHAR}
+			 , #{atchFilePathText, jdbcType=VARCHAR}
+			 , #{atchFileUrl, jdbcType=VARCHAR} )  
+    </insert>
+	
+	<delete id="deleteInqryFile" parameterType="kr.co.shop.web.board.model.master.BdMemberCounsel">
+	/*+ kr.co.shop.web.board.repository.master.BdMemberCounselAttachFileDao.deleteInqryFile [1:1 상담내역 삭제] [신인철] */
+		DELETE FROM BD_MEMBER_COUNSEL_ATTACH_FILE
+		 WHERE MEMBER_CNSL_SEQ = #{memberCnslSeq, jdbcType = INTEGER}
+	</delete>
+	
+	
+</mapper>

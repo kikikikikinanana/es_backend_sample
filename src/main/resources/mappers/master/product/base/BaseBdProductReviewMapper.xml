@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.BdProductReviewDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	prdt_rvw_seq, write_dtm, rvw_type, member_no, prdt_no, onln_buy_yn, vndr_no, site_no, chnnl_no, order_no, order_prdt_seq, safe_key, safe_key_seq, sale_date, store_cd, pos_no, deal_no, product_cd, size_cd, rvw_cont_text, aswr_cont_text, point_pay_yn, pay_point_amt, point_pay_dtm, point_pay_cncl_yn, point_pay_cncl_dtm, point_pay_cnclr_no, point_pay_impsblt_yn, best_yn, cnfrm_yn, cnfrmr_no, cnfrm_dtm, disp_yn, aswr_stat_code, aswr_no, aswr_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	prdt_rvw_seq = #{prdtRvwSeq, jdbcType=INTEGER}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.product.model.master.BdProductReview" resultType="kr.co.shop.web.product.model.master.BdProductReview">
+    
+     /*+ kr.co.shop.web.product.repository.master.BdProductReviewDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			BD_PRODUCT_REVIEW WITH (NOLOCK)
+
+		<where> 
+			<if test="prdtRvwSeq != null"> 
+				 prdt_rvw_seq = #{prdtRvwSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="writeDtm != null"> 
+				 AND write_dtm = #{writeDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="rvwType != null"> 
+				 AND rvw_type = #{rvwType, jdbcType=CHAR}
+			</if> 
+			<if test="memberNo != null"> 
+				 AND member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtNo != null"> 
+				 AND prdt_no = #{prdtNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="onlnBuyYn != null"> 
+				 AND onln_buy_yn = #{onlnBuyYn, jdbcType=CHAR}
+			</if> 
+			<if test="vndrNo != null"> 
+				 AND vndr_no = #{vndrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="chnnlNo != null"> 
+				 AND chnnl_no = #{chnnlNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderNo != null"> 
+				 AND order_no = #{orderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				 AND order_prdt_seq = #{orderPrdtSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="safeKey != null"> 
+				 AND safe_key = #{safeKey, jdbcType=VARCHAR}
+			</if> 
+			<if test="safeKeySeq != null"> 
+				 AND safe_key_seq = #{safeKeySeq, jdbcType=VARCHAR}
+			</if> 
+			<if test="saleDate != null"> 
+				 AND sale_date = #{saleDate, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeCd != null"> 
+				 AND store_cd = #{storeCd, jdbcType=VARCHAR}
+			</if> 
+			<if test="posNo != null"> 
+				 AND pos_no = #{posNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="dealNo != null"> 
+				 AND deal_no = #{dealNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="productCd != null"> 
+				 AND product_cd = #{productCd, jdbcType=VARCHAR}
+			</if> 
+			<if test="sizeCd != null"> 
+				 AND size_cd = #{sizeCd, jdbcType=VARCHAR}
+			</if> 
+			<if test="rvwContText != null"> 
+				 AND rvw_cont_text = #{rvwContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="aswrContText != null"> 
+				 AND aswr_cont_text = #{aswrContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pointPayYn != null"> 
+				 AND point_pay_yn = #{pointPayYn, jdbcType=CHAR}
+			</if> 
+			<if test="payPointAmt != null"> 
+				 AND pay_point_amt = #{payPointAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="pointPayDtm != null"> 
+				 AND point_pay_dtm = #{pointPayDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="pointPayCnclYn != null"> 
+				 AND point_pay_cncl_yn = #{pointPayCnclYn, jdbcType=CHAR}
+			</if> 
+			<if test="pointPayCnclDtm != null"> 
+				 AND point_pay_cncl_dtm = #{pointPayCnclDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="pointPayCnclrNo != null"> 
+				 AND point_pay_cnclr_no = #{pointPayCnclrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="pointPayImpsbltYn != null"> 
+				 AND point_pay_impsblt_yn = #{pointPayImpsbltYn, jdbcType=CHAR}
+			</if> 
+			<if test="bestYn != null"> 
+				 AND best_yn = #{bestYn, jdbcType=CHAR}
+			</if> 
+			<if test="cnfrmYn != null"> 
+				 AND cnfrm_yn = #{cnfrmYn, jdbcType=CHAR}
+			</if> 
+			<if test="cnfrmrNo != null"> 
+				 AND cnfrmr_no = #{cnfrmrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="cnfrmDtm != null"> 
+				 AND cnfrm_dtm = #{cnfrmDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="dispYn != null"> 
+				 AND disp_yn = #{dispYn, jdbcType=CHAR}
+			</if> 
+			<if test="aswrStatCode != null"> 
+				 AND aswr_stat_code = #{aswrStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="aswrNo != null"> 
+				 AND aswr_no = #{aswrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="aswrDtm != null"> 
+				 AND aswr_dtm = #{aswrDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+	<insert id="insert" useGeneratedKeys="true" keyProperty="prdtRvwSeq">
+
+     /*+ kr.co.shop.web.product.repository.master.BdProductReviewDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO BD_PRODUCT_REVIEW
+			 ( write_dtm, rvw_type, member_no, prdt_no, onln_buy_yn, vndr_no, site_no, chnnl_no, order_no, order_prdt_seq, safe_key, safe_key_seq, sale_date, store_cd, pos_no, deal_no, product_cd, size_cd, rvw_cont_text, aswr_cont_text, point_pay_yn, pay_point_amt, point_pay_dtm, point_pay_cncl_yn, point_pay_cncl_dtm, point_pay_cnclr_no, point_pay_impsblt_yn, best_yn, cnfrm_yn, cnfrmr_no, cnfrm_dtm, disp_yn, aswr_stat_code, aswr_no, aswr_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( <choose><when test="writeDtm != null">#{writeDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{rvwType, jdbcType=CHAR}, #{memberNo, jdbcType=VARCHAR}, #{prdtNo, jdbcType=VARCHAR}, #{onlnBuyYn, jdbcType=CHAR}, #{vndrNo, jdbcType=VARCHAR}, #{siteNo, jdbcType=VARCHAR}, #{chnnlNo, jdbcType=VARCHAR}, #{orderNo, jdbcType=VARCHAR}, #{orderPrdtSeq, jdbcType=INTEGER}, #{safeKey, jdbcType=VARCHAR}, #{safeKeySeq, jdbcType=VARCHAR}, #{saleDate, jdbcType=VARCHAR}, #{storeCd, jdbcType=VARCHAR}, #{posNo, jdbcType=VARCHAR}, #{dealNo, jdbcType=VARCHAR}, #{productCd, jdbcType=VARCHAR}, #{sizeCd, jdbcType=VARCHAR}, #{rvwContText, jdbcType=VARCHAR}, #{aswrContText, jdbcType=VARCHAR}, #{pointPayYn, jdbcType=CHAR}, #{payPointAmt, jdbcType=INTEGER}, <choose><when test="pointPayDtm != null">#{pointPayDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{pointPayCnclYn, jdbcType=CHAR}, <choose><when test="pointPayCnclDtm != null">#{pointPayCnclDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{pointPayCnclrNo, jdbcType=VARCHAR}, #{pointPayImpsbltYn, jdbcType=CHAR}, #{bestYn, jdbcType=CHAR}, #{cnfrmYn, jdbcType=CHAR}, #{cnfrmrNo, jdbcType=VARCHAR}, <choose><when test="cnfrmDtm != null">#{cnfrmDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{dispYn, jdbcType=CHAR}, #{aswrStatCode, jdbcType=VARCHAR}, #{aswrNo, jdbcType=VARCHAR}, <choose><when test="aswrDtm != null">#{aswrDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.product.model.master.BdProductReview">
+    
+     /*+ kr.co.shop.web.product.repository.master.BdProductReviewDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE BD_PRODUCT_REVIEW
+		<set> 
+			<if test="prdtRvwSeq != null"> 
+				prdt_rvw_seq = #{prdtRvwSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="writeDtm != null"> 
+				write_dtm = #{writeDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="rvwType != null"> 
+				rvw_type = #{rvwType, jdbcType=CHAR}, 
+			</if> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtNo != null"> 
+				prdt_no = #{prdtNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="onlnBuyYn != null"> 
+				onln_buy_yn = #{onlnBuyYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="vndrNo != null"> 
+				vndr_no = #{vndrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="chnnlNo != null"> 
+				chnnl_no = #{chnnlNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderNo != null"> 
+				order_no = #{orderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="orderPrdtSeq != null"> 
+				order_prdt_seq = #{orderPrdtSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="safeKey != null"> 
+				safe_key = #{safeKey, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="safeKeySeq != null"> 
+				safe_key_seq = #{safeKeySeq, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="saleDate != null"> 
+				sale_date = #{saleDate, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeCd != null"> 
+				store_cd = #{storeCd, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="posNo != null"> 
+				pos_no = #{posNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dealNo != null"> 
+				deal_no = #{dealNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="productCd != null"> 
+				product_cd = #{productCd, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="sizeCd != null"> 
+				size_cd = #{sizeCd, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rvwContText != null"> 
+				rvw_cont_text = #{rvwContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aswrContText != null"> 
+				aswr_cont_text = #{aswrContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pointPayYn != null"> 
+				point_pay_yn = #{pointPayYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="payPointAmt != null"> 
+				pay_point_amt = #{payPointAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="pointPayDtm != null"> 
+				point_pay_dtm = #{pointPayDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="pointPayCnclYn != null"> 
+				point_pay_cncl_yn = #{pointPayCnclYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="pointPayCnclDtm != null"> 
+				point_pay_cncl_dtm = #{pointPayCnclDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="pointPayCnclrNo != null"> 
+				point_pay_cnclr_no = #{pointPayCnclrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pointPayImpsbltYn != null"> 
+				point_pay_impsblt_yn = #{pointPayImpsbltYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="bestYn != null"> 
+				best_yn = #{bestYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="cnfrmYn != null"> 
+				cnfrm_yn = #{cnfrmYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="cnfrmrNo != null"> 
+				cnfrmr_no = #{cnfrmrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cnfrmDtm != null"> 
+				cnfrm_dtm = #{cnfrmDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="dispYn != null"> 
+				disp_yn = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="aswrStatCode != null"> 
+				aswr_stat_code = #{aswrStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aswrNo != null"> 
+				aswr_no = #{aswrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aswrDtm != null"> 
+				aswr_dtm = #{aswrDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 prdt_rvw_seq = #{prdtRvwSeq, jdbcType=INTEGER}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.product.model.master.BdProductReview">
+    
+     /*+ kr.co.shop.web.product.repository.master.BdProductReviewDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM BD_PRODUCT_REVIEW
+		WHERE 
+			 prdt_rvw_seq = #{prdtRvwSeq, jdbcType=INTEGER}  
+    </delete>
+</mapper>

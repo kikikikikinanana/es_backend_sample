@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.PdProductOptionDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	prdt_no, prdt_optn_no, optn_name, add_optn1_text, add_optn2_text, total_stock_qty, total_order_qty, order_psblt_qty, vndr_prdt_no_text, sell_stat_code, sold_out_rsn_text, sort_seq, use_yn, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	prdt_no = #{prdtNo, jdbcType=VARCHAR} AND prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.product.model.master.PdProductOption" resultType="kr.co.shop.web.product.model.master.PdProductOption">
+    
+     /*+ kr.co.shop.web.product.repository.master.PdProductOptionDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			PD_PRODUCT_OPTION WITH (NOLOCK)
+
+		<where> 
+			<if test="prdtNo != null"> 
+				 prdt_no = #{prdtNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="prdtOptnNo != null"> 
+				 AND prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="optnName != null"> 
+				 AND optn_name = #{optnName, jdbcType=VARCHAR}
+			</if> 
+			<if test="addOptn1Text != null"> 
+				 AND add_optn1_text = #{addOptn1Text, jdbcType=VARCHAR}
+			</if> 
+			<if test="addOptn2Text != null"> 
+				 AND add_optn2_text = #{addOptn2Text, jdbcType=VARCHAR}
+			</if> 
+			<if test="totalStockQty != null"> 
+				 AND total_stock_qty = #{totalStockQty, jdbcType=INTEGER}
+			</if> 
+			<if test="totalOrderQty != null"> 
+				 AND total_order_qty = #{totalOrderQty, jdbcType=INTEGER}
+			</if> 
+			<if test="orderPsbltQty != null"> 
+				 AND order_psblt_qty = #{orderPsbltQty, jdbcType=INTEGER}
+			</if> 
+			<if test="vndrPrdtNoText != null"> 
+				 AND vndr_prdt_no_text = #{vndrPrdtNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="sellStatCode != null"> 
+				 AND sell_stat_code = #{sellStatCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="soldOutRsnText != null"> 
+				 AND sold_out_rsn_text = #{soldOutRsnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="sortSeq != null"> 
+				 AND sort_seq = #{sortSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="useYn != null"> 
+				 AND use_yn = #{useYn, jdbcType=CHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.product.model.master.PdProductOption">	
+
+     /*+ kr.co.shop.web.product.repository.master.PdProductOptionDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO PD_PRODUCT_OPTION
+			 ( prdt_no, prdt_optn_no, optn_name, add_optn1_text, add_optn2_text, total_stock_qty, total_order_qty, order_psblt_qty, vndr_prdt_no_text, sell_stat_code, sold_out_rsn_text, sort_seq, use_yn, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{prdtNo, jdbcType=VARCHAR}, #{prdtOptnNo, jdbcType=VARCHAR}, #{optnName, jdbcType=VARCHAR}, #{addOptn1Text, jdbcType=VARCHAR}, #{addOptn2Text, jdbcType=VARCHAR}, #{totalStockQty, jdbcType=INTEGER}, #{totalOrderQty, jdbcType=INTEGER}, #{orderPsbltQty, jdbcType=INTEGER}, #{vndrPrdtNoText, jdbcType=VARCHAR}, #{sellStatCode, jdbcType=VARCHAR}, #{soldOutRsnText, jdbcType=VARCHAR}, #{sortSeq, jdbcType=INTEGER}, #{useYn, jdbcType=CHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.product.model.master.PdProductOption">
+    
+     /*+ kr.co.shop.web.product.repository.master.PdProductOptionDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE PD_PRODUCT_OPTION
+		<set> 
+			<if test="prdtNo != null"> 
+				prdt_no = #{prdtNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="prdtOptnNo != null"> 
+				prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="optnName != null"> 
+				optn_name = #{optnName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="addOptn1Text != null"> 
+				add_optn1_text = #{addOptn1Text, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="addOptn2Text != null"> 
+				add_optn2_text = #{addOptn2Text, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="totalStockQty != null"> 
+				total_stock_qty = #{totalStockQty, jdbcType=INTEGER}, 
+			</if> 
+			<if test="totalOrderQty != null"> 
+				total_order_qty = #{totalOrderQty, jdbcType=INTEGER}, 
+			</if> 
+			<if test="orderPsbltQty != null"> 
+				order_psblt_qty = #{orderPsbltQty, jdbcType=INTEGER}, 
+			</if> 
+			<if test="vndrPrdtNoText != null"> 
+				vndr_prdt_no_text = #{vndrPrdtNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="sellStatCode != null"> 
+				sell_stat_code = #{sellStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="soldOutRsnText != null"> 
+				sold_out_rsn_text = #{soldOutRsnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="sortSeq != null"> 
+				sort_seq = #{sortSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="useYn != null"> 
+				use_yn = #{useYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 prdt_no = #{prdtNo, jdbcType=VARCHAR} AND prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.product.model.master.PdProductOption">
+    
+     /*+ kr.co.shop.web.product.repository.master.PdProductOptionDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM PD_PRODUCT_OPTION
+		WHERE 
+			 prdt_no = #{prdtNo, jdbcType=VARCHAR} AND prdt_optn_no = #{prdtOptnNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

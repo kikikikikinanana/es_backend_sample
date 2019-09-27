@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.vendor.repository.master.VdVendorManagerDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	vndr_no, vndr_mngr_no, work_type_text, del_yn, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	vndr_mngr_no = #{vndrMngrNo, jdbcType=TINYINT} AND vndr_no = #{vndrNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.vendor.model.master.VdVendorManager" resultType="kr.co.shop.web.vendor.model.master.VdVendorManager">
+    
+     /*+ kr.co.shop.web.vendor.repository.master.VdVendorManagerDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			vd_vendor_manager WITH (NOLOCK)
+
+		<where> 
+			<if test="vndrNo != null"> 
+				 vndr_no = #{vndrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="vndrMngrNo != null"> 
+				 AND vndr_mngr_no = #{vndrMngrNo, jdbcType=TINYINT}
+			</if> 
+			<if test="workTypeText != null"> 
+				 AND work_type_text = #{workTypeText, jdbcType=VARCHAR}
+			</if> 
+			<if test="delYn != null"> 
+				 AND del_yn = #{delYn, jdbcType=CHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.vendor.model.master.VdVendorManager">	
+
+     /*+ kr.co.shop.web.vendor.repository.master.VdVendorManagerDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO vd_vendor_manager
+			 ( vndr_no, vndr_mngr_no, work_type_text, del_yn, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{vndrNo, jdbcType=VARCHAR}, #{vndrMngrNo, jdbcType=TINYINT}, #{workTypeText, jdbcType=VARCHAR}, #{delYn, jdbcType=CHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.vendor.model.master.VdVendorManager">
+    
+     /*+ kr.co.shop.web.vendor.repository.master.VdVendorManagerDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE vd_vendor_manager
+		<set> 
+			<if test="vndrNo != null"> 
+				vndr_no = #{vndrNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="vndrMngrNo != null"> 
+				vndr_mngr_no = #{vndrMngrNo, jdbcType=TINYINT}, 
+			</if> 
+			<if test="workTypeText != null"> 
+				work_type_text = #{workTypeText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="delYn != null"> 
+				del_yn = #{delYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 vndr_mngr_no = #{vndrMngrNo, jdbcType=TINYINT} AND vndr_no = #{vndrNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.vendor.model.master.VdVendorManager">
+    
+     /*+ kr.co.shop.web.vendor.repository.master.VdVendorManagerDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM vd_vendor_manager
+		WHERE 
+			 vndr_mngr_no = #{vndrMngrNo, jdbcType=TINYINT} AND vndr_no = #{vndrNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

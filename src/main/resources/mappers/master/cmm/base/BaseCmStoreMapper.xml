@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cmm.repository.master.CmStoreDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	store_no, site_no, store_name, tel_no_text, post_code_text, post_addr_text, dtl_addr_text, find_go_strt_text, area_no, area_dtl_seq, direct_yn, x_point_text, y_point_text, store_id_text, business_start_time, business_end_time, open_ymd, pc_image_name, pc_image_path_text, pc_image_url, pc_altrn_text, mobile_image_name, mobile_image_path_text, mobile_image_url, mobile_altrn_text, store_etc_text, store_url, store_gbn_code, store_type_code, pickup_psblt_yn, business_stop_rsn_code, business_stop_ymd, emp_price_buy_psblt_yn, disp_yn, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	store_no = #{storeNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.cmm.model.master.CmStore" resultType="kr.co.shop.web.cmm.model.master.CmStore">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmStoreDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			cm_store WITH (NOLOCK)
+
+		<where> 
+			<if test="storeNo != null"> 
+				 store_no = #{storeNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="siteNo != null"> 
+				 AND site_no = #{siteNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeName != null"> 
+				 AND store_name = #{storeName, jdbcType=VARCHAR}
+			</if> 
+			<if test="telNoText != null"> 
+				 AND tel_no_text = #{telNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="postCodeText != null"> 
+				 AND post_code_text = #{postCodeText, jdbcType=CHAR}
+			</if> 
+			<if test="postAddrText != null"> 
+				 AND post_addr_text = #{postAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="dtlAddrText != null"> 
+				 AND dtl_addr_text = #{dtlAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="findGoStrtText != null"> 
+				 AND find_go_strt_text = #{findGoStrtText, jdbcType=VARCHAR}
+			</if> 
+			<if test="areaNo != null"> 
+				 AND area_no = #{areaNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="areaDtlSeq != null"> 
+				 AND area_dtl_seq = #{areaDtlSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="directYn != null"> 
+				 AND direct_yn = #{directYn, jdbcType=CHAR}
+			</if> 
+			<if test="xPointText != null"> 
+				 AND x_point_text = #{xPointText, jdbcType=REAL}
+			</if> 
+			<if test="yPointText != null"> 
+				 AND y_point_text = #{yPointText, jdbcType=REAL}
+			</if> 
+			<if test="storeIdText != null"> 
+				 AND store_id_text = #{storeIdText, jdbcType=VARCHAR}
+			</if> 
+			<if test="businessStartTime != null"> 
+				 AND business_start_time = #{businessStartTime, jdbcType=TIME}
+			</if> 
+			<if test="businessEndTime != null"> 
+				 AND business_end_time = #{businessEndTime, jdbcType=TIME}
+			</if> 
+			<if test="openYmd != null"> 
+				 AND open_ymd = #{openYmd, jdbcType=DATE}
+			</if> 
+			<if test="pcImageName != null"> 
+				 AND pc_image_name = #{pcImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcImagePathText != null"> 
+				 AND pc_image_path_text = #{pcImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcImageUrl != null"> 
+				 AND pc_image_url = #{pcImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcAltrnText != null"> 
+				 AND pc_altrn_text = #{pcAltrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileImageName != null"> 
+				 AND mobile_image_name = #{mobileImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileImagePathText != null"> 
+				 AND mobile_image_path_text = #{mobileImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileImageUrl != null"> 
+				 AND mobile_image_url = #{mobileImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileAltrnText != null"> 
+				 AND mobile_altrn_text = #{mobileAltrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeEtcText != null"> 
+				 AND store_etc_text = #{storeEtcText, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeUrl != null"> 
+				 AND store_url = #{storeUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeGbnCode != null"> 
+				 AND store_gbn_code = #{storeGbnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeTypeCode != null"> 
+				 AND store_type_code = #{storeTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="pickupPsbltYn != null"> 
+				 AND pickup_psblt_yn = #{pickupPsbltYn, jdbcType=CHAR}
+			</if> 
+			<if test="businessStopRsnCode != null"> 
+				 AND business_stop_rsn_code = #{businessStopRsnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="businessStopYmd != null"> 
+				 AND business_stop_ymd = #{businessStopYmd, jdbcType=DATE}
+			</if> 
+			<if test="empPriceBuyPsbltYn != null"> 
+				 AND emp_price_buy_psblt_yn = #{empPriceBuyPsbltYn, jdbcType=CHAR}
+			</if> 
+			<if test="dispYn != null"> 
+				 AND disp_yn = #{dispYn, jdbcType=CHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.cmm.model.master.CmStore">	
+
+     /*+ kr.co.shop.web.cmm.repository.master.CmStoreDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO cm_store
+			 ( store_no, site_no, store_name, tel_no_text, post_code_text, post_addr_text, dtl_addr_text, find_go_strt_text, area_no, area_dtl_seq, direct_yn, x_point_text, y_point_text, store_id_text, business_start_time, business_end_time, open_ymd, pc_image_name, pc_image_path_text, pc_image_url, pc_altrn_text, mobile_image_name, mobile_image_path_text, mobile_image_url, mobile_altrn_text, store_etc_text, store_url, store_gbn_code, store_type_code, pickup_psblt_yn, business_stop_rsn_code, business_stop_ymd, emp_price_buy_psblt_yn, disp_yn, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{storeNo, jdbcType=VARCHAR}, #{siteNo, jdbcType=VARCHAR}, #{storeName, jdbcType=VARCHAR}, #{telNoText, jdbcType=VARCHAR}, #{postCodeText, jdbcType=CHAR}, #{postAddrText, jdbcType=VARCHAR}, #{dtlAddrText, jdbcType=VARCHAR}, #{findGoStrtText, jdbcType=VARCHAR}, #{areaNo, jdbcType=VARCHAR}, #{areaDtlSeq, jdbcType=INTEGER}, #{directYn, jdbcType=CHAR}, #{xPointText, jdbcType=REAL}, #{yPointText, jdbcType=REAL}, #{storeIdText, jdbcType=VARCHAR}, #{businessStartTime, jdbcType=TIME}, #{businessEndTime, jdbcType=TIME}, <choose><when test="openYmd != null">#{openYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, #{pcImageName, jdbcType=VARCHAR}, #{pcImagePathText, jdbcType=VARCHAR}, #{pcImageUrl, jdbcType=VARCHAR}, #{pcAltrnText, jdbcType=VARCHAR}, #{mobileImageName, jdbcType=VARCHAR}, #{mobileImagePathText, jdbcType=VARCHAR}, #{mobileImageUrl, jdbcType=VARCHAR}, #{mobileAltrnText, jdbcType=VARCHAR}, #{storeEtcText, jdbcType=VARCHAR}, #{storeUrl, jdbcType=VARCHAR}, #{storeGbnCode, jdbcType=VARCHAR}, #{storeTypeCode, jdbcType=VARCHAR}, #{pickupPsbltYn, jdbcType=CHAR}, #{businessStopRsnCode, jdbcType=VARCHAR}, <choose><when test="businessStopYmd != null">#{businessStopYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, #{empPriceBuyPsbltYn, jdbcType=CHAR}, #{dispYn, jdbcType=CHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.cmm.model.master.CmStore">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmStoreDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE cm_store
+		<set> 
+			<if test="storeNo != null"> 
+				store_no = #{storeNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="siteNo != null"> 
+				site_no = #{siteNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeName != null"> 
+				store_name = #{storeName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="telNoText != null"> 
+				tel_no_text = #{telNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="postCodeText != null"> 
+				post_code_text = #{postCodeText, jdbcType=CHAR}, 
+			</if> 
+			<if test="postAddrText != null"> 
+				post_addr_text = #{postAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dtlAddrText != null"> 
+				dtl_addr_text = #{dtlAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="findGoStrtText != null"> 
+				find_go_strt_text = #{findGoStrtText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="areaNo != null"> 
+				area_no = #{areaNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="areaDtlSeq != null"> 
+				area_dtl_seq = #{areaDtlSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="directYn != null"> 
+				direct_yn = #{directYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="xPointText != null"> 
+				x_point_text = #{xPointText, jdbcType=REAL}, 
+			</if> 
+			<if test="yPointText != null"> 
+				y_point_text = #{yPointText, jdbcType=REAL}, 
+			</if> 
+			<if test="storeIdText != null"> 
+				store_id_text = #{storeIdText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="businessStartTime != null"> 
+				business_start_time = #{businessStartTime, jdbcType=TIME}, 
+			</if> 
+			<if test="businessEndTime != null"> 
+				business_end_time = #{businessEndTime, jdbcType=TIME}, 
+			</if> 
+			<if test="openYmd != null"> 
+				open_ymd = #{openYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="pcImageName != null"> 
+				pc_image_name = #{pcImageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcImagePathText != null"> 
+				pc_image_path_text = #{pcImagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcImageUrl != null"> 
+				pc_image_url = #{pcImageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcAltrnText != null"> 
+				pc_altrn_text = #{pcAltrnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileImageName != null"> 
+				mobile_image_name = #{mobileImageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileImagePathText != null"> 
+				mobile_image_path_text = #{mobileImagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileImageUrl != null"> 
+				mobile_image_url = #{mobileImageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileAltrnText != null"> 
+				mobile_altrn_text = #{mobileAltrnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeEtcText != null"> 
+				store_etc_text = #{storeEtcText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeUrl != null"> 
+				store_url = #{storeUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeGbnCode != null"> 
+				store_gbn_code = #{storeGbnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeTypeCode != null"> 
+				store_type_code = #{storeTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pickupPsbltYn != null"> 
+				pickup_psblt_yn = #{pickupPsbltYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="businessStopRsnCode != null"> 
+				business_stop_rsn_code = #{businessStopRsnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="businessStopYmd != null"> 
+				business_stop_ymd = #{businessStopYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="empPriceBuyPsbltYn != null"> 
+				emp_price_buy_psblt_yn = #{empPriceBuyPsbltYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="dispYn != null"> 
+				disp_yn = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 store_no = #{storeNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.cmm.model.master.CmStore">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmStoreDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM cm_store
+		WHERE 
+			 store_no = #{storeNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cmm.repository.master.CmStoreDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.cmm.model.master.CmStore">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmStoreDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			cm_store	
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+
+	<select id="selectStoreListNotUseGiftcard" parameterType="kr.co.shop.web.cmm.model.master.CmStore" resultType="kr.co.shop.web.cmm.model.master.CmStore">
+	
+	/*+ kr.co.shop.web.cmm.repository.master.CmStoreDao.selectStoreListNotUseGiftcard [기프트카드 사용불가능한 매장 목록 조회] [이강수] */  
+	
+		  SELECT A.STORE_NO
+			   , A.SITE_NO
+			   , A.STORE_NAME
+		    FROM CM_STORE			A	
+		    JOIN CM_STORE_SERVICE	B 
+			  ON A.STORE_NO = B.STORE_NO
+			 AND B.STORE_SERVICE_CODE 	= #{storeServiceCode}	-- 기프트카드
+			 AND B.PSBLT_YN				= #{psbltYn}			-- 사용가능/불가능
+		<if test='otsYn == "Y"'>
+		   WHERE A.STORE_TYPE_CODE  = #{storeTypeCode}			-- OTS인지
+		</if>
+		<if test='otsYn == "N"'>
+		   WHERE A.STORE_TYPE_CODE != #{storeTypeCode}			-- OTS아닌지
+		</if>
+			
+	</select>
+	
+	<resultMap type="kr.co.shop.web.cmm.model.master.CmStore" id="cmStoreResultMap" autoMapping="true">
+    	<id property="storeNo" column="store_no"/>
+    	<collection property="storeServiceList" ofType="kr.co.shop.web.cmm.model.master.CmStoreService" resultMap="cmStoreServiceResultMap" columnPrefix="s_"/>
+    </resultMap>
+    
+    <resultMap type="kr.co.shop.web.cmm.model.master.CmStoreService" id="cmStoreServiceResultMap" autoMapping="true">
+    	<id property="storeNo" column="store_no" />
+    	<id property="storeServiceSeq" column="store_service_seq" />
+    </resultMap>
+    
+    <select id="selectCmStoreDetail" parameterType="kr.co.shop.web.cmm.model.master.CmStore" resultMap="cmStoreResultMap">
+    /*+ kr.co.shop.web.cmm.repository.master.CmStoreDao.selectCmStoreDetail [매장 상세 조회] [이가영] */
+    
+    	SELECT
+			A.store_no,
+			A.site_no,
+			A.store_name,
+			A.tel_no_text,
+			A.post_code_text,
+			A.post_addr_text,
+			A.dtl_addr_text,
+			A.find_go_strt_text,
+			A.area_no,
+			A.area_dtl_seq,
+			A.direct_yn,
+			A.x_point_text,
+			A.y_point_text,
+			A.store_id_text,
+			A.business_start_time,
+			A.business_end_time,
+			A.open_ymd,
+			A.pc_image_name,
+			A.pc_image_path_text,
+			A.pc_image_url,
+			A.pc_altrn_text,
+			A.mobile_image_name,
+			A.mobile_image_path_text,
+			A.mobile_image_url,
+			A.mobile_altrn_text,
+			A.store_etc_text,
+			A.store_url,
+			A.store_gbn_code,
+			A.store_type_code,
+			A.pickup_psblt_yn,
+			A.business_stop_rsn_code,
+			A.business_stop_ymd,
+			A.emp_price_buy_psblt_yn,
+			A.disp_yn,
+			S.store_no as s_store_no,
+			S.store_service_seq as s_store_service_seq,
+			S.store_service_code as s_store_service_code,
+			S.psblt_yn as s_psblt_yn,
+			CASE
+				WHEN S.psblt_yn = 'Y' THEN ''
+				ELSE 'no-service'
+			END AS s_cls_psblt,
+			CASE
+				WHEN S.store_service_code = '10001' THEN 'point'
+				WHEN S.store_service_code = '10002' THEN 'clothing'
+				WHEN S.store_service_code = '10003' THEN 'digital-gift'
+				ELSE ''
+			END AS s_cls_name
+		FROM
+			cm_store A
+		LEFT OUTER JOIN cm_area B ON A.area_no = B.area_no
+		LEFT OUTER JOIN cm_area_detail C ON A.area_dtl_seq = C.area_dtl_seq
+		LEFT OUTER JOIN cm_store_service S ON A.store_no = S.store_no
+		WHERE
+			A.store_no = #{storeNo, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectCmStoreDetailByStoreNo" parameterType="String" resultType="kr.co.shop.web.cmm.model.master.CmStore">
+    /*+ kr.co.shop.web.cmm.repository.master.CmStoreDao.selectCmStoreDetailByStoreNo [매장 상세 조회 (by storeNo)] [이가영] */
+    
+    	SELECT
+			A.store_no,
+			A.site_no,
+			A.store_name,
+			A.tel_no_text,
+			A.post_code_text,
+			A.post_addr_text,
+			A.dtl_addr_text,
+			A.find_go_strt_text,
+			A.area_no,
+			A.area_dtl_seq,
+			A.direct_yn,
+			A.x_point_text,
+			A.y_point_text,
+			A.store_id_text,
+			A.business_start_time,
+			A.business_end_time,
+			A.open_ymd,
+			A.pc_image_name,
+			A.pc_image_path_text,
+			A.pc_image_url,
+			A.pc_altrn_text,
+			A.mobile_image_name,
+			A.mobile_image_path_text,
+			A.mobile_image_url,
+			A.mobile_altrn_text,
+			A.store_etc_text,
+			A.store_url,
+			A.store_gbn_code,
+			A.store_type_code,
+			A.pickup_psblt_yn,
+			A.business_stop_rsn_code,
+			A.business_stop_ymd,
+			A.emp_price_buy_psblt_yn,
+			A.disp_yn
+		FROM
+			cm_store A
+		WHERE
+			A.store_no = #{storeNo, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectCmStoreListCount" parameterType="kr.co.shop.web.cmm.model.master.CmStore" resultType="int">
+    /*+ kr.co.shop.web.cmm.repository.master.CmStoreDao.selectCmStoreListCount [매장 리스트 카운트 조회] [이가영] */
+    
+    	SELECT
+    		NVL(MAX(rn), 0)
+		FROM (
+			SELECT
+				DENSE_RANK() over(order by A.store_no) as rn
+			FROM
+				cm_store A
+			INNER JOIN cm_area B ON
+				A.area_no = B.area_no
+			INNER JOIN cm_area_detail C ON
+				A.area_dtl_seq = C.area_dtl_seq
+			INNER JOIN cm_store_service S ON
+				A.store_no = S.store_no
+			<where>
+				A.disp_yn = 'Y'
+				<if test="storeNo != null">
+					 AND A.store_no = #{storeNo, jdbcType=VARCHAR}
+				</if> 
+				<if test="siteNo != null"> 
+					 AND A.site_no = #{siteNo, jdbcType=VARCHAR}
+				</if> 
+				<if test="storeName != null"> 
+					 AND A.store_name = #{storeName, jdbcType=VARCHAR}
+				</if> 
+				<if test="telNoText != null"> 
+					 AND A.tel_no_text = #{telNoText, jdbcType=VARCHAR}
+				</if> 
+				<if test="postCodeText != null"> 
+					 AND A.post_code_text = #{postCodeText, jdbcType=CHAR}
+				</if> 
+				<if test="postAddrText != null"> 
+					 AND A.post_addr_text = #{postAddrText, jdbcType=VARCHAR}
+				</if> 
+				<if test="dtlAddrText != null"> 
+					 AND A.dtl_addr_text = #{dtlAddrText, jdbcType=VARCHAR}
+				</if> 
+				<if test="findGoStrtText != null"> 
+					 AND A.find_go_strt_text = #{findGoStrtText, jdbcType=VARCHAR}
+				</if> 
+				<if test="areaNo != null"> 
+					 AND A.area_no = #{areaNo, jdbcType=VARCHAR}
+				</if> 
+				<if test="areaDtlSeq != null"> 
+					 AND A.area_dtl_seq = #{areaDtlSeq, jdbcType=INTEGER}
+				</if> 
+				<if test="directYn != null"> 
+					 AND A.direct_yn = #{directYn, jdbcType=CHAR}
+				</if> 
+				<if test="xPointText != null"> 
+					 AND A.x_point_text = #{xPointText, jdbcType=REAL}
+				</if> 
+				<if test="yPointText != null"> 
+					 AND A.y_point_text = #{yPointText, jdbcType=REAL}
+				</if> 
+				<if test="storeIdText != null"> 
+					 AND A.store_id_text = #{storeIdText, jdbcType=VARCHAR}
+				</if> 
+				<if test="businessStartTime != null"> 
+					 AND A.business_start_time = #{businessStartTime, jdbcType=TIME}
+				</if> 
+				<if test="businessEndTime != null"> 
+					 AND A.business_end_time = #{businessEndTime, jdbcType=TIME}
+				</if> 
+				<if test="openYmd != null"> 
+					 AND A.open_ymd = #{openYmd, jdbcType=DATE}
+				</if>
+				<if test="storeEtcText != null"> 
+					 AND A.store_etc_text = #{storeEtcText, jdbcType=VARCHAR}
+				</if> 
+				<if test="storeUrl != null"> 
+					 AND A.store_url = #{storeUrl, jdbcType=VARCHAR}
+				</if> 
+				<if test="storeGbnCode != null">
+					 AND A.store_gbn_code = #{storeGbnCode, jdbcType=VARCHAR}
+				</if> 
+				<if test="storeTypeCode != null"> 
+					 AND A.store_type_code = #{storeTypeCode, jdbcType=VARCHAR}
+				</if> 
+				<if test="pickupPsbltYn != null"> 
+					 AND A.pickup_psblt_yn = #{pickupPsbltYn, jdbcType=CHAR}
+				</if> 
+				<if test="businessStopRsnCode != null"> 
+					 AND A.business_stop_rsn_code = #{businessStopRsnCode, jdbcType=VARCHAR}
+				</if> 
+				<if test="businessStopYmd != null"> 
+					 AND A.business_stop_ymd = #{businessStopYmd, jdbcType=DATE}
+				</if> 
+				<if test="empPriceBuyPsbltYn != null"> 
+					 AND A.emp_price_buy_psblt_yn = #{empPriceBuyPsbltYn, jdbcType=CHAR}
+				</if>
+				<if test="storeSearchWord != null and storeSearchWord != ''">
+					AND (
+						A.store_name like '%' + #{storeSearchWord, jdbcType=VARCHAR} + '%'
+						OR B.area_name like '%' + #{storeSearchWord, jdbcType=VARCHAR} + '%'
+						OR C.area_dtl_name like '%' + #{storeSearchWord, jdbcType=VARCHAR} + '%'
+					)
+				</if>
+				<if test="storeServiceCode != null and storeServiceCode != ''">
+					AND EXISTS (
+						SELECT * FROM CM_STORE_SERVICE S WHERE A.STORE_NO = S.STORE_NO
+						AND S.STORE_SERVICE_CODE = #{storeServiceCode, jdbcType=VARCHAR}
+						AND S.PSBLT_YN = 'Y'
+					)
+				</if>
+			</where>
+		) AA
+    </select>
+	
+	<select id="selectCmStoreList" parameterType="kr.co.shop.web.cmm.model.master.CmStore" resultMap="cmStoreResultMap">
+	/*+ kr.co.shop.web.cmm.repository.master.CmStoreDao.selectCmStoreList [매장 리스트 조회] [이가영] */
+	
+		<if test="isExistMyLocation">
+		SELECT *
+		FROM (
+		</if>
+			SELECT
+				<if test="isExistMyLocation">
+				DENSE_RANK() over(order by distance, store_no) as rn2,
+				</if>
+				*
+			FROM (
+				SELECT
+					DENSE_RANK() over(order by A.store_no) as rn,
+					<if test="isExistMyLocation">
+					(
+						6371 * acos( cos( radians(#{myX, jdbcType=VARCHAR}) ) * cos( radians( X_POINT_TEXT ) )
+				         * cos( radians( Y_POINT_TEXT ) - radians(#{myY, jdbcType=VARCHAR}) )
+				         + sin( radians(#{myX, jdbcType=VARCHAR}) ) * sin( radians( X_POINT_TEXT ) ) )
+			        ) as distance,
+			        </if>
+					A.store_no,
+					A.site_no,
+					A.store_name,
+					A.tel_no_text,
+					A.post_code_text,
+					A.post_addr_text,
+					A.dtl_addr_text,
+					A.find_go_strt_text,
+					A.area_no,
+					A.area_dtl_seq,
+					A.direct_yn,
+					A.x_point_text,
+					A.y_point_text,
+					A.store_id_text,
+					A.business_start_time,
+					A.business_end_time,
+					A.open_ymd,
+					A.pc_image_name,
+					A.pc_image_path_text,
+					A.pc_image_url,
+					A.pc_altrn_text,
+					A.mobile_image_name,
+					A.mobile_image_path_text,
+					A.mobile_image_url,
+					A.mobile_altrn_text,
+					A.store_etc_text,
+					A.store_url,
+					A.store_gbn_code,
+					A.store_type_code,
+					A.pickup_psblt_yn,
+					A.business_stop_rsn_code,
+					A.business_stop_ymd,
+					A.emp_price_buy_psblt_yn,
+					A.disp_yn,
+					S.store_no as s_store_no,
+					S.store_service_seq as s_store_service_seq,
+					S.store_service_code as s_store_service_code,
+					S.psblt_yn as s_psblt_yn
+				FROM
+					cm_store A
+				INNER JOIN cm_area B ON A.area_no = B.area_no
+				INNER JOIN cm_area_detail C ON A.area_dtl_seq = C.area_dtl_seq
+				INNER JOIN cm_store_service S ON A.store_no = S.store_no
+				<where>
+					A.disp_yn = 'Y'
+					<if test="storeNo != null">
+						 AND A.store_no = #{storeNo, jdbcType=VARCHAR}
+					</if> 
+					<if test="siteNo != null"> 
+						 AND A.site_no = #{siteNo, jdbcType=VARCHAR}
+					</if> 
+					<if test="storeName != null"> 
+						 AND A.store_name = #{storeName, jdbcType=VARCHAR}
+					</if> 
+					<if test="telNoText != null"> 
+						 AND A.tel_no_text = #{telNoText, jdbcType=VARCHAR}
+					</if> 
+					<if test="postCodeText != null"> 
+						 AND A.post_code_text = #{postCodeText, jdbcType=CHAR}
+					</if> 
+					<if test="postAddrText != null"> 
+						 AND A.post_addr_text = #{postAddrText, jdbcType=VARCHAR}
+					</if> 
+					<if test="dtlAddrText != null"> 
+						 AND A.dtl_addr_text = #{dtlAddrText, jdbcType=VARCHAR}
+					</if> 
+					<if test="findGoStrtText != null"> 
+						 AND A.find_go_strt_text = #{findGoStrtText, jdbcType=VARCHAR}
+					</if> 
+					<if test="areaNo != null"> 
+						 AND A.area_no = #{areaNo, jdbcType=VARCHAR}
+					</if> 
+					<if test="areaDtlSeq != null"> 
+						 AND A.area_dtl_seq = #{areaDtlSeq, jdbcType=INTEGER}
+					</if> 
+					<if test="directYn != null"> 
+						 AND A.direct_yn = #{directYn, jdbcType=CHAR}
+					</if> 
+					<if test="xPointText != null"> 
+						 AND A.x_point_text = #{xPointText, jdbcType=REAL}
+					</if> 
+					<if test="yPointText != null"> 
+						 AND A.y_point_text = #{yPointText, jdbcType=REAL}
+					</if> 
+					<if test="storeIdText != null"> 
+						 AND A.store_id_text = #{storeIdText, jdbcType=VARCHAR}
+					</if> 
+					<if test="businessStartTime != null"> 
+						 AND A.business_start_time = #{businessStartTime, jdbcType=TIME}
+					</if> 
+					<if test="businessEndTime != null"> 
+						 AND A.business_end_time = #{businessEndTime, jdbcType=TIME}
+					</if> 
+					<if test="openYmd != null"> 
+						 AND A.open_ymd = #{openYmd, jdbcType=DATE}
+					</if>
+					<if test="storeEtcText != null"> 
+						 AND A.store_etc_text = #{storeEtcText, jdbcType=VARCHAR}
+					</if> 
+					<if test="storeUrl != null"> 
+						 AND A.store_url = #{storeUrl, jdbcType=VARCHAR}
+					</if> 
+					<if test="storeGbnCode != null">
+						 AND A.store_gbn_code = #{storeGbnCode, jdbcType=VARCHAR}
+					</if> 
+					<if test="storeTypeCode != null"> 
+						 AND A.store_type_code = #{storeTypeCode, jdbcType=VARCHAR}
+					</if> 
+					<if test="pickupPsbltYn != null"> 
+						 AND A.pickup_psblt_yn = #{pickupPsbltYn, jdbcType=CHAR}
+					</if> 
+					<if test="businessStopRsnCode != null"> 
+						 AND A.business_stop_rsn_code = #{businessStopRsnCode, jdbcType=VARCHAR}
+					</if> 
+					<if test="businessStopYmd != null"> 
+						 AND A.business_stop_ymd = #{businessStopYmd, jdbcType=DATE}
+					</if> 
+					<if test="empPriceBuyPsbltYn != null"> 
+						 AND A.emp_price_buy_psblt_yn = #{empPriceBuyPsbltYn, jdbcType=CHAR}
+					</if>
+					<if test="storeSearchWord != null and storeSearchWord != ''">
+						AND (
+							A.store_name like '%' + #{storeSearchWord, jdbcType=VARCHAR} + '%'
+							OR B.area_name like '%' + #{storeSearchWord, jdbcType=VARCHAR} + '%'
+							OR C.area_dtl_name like '%' + #{storeSearchWord, jdbcType=VARCHAR} + '%'
+						)
+					</if>
+					<if test="storeServiceCode != null and storeServiceCode != ''">
+						AND EXISTS (
+							SELECT * FROM CM_STORE_SERVICE S WHERE A.STORE_NO = S.STORE_NO
+							AND S.STORE_SERVICE_CODE = #{storeServiceCode, jdbcType=VARCHAR}
+							AND S.PSBLT_YN = 'Y'
+						)
+					</if>
+				</where>
+			) AA
+			<if test="isMobile and !isExistMyLocation">
+			WHERE
+				AA.rn > (#{pageNum, jdbcType=INTEGER} - 1) * #{rowsPerPage, jdbcType=INTEGER}
+				AND AA.rn &lt;= (#{pageNum, jdbcType=INTEGER}) * #{rowsPerPage, jdbcType=INTEGER}
+			</if>
+		<if test="isExistMyLocation">
+		) BB
+		WHERE
+			BB.rn2 > (#{pageNum, jdbcType=INTEGER} - 1) * #{rowsPerPage, jdbcType=INTEGER}
+			AND BB.rn2 &lt;= (#{pageNum, jdbcType=INTEGER}) * #{rowsPerPage, jdbcType=INTEGER}
+		</if>
+	</select>
+	
+	<select id="selectNewCmStoreList" parameterType="kr.co.shop.web.cmm.model.master.CmStore" resultMap="cmStoreResultMap">
+	/*+ kr.co.shop.web.cmm.repository.master.CmStoreDao.selectNewCmStoreList [신규 매장 리스트 조회] [이가영] */
+	
+		SELECT TBL.*
+		FROM (
+			SELECT
+				DENSE_RANK() over(order by A.store_no, A.open_ymd desc) rn,
+				A.store_no,
+				A.site_no,
+				A.store_name,
+				A.tel_no_text,
+				A.post_code_text,
+				A.post_addr_text,
+				A.dtl_addr_text,
+				A.find_go_strt_text,
+				A.area_no,
+				A.area_dtl_seq,
+				A.direct_yn,
+				A.x_point_text,
+				A.y_point_text,
+				A.store_id_text,
+				A.business_start_time,
+				A.business_end_time,
+				A.open_ymd,
+				A.pc_image_name,
+				A.pc_image_path_text,
+				A.pc_image_url,
+				A.pc_altrn_text,
+				A.mobile_image_name,
+				A.mobile_image_path_text,
+				A.mobile_image_url,
+				A.mobile_altrn_text,
+				A.store_etc_text,
+				A.store_url,
+				A.store_gbn_code,
+				A.store_type_code,
+				A.pickup_psblt_yn,
+				A.business_stop_rsn_code,
+				A.business_stop_ymd,
+				A.emp_price_buy_psblt_yn,
+				A.disp_yn,
+				S.store_no as s_store_no,
+				S.store_service_seq as s_store_service_seq,
+				S.store_service_code as s_store_service_code,
+				S.psblt_yn as s_psblt_yn
+			FROM
+				cm_store A
+			INNER JOIN cm_store_service S ON A.store_no = S.store_no
+			WHERE
+				A.open_ymd > SYSDATE - 300
+		) TBL
+		WHERE TBL.rn &lt; 5
+		ORDER BY TBL.rn, TBL.s_store_service_code
+	</select>
+	
+	<select id="selectMemberInterestStore" parameterType="kr.co.shop.web.cmm.model.master.CmStore" resultMap="cmStoreResultMap">
+	/*+ kr.co.shop.web.cmm.repository.master.CmStoreDao.selectMemberInterestStore [회원 단골 매장 조회] [이가영] */
+	
+		SELECT
+			A.store_no,
+			A.site_no,
+			A.store_name,
+			A.tel_no_text,
+			A.post_code_text,
+			A.post_addr_text,
+			A.dtl_addr_text,
+			A.find_go_strt_text,
+			A.area_no,
+			A.area_dtl_seq,
+			A.direct_yn,
+			A.x_point_text,
+			A.y_point_text,
+			A.store_id_text,
+			A.business_start_time,
+			A.business_end_time,
+			A.open_ymd,
+			A.pc_image_name,
+			A.pc_image_path_text,
+			A.pc_image_url,
+			A.pc_altrn_text,
+			A.mobile_image_name,
+			A.mobile_image_path_text,
+			A.mobile_image_url,
+			A.mobile_altrn_text,
+			A.store_etc_text,
+			A.store_url,
+			A.store_gbn_code,
+			A.store_type_code,
+			A.pickup_psblt_yn,
+			A.business_stop_rsn_code,
+			A.business_stop_ymd,
+			A.emp_price_buy_psblt_yn,
+			A.disp_yn,
+			S.store_no as s_store_no,
+			S.store_service_seq as s_store_service_seq,
+			S.store_service_code as s_store_service_code,
+			S.psblt_yn as s_psblt_yn,
+			CASE
+				WHEN S.psblt_yn = 'Y' THEN ''
+				ELSE 'no-service'
+			END AS s_cls_psblt,
+			CASE
+				WHEN S.store_service_code = '10001' THEN 'point'
+				WHEN S.store_service_code = '10002' THEN 'clothing'
+				WHEN S.store_service_code = '10003' THEN 'digital-gift'
+				ELSE ''
+			END AS s_cls_name
+		FROM
+			cm_store A
+		INNER JOIN cm_area B ON A.area_no = B.area_no
+		INNER JOIN cm_area_detail C ON A.area_dtl_seq = C.area_dtl_seq
+		INNER JOIN cm_store_service S ON A.store_no = S.store_no
+		INNER JOIN mb_member_interest_store I ON A.store_no = I.store_no
+		WHERE
+			I.member_no = #{memberNo, jdbcType=VARCHAR}
+			AND A.disp_yn = 'Y'
+		ORDER BY A.store_no, S.store_service_seq
+	</select>
+	
+	<select id="selectCouponApplyStoreCount" parameterType="pageable" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			cm_store A
+		<!-- INNER JOIN cm_area B ON
+			A.area_no = B.area_no
+		INNER JOIN cm_area_detail C ON
+			A.area_dtl_seq = C.area_dtl_seq
+		INNER JOIN cm_store_service S ON
+			A.store_no = S.store_no -->
+		INNER JOIN pr_coupon_apply_store P ON
+			A.store_no = P.store_no
+		WHERE
+			P.cpn_no = #{bean.cpnNo, jdbcType=VARCHAR}
+			AND A.disp_yn = 'Y'
+		<if test='bean.storeName != null and bean.storeName !="" '>
+			AND A.store_name LIKE '%' + #{bean.storeName, jdbcType=VARCHAR} + '%'
+		</if>
+	</select>
+	
+	<select id="selectCouponApplyStoreList" parameterType="pageable" resultMap="cmStoreResultMap">
+	/*+ kr.co.shop.web.cmm.repository.master.CmStoreDao.selectCouponApplyStoreList [쿠폰 적용 매장 리스트 조회] [이가영] */
+	
+		SELECT
+			A.store_no,
+			A.site_no,
+			A.store_name,
+			A.tel_no_text,
+			A.post_code_text,
+			A.post_addr_text,
+			A.dtl_addr_text,
+			A.find_go_strt_text,
+			A.area_no,
+			A.area_dtl_seq,
+			A.direct_yn,
+			A.x_point_text,
+			A.y_point_text,
+			A.store_id_text,
+			A.business_start_time,
+			A.business_end_time,
+			A.open_ymd,
+			A.pc_image_name,
+			A.pc_image_path_text,
+			A.pc_image_url,
+			A.pc_altrn_text,
+			A.mobile_image_name,
+			A.mobile_image_path_text,
+			A.mobile_image_url,
+			A.mobile_altrn_text,
+			A.store_etc_text,
+			A.store_url,
+			A.store_gbn_code,
+			A.store_type_code,
+			A.pickup_psblt_yn,
+			A.business_stop_rsn_code,
+			A.business_stop_ymd,
+			A.emp_price_buy_psblt_yn,
+			A.disp_yn,
+			S.store_no as s_store_no,
+			S.store_service_seq as s_store_service_seq,
+			S.store_service_code as s_store_service_code,
+			S.psblt_yn as s_psblt_yn
+		FROM
+			cm_store A
+		INNER JOIN cm_area B ON
+			A.area_no = B.area_no
+		INNER JOIN cm_area_detail C ON
+			A.area_dtl_seq = C.area_dtl_seq
+		INNER JOIN cm_store_service S ON
+			A.store_no = S.store_no
+		INNER JOIN pr_coupon_apply_store P ON
+			A.store_no = P.store_no
+		WHERE
+			P.cpn_no = #{bean.cpnNo, jdbcType=VARCHAR}
+			AND A.disp_yn = 'Y'
+		<if test='bean.storeName != null and bean.storeName !="" '>
+			AND A.store_name LIKE '%' + #{bean.storeName, jdbcType=VARCHAR} + '%'
+		</if>
+		ORDER BY A.store_no, S.store_service_seq
+		<include refid="Paging.mssql" />
+	</select>
+
+</mapper>

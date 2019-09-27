@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cmm.repository.master.CmMessageSendHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.cmm.model.master.CmMessageSendHistory">
+
+     /*+ kr.co.shop.web.cmm.repository.master.CmMessageSendHistoryDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */
+
+		SELECT
+			<include refid="select-columns" />
+		FROM
+			CM_MESSAGE_SEND_HISTORY
+		WHERE
+			<include refid="pk-columns" />
+    </select>
+
+    <insert id="insertSendRealTimeSms" parameterType="kr.co.shop.web.cmm.vo.MessageVO">
+    /*+ kr.co.shop.web.cmm.repository.master.CmMessageSendHistoryDao.insertSendRealTimeSms [SMS 즉시 발송 등록][최경호] */
+	INSERT INTO OPENQUERY(LINK_SMS_KAKAO, '
+	       SELECT REQDATE
+	            , STATUS
+	            , PHONE
+	            , CALLBACK
+	            , MSG
+	         FROM CJSMS.SMS_MSG
+	        WHERE 1 = 0'
+	)VALUES(
+	       (SELECT * FROM OPENQUERY(LINK_SMS_KAKAO, 'SELECT SYSDATE'))
+	     , '1'
+	     , #{recvTelNoText}
+	     , #{sendTelNoText}
+	     , #{mesgContText})
+    </insert>
+
+    <insert id="insertSendRealTimeSmsTest" parameterType="kr.co.shop.web.cmm.vo.MessageVO">
+    /*+ kr.co.shop.web.cmm.repository.master.CmMessageSendHistoryDao.insertSendRealTimeSmsTest [SMS 즉시 발송 등록][최경호] */
+		INSERT INTO OPENQUERY(LINK_ASIS,
+			'SELECT REQDATE
+				  , STATUS
+				  , PHONE
+				  , CALLBACK
+				  , MSG
+			   FROM abcmart.sms_msg
+			  WHERE 1 = 0'
+		)VALUES(
+			  (SELECT * FROM OPENQUERY(LINK_ASIS, 'SELECT SYSDATE'))
+			, '1'
+			, #{recvTelNoText}
+			, #{sendTelNoText}
+			, #{mesgContText})
+    </insert>
+
+    <insert id="insertSendRealTimeLms" parameterType="kr.co.shop.web.cmm.vo.MessageVO">
+    /*+ kr.co.shop.web.cmm.repository.master.CmMessageSendHistoryDao.insertSendRealTimeSms [LMS 즉시 발송 등록][최경호] */
+	INSERT INTO OPENQUERY(LINK_SMS_KAKAO, '
+	       SELECT REQDATE
+	            , STATUS
+	            , PHONE
+	            , CALLBACK
+	            , SUBJECT
+	            , MSG
+				, FILE_TYPE1
+	            , FILE_PATH1
+	            , FILE_CNT
+	         FROM CJSMS.MMS_MSG
+	        WHERE 1 = 0'
+	)VALUES(
+	       (SELECT * FROM OPENQUERY(LINK_SMS_KAKAO, 'SELECT SYSDATE'))
+	     , '1'
+	     , #{recvTelNoText}
+	     , #{sendTelNoText}
+	     , #{mesgTitleText}
+	     , #{mesgContText}
+	     , ''
+	     , ''
+	     , '1')
+    </insert>
+
+    <insert id="insertSendRealTimeLmsTest" parameterType="kr.co.shop.web.cmm.vo.MessageVO">
+    /*+ kr.co.shop.web.cmm.repository.master.CmMessageSendHistoryDao.insertSendRealTimeLmsTest [LMS 즉시 발송 등록][최경호] */
+		INSERT INTO OPENQUERY(LINK_ASIS,
+			'SELECT REQDATE
+				  , STATUS
+				  , PHONE
+				  , CALLBACK
+				  , SUBJECT
+				  , MSG
+				  , FILE_TYPE1
+				  , FILE_PATH1
+				  , FILE_CNT
+			   FROM abcmart.mms_msg
+			  WHERE 1 = 0'
+		)VALUES(
+			  (SELECT * FROM OPENQUERY(LINK_ASIS, 'SELECT SYSDATE'))
+			, '1'
+			, #{recvTelNoText}
+			, #{sendTelNoText}
+			, #{mesgTitleText}
+			, #{mesgContText}
+			, ''
+			, ''
+			, '1'
+		)
+    </insert>
+
+    <insert id="insertSendRealTimeKko" parameterType="kr.co.shop.web.cmm.vo.MessageVO">
+    /*+ kr.co.shop.web.cmm.repository.master.CmMessageSendHistoryDao.insertSendRealTimeKko [KKO 즉시 발송 등록][최경호] */
+	    INSERT INTO OPENQUERY(LINK_SMS_KAKAO, '
+	       SELECT REQDATE
+	            , STATUS
+	            , PHONE
+	            , CALLBACK
+	            , MSG
+	            , TEMPLATE_CODE
+	            , FAILED_TYPE
+	            , FAILED_SUBJECT
+	            , FAILED_MSG
+	         FROM CJSMS.KKO_MSG
+	        WHERE 1 = 0'
+	)VALUES(
+	       (SELECT * FROM OPENQUERY(LINK_SMS_KAKAO, 'SELECT SYSDATE'))
+	     , '1'
+	     , #{recvTelNoText}
+		 , #{sendTelNoText}
+		 , #{mesgContText}
+		 , #{mesgId}
+		 , #{failedType}
+		 , #{failedSubject}
+		 , #{failedMsg}
+		 )
+    </insert>
+
+    <insert id="insertSendRealTimeKkoTest" parameterType="kr.co.shop.web.cmm.vo.MessageVO">
+    /*+ kr.co.shop.web.cmm.repository.master.CmMessageSendHistoryDao.insertSendRealTimeKkoTest [KKO 즉시 발송 등록][최경호] */
+		INSERT INTO OPENQUERY(LINK_ASIS,
+			'SELECT REQDATE
+				  , STATUS
+				  , PHONE
+				  , CALLBACK
+				  , MSG
+				  , TEMPLATE_CODE
+				  , FAILED_TYPE
+				  , FAILED_SUBJECT
+				  , FAILED_MSG
+			   FROM abcmart.kko_msg
+			  WHERE 1 = 0'
+		)VALUES(
+			  (SELECT * FROM OPENQUERY(LINK_ASIS, 'SELECT SYSDATE'))
+			 , '1'
+			 , #{recvTelNoText}
+			 , #{sendTelNoText}
+			 , #{mesgContText}
+			 , #{mesgId}
+			 , #{failedType}
+			 , #{failedSubject}
+			 , #{failedMsg}
+		 )
+    </insert>
+
+</mapper>

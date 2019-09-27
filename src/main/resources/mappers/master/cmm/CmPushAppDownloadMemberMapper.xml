@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cmm.repository.master.CmPushAppDownloadMemberDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.cmm.model.master.CmPushAppDownloadMember">
+     /*+ kr.co.shop.web.cmm.repository.master.CmPushAppDownloadMemberDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			CM_PUSH_APP_DOWNLOAD_MEMBER
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <insert id="insertFcmToken" useGeneratedKeys="true" keyProperty="appDwldMemberSeq">
+    /*+ kr.co.shop.web.cmm.repository.master.CmPushAppDownloadMemberDao.insertFcmToken [app 설치 시 기본정보 insert 쿼리] [김영현] */
+    	INSERT INTO cm_push_app_download_member (
+    		site_no
+    		, app_os_code
+    		, app_ver_text
+    		, fcm_token_text
+    		, app_install_dtm
+    		, app_push_recv_yn
+    		, night_push_recv_yn
+    		, bio_crtfc_login_use_yn
+    	) VALUES (
+    		#{siteNo, jdbcType=VARCHAR}
+    		, #{appOsCode, jdbcType=VARCHAR}
+    		, #{appVerText, jdbcType=VARCHAR}
+    		, #{fcmTokenText, jdbcType=VARCHAR}
+    		, SYSDATE
+    		, #{appPushRecvYn, jdbcType=CHAR}
+    		, #{nightPushRecvYn, jdbcType=CHAR}
+    		, #{bioCrtfcLoginUseYn, jdbcType=CHAR}
+    	)  
+    </insert>
+    
+    <update id="updateDeviceToken" parameterType="kr.co.shop.web.cmm.model.master.CmPushAppDownloadMember">
+    /*+ kr.co.shop.web.cmm.repository.master.CmPushAppDownloadMemberDao.updateDeviceToken [디바이스 토큰, 회원번호 update 쿼리] [김영현] */
+    	UPDATE cm_push_app_download_member
+    	<set>
+			device_token_text = #{deviceTokenText, jdbcType=VARCHAR}
+			, member_no = #{memberNo, jdbcType=VARCHAR}
+		</set> 
+		WHERE 
+			 fcm_token_text = #{fcmTokenText, jdbcType=VARCHAR}   
+    </update>
+    
+    <update id="updateReceivePush" parameterType="kr.co.shop.web.cmm.model.master.CmPushAppDownloadMember">
+    /*+ kr.co.shop.web.cmm.repository.master.CmPushAppDownloadMemberDao.updateReceivePush [push 수신여부 update 쿼리] [김영현] */
+    	UPDATE cm_push_app_download_member
+    	<set>
+			app_push_recv_yn = #{appPushRecvYn, jdbcType=CHAR}
+			, night_push_recv_yn = #{nightPushRecvYn, jdbcType=CHAR}
+			, app_push_recv_yn_mod_dtm = SYSDATE
+		</set> 
+		WHERE
+			site_no = #{siteNo, jdbcType=VARCHAR}
+		AND
+			fcm_token_text = #{fcmTokenText, jdbcType=VARCHAR}   
+    </update>
+    
+    <update id="updateBioLogin" parameterType="kr.co.shop.web.cmm.model.master.CmPushAppDownloadMember">
+    /*+ kr.co.shop.web.cmm.repository.master.CmPushAppDownloadMemberDao.updateBioLogin [바이오인증 사용여부 upate 쿼리] [김영현] */
+    	UPDATE cm_push_app_download_member
+    	<set>
+			bio_crtfc_login_use_yn = #{bioCrtfcLoginUseYn, jdbcType=CHAR}
+			, bio_crtfc_login_use_yn_mod_dtm = SYSDATE
+		</set> 
+		WHERE
+			device_token_text = #{deviceTokenText, jdbcType=VARCHAR}
+		AND
+			site_no = #{siteNo, jdbcType=VARCHAR}
+    </update>
+
+</mapper>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.system.repository.master.SyCodeDetailDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.system.model.master.SyCodeDetail">
+    
+     /*+ kr.co.shop.web.system.repository.master.SyCodeDetailDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			sy_code_detail
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectUseCode" parameterType="java.lang.String" resultType="kr.co.shop.web.system.model.master.SyCodeDetail">
+		/* kr.co.shop.web.system.repository.master.SyCodeDetailDao.selectUseCode [코드필드로 상위,하위코드  번호 이름검색] [신인철]*/
+		SELECT A.CODE_FIELD
+			 , A.CODE_DTL_NO
+			 , A.UP_CODE_DTL_NO
+			 , A.CODE_DTL_NAME
+			 , A.NOTE_TEXT
+			 , A.SORT_SEQ
+			 , A.ADD_INFO1
+			 , A.ADD_INFO2
+			 , A.ADD_INFO3
+			 , A.ADD_INFO4
+			 , A.ADD_INFO5
+			 , A.ADD_INFO6
+			 , A.USE_YN
+		  FROM SY_CODE_DETAIL A
+		  JOIN SY_CODE B
+			ON A.CODE_FIELD = B.CODE_FIELD
+		 WHERE A.CODE_FIELD = #{codeField, jdbcType = VARCHAR} 
+		   AND A.USE_YN = 'Y'
+		   AND B.USE_YN = 'Y'
+		 ORDER BY A.SORT_SEQ
+	</select>
+	
+	<select id="selectCode" parameterType="java.lang.String" resultType="kr.co.shop.web.system.model.master.SyCodeDetail">
+		/* kr.co.shop.web.system.repository.master.SyCodeDetailDao.selectCode [코드필드로 상위,하위코드  번호 이름검색] [신인철]*/
+		SELECT A.CODE_FIELD
+			 , A.CODE_DTL_NO
+			 , A.UP_CODE_DTL_NO
+			 , A.CODE_DTL_NAME
+			 , A.NOTE_TEXT
+			 , A.SORT_SEQ
+			 , A.ADD_INFO1
+			 , A.ADD_INFO2
+			 , A.ADD_INFO3
+			 , A.ADD_INFO4
+			 , A.ADD_INFO5
+			 , A.ADD_INFO6
+			 , A.USE_YN
+		  FROM SY_CODE_DETAIL A
+		  JOIN SY_CODE B
+			ON A.CODE_FIELD = B.CODE_FIELD
+		 WHERE A.CODE_FIELD = #{codeField, jdbcType = VARCHAR} 
+		 ORDER BY A.SORT_SEQ
+	</select>
+	
+	<select id="selectUseCodeByAddInfo1" parameterType="kr.co.shop.web.system.model.master.SyCodeDetail" resultType="kr.co.shop.web.system.model.master.SyCodeDetail">
+		/* kr.co.shop.web.system.repository.master.SyCodeDetailDao.selectUseCodeByAddInfo1 [codeField와 addinfo로 조회] [신인철]*/
+		SELECT A.CODE_FIELD
+			 , A.CODE_DTL_NO
+			 , A.UP_CODE_DTL_NO
+			 , A.CODE_DTL_NAME
+			 , A.NOTE_TEXT
+			 , A.SORT_SEQ
+			 , A.ADD_INFO1
+			 , A.ADD_INFO2
+			 , A.ADD_INFO3
+			 , A.ADD_INFO4
+			 , A.ADD_INFO5
+			 , A.ADD_INFO6
+			 , A.USE_YN
+		  FROM SY_CODE_DETAIL A
+		  JOIN SY_CODE B
+			ON A.CODE_FIELD = B.CODE_FIELD
+		 WHERE A.CODE_FIELD = #{codeField, jdbcType = VARCHAR} 
+		   AND A.ADD_INFO1 = #{addInfo1, jdbcType = VARCHAR}
+		   AND A.USE_YN = 'Y'
+		   AND B.USE_YN = 'Y'
+		 ORDER BY A.SORT_SEQ
+	</select>
+	
+	<select id="selectUseCodeByGroup" parameterType="java.util.HashMap" resultType="kr.co.shop.web.system.model.master.SyCodeDetail">
+		/* kr.co.shop.web.system.repository.master.SyCodeDetailDao.selectCodeListByGroup [코드필드로 상위,하위코드  번호 이름검색] [신인철]*/
+		SELECT A.CODE_FIELD
+			 , A.CODE_DTL_NO
+			 , A.UP_CODE_DTL_NO
+			 , A.CODE_DTL_NAME
+			 , A.NOTE_TEXT
+			 , A.SORT_SEQ
+			 , A.ADD_INFO1
+			 , A.ADD_INFO2
+			 , A.ADD_INFO3
+			 , A.ADD_INFO4
+			 , A.ADD_INFO5
+			 , A.ADD_INFO6
+			 , A.INSD_MGMT_INFO_TEXT
+			 , A.USE_YN
+		  FROM SY_CODE_DETAIL A
+		  JOIN SY_CODE B
+			ON A.CODE_FIELD = B.CODE_FIELD
+			AND B.USE_YN = 'Y'
+		<where>
+			AND A.CODE_FIELD IN
+				<foreach collection="array" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			AND A.USE_YN = 'Y'
+		</where>
+	</select>
+	
+	<select id="selectCodeByGroup" parameterType="java.util.HashMap" resultType="kr.co.shop.web.system.model.master.SyCodeDetail">
+		/* kr.co.shop.web.system.repository.master.SyCodeDetailDao.selectCodeListByGroup [코드필드로 상위,하위코드  번호 이름검색] [신인철]*/
+		SELECT A.CODE_FIELD
+			 , A.CODE_DTL_NO
+			 , A.UP_CODE_DTL_NO
+			 , A.CODE_DTL_NAME
+			 , A.NOTE_TEXT
+			 , A.SORT_SEQ
+			 , A.ADD_INFO1
+			 , A.ADD_INFO2
+			 , A.ADD_INFO3
+			 , A.ADD_INFO4
+			 , A.ADD_INFO5
+			 , A.ADD_INFO6
+			 , A.USE_YN
+		  FROM SY_CODE_DETAIL A
+		  JOIN SY_CODE B
+			ON A.CODE_FIELD = B.CODE_FIELD
+		<where>
+			AND A.CODE_FIELD IN
+				<foreach collection="array" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+		</where>
+	</select>
+
+</mapper>

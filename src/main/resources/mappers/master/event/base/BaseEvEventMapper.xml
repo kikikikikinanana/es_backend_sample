@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.event.repository.master.EvEventDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	event_no, event_type_code, event_name, event_term_setup_yn, event_start_dtm, event_end_dtm, przwr_mgmt_yn, przwr_pblc_todo_ymd, przwr_order_start_ymd, przwr_order_end_ymd, pickup_start_ymd, pickup_end_ymd, przwr_pblc_yn, point_ddct_yn, ddct_point_amt, event_stplat_use_yn, event_stplat_cont_text, event_join_type, login_id_dup_perm_yn, onln_recpt_yn, prdt_recpt_store_type, insd_mgmt_info_text, pc_event_cont_text, mobile_event_cont_text, srch_key_word, note_text, use_yn, disp_yn, tmpr_save_yn, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	event_no = #{eventNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.event.model.master.EvEvent" resultType="kr.co.shop.web.event.model.master.EvEvent">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			ev_event
+		<where> 
+			<if test="eventNo != null"> 
+				 event_no = #{eventNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="eventTypeCode != null"> 
+				 AND event_type_code = #{eventTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="eventName != null"> 
+				 AND event_name = #{eventName, jdbcType=VARCHAR}
+			</if> 
+			<if test="eventTermSetupYn != null"> 
+				 AND event_term_setup_yn = #{eventTermSetupYn, jdbcType=CHAR}
+			</if> 
+			<if test="eventStartDtm != null"> 
+				 AND event_start_dtm = #{eventStartDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="eventEndDtm != null"> 
+				 AND event_end_dtm = #{eventEndDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="przwrMgmtYn != null"> 
+				 AND przwr_mgmt_yn = #{przwrMgmtYn, jdbcType=CHAR}
+			</if> 
+			<if test="przwrPblcTodoYmd != null"> 
+				 AND przwr_pblc_todo_ymd = #{przwrPblcTodoYmd, jdbcType=DATE}
+			</if> 
+			<if test="przwrOrderStartYmd != null"> 
+				 AND przwr_order_start_ymd = #{przwrOrderStartYmd, jdbcType=DATE}
+			</if> 
+			<if test="przwrOrderEndYmd != null"> 
+				 AND przwr_order_end_ymd = #{przwrOrderEndYmd, jdbcType=DATE}
+			</if> 
+			<if test="pickupStartYmd != null"> 
+				 AND pickup_start_ymd = #{pickupStartYmd, jdbcType=DATE}
+			</if> 
+			<if test="pickupEndYmd != null"> 
+				 AND pickup_end_ymd = #{pickupEndYmd, jdbcType=DATE}
+			</if> 
+			<if test="przwrPblcYn != null"> 
+				 AND przwr_pblc_yn = #{przwrPblcYn, jdbcType=CHAR}
+			</if> 
+			<if test="pointDdctYn != null"> 
+				 AND point_ddct_yn = #{pointDdctYn, jdbcType=CHAR}
+			</if> 
+			<if test="ddctPointAmt != null"> 
+				 AND ddct_point_amt = #{ddctPointAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="eventStplatUseYn != null"> 
+				 AND event_stplat_use_yn = #{eventStplatUseYn, jdbcType=CHAR}
+			</if> 
+			<if test="eventStplatContText != null"> 
+				 AND event_stplat_cont_text = #{eventStplatContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="eventJoinType != null"> 
+				 AND event_join_type = #{eventJoinType, jdbcType=CHAR}
+			</if> 
+			<if test="loginIdDupPermYn != null"> 
+				 AND login_id_dup_perm_yn = #{loginIdDupPermYn, jdbcType=CHAR}
+			</if> 
+			<if test="onlnRecptYn != null"> 
+				 AND onln_recpt_yn = #{onlnRecptYn, jdbcType=CHAR}
+			</if> 
+			<if test="prdtRecptStoreType != null"> 
+				 AND prdt_recpt_store_type = #{prdtRecptStoreType, jdbcType=CHAR}
+			</if> 
+			<if test="insdMgmtInfoText != null"> 
+				 AND insd_mgmt_info_text = #{insdMgmtInfoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcEventContText != null"> 
+				 AND pc_event_cont_text = #{pcEventContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileEventContText != null"> 
+				 AND mobile_event_cont_text = #{mobileEventContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="srchKeyWord != null"> 
+				 AND srch_key_word = #{srchKeyWord, jdbcType=VARCHAR}
+			</if> 
+			<if test="noteText != null"> 
+				 AND note_text = #{noteText, jdbcType=VARCHAR}
+			</if> 
+			<if test="useYn != null"> 
+				 AND use_yn = #{useYn, jdbcType=CHAR}
+			</if> 
+			<if test="dispYn != null"> 
+				 AND disp_yn = #{dispYn, jdbcType=CHAR}
+			</if> 
+			<if test="tmprSaveYn != null"> 
+				 AND tmpr_save_yn = #{tmprSaveYn, jdbcType=CHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.event.model.master.EvEvent">	
+
+     /*+ kr.co.shop.web.event.repository.master.EvEventDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO ev_event
+			 ( event_no, event_type_code, event_name, event_term_setup_yn, event_start_dtm, event_end_dtm, przwr_mgmt_yn, przwr_pblc_todo_ymd, przwr_order_start_ymd, przwr_order_end_ymd, pickup_start_ymd, pickup_end_ymd, przwr_pblc_yn, point_ddct_yn, ddct_point_amt, event_stplat_use_yn, event_stplat_cont_text, event_join_type, login_id_dup_perm_yn, onln_recpt_yn, prdt_recpt_store_type, insd_mgmt_info_text, pc_event_cont_text, mobile_event_cont_text, srch_key_word, note_text, use_yn, disp_yn, tmpr_save_yn, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{eventNo, jdbcType=VARCHAR}, #{eventTypeCode, jdbcType=VARCHAR}, #{eventName, jdbcType=VARCHAR}, #{eventTermSetupYn, jdbcType=CHAR}, <choose><when test="eventStartDtm != null">#{eventStartDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="eventEndDtm != null">#{eventEndDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{przwrMgmtYn, jdbcType=CHAR}, <choose><when test="przwrPblcTodoYmd != null">#{przwrPblcTodoYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="przwrOrderStartYmd != null">#{przwrOrderStartYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="przwrOrderEndYmd != null">#{przwrOrderEndYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="pickupStartYmd != null">#{pickupStartYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="pickupEndYmd != null">#{pickupEndYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, #{przwrPblcYn, jdbcType=CHAR}, #{pointDdctYn, jdbcType=CHAR}, #{ddctPointAmt, jdbcType=INTEGER}, #{eventStplatUseYn, jdbcType=CHAR}, #{eventStplatContText, jdbcType=VARCHAR}, #{eventJoinType, jdbcType=CHAR}, #{loginIdDupPermYn, jdbcType=CHAR}, #{onlnRecptYn, jdbcType=CHAR}, #{prdtRecptStoreType, jdbcType=CHAR}, #{insdMgmtInfoText, jdbcType=VARCHAR}, #{pcEventContText, jdbcType=VARCHAR}, #{mobileEventContText, jdbcType=VARCHAR}, #{srchKeyWord, jdbcType=VARCHAR}, #{noteText, jdbcType=VARCHAR}, #{useYn, jdbcType=CHAR}, #{dispYn, jdbcType=CHAR}, #{tmprSaveYn, jdbcType=CHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.event.model.master.EvEvent">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE ev_event
+		<set> 
+			<if test="eventNo != null"> 
+				event_no = #{eventNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="eventTypeCode != null"> 
+				event_type_code = #{eventTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="eventName != null"> 
+				event_name = #{eventName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="eventTermSetupYn != null"> 
+				event_term_setup_yn = #{eventTermSetupYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="eventStartDtm != null"> 
+				event_start_dtm = #{eventStartDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="eventEndDtm != null"> 
+				event_end_dtm = #{eventEndDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="przwrMgmtYn != null"> 
+				przwr_mgmt_yn = #{przwrMgmtYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="przwrPblcTodoYmd != null"> 
+				przwr_pblc_todo_ymd = #{przwrPblcTodoYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="przwrOrderStartYmd != null"> 
+				przwr_order_start_ymd = #{przwrOrderStartYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="przwrOrderEndYmd != null"> 
+				przwr_order_end_ymd = #{przwrOrderEndYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="pickupStartYmd != null"> 
+				pickup_start_ymd = #{pickupStartYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="pickupEndYmd != null"> 
+				pickup_end_ymd = #{pickupEndYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="przwrPblcYn != null"> 
+				przwr_pblc_yn = #{przwrPblcYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="pointDdctYn != null"> 
+				point_ddct_yn = #{pointDdctYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="ddctPointAmt != null"> 
+				ddct_point_amt = #{ddctPointAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="eventStplatUseYn != null"> 
+				event_stplat_use_yn = #{eventStplatUseYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="eventStplatContText != null"> 
+				event_stplat_cont_text = #{eventStplatContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="eventJoinType != null"> 
+				event_join_type = #{eventJoinType, jdbcType=CHAR}, 
+			</if> 
+			<if test="loginIdDupPermYn != null"> 
+				login_id_dup_perm_yn = #{loginIdDupPermYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="onlnRecptYn != null"> 
+				onln_recpt_yn = #{onlnRecptYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="prdtRecptStoreType != null"> 
+				prdt_recpt_store_type = #{prdtRecptStoreType, jdbcType=CHAR}, 
+			</if> 
+			<if test="insdMgmtInfoText != null"> 
+				insd_mgmt_info_text = #{insdMgmtInfoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcEventContText != null"> 
+				pc_event_cont_text = #{pcEventContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileEventContText != null"> 
+				mobile_event_cont_text = #{mobileEventContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="srchKeyWord != null"> 
+				srch_key_word = #{srchKeyWord, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="noteText != null"> 
+				note_text = #{noteText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="useYn != null"> 
+				use_yn = #{useYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="dispYn != null"> 
+				disp_yn = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="tmprSaveYn != null"> 
+				tmpr_save_yn = #{tmprSaveYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 event_no = #{eventNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.event.model.master.EvEvent">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM ev_event
+		WHERE 
+			 event_no = #{eventNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

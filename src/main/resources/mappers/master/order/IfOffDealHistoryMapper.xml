@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.IfOffDealHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.order.model.master.IfOffDealHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.IfOffDealHistoryDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			IF_OFF_DEAL_HISTORY
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+   	<select id="selectOfflineOrderProductList" parameterType="kr.co.shop.web.order.model.master.IfOffDealHistory" resultType="kr.co.shop.web.order.model.master.IfOffDealHistory">
+	/*+ kr.co.shop.web.order.repository.master.IfOffDealHistoryDao.selectOfflineOrderProductList [주문번호에 관련된  오프라인  주문 상품 리스트]  */
+		SELECT
+		      (SELECT STORE_NAME FROM CM_STORE WHERE STORE_NO = IODH.STORE_CD) STORE_NAME
+		    , IODH.SAFE_KEY
+            , IODH.SAFE_KEY_SEQ
+            , IODH.STORE_CD
+            , IODH.POS_NO
+            , IODH.DEAL_NO
+            , IODH.SALE_DATE
+		    , IODH.PRODUCT_CD
+		    , PP.VNDR_PRDT_NO_TEXT
+		    , PP.PRDT_NAME
+		    , PP.PRDT_COLOR_INFO
+		    , IODH.SIZE_CD
+		    , IODH.SALE_QTY                   --판매수량
+		    , IODH.RETURN_FLAG  -- 반품구분(판매:0, 반품시:1)
+		    , IODH.CONF_FLAG  
+		    , IODH.SALE_PRICE --실판매가
+		    , IODH.SALE_DATE
+		    , (select BRAND_NAME from DP_BRAND where BRAND_NO = PP.BRAND_NO) BRAND_NAME
+		    , CASE WHEN (  SELECT COUNT(*)
+		                      FROM BD_PRODUCT_REVIEW
+		                           
+		                      WHERE PRDT_NO = IODH.PRODUCT_CD
+		                      and SALE_DATE = IODH.SALE_DATE 
+		                      AND POS_NO = IODH.POS_NO
+		                      AND DEAL_NO = IODH.DEAL_NO
+		                      and MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+		                 	) = 0 THEN 'N' ELSE 'Y' END REVIEW_YN
+		     , E.IMAGE_PATH_TEXT
+			 , E.IMAGE_URL
+			 , E.ALTRN_TEXT
+		from IF_OFF_DEAL_HISTORY IODH
+		   , PD_PRODUCT PP
+		LEFT JOIN PD_PRODUCT_RELATION_FILE E
+			 ON PP.PRDT_NO = E.PRDT_NO
+		   AND E.PRDT_RLTN_FILE_SEQ = 1
+		   AND E.DISP_POSTN_TYPE = 'P'
+		   AND E.FILE_TYPE = 'I'
+		WHERE IODH.PRODUCT_CD = PP.VNDR_PRDT_NO_TEXT
+		  AND (IODH.SALE_DATE + IODH.POS_NO + IODH.DEAL_NO) = #{orderNo, jdbcType=VARCHAR}
+		ORDER BY IODH.SALE_DATE  DESC
+	</select>
+	
+	<update id="updateOfflineOrderBuyFix" parameterType="kr.co.shop.web.order.model.master.IfOffDealHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.IfOffDealHistoryDao.updateOfflineOrderBuyFix [구매확정 업데이트 ] [lsh] */
+    
+		UPDATE IF_OFF_DEAL_HISTORY
+		<set> 
+			<if test="confFlag != null"> 
+				conf_flag = #{confFlag, jdbcType=CHAR}, 
+			</if> 
+				buy_fix_dtm = SYSDATE, 
+		</set> 
+		WHERE deal_no = #{dealNo, jdbcType=VARCHAR} 
+		  AND pos_no = #{posNo, jdbcType=VARCHAR} 
+		  AND product_cd = #{productCd, jdbcType=VARCHAR} 
+		  AND safe_key = #{safeKey, jdbcType=VARCHAR} 
+		  AND safe_key_seq = #{safeKeySeq, jdbcType=VARCHAR} 
+		  AND sale_date = #{saleDate, jdbcType=VARCHAR} 
+		  AND size_cd = #{sizeCd, jdbcType=VARCHAR} 
+		  AND store_cd = #{storeCd, jdbcType=VARCHAR}   
+    </update>
+    
+    <select id="selectOffDealHistory"  parameterType="kr.co.shop.web.order.model.master.IfOffDealHistory" resultType="kr.co.shop.web.order.model.master.IfOffDealHistory">
+		 /*+ kr.co.shop.bo.order.repository.master.IfOffDealHistoryDao.selectOffDealHistory [오프라인 단건 조회(상품후기용)] [황성준] */
+		 SELECT
+			<include refid="select-columns" />
+		FROM 
+			IF_OFF_DEAL_HISTORY
+		<where>
+			AND safe_key = #{safeKey, jdbcType=VARCHAR}
+			AND safe_key_seq = #{safeKeySeq, jdbcType=VARCHAR}
+			AND sale_date = #{saleDate, jdbcType=VARCHAR}
+			AND store_cd = #{storeCd, jdbcType=VARCHAR}
+			AND pos_no = #{posNo, jdbcType=VARCHAR}
+			AND deal_no = #{dealNo, jdbcType=VARCHAR}
+			AND product_cd = #{productCd, jdbcType=VARCHAR}
+			AND size_cd = #{sizeCd, jdbcType=VARCHAR}
+		</where>   
+	</select>
+
+</mapper>

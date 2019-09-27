@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.event.repository.master.EvEventAnswerDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.event.model.master.EvEventAnswer">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventAnswerDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			ev_event_answer
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectEventAnswerList" parameterType="Pageable" resultType="kr.co.shop.web.event.model.master.EvEventAnswer">
+    /*+ kr.co.shop.web.event.repository.master.EvEventAnswerDao.selectEventAnswerList [이벤트 참여(댓글형) 조회 쿼리] [이지훈] */  
+    	SELECT 
+			EEA.EVENT_ASWR_SEQ
+			,EEA.EVENT_NO
+			,EEA.MEMBER_NO
+			,EEA.ASWR_CONT_TEXT
+			,EEA.DISP_YN
+			,EEA.UN_DISP_RSN_CODE
+			,EEA.UN_DISP_RSN_TEXT
+			,EEA.RGST_DTM
+			,EEA.MODER_NO
+			,EEA.MOD_DTM
+			,MM.MEMBER_NO
+			,MM.LOGIN_ID
+		FROM 
+			EV_EVENT_ANSWER EEA
+		INNER JOIN EV_EVENT EE
+					ON EEA.EVENT_NO = EE.EVENT_NO
+		INNER JOIN MB_MEMBER MM
+					ON EEA.MEMBER_NO = MM.MEMBER_NO
+		<include refid="whereSql" />
+		ORDER BY EE.RGST_DTM DESC 
+		<include refid="Paging.mssql" />
+    </select>
+    
+    <select id="selectEventAnswerCount" parameterType="Pageable" resultType="int">
+   		SELECT
+    		<include refid="Paging.totalCount" /> 
+    	FROM  
+    		EV_EVENT_ANSWER EEA
+    	INNER JOIN EV_EVENT EE
+					ON EEA.EVENT_NO = EE.EVENT_NO
+		INNER JOIN MB_MEMBER MM
+					ON EEA.MEMBER_NO = MM.MEMBER_NO
+    	<include refid="whereSql" />
+    </select>
+    
+    <select id="selectEventAnswerJoinCount" parameterType="kr.co.shop.web.event.model.master.EvEventAnswer" resultType="int">
+    /*+ kr.co.shop.web.event.repository.master.EvEventAnswerDao.selectEventAnswerJoinCount [이벤트 회원 참여(댓글형) 회수 조회 쿼리] [이지훈] */  
+    
+   		SELECT
+    		COUNT(*) 
+    	FROM  
+    		EV_EVENT_ANSWER
+    	WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}	
+		<if test='limitType != null and limitType = "D" '>
+			AND TO_CHAR(SYSDATE, 'YYYYMMDD') = TO_CHAR(RGST_DTM, 'YYYYMMDD')
+		</if>
+    </select>
+    
+    <update id="updateEventAnswer" parameterType="kr.co.shop.web.event.model.master.EvEventAnswer">
+     /*+ kr.co.shop.web.event.repository.master.EvEventAnswerDao.updateEventAnswer [이벤트 댓글 update 쿼리] [이지훈] */
+    
+		UPDATE EV_EVENT_ANSWER
+		<set> 
+			<if test="eventNo != null"> 
+				EVENT_NO = #{eventNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="memberNo != null"> 
+				MEMBER_NO = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aswrContText != null"> 
+				ASWR_CONT_TEXT = #{aswrContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="deviceCode != null"> 
+				DEVICE_CODE = #{deviceCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dispYn != null"> 
+				DISP_YN = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="unDispRsnCode != null"> 
+				UN_DISP_RSN_CODE = #{unDispRsnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="unDispRsnText != null"> 
+				UN_DISP_RSN_TEXT = #{unDispRsnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				RGST_DTM = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				MODER_NO = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				MOD_DTM = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 EVENT_ASWR_SEQ = #{eventAswrSeq, jdbcType=BIGINT}   
+    </update>
+    
+    <sql id="whereSql">
+    	<where>
+    		<if test='bean.eventNo != null and bean.eventNo != "" '>
+    			AND EEA.EVENT_NO = #{bean.eventNo, jdbcType=VARCHAR}
+    		</if>
+    		<if test='bean.memberNo != null and bean.memberNo != "" '>
+    			AND MM.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+    		</if>
+    	</where>
+    </sql>
+
+</mapper>

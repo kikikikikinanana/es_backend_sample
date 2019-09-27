@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.DpWebzineDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	wbzn_seq, wbzn_type, wbzn_no, wbzn_title_text, pc_image_name, pc_image_path_text, pc_image_url, pc_altrn_text, mobile_image_name, mobile_image_path_text, mobile_image_url, mobile_altrn_text, movie_image_name, movie_image_path_text, movie_image_url, movie_altrn_text, movie_upload_yn, movie_play_type, movie_name, movie_path_text, movie_url, wbzn_info, disp_yn, disp_start_ymd, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	wbzn_seq = #{wbznSeq, jdbcType=INTEGER}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.display.model.master.DpWebzine" resultType="kr.co.shop.web.display.model.master.DpWebzine">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpWebzineDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			dp_webzine
+		<where> 
+			<if test="wbznSeq != null"> 
+				 wbzn_seq = #{wbznSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="wbznType != null"> 
+				 AND wbzn_type = #{wbznType, jdbcType=CHAR}
+			</if> 
+			<if test="wbznNo != null"> 
+				 AND wbzn_no = #{wbznNo, jdbcType=INTEGER}
+			</if> 
+			<if test="wbznTitleText != null"> 
+				 AND wbzn_title_text = #{wbznTitleText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcImageName != null"> 
+				 AND pc_image_name = #{pcImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcImagePathText != null"> 
+				 AND pc_image_path_text = #{pcImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcImageUrl != null"> 
+				 AND pc_image_url = #{pcImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="pcAltrnText != null"> 
+				 AND pc_altrn_text = #{pcAltrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileImageName != null"> 
+				 AND mobile_image_name = #{mobileImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileImagePathText != null"> 
+				 AND mobile_image_path_text = #{mobileImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileImageUrl != null"> 
+				 AND mobile_image_url = #{mobileImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="mobileAltrnText != null"> 
+				 AND mobile_altrn_text = #{mobileAltrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="movieImageName != null"> 
+				 AND movie_image_name = #{movieImageName, jdbcType=VARCHAR}
+			</if> 
+			<if test="movieImagePathText != null"> 
+				 AND movie_image_path_text = #{movieImagePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="movieImageUrl != null"> 
+				 AND movie_image_url = #{movieImageUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="movieAltrnText != null"> 
+				 AND movie_altrn_text = #{movieAltrnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="movieUploadYn != null"> 
+				 AND movie_upload_yn = #{movieUploadYn, jdbcType=CHAR}
+			</if> 
+			<if test="moviePlayType != null"> 
+				 AND movie_play_type = #{moviePlayType, jdbcType=CHAR}
+			</if> 
+			<if test="movieName != null"> 
+				 AND movie_name = #{movieName, jdbcType=VARCHAR}
+			</if> 
+			<if test="moviePathText != null"> 
+				 AND movie_path_text = #{moviePathText, jdbcType=VARCHAR}
+			</if> 
+			<if test="movieUrl != null"> 
+				 AND movie_url = #{movieUrl, jdbcType=VARCHAR}
+			</if> 
+			<if test="wbznInfo != null"> 
+				 AND wbzn_info = #{wbznInfo, jdbcType=VARCHAR}
+			</if> 
+			<if test="dispYn != null"> 
+				 AND disp_yn = #{dispYn, jdbcType=CHAR}
+			</if> 
+			<if test="dispStartYmd != null"> 
+				 AND disp_start_ymd = #{dispStartYmd, jdbcType=DATE}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+	<insert id="insert" useGeneratedKeys="true" keyProperty="wbznSeq">
+
+     /*+ kr.co.shop.web.display.repository.master.DpWebzineDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO dp_webzine
+			 ( wbzn_type, wbzn_no, wbzn_title_text, pc_image_name, pc_image_path_text, pc_image_url, pc_altrn_text, mobile_image_name, mobile_image_path_text, mobile_image_url, mobile_altrn_text, movie_image_name, movie_image_path_text, movie_image_url, movie_altrn_text, movie_upload_yn, movie_play_type, movie_name, movie_path_text, movie_url, wbzn_info, disp_yn, disp_start_ymd, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{wbznType, jdbcType=CHAR}, #{wbznNo, jdbcType=INTEGER}, #{wbznTitleText, jdbcType=VARCHAR}, #{pcImageName, jdbcType=VARCHAR}, #{pcImagePathText, jdbcType=VARCHAR}, #{pcImageUrl, jdbcType=VARCHAR}, #{pcAltrnText, jdbcType=VARCHAR}, #{mobileImageName, jdbcType=VARCHAR}, #{mobileImagePathText, jdbcType=VARCHAR}, #{mobileImageUrl, jdbcType=VARCHAR}, #{mobileAltrnText, jdbcType=VARCHAR}, #{movieImageName, jdbcType=VARCHAR}, #{movieImagePathText, jdbcType=VARCHAR}, #{movieImageUrl, jdbcType=VARCHAR}, #{movieAltrnText, jdbcType=VARCHAR}, #{movieUploadYn, jdbcType=CHAR}, #{moviePlayType, jdbcType=CHAR}, #{movieName, jdbcType=VARCHAR}, #{moviePathText, jdbcType=VARCHAR}, #{movieUrl, jdbcType=VARCHAR}, #{wbznInfo, jdbcType=VARCHAR}, #{dispYn, jdbcType=CHAR}, <choose><when test="dispStartYmd != null">#{dispStartYmd, jdbcType=DATE}</when><otherwise>getdate()</otherwise></choose>, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.display.model.master.DpWebzine">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpWebzineDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE dp_webzine
+		<set> 
+			<if test="wbznSeq != null"> 
+				wbzn_seq = #{wbznSeq, jdbcType=INTEGER}, 
+			</if> 
+			<if test="wbznType != null"> 
+				wbzn_type = #{wbznType, jdbcType=CHAR}, 
+			</if> 
+			<if test="wbznNo != null"> 
+				wbzn_no = #{wbznNo, jdbcType=INTEGER}, 
+			</if> 
+			<if test="wbznTitleText != null"> 
+				wbzn_title_text = #{wbznTitleText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcImageName != null"> 
+				pc_image_name = #{pcImageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcImagePathText != null"> 
+				pc_image_path_text = #{pcImagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcImageUrl != null"> 
+				pc_image_url = #{pcImageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="pcAltrnText != null"> 
+				pc_altrn_text = #{pcAltrnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileImageName != null"> 
+				mobile_image_name = #{mobileImageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileImagePathText != null"> 
+				mobile_image_path_text = #{mobileImagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileImageUrl != null"> 
+				mobile_image_url = #{mobileImageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="mobileAltrnText != null"> 
+				mobile_altrn_text = #{mobileAltrnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="movieImageName != null"> 
+				movie_image_name = #{movieImageName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="movieImagePathText != null"> 
+				movie_image_path_text = #{movieImagePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="movieImageUrl != null"> 
+				movie_image_url = #{movieImageUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="movieAltrnText != null"> 
+				movie_altrn_text = #{movieAltrnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="movieUploadYn != null"> 
+				movie_upload_yn = #{movieUploadYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="moviePlayType != null"> 
+				movie_play_type = #{moviePlayType, jdbcType=CHAR}, 
+			</if> 
+			<if test="movieName != null"> 
+				movie_name = #{movieName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="moviePathText != null"> 
+				movie_path_text = #{moviePathText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="movieUrl != null"> 
+				movie_url = #{movieUrl, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="wbznInfo != null"> 
+				wbzn_info = #{wbznInfo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dispYn != null"> 
+				disp_yn = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="dispStartYmd != null"> 
+				disp_start_ymd = #{dispStartYmd, jdbcType=DATE}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 wbzn_seq = #{wbznSeq, jdbcType=INTEGER}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.display.model.master.DpWebzine">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpWebzineDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM dp_webzine
+		WHERE 
+			 wbzn_seq = #{wbznSeq, jdbcType=INTEGER}  
+    </delete>
+</mapper>

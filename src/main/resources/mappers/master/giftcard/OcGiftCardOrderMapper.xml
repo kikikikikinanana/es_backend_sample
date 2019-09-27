@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrder">
+    
+     /*+ kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			oc_gift_card_order
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <insert id="insertGiftCardPayment" parameterType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrder">	
+
+     /*+ kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderDao.insertGiftCardPayment [임시 insert 쿼리] [YSW] */
+    
+		INSERT INTO oc_gift_card_order
+			 ( 
+			 	gift_card_order_no
+			 	, order_dtm
+			 	, site_no
+			 	, emp_order_yn
+			 	, member_no
+			 	, member_type_code
+			 	, mbshp_grade_code
+			 	, emp_yn
+			 	, ots_vip_yn
+			 	, device_code
+			 	, buyer_name
+			 	, buyer_hdphn_no_text
+			 	, rcvr_name
+			 	, rcvr_hdphn_no_text
+			 	, gift_card_no
+			 	, pymnt_amt
+			 	, gift_card_order_type_code
+			 	, gift_card_stat_code
+			 	, cash_rcpt_issue_yn
+			 	, tax_bill_issue_stat_code
+			 	, mms_send_mesg_text
+			 	, order_stat_code
+			 	, rgster_no
+			 	, rgst_dtm 
+			 ) 
+
+		VALUES 
+			 ( 
+			 	#{giftCardOrderNo, jdbcType=VARCHAR}
+			 	, <choose><when test="orderDtm != null">#{orderDtm, jdbcType=TIMESTAMP}</when><otherwise>SYSDATE</otherwise></choose>
+			 	, #{siteNo, jdbcType=VARCHAR}
+			 	, #{empOrderYn, jdbcType=CHAR}
+			 	, #{memberNo, jdbcType=VARCHAR}
+			 	, #{memberTypeCode, jdbcType=VARCHAR}
+			 	, #{mbshpGradeCode, jdbcType=VARCHAR}
+			 	, #{empYn, jdbcType=CHAR}
+			 	, #{otsVipYn, jdbcType=CHAR}
+			 	, #{deviceCode, jdbcType=VARCHAR}
+			 	, #{buyerName, jdbcType=VARCHAR}
+			 	, #{buyerHdphnNoText, jdbcType=VARCHAR}
+			 	, #{rcvrName, jdbcType=VARCHAR}
+			 	, #{rcvrHdphnNoText, jdbcType=VARCHAR}
+			 	, ''
+			 	, #{pymntAmt, jdbcType=INTEGER}
+			 	, #{giftCardOrderTypeCode, jdbcType=VARCHAR}
+			 	, #{giftCardStatCode, jdbcType=VARCHAR}
+			 	, #{cashRcptIssueYn, jdbcType=CHAR}
+			 	, #{taxBillIssueStatCode, jdbcType=VARCHAR}
+			 	, #{mmsSendMesgText, jdbcType=VARCHAR}
+			 	, #{orderStatCode, jdbcType=VARCHAR}
+			 	, #{rgsterNo, jdbcType=VARCHAR}
+			 	, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>SYSDATE</otherwise></choose> 
+			 )  
+    </insert>
+    
+    <update id="updateGiftCardPayment" parameterType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrder">
+    
+     /*+ kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderDao.updateGiftCardPayment [결제 후 update 쿼리] [YSW] */
+    
+		UPDATE oc_gift_card_order
+		<set> 
+			<if test="giftCardAprvNoText != null"> 
+				gift_card_aprv_no_text = #{giftCardAprvNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="giftCardAprvDtm != null"> 
+				gift_card_aprv_dtm = #{giftCardAprvDtm, jdbcType=TIMESTAMP}, 
+			</if>
+			<if test="cardNoText != null"> 
+				card_no_text = #{cardNoText, jdbcType=VARCHAR}, 
+			</if>
+			<if test="cardPinNoText != null"> 
+				card_pin_no_text = #{cardPinNoText, jdbcType=VARCHAR}, 
+			</if>
+			<if test="giftCardNo != null">
+				gift_card_no = #{giftCardNo, jdbcType=VARCHAR},
+			</if>
+			<if test="orderStatCode != null"> 
+				order_stat_code = #{orderStatCode, jdbcType=VARCHAR}, 
+			</if>
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			mod_dtm = <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>SYSDATE</otherwise></choose>
+		</set> 
+		WHERE 
+			 gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <select id="selectGiftCardHistoryList" parameterType="Pageable" resultType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrder">
+    
+    /*+ kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderDao.selectGiftCardHistory [구매,선물,충전 결제 내역 조회 쿼리] [YSW] */
+    
+    	SELECT
+    		gift_card_order_no
+    		, (SELECT pymnt_means_code FROM OC_GIFT_CARD_ORDER_PAYMENT WHERE gift_card_order_no = a.gift_card_order_no) as pymnt_means_code
+    		, order_dtm
+    		, site_no
+    		, emp_order_yn
+    		, member_no
+    		, member_type_code
+    		, mbshp_grade_code
+    		, emp_yn
+    		, ots_vip_yn
+    		, device_code
+    		, buyer_name
+    		, buyer_hdphn_no_text
+    		, rcvr_name
+    		, rcvr_hdphn_no_text
+    		, (SELECT gift_card_no FROM MB_MEMBER_GIFT_CARD where card_no_text = a.CARD_NO_TEXT) as gift_card_no
+    		, (SELECT image_url FROM PD_GIFT_CARD WHERE gift_card_no = (select  gift_card_no from mb_member_gift_card where card_no_text = a.CARD_NO_TEXT)) as image_url
+    		, (SELECT GIFT_CARD_NAME FROM PD_GIFT_CARD WHERE gift_card_no = (select  gift_card_no from mb_member_gift_card where card_no_text = a.CARD_NO_TEXT)) as gift_card_name
+    		, pymnt_amt
+    		, gift_card_aprv_no_text
+    		, gift_card_aprv_dtm
+    		, card_no_text
+    		, card_pin_no_text
+    		, gift_card_order_type_code
+    		, gift_card_stat_code
+    		, cash_rcpt_issue_yn
+    		, tax_bill_issue_stat_code
+    		, mms_send_mesg_text
+    		, mms_re_send_dtm
+    		, order_stat_code
+    		, rgster_no
+    		, rgst_dtm
+    		, moder_no
+    		, mod_dtm
+   		FROM OC_GIFT_CARD_ORDER a
+   		WHERE 1=1
+  		<if test="bean.memberNo != null"> 
+			AND MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+		</if>
+		<if test="bean.historyStartDtm != null">
+		<![CDATA[
+			AND RGST_DTM >= TO_DATE(#{bean.historyStartDtm}, 'YYYY-MM-DD HH24:MI:SS')
+		]]>
+		</if>
+		<if test="bean.historyEndDtm != null">
+		<![CDATA[
+			AND RGST_DTM <= TO_DATE(#{bean.historyEndDtm}, 'YYYY-MM-DD HH24:MI:SS')
+		]]>
+		</if>
+		ORDER BY gift_card_order_no DESC
+		<include refid="Paging.mssql" />
+    </select>
+    
+    <select id="selectGiftCardHistoryCount" parameterType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrder" resultType="int">
+    
+    /*+ kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderDao.selectGiftCardHistoryCount [구매,선물,충전 결제 내역 카운트 쿼리] [YSW] */
+    
+    	SELECT 
+    		count(*) as cnt
+    	FROM OC_GIFT_CARD_ORDER a
+   		WHERE 1=1
+  		<if test="memberNo != null"> 
+			AND member_no = #{memberNo, jdbcType=VARCHAR}
+		</if>
+		<if test="historyStartDtm != null">
+		<![CDATA[
+			and rgst_dtm >= #{historyStartDtm}
+		]]>
+		</if>
+		<if test="historyEndDtm != null">
+		<![CDATA[
+			and rgst_dtm <= #{historyEndDtm}
+		]]>
+		</if>
+    </select>
+    
+    <select id="selectGiftCardHistoryForCancel" parameterType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrder" resultType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrder">
+    
+    /*+ kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderDao.selectGiftCardHistoryForCancel [구매,선물,충전 결제 내역 조회 쿼리] [YSW] */
+    
+    	SELECT 
+    		gift_card_order_no
+    		, (SELECT pymnt_aprv_no_text FROM OC_GIFT_CARD_ORDER_PAYMENT WHERE gift_card_order_no = a.gift_card_order_no) as pymnt_aprv_no_text
+    		, order_dtm
+    		, site_no
+    		, emp_order_yn
+    		, member_no
+    		, member_type_code
+    		, mbshp_grade_code
+    		, emp_yn
+    		, ots_vip_yn
+    		, device_code
+    		, buyer_name
+    		, buyer_hdphn_no_text
+    		, rcvr_name
+    		, rcvr_hdphn_no_text
+    		, gift_card_no
+    		, pymnt_amt
+    		, gift_card_aprv_no_text
+    		, gift_card_aprv_dtm
+    		, card_no_text
+    		, card_pin_no_text
+    		, gift_card_order_type_code
+    		, gift_card_stat_code
+    		, cash_rcpt_issue_yn
+    		, tax_bill_issue_stat_code
+    		, mms_send_mesg_text
+    		, mms_re_send_dtm
+    		, order_stat_code
+    		, rgster_no
+    		, rgst_dtm
+    		, moder_no
+    		, mod_dtm
+    	FROM OC_GIFT_CARD_ORDER a
+   		WHERE 1=1
+  		<if test="giftCardOrderNo != null"> 
+			AND gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR}
+		</if>
+    </select>
+    
+    <update id="updateGiftCardOrderCancelStat" parameterType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrder">
+    
+    /*+ kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderDao.updateGiftCardOrderCancelStat [구매,선물,충전 결제 내역 취소 상태 업데이트 쿼리] [YSW] */
+    
+    	UPDATE oc_gift_card_order
+		<set> 
+			<if test="orderStatCode != null"> 
+				order_stat_code = #{orderStatCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 gift_card_order_no = #{giftCardOrderNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <update id="updateGiftCardStat" parameterType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrder">
+    
+    /*+ kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderDao.updateGiftCardStat [기프트카드 상태 업데이트 쿼리] [YSW] */
+    
+    	update oc_gift_card_order
+    	<set> 
+			<if test="giftCardStatCode != null"> 
+				gift_card_stat_code = #{giftCardStatCode, jdbcType=VARCHAR}, 
+			</if> 
+		</set> 
+		WHERE 1=1
+			 and member_no = #{memberNo, jdbcType=VARCHAR}
+			 and card_no_text = #{cardNoText, jdbcType=VARCHAR}
+			 and gift_card_order_type_code = #{giftCardOrderTypeCode, jdbcType=VARCHAR}
+    </update>
+    
+    <select id="selectGiftCardSaleAgenciesInfo" parameterType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrder" resultType="kr.co.shop.web.giftcard.model.master.OcGiftCardOrder">
+    
+    /*+ kr.co.shop.web.giftcard.repository.master.OcGiftCardOrderDao.selectGiftCardSaleAgenciesInfo [구매,선물 후 결제 내역 조회 쿼리] [YSW] */
+    
+    	SELECT
+    		a.gift_card_order_no
+    		, a.order_dtm
+    		, a.site_no
+    		, a.emp_order_yn
+    		, a.member_no
+    		, a.member_type_code
+    		, a.mbshp_grade_code
+    		, a.emp_yn
+    		, a.ots_vip_yn
+    		, a.device_code
+    		, a.buyer_name
+    		, a.buyer_hdphn_no_text
+    		, a.rcvr_name
+    		, a.rcvr_hdphn_no_text
+    		, a.gift_card_no
+    		, a.pymnt_amt
+    		, a.gift_card_aprv_no_text
+    		, a.gift_card_aprv_dtm
+    		, a.card_pin_no_text
+    		, a.gift_card_order_type_code
+    		, a.gift_card_stat_code
+    		, a.cash_rcpt_issue_yn
+    		, a.tax_bill_issue_stat_code
+    		, a.mms_send_mesg_text
+    		, a.mms_re_send_dtm
+    		, a.order_stat_code
+    		, a.rgster_no
+    		, a.rgst_dtm
+    		, a.moder_no
+    		, a.mod_dtm
+   		FROM OC_GIFT_CARD_ORDER a
+   		WHERE 1=1
+   		<if test="cardNoText != null"> 
+			AND card_no_text = #{cardNoText, jdbcType=VARCHAR}
+		</if>
+    </select>
+
+</mapper>

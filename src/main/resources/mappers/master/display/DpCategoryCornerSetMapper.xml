@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.DpCategoryCornerSetDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.display.model.master.DpCategoryCornerSet">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpCategoryCornerSetDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			DP_CATEGORY_CORNER_SET
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectDpCategoryCornerSetList" parameterType="kr.co.shop.web.display.model.master.DpCategoryCornerSet" resultType="kr.co.shop.web.display.model.master.DpCategoryCornerSet">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpCategoryCornerSetDao.selectDpCategoryCornerSetList [전시카테고리 코너 셋 리스트 조회] [박민우] */
+    
+    	SELECT A.*
+    	FROM (
+			SELECT 
+				 <include refid="select-columns" />
+				 , ROW_NUMBER() OVER(ORDER BY SORT_SEQ) as RUM
+			FROM 
+				DP_CATEGORY_CORNER_SET
+			<where> 
+			<if test="ctgrNo != null"> 
+				 ctgr_no = #{ctgrNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="dispTmplNo != null"> 
+				 AND disp_tmpl_no = #{dispTmplNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="dispTmplCornerSeq != null"> 
+				 AND disp_tmpl_corner_seq = #{dispTmplCornerSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="dispTmplCornerSetSeq != null"> 
+				 AND disp_tmpl_corner_set_seq = #{dispTmplCornerSetSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="contTypeCode != null"> 
+				 AND cont_type_code = #{contTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="contTypeSeq != null"> 
+				 AND cont_type_seq = #{contTypeSeq, jdbcType=INTEGER}
+			</if> 
+				AND DISP_YN = 'Y'
+				AND TO_CHAR(DISP_START_YMD, 'YYYY-MM-DD') &lt;= TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+				AND TO_CHAR(DISP_END_YMD, 'YYYY-MM-DD')  &gt;= TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+			</where> 
+			) A
+		WHERE A.RUM BETWEEN 1 AND #{dispContCount, jdbcType=INTEGER}
+    </select>
+
+</mapper>

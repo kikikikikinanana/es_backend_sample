@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.DpDisplayPageCornerDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.display.model.master.DpDisplayPageCorner">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpDisplayPageCornerDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			DP_DISPLAY_PAGE_CORNER
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectDpDisplayPageCornerList" parameterType="kr.co.shop.web.display.model.master.DpDisplayPageCorner" resultType="kr.co.shop.web.display.model.master.DpDisplayPageCorner">
+     /*+ kr.co.shop.web.display.repository.master.DpDisplayPageCornerDao.select [전시페이지 코너 리스트조회] [박민우] */
+    
+		SELECT 
+			 disp_page_no, disp_tmpl_no, disp_tmpl_corner_seq
+		FROM 
+			DP_DISPLAY_PAGE_CORNER
+		<where> 
+			<if test="dispPageNo != null"> 
+				 disp_page_no = #{dispPageNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="dispTmplNo != null"> 
+				 AND disp_tmpl_no = #{dispTmplNo, jdbcType=VARCHAR}
+			</if> 
+		</where>  
+    </select>
+
+</mapper>

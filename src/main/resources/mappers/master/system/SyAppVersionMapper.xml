@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.system.repository.master.SyAppVersionDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.system.model.master.SyAppVersion">
+    
+     /*+ kr.co.shop.web.system.repository.master.SyAppVersionDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			sy_app_version
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+	<select id="selectAppVersionData" parameterType="kr.co.shop.web.system.model.master.SyAppVersion" resultType="kr.co.shop.web.system.model.master.SyAppVersion">
+	/*+ kr.co.shop.web.system.repository.master.SyAppVersionDao.selectAppVersionData [앱버전 정보 조회] [최경호] */      
+    SELECT A.SITE_NO
+		 , A.APP_OS_CODE
+		 , A.APP_VER_TEXT
+		 , A.APP_RGST_YMD
+		FROM SY_APP_VERSION A
+	  WHERE A.APP_RGST_YMD <![CDATA[<=]]> SYSDATE
+        AND A.SITE_NO     = #{siteNo, jdbcType=VARCHAR}
+        AND A.APP_OS_CODE = #{appOsCode, jdbcType=VARCHAR}
+	ORDER BY A.APP_RGST_YMD DESC, A.RGST_DTM DESC
+	FETCH FIRST 1 ROWS ONLY 
+    </select>
+
+</mapper>

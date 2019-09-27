@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.IfOffDealHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	safe_key, safe_key_seq, sale_date, store_cd, pos_no, deal_no, product_cd, size_cd, sale_qty, consumer_price, dc_price, sale_price, return_flag, ins_dt, ins_cd, upt_dt, upt_cd, return_store_cd, return_date, conf_flag, buy_fix_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	deal_no = #{dealNo, jdbcType=VARCHAR} AND pos_no = #{posNo, jdbcType=VARCHAR} AND product_cd = #{productCd, jdbcType=VARCHAR} AND safe_key = #{safeKey, jdbcType=VARCHAR} AND safe_key_seq = #{safeKeySeq, jdbcType=VARCHAR} AND sale_date = #{saleDate, jdbcType=VARCHAR} AND size_cd = #{sizeCd, jdbcType=VARCHAR} AND store_cd = #{storeCd, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.order.model.master.IfOffDealHistory" resultType="kr.co.shop.web.order.model.master.IfOffDealHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.IfOffDealHistoryDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			IF_OFF_DEAL_HISTORY
+		<where> 
+			<if test="safeKey != null"> 
+				 safe_key = #{safeKey, jdbcType=VARCHAR}
+			</if> 
+			<if test="safeKeySeq != null"> 
+				 AND safe_key_seq = #{safeKeySeq, jdbcType=VARCHAR}
+			</if> 
+			<if test="saleDate != null"> 
+				 AND sale_date = #{saleDate, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeCd != null"> 
+				 AND store_cd = #{storeCd, jdbcType=VARCHAR}
+			</if> 
+			<if test="posNo != null"> 
+				 AND pos_no = #{posNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="dealNo != null"> 
+				 AND deal_no = #{dealNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="productCd != null"> 
+				 AND product_cd = #{productCd, jdbcType=VARCHAR}
+			</if> 
+			<if test="sizeCd != null"> 
+				 AND size_cd = #{sizeCd, jdbcType=VARCHAR}
+			</if> 
+			<if test="saleQty != null"> 
+				 AND sale_qty = #{saleQty, jdbcType=INTEGER}
+			</if> 
+			<if test="consumerPrice != null"> 
+				 AND consumer_price = #{consumerPrice, jdbcType=INTEGER}
+			</if> 
+			<if test="dcPrice != null"> 
+				 AND dc_price = #{dcPrice, jdbcType=INTEGER}
+			</if> 
+			<if test="salePrice != null"> 
+				 AND sale_price = #{salePrice, jdbcType=INTEGER}
+			</if> 
+			<if test="returnFlag != null"> 
+				 AND return_flag = #{returnFlag, jdbcType=CHAR}
+			</if> 
+			<if test="insDt != null"> 
+				 AND ins_dt = #{insDt, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="insCd != null"> 
+				 AND ins_cd = #{insCd, jdbcType=VARCHAR}
+			</if> 
+			<if test="uptDt != null"> 
+				 AND upt_dt = #{uptDt, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="uptCd != null"> 
+				 AND upt_cd = #{uptCd, jdbcType=VARCHAR}
+			</if> 
+			<if test="returnStoreCd != null"> 
+				 AND return_store_cd = #{returnStoreCd, jdbcType=VARCHAR}
+			</if> 
+			<if test="returnDate != null"> 
+				 AND return_date = #{returnDate, jdbcType=VARCHAR}
+			</if> 
+			<if test="confFlag != null"> 
+				 AND conf_flag = #{confFlag, jdbcType=CHAR}
+			</if> 
+			<if test="buyFixDtm != null"> 
+				 AND buy_fix_dtm = #{buyFixDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.order.model.master.IfOffDealHistory">	
+
+     /*+ kr.co.shop.web.order.repository.master.IfOffDealHistoryDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO IF_OFF_DEAL_HISTORY
+			 ( safe_key, safe_key_seq, sale_date, store_cd, pos_no, deal_no, product_cd, size_cd, sale_qty, consumer_price, dc_price, sale_price, return_flag, ins_dt, ins_cd, upt_dt, upt_cd, return_store_cd, return_date, conf_flag, buy_fix_dtm ) 
+
+		VALUES 
+			 ( #{safeKey, jdbcType=VARCHAR}, #{safeKeySeq, jdbcType=VARCHAR}, #{saleDate, jdbcType=VARCHAR}, #{storeCd, jdbcType=VARCHAR}, #{posNo, jdbcType=VARCHAR}, #{dealNo, jdbcType=VARCHAR}, #{productCd, jdbcType=VARCHAR}, #{sizeCd, jdbcType=VARCHAR}, #{saleQty, jdbcType=INTEGER}, #{consumerPrice, jdbcType=INTEGER}, #{dcPrice, jdbcType=INTEGER}, #{salePrice, jdbcType=INTEGER}, #{returnFlag, jdbcType=CHAR}, <choose><when test="insDt != null">#{insDt, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{insCd, jdbcType=VARCHAR}, <choose><when test="uptDt != null">#{uptDt, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{uptCd, jdbcType=VARCHAR}, #{returnStoreCd, jdbcType=VARCHAR}, #{returnDate, jdbcType=VARCHAR}, #{confFlag, jdbcType=CHAR}, <choose><when test="buyFixDtm != null">#{buyFixDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.order.model.master.IfOffDealHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.IfOffDealHistoryDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE IF_OFF_DEAL_HISTORY
+		<set> 
+			<if test="safeKey != null"> 
+				safe_key = #{safeKey, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="safeKeySeq != null"> 
+				safe_key_seq = #{safeKeySeq, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="saleDate != null"> 
+				sale_date = #{saleDate, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeCd != null"> 
+				store_cd = #{storeCd, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="posNo != null"> 
+				pos_no = #{posNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dealNo != null"> 
+				deal_no = #{dealNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="productCd != null"> 
+				product_cd = #{productCd, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="sizeCd != null"> 
+				size_cd = #{sizeCd, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="saleQty != null"> 
+				sale_qty = #{saleQty, jdbcType=INTEGER}, 
+			</if> 
+			<if test="consumerPrice != null"> 
+				consumer_price = #{consumerPrice, jdbcType=INTEGER}, 
+			</if> 
+			<if test="dcPrice != null"> 
+				dc_price = #{dcPrice, jdbcType=INTEGER}, 
+			</if> 
+			<if test="salePrice != null"> 
+				sale_price = #{salePrice, jdbcType=INTEGER}, 
+			</if> 
+			<if test="returnFlag != null"> 
+				return_flag = #{returnFlag, jdbcType=CHAR}, 
+			</if> 
+			<if test="insDt != null"> 
+				ins_dt = #{insDt, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="insCd != null"> 
+				ins_cd = #{insCd, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="uptDt != null"> 
+				upt_dt = #{uptDt, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="uptCd != null"> 
+				upt_cd = #{uptCd, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="returnStoreCd != null"> 
+				return_store_cd = #{returnStoreCd, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="returnDate != null"> 
+				return_date = #{returnDate, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="confFlag != null"> 
+				conf_flag = #{confFlag, jdbcType=CHAR}, 
+			</if> 
+			<if test="buyFixDtm != null"> 
+				buy_fix_dtm = #{buyFixDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 deal_no = #{dealNo, jdbcType=VARCHAR} AND pos_no = #{posNo, jdbcType=VARCHAR} AND product_cd = #{productCd, jdbcType=VARCHAR} AND safe_key = #{safeKey, jdbcType=VARCHAR} AND safe_key_seq = #{safeKeySeq, jdbcType=VARCHAR} AND sale_date = #{saleDate, jdbcType=VARCHAR} AND size_cd = #{sizeCd, jdbcType=VARCHAR} AND store_cd = #{storeCd, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.order.model.master.IfOffDealHistory">
+    
+     /*+ kr.co.shop.web.order.repository.master.IfOffDealHistoryDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM IF_OFF_DEAL_HISTORY
+		WHERE 
+			 deal_no = #{dealNo, jdbcType=VARCHAR} AND pos_no = #{posNo, jdbcType=VARCHAR} AND product_cd = #{productCd, jdbcType=VARCHAR} AND safe_key = #{safeKey, jdbcType=VARCHAR} AND safe_key_seq = #{safeKeySeq, jdbcType=VARCHAR} AND sale_date = #{saleDate, jdbcType=VARCHAR} AND size_cd = #{sizeCd, jdbcType=VARCHAR} AND store_cd = #{storeCd, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.DpStoreBrandDao">
+
+    <select id="getStoreBrandList" parameterType="kr.co.shop.web.product.model.master.DpStoreProduct" resultType="kr.co.shop.web.product.model.master.DpStoreBrand">
+     /*+ kr.co.shop.fo.display.repository.DpStoreBrandDao.select [기본 조회 쿼리] [Generator] */
+		SELECT 
+			PROD.BRAND_NO
+			, BRD.BRAND_NAME
+			, BRD.BRAND_EN_NAME
+			, BRD.IMAGE_PATH_TEXT
+			, BRD.IMAGE_URL
+		FROM 
+			(
+				SELECT BRAND_NO
+				FROM PD_PRODUCT
+				WHERE 1 = 1
+					AND USE_YN = 'Y'
+					AND DISP_YN = 'Y'
+				GROUP BY BRAND_NO
+			) PROD
+			LEFT OUTER JOIN DP_BRAND BRD on PROD.brand_no = BRD.BRAND_NO
+		WHERE 1 = 1
+			AND BRD.USE_YN = 'Y'
+    </select>
+
+</mapper>

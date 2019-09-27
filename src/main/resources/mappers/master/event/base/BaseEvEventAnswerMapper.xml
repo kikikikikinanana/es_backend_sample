@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.event.repository.master.EvEventAnswerDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	event_aswr_seq, event_no, member_no, aswr_cont_text, device_code, disp_yn, un_disp_rsn_code, un_disp_rsn_text, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	event_aswr_seq = #{eventAswrSeq, jdbcType=BIGINT}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.event.model.master.EvEventAnswer" resultType="kr.co.shop.web.event.model.master.EvEventAnswer">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventAnswerDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			ev_event_answer
+		<where> 
+			<if test="eventAswrSeq != null"> 
+				 event_aswr_seq = #{eventAswrSeq, jdbcType=BIGINT}
+			</if> 
+			<if test="eventNo != null"> 
+				 AND event_no = #{eventNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="memberNo != null"> 
+				 AND member_no = #{memberNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="aswrContText != null"> 
+				 AND aswr_cont_text = #{aswrContText, jdbcType=VARCHAR}
+			</if> 
+			<if test="deviceCode != null"> 
+				 AND device_code = #{deviceCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="dispYn != null"> 
+				 AND disp_yn = #{dispYn, jdbcType=CHAR}
+			</if> 
+			<if test="unDispRsnCode != null"> 
+				 AND un_disp_rsn_code = #{unDispRsnCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="unDispRsnText != null"> 
+				 AND un_disp_rsn_text = #{unDispRsnText, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+	<insert id="insert" useGeneratedKeys="true" keyProperty="eventAswrSeq">
+
+     /*+ kr.co.shop.web.event.repository.master.EvEventAnswerDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO ev_event_answer
+			 ( event_no, member_no, aswr_cont_text, device_code, disp_yn, un_disp_rsn_code, un_disp_rsn_text, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{eventNo, jdbcType=VARCHAR}, #{memberNo, jdbcType=VARCHAR}, #{aswrContText, jdbcType=VARCHAR}, #{deviceCode, jdbcType=VARCHAR}, #{dispYn, jdbcType=CHAR}, #{unDispRsnCode, jdbcType=VARCHAR}, #{unDispRsnText, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.event.model.master.EvEventAnswer">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventAnswerDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE ev_event_answer
+		<set> 
+			<if test="eventAswrSeq != null"> 
+				event_aswr_seq = #{eventAswrSeq, jdbcType=BIGINT}, 
+			</if> 
+			<if test="eventNo != null"> 
+				event_no = #{eventNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="memberNo != null"> 
+				member_no = #{memberNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="aswrContText != null"> 
+				aswr_cont_text = #{aswrContText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="deviceCode != null"> 
+				device_code = #{deviceCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dispYn != null"> 
+				disp_yn = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="unDispRsnCode != null"> 
+				un_disp_rsn_code = #{unDispRsnCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="unDispRsnText != null"> 
+				un_disp_rsn_text = #{unDispRsnText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 event_aswr_seq = #{eventAswrSeq, jdbcType=BIGINT}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.event.model.master.EvEventAnswer">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventAnswerDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM ev_event_answer
+		WHERE 
+			 event_aswr_seq = #{eventAswrSeq, jdbcType=BIGINT}  
+    </delete>
+</mapper>

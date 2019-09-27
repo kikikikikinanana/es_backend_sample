@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.member.repository.master.MbMemberInterestBrandDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.member.model.master.MbMemberInterestBrand">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberInterestBrandDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			mb_member_interest_brand
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+
+	<select id="selectMyInterestedBrandListCount" parameterType="pageable" resultType="int">
+	/*+ kr.co.shop.web.member.repository.master.MbMemberInterestBrandDao.selectMyInterestedBrandListCount [관심브랜드 카운트] [유성민] */
+		SELECT <include refid="Paging.totalCount" />
+		  FROM MB_MEMBER_INTEREST_BRAND A
+		 INNER JOIN DP_BRAND B
+			ON A.BRAND_NO = B.BRAND_NO
+		   AND B.USE_YN = 'Y'
+		 WHERE A.MEMBER_NO = #{bean.memberNo}
+		<if test="bean.siteNo == '10001'.toString()">
+		   AND B.ACONNECT_DISP_YN = 'Y'
+		</if>
+	</select>
+	
+	<select id="selectMyInterestedBrandList" parameterType="pageable" resultType="kr.co.shop.web.member.model.master.MbMemberInterestBrand">
+	/*+ kr.co.shop.web.member.repository.master.MbMemberInterestBrandDao.selectMyInterestedBrandList [관심브랜드 조회] [유성민] */
+		SELECT A.MEMBER_NO
+			 , A.BRAND_NO
+			 , B.BRAND_NAME
+			 , B.BRAND_EN_NAME
+			 , B.SITE_NO
+			 , B.IMAGE_NAME
+			 , B.IMAGE_PATH_TEXT
+			 , B.IMAGE_URL
+			 , B.ALTRN_TEXT
+			 , B.ACONNECT_DISP_YN
+		  FROM MB_MEMBER_INTEREST_BRAND A
+		 INNER JOIN DP_BRAND B
+			ON A.BRAND_NO = B.BRAND_NO
+		   AND B.USE_YN = 'Y'
+		 WHERE A.MEMBER_NO = #{bean.memberNo}
+		<if test="bean.siteNo == '10001'.toString()">
+		   AND B.ACONNECT_DISP_YN = 'Y'
+		</if>
+		 ORDER BY A.RGST_DTM
+		 <include refid="Paging.mssql" />
+	</select>	
+	
+	<delete id="deleteMyInterestedBrand" parameterType="kr.co.shop.web.member.model.master.MbMemberInterestBrand">
+		DELETE FROM MB_MEMBER_INTEREST_BRAND
+		 WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+		<if test="delGubun == 'S'.toString()">
+		   AND BRAND_NO = #{brandNo, jdbcType=VARCHAR}
+		</if>
+	</delete>
+</mapper>

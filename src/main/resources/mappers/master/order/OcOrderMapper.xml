@@ -1,0 +1,862 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectOrderNoNextVal" resultType="int">
+    /*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectOrderNoNextVal [주문번호SEQ 생성] [이재영] */
+    	SELECT NEXT VALUE FOR SEQ_OC_ORDER_NO
+    </select>
+    
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.order.model.master.OcOrder">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			OC_ORDER
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+
+	<select id="selectRecentDlvyAddrListCount" parameterType="pageable" resultType="int">
+	
+		/*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectRecentDlvyAddrListCount [최근 배송지 목록 갯수 조회] [이강수] */  
+
+		  SELECT <include refid="Paging.totalCount" />
+		    FROM OC_ORDER
+		   WHERE MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+
+	</select>
+	
+	<select id="selectMyPageOrderInfoCount" parameterType="pageable" resultType="int">
+	/*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectMyPageOrderInfoCount [마이페이지 주문내역]  */  
+		SELECT <include refid="Paging.totalCount" />
+		  FROM OC_ORDER OC
+		 WHERE OC.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+		   AND OC.RSV_ORDER_YN = #{bean.rsvOrderYn, jdbcType=VARCHAR}
+		   AND OC.ORDER_STAT_CODE NOT IN ('10000' ) -- 임시주문 제외
+		   	
+		   	<if test="bean.orderNo != null ">
+		     -- 비회원 주문
+		   	 AND OC.ORDER_NO = #{bean.orderNo, jdbcType=VARCHAR} 
+		   	</if>
+		   	
+		<choose>
+			<when test="('' != bean.toDate and bean.toDate != null) and (bean.fromDate != null and '' != bean.fromDate)">
+		   AND ORDER_DTM BETWEEN TO_DATE(CONCAT(#{bean.fromDate, jdbcType=VARCHAR}, ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(CONCAT(#{bean.toDate, jdbcType=VARCHAR}, ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS')
+			</when>
+			<otherwise>
+		   AND ORDER_DTM BETWEEN SYSDATE-30 AND SYSDATE 
+			</otherwise>
+		</choose>
+		
+		<if test="bean.orderPrdtStatCodeClick != null ">
+			AND EXISTS (
+							SELECT 1 
+							FROM OC_ORDER_PRODUCT OCPS
+							    , OC_ORDER OCS
+							WHERE OCS.ORDER_NO = OC.ORDER_NO 
+							and OCS.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+							and OCPS.ORDER_NO = OCS.ORDER_NO
+							
+							<if test="bean.orderPrdtStatCodeClick == '10001'  ">
+							-- 입금대기
+							AND OCPS.ORDER_PRDT_STAT_CODE IN ( '10001' )
+							</if>
+							
+							<if test="bean.orderPrdtStatCodeClick == '10002'  ">
+							--결제완료
+							AND OCPS.ORDER_PRDT_STAT_CODE IN ( '10002' )
+							</if>
+							 
+							<if test="bean.orderPrdtStatCodeClick == '10003'  ">
+							--  상품준비중
+							AND OCPS.ORDER_PRDT_STAT_CODE IN ( '10003' , '10004')
+							</if>
+							
+							<if test="bean.orderPrdtStatCodeClick == '10005'  ">
+							-- 배송중
+							AND OCPS.ORDER_PRDT_STAT_CODE IN ( '10005' ,'10006' )
+							</if>
+							  
+							  <if test="bean.orderPrdtStatCodeClick == '10007'  ">
+							-- 배송완료
+							AND OCPS.ORDER_PRDT_STAT_CODE IN ( '10007' ,'10008' )
+							</if>
+			 
+						)  
+		</if>
+	</select>
+
+	<select id="selectRecentDlvyAddrList" parameterType="pageable" resultType="kr.co.shop.web.order.model.master.OcOrder">
+	
+		/*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectRecentDlvyAddrList [최근 배송지 목록 조회] [이강수] */  
+
+		  SELECT RTRIM( RCVR_NAME )				AS RCVR_NAME
+			   , RTRIM( RCVR_HDPHN_NO_TEXT )	AS RCVR_HDPHN_NO_TEXT
+			   , RTRIM( RCVR_POST_CODE_TEXT )	AS RCVR_POST_CODE_TEXT
+			   , RTRIM( RCVR_POST_ADDR_TEXT )	AS RCVR_POST_ADDR_TEXT
+			   , RTRIM( RCVR_DTL_ADDR_TEXT )	AS RCVR_DTL_ADDR_TEXT
+		    FROM OC_ORDER
+		   WHERE MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+		ORDER BY ORDER_DTM DESC
+		<include refid="Paging.mssql" />
+		
+	</select>
+	
+	<select id="selectClaimRequestOrderListCount" parameterType="pageable" resultType="int">
+	
+		/*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectClaimRequestOrderListCount [클레임신청 대상 주문목록 갯수 조회] [이강수] */  
+	
+		  SELECT <include refid="Paging.totalCount" />
+		    FROM OC_ORDER A
+		   WHERE A.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR} 
+			 AND EXISTS ( SELECT 1
+			 				FROM OC_ORDER_PRODUCT X
+			 			   WHERE X.ORDER_NO = A.ORDER_NO
+						<if test="bean.orderPrdtStatCodeList.length > 0">
+							 AND X.ORDER_PRDT_STAT_CODE IN
+							<foreach item="item" index="index" collection="bean.orderPrdtStatCodeList" open="(" close=")" separator="," >
+								 #{item}
+							</foreach>
+						</if>		--- 주문상품상태코드가 '입금대기', '결제완료' : 취소 / '배송완료' : 교환,반품
+							 AND NOT EXISTS ( SELECT 1
+												FROM OC_CLAIM_PRODUCT Z
+											   WHERE Z.ORDER_NO 		= X.ORDER_NO
+												 AND Z.ORDER_PRDT_SEQ 	= X.ORDER_PRDT_SEQ
+								 ) 	--- 클레임이 걸린 주문상품 존재하면 안되는 조건
+			 	 )
+			 AND A.ORDER_NO = A.ORG_ORDER_NO
+        
+	</select>
+	
+	<select id="selectClaimRequestOrderList" parameterType="pageable" resultType="kr.co.shop.web.order.model.master.OcOrder">
+	
+		/*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectClaimRequestOrderList [클레임신청 대상 주문목록 조회] [이강수] */  
+
+		  SELECT A.ORDER_NO
+			   , A.ORG_ORDER_NO
+			   , TO_CHAR(A.ORDER_DTM, 'YYYY.MM.DD HH24:MI:SS') AS STR_ORDER_DTM
+			   , A.PYMNT_AMT
+		    FROM OC_ORDER A
+		   WHERE A.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR} 
+			 AND EXISTS ( SELECT 1
+			 				FROM OC_ORDER_PRODUCT X
+			 			   WHERE X.ORDER_NO = A.ORDER_NO
+						<if test="bean.orderPrdtStatCodeList.length > 0">
+							 AND X.ORDER_PRDT_STAT_CODE IN
+							<foreach item="item" index="index" collection="bean.orderPrdtStatCodeList" open="(" close=")" separator="," >
+								 #{item}
+							</foreach>
+						</if>		--- 주문상품상태코드가 '입금대기', '결제완료' 인 조건
+							 AND NOT EXISTS ( SELECT 1
+												FROM OC_CLAIM_PRODUCT Z
+											   WHERE Z.ORDER_NO 		= X.ORDER_NO
+												 AND Z.ORDER_PRDT_SEQ 	= X.ORDER_PRDT_SEQ
+								 ) 	--- 클레임이 걸린 주문상품 존재하면 안되는 조건
+			 	 )
+			 AND A.ORDER_NO = A.ORG_ORDER_NO
+	   	ORDER BY ORDER_DTM DESC, ORG_ORDER_NO DESC
+	   	<include refid="Paging.mssql" />
+	   	
+	</select>
+	
+	<select id="selectRecentDlvyAddreesCount" parameterType="pageable" resultType="int">
+		/*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectRecentDlvyAddreesCount [최근 배송지 건수] [이재영] */  
+		  SELECT <include refid="Paging.totalCount" />
+		    FROM OC_ORDER
+		   WHERE MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectRecentDlvyAddrees" parameterType="pageable" resultType="kr.co.shop.web.order.vo.OrderFormVo$DeleveryAddress">
+		/*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectRecentDlvyAddrees [최근 배송지 목록] [이재영] */  
+			SELECT 
+				RTRIM( RCVR_NAME )				AS RCVR_NAME
+				, RTRIM( RCVR_HDPHN_NO_TEXT )	AS RCVR_HDPHN_NO_TEXT
+				, RTRIM( RCVR_POST_CODE_TEXT )	AS RCVR_POST_CODE_TEXT
+				, RTRIM( RCVR_POST_ADDR_TEXT )	AS RCVR_POST_ADDR_TEXT
+				, RTRIM( RCVR_DTL_ADDR_TEXT )	AS RCVR_DTL_ADDR_TEXT
+		    FROM 	OC_ORDER
+			WHERE 	MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+			ORDER BY ORDER_DTM DESC
+		   <include refid="Paging.mssql" />
+	</select>
+	
+	<select id="selectRecentPickupStore" parameterType="kr.co.shop.web.order.model.master.OcOrder" resultType="kr.co.shop.web.order.model.master.OcOrder">
+		/*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectRecentDlvyAddrees [최근 배송지 목록] [이재영] */  
+			SELECT STORE_NO FROM OC_ORDER
+			WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+			AND DLVY_TYPE_CODE =  #{dlvyTypeCode, jdbcType=VARCHAR}
+			ORDER BY ORDER_NO DESC
+			FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	<select id="selectOrderDetail" parameterType="kr.co.shop.web.order.model.master.OcOrder" resultType="kr.co.shop.web.order.model.master.OcOrder">
+		/*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectOrderDetail [주문마스터 상세] [KTH] */  
+		SELECT A.ORDER_NO
+			 , A.ORDER_DTM
+			 , TO_CHAR(A.ORDER_DTM, 'YYYY-MM-DD HH24:MI:SS') AS STR_ORDER_DTM
+			 , A.SITE_NO
+			 , (SELECT SITE_NAME FROM SY_SITE WHERE SITE_NO = A.SITE_NO) AS SITE_NAME
+			 , A.EMP_ORDER_YN
+			 , A.MEMBER_NO
+			 , A.MEMBER_TYPE_CODE
+			 , A.MBSHP_GRADE_CODE
+			 , A.EMP_YN
+			 , A.OTS_VIP_YN
+			 , A.DEVICE_CODE
+			 , A.PSWD_TEXT
+			 , A.PSWD_SALT_TEXT
+			 , A.RSV_ORDER_YN
+			 , A.DLVY_TYPE_CODE
+			 , A.STORE_NO
+			 , A.STORE_NAME
+			 , A.STORE_ADD_INFO
+			 , A.BUYER_NAME
+			 , A.BUYER_EMAIL_ADDR_TEXT
+			 , A.BUYER_TEL_NO_TEXT
+			 , A.BUYER_HDPHN_NO_TEXT
+			 , A.BUYER_POST_CODE_TEXT
+			 , A.BUYER_POST_ADDR_TEXT
+			 , A.BUYER_DTL_ADDR_TEXT
+			 , A.RCVR_NAME
+			 , A.RCVR_TEL_NO_TEXT
+			 , A.RCVR_HDPHN_NO_TEXT
+			 , A.RCVR_POST_CODE_TEXT
+			 , A.RCVR_POST_ADDR_TEXT
+			 , A.RCVR_DTL_ADDR_TEXT
+			 , A.ORDER_PRDT_INFO
+			 , A.TOTAL_NORMAL_AMT
+			 , A.TOTAL_SELL_AMT
+			 , A.TOTAL_PROMO_DSCNT_AMT
+			 , A.TOTAL_CPN_DSCNT_AMT
+			 , A.TOTAL_EMP_DSCNT_AMT
+			 , A.POINT_USE_AMT
+			 , A.EVENT_POINT_USE_AMT
+			 , A.MMNY_DLVY_AMT
+			 , A.TOTAL_VNDR_DLVY_AMT
+			 , A.PYMNT_TODO_AMT
+			 , A.PYMNT_AMT
+			 , A.CNCL_AMT
+			 , A.CASH_RCPT_ISSUE_YN
+			 , A.TAX_BILL_ISSUE_STAT_CODE
+			 , A.DLVY_MEMO_TEXT
+			 , A.BANK_CODE
+			 , A.RFND_ACNT_TEXT
+			 , A.ACNT_HLDR_NAME
+			 , A.ORG_ORDER_NO
+			 , A.UP_ORDER_NO
+			 , A.CRTFC_NO_TEXT
+			 , A.EXPOST_SAVE_MEMBER_NO
+			 , A.EXPOST_SAVE_POINT_SEQ
+			 , A.AFFLTS_CODE
+			 , A.AFFLTS_ORDER_NO
+			 , A.UN_RECPT_TERM_EXTSN_YN
+			 , A.SALES_CNCL_GBN_TYPE
+			 , A.BUY_DCSN_DTM
+			 , A.POINT_SAVE_YN
+			 , A.ORDER_STAT_CODE
+			 , A.RGSTER_NO
+			 , A.RGST_DTM
+			 , A.MODER_NO
+			 , A.MOD_DTM
+			 , FN_CODE_VALUE( 'MEMBER_TYPE_CODE' , A.MEMBER_TYPE_CODE ) AS MEMBER_TYPE_CODE_NAME
+			 , FN_CODE_VALUE( 'MBSHP_GRADE_CODE' , A.MBSHP_GRADE_CODE ) AS MBSHP_GRADE_CODE_NAME
+			 , FN_CODE_VALUE( 'DEVICE_CODE' , A.DEVICE_CODE ) 			AS DEVICE_CODE_NAME
+			 , FN_CODE_VALUE( 'DLVY_TYPE_CODE' , A.DLVY_TYPE_CODE ) 	AS DLVY_TYPE_CODE_NAME
+			 , FN_CODE_VALUE( 'ORDER_STAT_CODE' , A.ORDER_STAT_CODE ) 	AS ORDER_STAT_CODE_NAME
+			 , B.LOGIN_ID
+		  FROM OC_ORDER A
+		  LEFT OUTER JOIN MB_MEMBER B
+		    ON A.MEMBER_NO = B.MEMBER_NO		
+		 WHERE ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+	
+	</select>
+	
+	<select id="selectCommonOrderStat" parameterType="kr.co.shop.web.order.model.master.OcOrder" resultType="kr.co.shop.web.mypage.vo.OrderStatVO">
+	
+		/*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectCommonOrderStat [마이페이지 - 공통영역 최근 주문내역 조회] [이강수] */ 
+
+		  WITH ORDER_STAT AS (
+				  SELECT 'STAND_BY_CNT' AS GBN
+				       , COUNT(*)		AS CNT
+				    FROM OC_ORDER A
+				   WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+				   
+				     <if test="orderNo != null ">
+				     -- 비회원 주문
+				   	 AND A.ORDER_NO = #{orderNo, jdbcType=VARCHAR} 
+				   	</if>
+				   	
+				     AND DATEDIFF( DD
+								 , ORDER_DTM
+								 , SYSDATE ) &lt;= #{orderPeriod, jdbcType=INTEGER}											
+					 AND EXISTS ( SELECT 1
+								    FROM OC_ORDER_PRODUCT Z
+								   WHERE Z.ORDER_NO = A.ORDER_NO
+								     AND Z.ORDER_PRDT_STAT_CODE = '10001' )	-- 주문일로부터 15일 이내 -- 입금대기 상태 주문건수
+			UNION ALL
+				  SELECT 'COMPLETE_CNT' AS GBN
+				       , COUNT(*)		AS CNT
+				    FROM OC_ORDER A
+				   WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+				    
+				    <if test="orderNo != null ">
+				     -- 비회원 주문
+				   	 AND A.ORDER_NO = #{orderNo, jdbcType=VARCHAR} 
+				   	</if>
+				   	
+				     AND DATEDIFF( DD
+								 , ORDER_DTM
+								 , SYSDATE ) &lt;= #{orderPeriod, jdbcType=INTEGER}											
+					 AND EXISTS ( SELECT 1
+								    FROM OC_ORDER_PRODUCT Z
+								   WHERE Z.ORDER_NO = A.ORDER_NO
+								     AND Z.ORDER_PRDT_STAT_CODE = '10002' )	-- 주문일로부터 15일 이내 -- 결제완료 상태 주문건수
+
+			UNION ALL
+				  SELECT 'PRODUCT_PREPARATION_CNT'	AS GBN
+				       , COUNT(*)					AS CNT
+				    FROM OC_ORDER A
+				   WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+				    
+				     <if test="orderNo != null ">
+				     -- 비회원 주문
+				   	 AND A.ORDER_NO = #{orderNo, jdbcType=VARCHAR} 
+				   	</if>
+				   	
+				     AND DATEDIFF( DD
+								 , ORDER_DTM
+								 , SYSDATE ) &lt;= #{orderPeriod, jdbcType=INTEGER}											
+					 AND EXISTS ( SELECT 1
+								    FROM OC_ORDER_PRODUCT Z
+								   WHERE Z.ORDER_NO = A.ORDER_NO
+								     AND Z.ORDER_PRDT_STAT_CODE  IN ( '10003' , '10004')  )	-- 주문일로부터 15일 이내 -- 상품준비중 상태 주문건수
+			UNION ALL
+				  SELECT 'DLVYING_PICKUP_READY_CNT' AS GBN
+				       , COUNT(*)					AS CNT
+				    FROM OC_ORDER A
+				   WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+				   
+				    <if test="orderNo != null ">
+				     -- 비회원 주문
+				   	 AND A.ORDER_NO = #{orderNo, jdbcType=VARCHAR} 
+				   	</if>
+				   	
+				     AND DATEDIFF( DD
+								 , ORDER_DTM
+								 , SYSDATE ) &lt;= #{orderPeriod, jdbcType=INTEGER}											
+					 AND EXISTS ( SELECT 1
+								    FROM OC_ORDER_PRODUCT Z
+								   WHERE Z.ORDER_NO = A.ORDER_NO
+								     AND Z.ORDER_PRDT_STAT_CODE in  ( '10005' , '10006' ) )	-- 주문일로부터 15일 이내 -- 배송중/픽업준비완료 상태 주문건수
+			UNION ALL
+				  SELECT 'DLVY_FINISH_CNT'	AS GBN
+				       , COUNT(*)			AS CNT
+				    FROM OC_ORDER A
+				   WHERE MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+				   
+				     <if test="orderNo != null ">
+				     -- 비회원 주문
+				   	 AND A.ORDER_NO = #{orderNo, jdbcType=VARCHAR} 
+				   	 </if>
+				   	
+				     AND DATEDIFF( DD
+								 , ORDER_DTM
+								 , SYSDATE ) &lt;= #{orderPeriod, jdbcType=INTEGER}											
+					 AND EXISTS ( SELECT 1
+								    FROM OC_ORDER_PRODUCT Z
+								   WHERE Z.ORDER_NO = A.ORDER_NO
+								     AND Z.ORDER_PRDT_STAT_CODE in (  '10007', '10008' ) )	-- 주문일로부터 15일 이내 -- 배송/수령완료 상태 주문건수
+			UNION ALL
+				  SELECT 'CLM_CANCEL_CNT'		AS GBN
+				       , NVL(COUNT(*), 0) 	AS CNT
+					FROM OC_CLAIM
+				   WHERE CLM_GBN_CODE = '10000'
+				     AND MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+				     
+				     <if test="orderNo != null ">
+				     -- 비회원 주문
+				   	 AND ORG_ORDER_NO = #{orderNo, jdbcType=VARCHAR} 
+				   	 </if>
+				   	 
+				     AND DATEDIFF( DD
+								 , CLM_DTM
+								 , SYSDATE ) &lt;= #{clmPeriod, jdbcType=INTEGER}	-- 클레임 발생으로부터 15일 이내	-- 주문취소 클레임건수
+			UNION ALL
+				  SELECT 'CLM_EXCHANGE_CNT'		AS GBN
+				       , NVL(COUNT(*), 0) 	AS CNT
+					FROM OC_CLAIM
+				   WHERE CLM_GBN_CODE = '10001'
+				     AND MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+				     
+				     <if test="orderNo != null ">
+				     -- 비회원 주문
+				   	 AND ORG_ORDER_NO = #{orderNo, jdbcType=VARCHAR} 
+				   	 </if>
+				   	 
+				     AND DATEDIFF( DD
+								 , CLM_DTM
+								 , SYSDATE ) &lt;= #{clmPeriod, jdbcType=INTEGER}	-- 클레임 발생으로부터 15일 이내	-- 교환접수 클레임건수
+			UNION ALL
+				  SELECT 'CLM_RETURN_CNT'		AS GBN
+				       , NVL(COUNT(*), 0) 	AS CNT
+					FROM OC_CLAIM
+				   WHERE CLM_GBN_CODE = '10002'
+				     AND MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+				     
+				     <if test="orderNo != null ">
+				     -- 비회원 주문
+				   	 AND ORG_ORDER_NO = #{orderNo, jdbcType=VARCHAR} 
+				   	 </if>
+				   	 
+				     AND DATEDIFF( DD
+								 , CLM_DTM
+								 , SYSDATE ) &lt;= #{clmPeriod, jdbcType=INTEGER}	-- 클레임 발생으로부터 15일 이내	-- 반품접수 클레임건수
+		  )
+		  SELECT * FROM ORDER_STAT
+		  PIVOT ( SUM(CNT) FOR GBN IN ( [STAND_BY_CNT]				-- 입금대기 상태 주문건수
+									  , [COMPLETE_CNT]				-- 결제완료 상태 주문건수
+									  , [PRODUCT_PREPARATION_CNT]	-- 상품준비중 상태 주문건수
+									  , [DLVYING_PICKUP_READY_CNT]	-- 배송중/픽업준비완료 상태 주문건수
+									  , [DLVY_FINISH_CNT]			-- 배송/수령완료 상태 주문건수
+									  , [CLM_CANCEL_CNT]			-- 주문취소 클레임건수
+		  							  , [CLM_EXCHANGE_CNT]			-- 교환접수 클레임건수
+		  							  , [CLM_RETURN_CNT]			-- 반품접수 클레임건수
+		  							  )			
+		  ) PV
+
+	</select>
+	
+	<select id="selectMyPageOrderList" parameterType="pageable" resultType="kr.co.shop.web.order.model.master.OcOrder">
+	/*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectMyPageOrderList [마이페이지 - 주문내역 리스트] */ 
+		SELECT A.ORDER_NO
+			 , TO_CHAR(A.ORDER_DTM, 'YYYY-MM-DD HH24:MI:SS') AS STR_ORDER_DTM
+			 , A.SITE_NO
+			 , A.EMP_ORDER_YN
+			 , A.MEMBER_NO
+			 , A.MEMBER_TYPE_CODE
+			 , A.MBSHP_GRADE_CODE
+			 , A.EMP_YN
+			 , A.OTS_VIP_YN
+			 , A.DEVICE_CODE
+			 , A.PSWD_TEXT
+			 , A.PSWD_SALT_TEXT
+			 , A.RSV_ORDER_YN
+			 , A.DLVY_TYPE_CODE
+			 , A.STORE_NO
+			 , A.STORE_NAME
+			 , A.STORE_ADD_INFO
+			 , A.BUYER_NAME
+			 , A.BUYER_EMAIL_ADDR_TEXT
+			 , A.BUYER_TEL_NO_TEXT
+			 , A.BUYER_HDPHN_NO_TEXT
+			 , A.BUYER_POST_CODE_TEXT
+			 , A.BUYER_POST_ADDR_TEXT
+			 , A.BUYER_DTL_ADDR_TEXT
+			 , A.RCVR_NAME
+			 , A.RCVR_TEL_NO_TEXT
+			 , A.RCVR_HDPHN_NO_TEXT
+			 , A.RCVR_POST_CODE_TEXT
+			 , A.RCVR_POST_ADDR_TEXT
+			 , A.RCVR_DTL_ADDR_TEXT
+			 , A.ORDER_PRDT_INFO
+			 , A.TOTAL_NORMAL_AMT
+			 , A.TOTAL_SELL_AMT
+			 , A.TOTAL_PROMO_DSCNT_AMT
+			 , A.TOTAL_CPN_DSCNT_AMT
+			 , A.TOTAL_EMP_DSCNT_AMT
+			 , A.POINT_USE_AMT
+			 , A.EVENT_POINT_USE_AMT
+			 , A.MMNY_DLVY_AMT
+			 , A.TOTAL_VNDR_DLVY_AMT
+			 , A.PYMNT_TODO_AMT
+			 , A.PYMNT_AMT
+			 , A.CNCL_AMT
+			 , A.CASH_RCPT_ISSUE_YN
+			 , A.TAX_BILL_ISSUE_STAT_CODE
+			 , A.DLVY_MEMO_TEXT
+			 , A.BANK_CODE
+			 , A.RFND_ACNT_TEXT
+			 , A.ACNT_HLDR_NAME
+			 , A.ORG_ORDER_NO
+			 , A.UP_ORDER_NO
+			 , A.CRTFC_NO_TEXT
+			 , A.EXPOST_SAVE_MEMBER_NO
+			 , A.EXPOST_SAVE_POINT_SEQ
+			 , A.CLM_NO
+			 , A.AFFLTS_CODE
+			 , A.AFFLTS_ORDER_NO
+			 , A.UN_RECPT_TERM_EXTSN_YN
+			 , A.SALES_CNCL_GBN_TYPE
+			 , A.BUY_DCSN_DTM
+			 , A.POINT_SAVE_YN
+			 , A.ORDER_STAT_CODE
+			 , A.RGSTER_NO
+			 , A.RGST_DTM
+			 , A.MODER_NO
+			 , A.MOD_DTM
+		  FROM OC_ORDER A
+		 WHERE A.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+		   AND A.RSV_ORDER_YN = #{bean.rsvOrderYn, jdbcType=VARCHAR}
+		   AND A.ORDER_STAT_CODE NOT IN ('10000' ) -- 임시주문제외
+		   
+		   <if test="bean.orderNo != null ">
+		     -- 비회원 주문
+		   	 AND A.ORDER_NO = #{bean.orderNo, jdbcType=VARCHAR} 
+		   	</if>
+		   	
+		<choose>
+			<when test="('' != bean.toDate and bean.toDate != null) and (bean.fromDate != null and '' != bean.fromDate)">
+		   AND A.ORDER_DTM BETWEEN TO_DATE(CONCAT(#{bean.fromDate, jdbcType=VARCHAR}, ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(CONCAT(#{bean.toDate, jdbcType=VARCHAR}, ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS')
+			</when>
+			<otherwise>
+		   AND A.ORDER_DTM BETWEEN SYSDATE-30 AND SYSDATE 
+			</otherwise>
+		</choose>
+		
+		<if test="bean.orderPrdtStatCodeClick != null ">
+			AND EXISTS (
+							SELECT 1 
+							FROM OC_ORDER_PRODUCT OCPS
+							    , OC_ORDER OCS
+							WHERE OCS.ORDER_NO = A.ORDER_NO 
+							and OCS.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+							and OCPS.ORDER_NO = OCS.ORDER_NO 
+							
+							<if test="bean.orderNo != null ">
+						     -- 비회원 주문
+						   	 AND A.ORDER_NO = #{bean.orderNo, jdbcType=VARCHAR} 
+						   	</if>
+					   	
+							<if test="bean.orderPrdtStatCodeClick == '10001'  ">
+							-- 입금대기
+							AND OCPS.ORDER_PRDT_STAT_CODE IN ( '10001' )
+							</if>
+							
+							<if test="bean.orderPrdtStatCodeClick == '10002'  ">
+							--결제완료
+							AND OCPS.ORDER_PRDT_STAT_CODE IN ( '10002' )
+							</if>
+							 
+							<if test="bean.orderPrdtStatCodeClick == '10003'  ">
+							--  상품준비중
+							AND OCPS.ORDER_PRDT_STAT_CODE IN ( '10003' , '10004')
+							</if>
+							
+							<if test="bean.orderPrdtStatCodeClick == '10005'  ">
+							-- 배송중
+							AND OCPS.ORDER_PRDT_STAT_CODE IN ( '10005' ,'10006' )
+							</if>
+							  
+							  <if test="bean.orderPrdtStatCodeClick == '10007'  ">
+							-- 배송완료
+							AND OCPS.ORDER_PRDT_STAT_CODE IN ( '10007' ,'10008' )
+							</if>  
+			 
+						)  
+		</if>
+		
+		 ORDER BY A.ORDER_DTM DESC
+		 <include refid="Paging.mssql" />
+	</select>
+	
+	
+	<select id="selectMyPageOrderOfflineInfoCount" parameterType="pageable" resultType="int">
+	/*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectMyPageOrderOfflineInfoCount [마이페이지 오프라인 주문내역]  */  
+		SELECT <include refid="Paging.totalCount" />
+		  FROM IF_OFF_DEAL_HISTORY IODH
+		     , PD_PRODUCT PP
+		     , MB_MEMBER MM
+		 WHERE IODH.PRODUCT_CD = PP.VNDR_PRDT_NO_TEXT
+		   AND IODH.SAFE_KEY = MM.SAFE_KEY
+           AND IODH.SAFE_KEY_SEQ = MM.SAFE_KEY_SEQ
+		   AND MM.MEMBER_TYPE_CODE = '10001' --맵버쉽 회원 고정 
+		   AND MM.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+		<choose>
+			<when test="('' != bean.toDate and bean.toDate != null) and (bean.fromDate != null and '' != bean.fromDate)">
+		   AND IODH.SALE_DATE BETWEEN TO_DATE(CONCAT(#{bean.fromDate, jdbcType=VARCHAR}, ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(CONCAT(#{bean.toDate, jdbcType=VARCHAR}, ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS')
+			</when>
+			<otherwise>
+		   AND IODH.SALE_DATE BETWEEN SYSDATE-30 AND SYSDATE 
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="selectMyPageOrderOfflineList" parameterType="pageable" resultType="kr.co.shop.web.order.model.master.OcOrder">
+	/*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectMyPageOrderOfflineList [마이페이지 - 주문내역 리스트] */ 
+		SELECT  orderNo
+		       ,totalSellAmt
+		       ,strOrderDtm
+		   FROM(
+		      SELECT
+		          (IODH.SALE_DATE + IODH.POS_NO + IODH.DEAL_NO) AS orderNo
+		        , SUM(SALE_PRICE) AS totalSellAmt
+		        , TO_CHAR(TO_DATE(IODH.SALE_DATE, 'YYYY-MM-DD'), 'YYYY.MM.DD' ) AS strOrderDtm
+		       from IF_OFF_DEAL_HISTORY IODH
+		          , PD_PRODUCT PP
+		          , MB_MEMBER MM
+		      WHERE IODH.PRODUCT_CD = PP.VNDR_PRDT_NO_TEXT
+		        AND IODH.SAFE_KEY = MM.SAFE_KEY
+		        AND IODH.SAFE_KEY_SEQ = MM.SAFE_KEY_SEQ
+		        AND MM.MEMBER_TYPE_CODE = '10001' -- 멤버쉽회원
+		 	    AND MM.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+		<choose>
+			<when test="('' != bean.toDate and bean.toDate != null) and (bean.fromDate != null and '' != bean.fromDate)">
+		   AND IODH.SALE_DATE BETWEEN TO_DATE(CONCAT(#{bean.fromDate, jdbcType=VARCHAR}, ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(CONCAT(#{bean.toDate, jdbcType=VARCHAR}, ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS')
+			</when>
+			<otherwise>
+		   AND IODH.SALE_DATE BETWEEN SYSDATE-30 AND SYSDATE 
+			</otherwise>
+		</choose>
+		 group by (IODH.SALE_DATE + IODH.POS_NO + IODH.DEAL_NO), IODH.SALE_DATE
+		 ) A
+		 ORDER BY strOrderDtm  DESC
+		 <include refid="Paging.mssql" />
+	</select>
+	
+	<update id="updateOrderStat" parameterType="kr.co.shop.web.order.model.master.OcOrder">
+	 /*+ kr.co.shop.web.order.repository.master.OcOrderDao.updateOrderStat [상품상태 update 쿼리] [이재영] */
+   		UPDATE 	OC_ORDER
+   		SET 	order_stat_code = #{orderStatCode, jdbcType=VARCHAR}
+   		WHERE	order_no = #{orderNo, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateOcOrderAddrModify" parameterType="kr.co.shop.web.order.model.master.OcOrder">
+	 /*+ kr.co.shop.web.order.repository.master.OcOrderDao.updateOcOrderAddrModify [주소변경 update 쿼리] [Generator] */
+   			UPDATE OC_ORDER
+		<set> 
+			<if test="rcvrName != null"> 
+				rcvr_name = #{rcvrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrHdphnNoText != null"> 
+				rcvr_hdphn_no_text = #{rcvrHdphnNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrPostCodeText != null"> 
+				rcvr_post_code_text = #{rcvrPostCodeText, jdbcType=CHAR}, 
+			</if> 
+			<if test="rcvrPostAddrText != null"> 
+				rcvr_post_addr_text = #{rcvrPostAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rcvrDtlAddrText != null"> 
+				rcvr_dtl_addr_text = #{rcvrDtlAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			mod_dtm = SYSDATE  
+		</set> 
+		WHERE 
+			 order_no = #{orderNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <select id="selectOrderStatCount" parameterType="kr.co.shop.web.order.model.master.OcOrder" resultType="kr.co.shop.web.mypage.vo.OrderStatVO">
+		/*+ kr.co.shop.web.order.repository.master.OcOrderDao.selectOrderStatCount [마이페이지 - 주문 번호별 상태 Count] [방난기] */ 
+			 WITH CLAIM_PRODUCT AS (
+				SELECT OC.CLM_NO
+			       	 , OC.ORDER_NO    --주문번호
+					 , OC.ORG_ORDER_NO   -- 원 주문번호
+					 , OC.CLM_STAT_CODE  -- 클레임 상태
+					 , OCP.CLM_PRDT_SEQ    -- 클레임 순번
+					 , OCP.ORDER_PRDT_SEQ   -- 주문상품 순번
+				  FROM OC_CLAIM OC 
+				      , OC_CLAIM_PRODUCT OCP 
+				 WHERE  OC.CLM_NO = OCP.CLM_NO
+				   AND OC.ORDER_NO = #{orderNo, jdbcType=VARCHAR}  
+			)
+		select count(OOP.ORDER_PRDT_SEQ) AS ORDER_TOTAL_CNT  --상품전체 건수
+		     , SUM(CASE WHEN (OOP.ORDER_PRDT_STAT_CODE = '10002' or OOP.ORDER_PRDT_STAT_CODE = '10001' ) THEN 1
+							ELSE 0
+						END)  AS ORDER_READLY_CNT  -- 결제완료 , 입금대기
+		      , SUM(CASE WHEN (OOP.ORDER_PRDT_STAT_CODE = '10007' or OOP.ORDER_PRDT_STAT_CODE = '10011' ) THEN 1
+							ELSE 0
+						END)  AS ORDER_CONFIRM_CNT   --  배송완료 
+			, SUM(CASE WHEN (  OOP.ORDER_PRDT_STAT_CODE = '10011' ) THEN 1
+							ELSE 0
+						END)  AS ORDER_CANCEL_CNT   --   취소완료
+			  , COUNT(cp.CLM_NO) AS ORDER_CLAIM_TOTAL_CNT       -- 클레임 건수
+		FROM OC_ORDER_PRODUCT OOP
+		 LEFT OUTER JOIN CLAIM_PRODUCT CP
+					ON OOP.ORDER_NO = OOP.ORDER_NO
+				   AND CP.ORDER_PRDT_SEQ = OOP.ORDER_PRDT_SEQ 
+		WHERE OOP.ORDER_NO = #{orderNo, jdbcType=VARCHAR}  
+		AND OOP.ORDER_PRDT_STAT_CODE NOT IN ('10000')  -- 임시주문 제외
+		and OOP.PRDT_TYPE_CODE NOT IN ('10003' , '10004') 
+	
+		</select>
+		
+	<insert id="insertOrder" parameterType="kr.co.shop.web.order.model.master.OcOrder">
+		/*+ kr.co.shop.web.order.repository.master.OcOrderDao.insertOrder [주문마스터 등록] [KTH] */
+		INSERT INTO OC_ORDER
+			 (
+			   ORDER_NO
+			 , ORDER_DTM
+			 , SITE_NO
+			 , EMP_ORDER_YN
+			 , MEMBER_NO
+			 , MEMBER_TYPE_CODE
+			 , MBSHP_GRADE_CODE
+			 , EMP_YN
+			 , OTS_VIP_YN
+			 , DEVICE_CODE
+			 , PSWD_TEXT
+			 , PSWD_SALT_TEXT
+			 , RSV_ORDER_YN
+			 , DLVY_TYPE_CODE
+			 , STORE_NO
+			 , STORE_NAME
+			 , STORE_ADD_INFO
+			 , BUYER_NAME
+			 , BUYER_EMAIL_ADDR_TEXT
+			 , BUYER_TEL_NO_TEXT
+			 , BUYER_HDPHN_NO_TEXT
+			 , BUYER_POST_CODE_TEXT
+			 , BUYER_POST_ADDR_TEXT
+			 , BUYER_DTL_ADDR_TEXT
+			 , RCVR_NAME
+			 , RCVR_TEL_NO_TEXT
+			 , RCVR_HDPHN_NO_TEXT
+			 , RCVR_POST_CODE_TEXT
+			 , RCVR_POST_ADDR_TEXT
+			 , RCVR_DTL_ADDR_TEXT
+			 , ORDER_PRDT_INFO
+			 , TOTAL_NORMAL_AMT
+			 , TOTAL_SELL_AMT
+			 , TOTAL_PROMO_DSCNT_AMT
+			 , TOTAL_CPN_DSCNT_AMT
+			 , TOTAL_EMP_DSCNT_AMT
+			 , POINT_USE_AMT
+			 , EVENT_POINT_USE_AMT
+			 , MMNY_DLVY_AMT
+			 , TOTAL_VNDR_DLVY_AMT
+			 , PYMNT_TODO_AMT
+			 , PYMNT_AMT
+			 , CNCL_AMT
+			 , CASH_RCPT_ISSUE_YN
+			 , TAX_BILL_ISSUE_STAT_CODE
+			 , DLVY_MEMO_TEXT
+			 , BANK_CODE
+			 , RFND_ACNT_TEXT
+			 , ACNT_HLDR_NAME
+			 , ORG_ORDER_NO
+			 , UP_ORDER_NO
+			 , CRTFC_NO_TEXT
+			 , EXPOST_SAVE_MEMBER_NO
+			 , EXPOST_SAVE_POINT_SEQ
+			 , CLM_NO
+			 , AFFLTS_CODE
+			 , AFFLTS_ORDER_NO
+			 , UN_RECPT_TERM_EXTSN_YN
+			 , SALES_CNCL_GBN_TYPE
+			 , BUY_DCSN_DTM
+			 , POINT_SAVE_YN
+			 , ORDER_STAT_CODE
+			 , RGSTER_NO
+			 , RGST_DTM
+			 , MODER_NO
+			 , MOD_DTM
+			 )
+		VALUES
+			 (
+			   #{orderNo, jdbcType=VARCHAR}					--주문번호
+			 , SYSDATE									--주문일시
+			 , #{siteNo, jdbcType=VARCHAR}					--사이트번호
+			 , #{empOrderYn, jdbcType=CHAR}					--임직원주문여부
+			 , #{memberNo, jdbcType=VARCHAR}				--회원번호
+			 , #{memberTypeCode, jdbcType=VARCHAR}			--회원유형코드
+			 , #{mbshpGradeCode, jdbcType=VARCHAR}			--멤버십등급코드
+			 , #{empYn, jdbcType=CHAR}						--임직원여부
+			 , #{otsVipYn, jdbcType=CHAR}					--OTS VIP 여부
+			 , #{deviceCode, jdbcType=VARCHAR}				--디바이스코드
+			 , #{pswdText, jdbcType=VARCHAR}				--비회원비밀번호
+			 , #{pswdSaltText, jdbcType=VARCHAR}			--비회원비밀번호Salt
+			 , #{rsvOrderYn, jdbcType=CHAR}					--예약주문여부
+			 , #{dlvyTypeCode, jdbcType=VARCHAR}			--배송유형코드
+			 , #{storeNo, jdbcType=VARCHAR}					--매장번호
+			 , #{storeName, jdbcType=VARCHAR}				--매장명
+			 , #{storeAddInfo, jdbcType=VARCHAR}			--매장추가정보
+			 , #{buyerName, jdbcType=VARCHAR}				--주문자명
+			 , #{buyerEmailAddrText, jdbcType=VARCHAR}		--주문자이메일주소
+			 , #{buyerTelNoText, jdbcType=VARCHAR}			--주문자전화번호
+			 , #{buyerHdphnNoText, jdbcType=VARCHAR}		--주문자핸드폰번호
+			 , #{buyerPostCodeText, jdbcType=VARCHAR}		--주문자우편번호
+			 , #{buyerPostAddrText, jdbcType=CHAR}			--주문자우편주소
+			 , #{buyerDtlAddrText, jdbcType=VARCHAR}		--주문자상세주소
+			 , #{rcvrName, jdbcType=VARCHAR}				--수취인명
+			 , #{rcvrTelNoText, jdbcType=VARCHAR}			--수취인전화번호
+			 , #{rcvrHdphnNoText, jdbcType=VARCHAR}			--수취인핸드폰번호
+			 , #{rcvrPostCodeText, jdbcType=CHAR}			--수취인우편번호
+			 , #{rcvrPostAddrText, jdbcType=VARCHAR}		--수취인우편주소
+			 , #{rcvrDtlAddrText, jdbcType=VARCHAR}			--수취인상세주소
+			 , #{orderPrdtInfo, jdbcType=VARCHAR}			--주문상품정보
+			 , #{totalNormalAmt, jdbcType=INTEGER}			--정상가총액
+			 , #{totalSellAmt, jdbcType=INTEGER}			--판매가총액
+			 , #{totalPromoDscntAmt, jdbcType=INTEGER}		--프로모션할인총액
+			 , #{totalCpnDscntAmt, jdbcType=INTEGER}		--쿠폰할인총액
+			 , #{totalEmpDscntAmt, jdbcType=INTEGER}		--임직원할인총액
+			 , #{pointUseAmt, jdbcType=INTEGER}				--포인트사용액
+			 , #{eventPointUseAmt, jdbcType=INTEGER}		--이벤트포인트사용액
+			 , #{mmnyDlvyAmt, jdbcType=INTEGER}				--자사배송비
+			 , #{totalVndrDlvyAmt, jdbcType=INTEGER}		--입점사배송비총액
+			 , #{pymntTodoAmt, jdbcType=INTEGER}			--결제예정금액
+			 , #{pymntAmt, jdbcType=INTEGER}				--결제금액
+			 , #{cnclAmt, jdbcType=INTEGER}					--취소금액
+			 , #{cashRcptIssueYn, jdbcType=CHAR}			--현금영수증발급여부
+			 , #{taxBillIssueStatCode, jdbcType=VARCHAR}	--세금계산서발급상태코드
+			 , #{dlvyMemoText, jdbcType=VARCHAR}			--배송메모
+			 , #{bankCode, jdbcType=VARCHAR}				--은행코드
+			 , #{rfndAcntText, jdbcType=VARCHAR}			--환불계좌
+			 , #{acntHldrName, jdbcType=VARCHAR}			--예금주명
+			 , #{orgOrderNo, jdbcType=VARCHAR}				--원주문번호
+			 , #{upOrderNo, jdbcType=VARCHAR}				--상위주문번호
+			 , #{crtfcNoText, jdbcType=VARCHAR}				--인증번호
+			 , #{expostSaveMemberNo, jdbcType=VARCHAR}		--사후적립회원번호
+			 , #{expostSavePointSeq, jdbcType=INTEGER}		--사후적립순번
+			 , #{clmNo, jdbcType=VARCHAR}					--클레임번호
+			 , #{affltsCode, jdbcType=VARCHAR}				--제휴사코드
+			 , #{affltsOrderNo, jdbcType=VARCHAR}			--제휴사주문번호
+			 , #{unRecptTermExtsnYn, jdbcType=CHAR}			--미수령기간연장여부
+			 , #{salesCnclGbnType, jdbcType=CHAR}			--매출취소구분
+			 , #{buyDcsnDtm, jdbcType=TIMESTAMP}			--구매확정일시
+			 , #{pointSaveYn, jdbcType=CHAR}				--포인트적립여부
+			 , #{orderStatCode, jdbcType=VARCHAR}			--주문상태코드
+			 , #{rgsterNo, jdbcType=VARCHAR}				--등록자번호
+			 , SYSDATE									--등록일시
+			 , #{moderNo, jdbcType=VARCHAR}					--수정자번호
+			 , SYSDATE									--수정일시
+			 )
+	</insert>
+	
+	<update id="updateOrderByClaim" parameterType="kr.co.shop.web.order.model.master.OcOrder">
+		/*+ kr.co.shop.web.order.repository.master.OcOrderDao.updateOrderByClaim [클레임 처리로 인한 주문 update] [김태호] */
+		UPDATE OC_ORDER
+		   SET ORDER_STAT_CODE = #{orderStatCode, jdbcType=VARCHAR}
+			<if test="cnclAmt != null">
+		     , CNCL_AMT = #{cnclAmt, jdbcType=INTEGER}
+			</if>
+			<if test="clmNo != null">
+		     , CLM_NO = #{clmNo, jdbcType=VARCHAR}
+			</if>
+		     , MODER_NO = #{moderNo}
+		     , MOD_DTM = SYSDATE
+		 WHERE ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateOrderDcsnDtm"	parameterType="kr.co.shop.web.order.model.master.OcOrder">
+	/*+ kr.co.shop.web.order.repository.master.OcOrderDao.updateOrderDcsnDtm [구매확정 update] [NKB] */
+		UPDATE OC_ORDER
+		<trim prefix="SET" prefixOverrides=",">
+			, BUY_DCSN_DTM = SYSDATE
+			, MODER_NO = #{moderNo, jdbcType=VARCHAR}
+			, MOD_DTM = SYSDATE
+		</trim>
+		WHERE ORDER_NO = #{orderNo, jdbcType=VARCHAR}
+		AND BUY_DCSN_DTM IS NULL
+	</update>
+</mapper>

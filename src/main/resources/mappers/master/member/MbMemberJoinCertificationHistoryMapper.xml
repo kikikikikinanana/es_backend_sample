@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.member.repository.master.MbMemberJoinCertificationHistoryDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.member.model.master.MbMemberJoinCertificationHistory">
+    
+     /*+ kr.co.shop.web.member.repository.master.MbMemberJoinCertificationHistoryDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			mb_member_join_certification_history
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectCertificationCount" parameterType="kr.co.shop.web.member.model.master.MbMemberJoinCertificationHistory" resultType="int">
+     /*+ kr.co.shop.web.member.repository.master.MbMemberJoinCertificationHistoryDao.selectCertifyCount [인증횟수 카운트 조회 쿼리] [Generator] */
+		SELECT count(0)
+		FROM 
+			mb_member_join_certification_history
+		WHERE
+			TO_CHAR(rgst_dtm, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+		AND
+			hdphn_no_text = #{hdphnNoText, jdbcType=VARCHAR} 
+    </select>
+    
+    <select id="selectCertification" parameterType="kr.co.shop.web.member.model.master.MbMemberJoinCertificationHistory" resultType="kr.co.shop.web.member.model.master.MbMemberJoinCertificationHistory">
+     /*+ kr.co.shop.web.member.repository.master.MbMemberJoinCertificationHistoryDao.selectCertifyCount [인증횟수 카운트 조회 쿼리] [김영현] */
+		SELECT
+			<include refid="select-columns" />
+		FROM 
+			mb_member_join_certification_history
+		WHERE
+			hdphn_no_text = #{hdphnNoText, jdbcType=VARCHAR}
+		AND
+			crtfc_no_text = #{crtfcNoText, jdbcType=VARCHAR}
+		AND
+			crtfc_success_yn = 'N' 
+		AND
+			<![CDATA[
+			(SYSDATE - rgst_dtm) * 24 * 60 * 60 <= #{validTime}
+			]]>
+		ORDER BY rgst_dtm DESC
+		FETCH FIRST 1 ROWS ONLY
+    </select>
+    
+    <insert id="insertCertification" useGeneratedKeys="true" keyProperty="memberJoinCrtfcHistSeq" parameterType="kr.co.shop.web.member.model.master.MbMemberJoinCertificationHistory">
+     /*+ kr.co.shop.web.member.repository.master.MbMemberJoinCertificationHistoryDao.insertCertification [휴대폰 인증번호 insert 쿼리] [김영현] */
+		INSERT INTO mb_member_join_certification_history (
+			hdphn_no_text
+			, crtfc_no_text
+			, crtfc_success_yn
+			, rgst_dtm
+		) VALUES (
+			#{hdphnNoText, jdbcType=VARCHAR}
+			, #{crtfcNoText, jdbcType=VARCHAR}
+			, #{crtfcSuccessYn, jdbcType=CHAR}
+			, SYSDATE
+		)  
+    </insert>
+    
+    <update id="updateCertificationNumber" parameterType="kr.co.shop.web.member.model.master.MbMemberJoinCertificationHistory">
+     /*+ kr.co.shop.web.member.repository.master.MbMemberJoinCertificationHistoryDao.updateCertificationNumber [휴대폰 인증번호 update 쿼리] [김영현] */
+		UPDATE mb_member_join_certification_history
+		<set>
+			crtfc_success_yn = #{crtfcSuccessYn, jdbcType=CHAR},
+			crtfc_dtm = SYSDATE 
+		</set> 
+		WHERE 
+			 member_join_crtfc_hist_seq = #{memberJoinCrtfcHistSeq, jdbcType=BIGINT}  
+    </update>
+    
+
+</mapper>

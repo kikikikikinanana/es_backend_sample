@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.system.repository.master.SySiteApplySnsDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.system.model.master.SySiteApplySns">
+    
+     /*+ kr.co.shop.web.system.repository.master.SySiteApplySnsDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			sy_site_apply_sns
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectApplySnsList" parameterType="String" resultType="kr.co.shop.web.system.model.master.SySiteApplySns">
+     /*+ kr.co.shop.web.system.repository.master.SySiteApplySnsDao.selectApplySnsList [사이트별 sns공유채널 조회] [김영현] */
+		SELECT 
+			a.site_no
+			, a.sns_chnnl_code
+			, a.use_yn
+			, b.code_dtl_name as sns_chnnl_code_name
+			, b.sort_seq
+		FROM 
+			sy_site_apply_sns a
+		LEFT JOIN
+			sy_code_detail b
+		ON
+			b.code_field = 'SNS_CHNNL_CODE' and a.sns_chnnl_code = b.code_dtl_no
+		WHERE
+			a.site_no = #{value, jdbcType=VARCHAR}
+		AND
+			a.use_yn = 'Y'
+		ORDER BY b.SORT_SEQ
+    </select>
+    
+    
+
+</mapper>

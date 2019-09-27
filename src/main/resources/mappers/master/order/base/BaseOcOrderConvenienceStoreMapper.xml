@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.order.repository.master.OcOrderConvenienceStoreDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	order_no, cvnstr_seq, cvnstr_code, cvnstr_no_text, cvnstr_name, tel_no_text, post_code_text, post_addr_text, dtl_addr_text, arvl_store_code_text, arvl_store_brcd_text, dong_name_code_text, arvl_dong_name, dlvy_place_yn
+    </sql>
+    
+    <sql id="pk-columns">
+    	cvnstr_seq = #{cvnstrSeq, jdbcType=TINYINT} AND order_no = #{orderNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.order.model.master.OcOrderConvenienceStore" resultType="kr.co.shop.web.order.model.master.OcOrderConvenienceStore">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderConvenienceStoreDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			OC_ORDER_CONVENIENCE_STORE
+		<where> 
+			<if test="orderNo != null"> 
+				 order_no = #{orderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="cvnstrSeq != null"> 
+				 AND cvnstr_seq = #{cvnstrSeq, jdbcType=TINYINT}
+			</if> 
+			<if test="cvnstrCode != null"> 
+				 AND cvnstr_code = #{cvnstrCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="cvnstrNoText != null"> 
+				 AND cvnstr_no_text = #{cvnstrNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="cvnstrName != null"> 
+				 AND cvnstr_name = #{cvnstrName, jdbcType=VARCHAR}
+			</if> 
+			<if test="telNoText != null"> 
+				 AND tel_no_text = #{telNoText, jdbcType=VARCHAR}
+			</if> 
+			<if test="postCodeText != null"> 
+				 AND post_code_text = #{postCodeText, jdbcType=CHAR}
+			</if> 
+			<if test="postAddrText != null"> 
+				 AND post_addr_text = #{postAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="dtlAddrText != null"> 
+				 AND dtl_addr_text = #{dtlAddrText, jdbcType=VARCHAR}
+			</if> 
+			<if test="arvlStoreCodeText != null"> 
+				 AND arvl_store_code_text = #{arvlStoreCodeText, jdbcType=VARCHAR}
+			</if> 
+			<if test="arvlStoreBrcdText != null"> 
+				 AND arvl_store_brcd_text = #{arvlStoreBrcdText, jdbcType=VARCHAR}
+			</if> 
+			<if test="dongNameCodeText != null"> 
+				 AND dong_name_code_text = #{dongNameCodeText, jdbcType=VARCHAR}
+			</if> 
+			<if test="arvlDongName != null"> 
+				 AND arvl_dong_name = #{arvlDongName, jdbcType=VARCHAR}
+			</if> 
+			<if test="dlvyPlaceYn != null"> 
+				 AND dlvy_place_yn = #{dlvyPlaceYn, jdbcType=CHAR}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.order.model.master.OcOrderConvenienceStore">	
+
+     /*+ kr.co.shop.web.order.repository.master.OcOrderConvenienceStoreDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO OC_ORDER_CONVENIENCE_STORE
+			 ( order_no, cvnstr_seq, cvnstr_code, cvnstr_no_text, cvnstr_name, tel_no_text, post_code_text, post_addr_text, dtl_addr_text, arvl_store_code_text, arvl_store_brcd_text, dong_name_code_text, arvl_dong_name, dlvy_place_yn ) 
+
+		VALUES 
+			 ( #{orderNo, jdbcType=VARCHAR}, #{cvnstrSeq, jdbcType=TINYINT}, #{cvnstrCode, jdbcType=VARCHAR}, #{cvnstrNoText, jdbcType=VARCHAR}, #{cvnstrName, jdbcType=VARCHAR}, #{telNoText, jdbcType=VARCHAR}, #{postCodeText, jdbcType=CHAR}, #{postAddrText, jdbcType=VARCHAR}, #{dtlAddrText, jdbcType=VARCHAR}, #{arvlStoreCodeText, jdbcType=VARCHAR}, #{arvlStoreBrcdText, jdbcType=VARCHAR}, #{dongNameCodeText, jdbcType=VARCHAR}, #{arvlDongName, jdbcType=VARCHAR}, #{dlvyPlaceYn, jdbcType=CHAR} )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.order.model.master.OcOrderConvenienceStore">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderConvenienceStoreDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE OC_ORDER_CONVENIENCE_STORE
+		<set> 
+			<if test="orderNo != null"> 
+				order_no = #{orderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cvnstrSeq != null"> 
+				cvnstr_seq = #{cvnstrSeq, jdbcType=TINYINT}, 
+			</if> 
+			<if test="cvnstrCode != null"> 
+				cvnstr_code = #{cvnstrCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cvnstrNoText != null"> 
+				cvnstr_no_text = #{cvnstrNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cvnstrName != null"> 
+				cvnstr_name = #{cvnstrName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="telNoText != null"> 
+				tel_no_text = #{telNoText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="postCodeText != null"> 
+				post_code_text = #{postCodeText, jdbcType=CHAR}, 
+			</if> 
+			<if test="postAddrText != null"> 
+				post_addr_text = #{postAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dtlAddrText != null"> 
+				dtl_addr_text = #{dtlAddrText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="arvlStoreCodeText != null"> 
+				arvl_store_code_text = #{arvlStoreCodeText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="arvlStoreBrcdText != null"> 
+				arvl_store_brcd_text = #{arvlStoreBrcdText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dongNameCodeText != null"> 
+				dong_name_code_text = #{dongNameCodeText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="arvlDongName != null"> 
+				arvl_dong_name = #{arvlDongName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dlvyPlaceYn != null"> 
+				dlvy_place_yn = #{dlvyPlaceYn, jdbcType=CHAR}, 
+			</if> 
+		</set> 
+		WHERE 
+			 cvnstr_seq = #{cvnstrSeq, jdbcType=TINYINT} AND order_no = #{orderNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.order.model.master.OcOrderConvenienceStore">
+    
+     /*+ kr.co.shop.web.order.repository.master.OcOrderConvenienceStoreDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM OC_ORDER_CONVENIENCE_STORE
+		WHERE 
+			 cvnstr_seq = #{cvnstrSeq, jdbcType=TINYINT} AND order_no = #{orderNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

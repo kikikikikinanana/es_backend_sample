@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.cmm.repository.master.CmEmailTemplateDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.cmm.model.master.CmEmailTemplate">
+    
+     /*+ kr.co.shop.web.cmm.repository.master.CmEmailTemplateDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			CM_EMAIL_TEMPLATE
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectCmEmailTemplateByEmailId" parameterType="String" resultType="kr.co.shop.web.cmm.model.master.CmEmailTemplate">
+    /*+ kr.co.shop.web.cmm.repository.master.CmEmailTemplateDao.selectByPrimaryKey [템플릿 조회 쿼리] [김영현] */
+		SELECT
+				email_tmpl_seq
+				, site_no
+				, email_type_code
+				, email_tmpl_name
+				, email_title_text
+				, email_cont_text
+				, email_key_text
+		  FROM	cm_email_template
+		 WHERE	email_id = #{value, jdbcType=VARCHAR}
+		 AND	email_tmpl_yn = 'Y'
+    </select>
+
+</mapper>

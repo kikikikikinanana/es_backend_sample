@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.promotion.repository.master.PrCouponDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <sql id="select-columns">
+    	cpn_no, cpn_name, cpn_type_code, normal_cpn_yn, cpn_use_gbn_type, use_yn, disp_yn, issue_start_dtm, issue_end_dtm, valid_term_gbn_type, valid_start_dtm, valid_end_dtm, use_limit_day_count, valid_term_alert_yn, alert_send_day_count, relay_cpn_use_yn, relay_cpn_no, dwld_psblt_yn, mon_yn, tue_yn, wed_yn, thu_yn, fri_yn, sat_yn, sun_yn, dwld_start_time, dwld_end_time, use_place_gbn_type, cpn_crt_type, paper_crt_count, paper_crt_rndm_no_value, store_apply_type, store_pos_disp_yn, total_issue_limit_yn, total_issue_limit_count, total_issue_count, per1psn_issue_limit_yn, per1psn_max_issue_count, min_limit_sell_amt, limit_dscnt_rate, cpn_apply_type, cpn_desc_text, dscnt_type, dscnt_value, max_dscnt_limit_yn, max_dscnt_limit_amt, max_cpn_apply_yn, max_cpn_apply_qty, afflts_code, rgster_no, rgst_dtm, moder_no, mod_dtm
+    </sql>
+    
+    <sql id="pk-columns">
+    	cpn_no = #{cpnNo, jdbcType=VARCHAR}
+    </sql>
+    
+    <select id="select" parameterType="kr.co.shop.web.promotion.model.master.PrCoupon" resultType="kr.co.shop.web.promotion.model.master.PrCoupon">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrCouponDao.select [기본 조회 쿼리] [Generator] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			PR_COUPON
+		<where> 
+			<if test="cpnNo != null"> 
+				 cpn_no = #{cpnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="cpnName != null"> 
+				 AND cpn_name = #{cpnName, jdbcType=VARCHAR}
+			</if> 
+			<if test="cpnTypeCode != null"> 
+				 AND cpn_type_code = #{cpnTypeCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="normalCpnYn != null"> 
+				 AND normal_cpn_yn = #{normalCpnYn, jdbcType=CHAR}
+			</if> 
+			<if test="cpnUseGbnType != null"> 
+				 AND cpn_use_gbn_type = #{cpnUseGbnType, jdbcType=CHAR}
+			</if> 
+			<if test="useYn != null"> 
+				 AND use_yn = #{useYn, jdbcType=CHAR}
+			</if> 
+			<if test="dispYn != null"> 
+				 AND disp_yn = #{dispYn, jdbcType=CHAR}
+			</if> 
+			<if test="issueStartDtm != null"> 
+				 AND issue_start_dtm = #{issueStartDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="issueEndDtm != null"> 
+				 AND issue_end_dtm = #{issueEndDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="validTermGbnType != null"> 
+				 AND valid_term_gbn_type = #{validTermGbnType, jdbcType=CHAR}
+			</if> 
+			<if test="validStartDtm != null"> 
+				 AND valid_start_dtm = #{validStartDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="validEndDtm != null"> 
+				 AND valid_end_dtm = #{validEndDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="useLimitDayCount != null"> 
+				 AND use_limit_day_count = #{useLimitDayCount, jdbcType=SMALLINT}
+			</if> 
+			<if test="validTermAlertYn != null"> 
+				 AND valid_term_alert_yn = #{validTermAlertYn, jdbcType=CHAR}
+			</if> 
+			<if test="alertSendDayCount != null"> 
+				 AND alert_send_day_count = #{alertSendDayCount, jdbcType=TINYINT}
+			</if> 
+			<if test="relayCpnUseYn != null"> 
+				 AND relay_cpn_use_yn = #{relayCpnUseYn, jdbcType=CHAR}
+			</if> 
+			<if test="relayCpnNo != null"> 
+				 AND relay_cpn_no = #{relayCpnNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="dwldPsbltYn != null"> 
+				 AND dwld_psblt_yn = #{dwldPsbltYn, jdbcType=CHAR}
+			</if> 
+			<if test="monYn != null"> 
+				 AND mon_yn = #{monYn, jdbcType=CHAR}
+			</if> 
+			<if test="tueYn != null"> 
+				 AND tue_yn = #{tueYn, jdbcType=CHAR}
+			</if> 
+			<if test="wedYn != null"> 
+				 AND wed_yn = #{wedYn, jdbcType=CHAR}
+			</if> 
+			<if test="thuYn != null"> 
+				 AND thu_yn = #{thuYn, jdbcType=CHAR}
+			</if> 
+			<if test="friYn != null"> 
+				 AND fri_yn = #{friYn, jdbcType=CHAR}
+			</if> 
+			<if test="satYn != null"> 
+				 AND sat_yn = #{satYn, jdbcType=CHAR}
+			</if> 
+			<if test="sunYn != null"> 
+				 AND sun_yn = #{sunYn, jdbcType=CHAR}
+			</if> 
+			<if test="dwldStartTime != null"> 
+				 AND dwld_start_time = #{dwldStartTime, jdbcType=TIME}
+			</if> 
+			<if test="dwldEndTime != null"> 
+				 AND dwld_end_time = #{dwldEndTime, jdbcType=TIME}
+			</if> 
+			<if test="usePlaceGbnType != null"> 
+				 AND use_place_gbn_type = #{usePlaceGbnType, jdbcType=CHAR}
+			</if> 
+			<if test="cpnCrtType != null"> 
+				 AND cpn_crt_type = #{cpnCrtType, jdbcType=CHAR}
+			</if> 
+			<if test="paperCrtCount != null"> 
+				 AND paper_crt_count = #{paperCrtCount, jdbcType=INTEGER}
+			</if> 
+			<if test="paperCrtRndmNoValue != null"> 
+				 AND paper_crt_rndm_no_value = #{paperCrtRndmNoValue, jdbcType=VARCHAR}
+			</if> 
+			<if test="storeApplyType != null"> 
+				 AND store_apply_type = #{storeApplyType, jdbcType=CHAR}
+			</if> 
+			<if test="storePosDispYn != null"> 
+				 AND store_pos_disp_yn = #{storePosDispYn, jdbcType=CHAR}
+			</if> 
+			<if test="totalIssueLimitYn != null"> 
+				 AND total_issue_limit_yn = #{totalIssueLimitYn, jdbcType=CHAR}
+			</if> 
+			<if test="totalIssueLimitCount != null"> 
+				 AND total_issue_limit_count = #{totalIssueLimitCount, jdbcType=INTEGER}
+			</if> 
+			<if test="totalIssueCount != null"> 
+				 AND total_issue_count = #{totalIssueCount, jdbcType=INTEGER}
+			</if> 
+			<if test="per1psnIssueLimitYn != null"> 
+				 AND per1psn_issue_limit_yn = #{per1psnIssueLimitYn, jdbcType=CHAR}
+			</if> 
+			<if test="per1psnMaxIssueCount != null"> 
+				 AND per1psn_max_issue_count = #{per1psnMaxIssueCount, jdbcType=INTEGER}
+			</if> 
+			<if test="minLimitSellAmt != null"> 
+				 AND min_limit_sell_amt = #{minLimitSellAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="limitDscntRate != null"> 
+				 AND limit_dscnt_rate = #{limitDscntRate, jdbcType=TINYINT}
+			</if> 
+			<if test="cpnApplyType != null"> 
+				 AND cpn_apply_type = #{cpnApplyType, jdbcType=CHAR}
+			</if> 
+			<if test="cpnDescText != null"> 
+				 AND cpn_desc_text = #{cpnDescText, jdbcType=VARCHAR}
+			</if> 
+			<if test="dscntType != null"> 
+				 AND dscnt_type = #{dscntType, jdbcType=CHAR}
+			</if> 
+			<if test="dscntValue != null"> 
+				 AND dscnt_value = #{dscntValue, jdbcType=INTEGER}
+			</if> 
+			<if test="maxDscntLimitYn != null"> 
+				 AND max_dscnt_limit_yn = #{maxDscntLimitYn, jdbcType=CHAR}
+			</if> 
+			<if test="maxDscntLimitAmt != null"> 
+				 AND max_dscnt_limit_amt = #{maxDscntLimitAmt, jdbcType=INTEGER}
+			</if> 
+			<if test="maxCpnApplyYn != null"> 
+				 AND max_cpn_apply_yn = #{maxCpnApplyYn, jdbcType=CHAR}
+			</if> 
+			<if test="maxCpnApplyQty != null"> 
+				 AND max_cpn_apply_qty = #{maxCpnApplyQty, jdbcType=INTEGER}
+			</if> 
+			<if test="affltsCode != null"> 
+				 AND afflts_code = #{affltsCode, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgsterNo != null"> 
+				 AND rgster_no = #{rgsterNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="rgstDtm != null"> 
+				 AND rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}
+			</if> 
+			<if test="moderNo != null"> 
+				 AND moder_no = #{moderNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="modDtm != null"> 
+				 AND mod_dtm = #{modDtm, jdbcType=TIMESTAMP}
+			</if> 
+		</where>  
+    </select>
+    
+    <!--
+    	※ 경고
+		이 insert SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    
+    <insert id="insert" parameterType="kr.co.shop.web.promotion.model.master.PrCoupon">	
+
+     /*+ kr.co.shop.web.promotion.repository.master.PrCouponDao.insert [기본 insert 쿼리] [Generator] */
+    
+		INSERT INTO PR_COUPON
+			 ( cpn_no, cpn_name, cpn_type_code, normal_cpn_yn, cpn_use_gbn_type, use_yn, disp_yn, issue_start_dtm, issue_end_dtm, valid_term_gbn_type, valid_start_dtm, valid_end_dtm, use_limit_day_count, valid_term_alert_yn, alert_send_day_count, relay_cpn_use_yn, relay_cpn_no, dwld_psblt_yn, mon_yn, tue_yn, wed_yn, thu_yn, fri_yn, sat_yn, sun_yn, dwld_start_time, dwld_end_time, use_place_gbn_type, cpn_crt_type, paper_crt_count, paper_crt_rndm_no_value, store_apply_type, store_pos_disp_yn, total_issue_limit_yn, total_issue_limit_count, total_issue_count, per1psn_issue_limit_yn, per1psn_max_issue_count, min_limit_sell_amt, limit_dscnt_rate, cpn_apply_type, cpn_desc_text, dscnt_type, dscnt_value, max_dscnt_limit_yn, max_dscnt_limit_amt, max_cpn_apply_yn, max_cpn_apply_qty, afflts_code, rgster_no, rgst_dtm, moder_no, mod_dtm ) 
+
+		VALUES 
+			 ( #{cpnNo, jdbcType=VARCHAR}, #{cpnName, jdbcType=VARCHAR}, #{cpnTypeCode, jdbcType=VARCHAR}, #{normalCpnYn, jdbcType=CHAR}, #{cpnUseGbnType, jdbcType=CHAR}, #{useYn, jdbcType=CHAR}, #{dispYn, jdbcType=CHAR}, <choose><when test="issueStartDtm != null">#{issueStartDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="issueEndDtm != null">#{issueEndDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{validTermGbnType, jdbcType=CHAR}, <choose><when test="validStartDtm != null">#{validStartDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, <choose><when test="validEndDtm != null">#{validEndDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{useLimitDayCount, jdbcType=SMALLINT}, #{validTermAlertYn, jdbcType=CHAR}, #{alertSendDayCount, jdbcType=TINYINT}, #{relayCpnUseYn, jdbcType=CHAR}, #{relayCpnNo, jdbcType=VARCHAR}, #{dwldPsbltYn, jdbcType=CHAR}, #{monYn, jdbcType=CHAR}, #{tueYn, jdbcType=CHAR}, #{wedYn, jdbcType=CHAR}, #{thuYn, jdbcType=CHAR}, #{friYn, jdbcType=CHAR}, #{satYn, jdbcType=CHAR}, #{sunYn, jdbcType=CHAR}, #{dwldStartTime, jdbcType=TIME}, #{dwldEndTime, jdbcType=TIME}, #{usePlaceGbnType, jdbcType=CHAR}, #{cpnCrtType, jdbcType=CHAR}, #{paperCrtCount, jdbcType=INTEGER}, #{paperCrtRndmNoValue, jdbcType=VARCHAR}, #{storeApplyType, jdbcType=CHAR}, #{storePosDispYn, jdbcType=CHAR}, #{totalIssueLimitYn, jdbcType=CHAR}, #{totalIssueLimitCount, jdbcType=INTEGER}, #{totalIssueCount, jdbcType=INTEGER}, #{per1psnIssueLimitYn, jdbcType=CHAR}, #{per1psnMaxIssueCount, jdbcType=INTEGER}, #{minLimitSellAmt, jdbcType=INTEGER}, #{limitDscntRate, jdbcType=TINYINT}, #{cpnApplyType, jdbcType=CHAR}, #{cpnDescText, jdbcType=VARCHAR}, #{dscntType, jdbcType=CHAR}, #{dscntValue, jdbcType=INTEGER}, #{maxDscntLimitYn, jdbcType=CHAR}, #{maxDscntLimitAmt, jdbcType=INTEGER}, #{maxCpnApplyYn, jdbcType=CHAR}, #{maxCpnApplyQty, jdbcType=INTEGER}, #{affltsCode, jdbcType=VARCHAR}, #{rgsterNo, jdbcType=VARCHAR}, <choose><when test="rgstDtm != null">#{rgstDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose>, #{moderNo, jdbcType=VARCHAR}, <choose><when test="modDtm != null">#{modDtm, jdbcType=TIMESTAMP}</when><otherwise>getdate()</otherwise></choose> )  
+    </insert>
+    
+    <!--
+    	※ 경고
+		이 update SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <update id="update" parameterType="kr.co.shop.web.promotion.model.master.PrCoupon">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrCouponDao.update [기본 update 쿼리] [Generator] */
+    
+		UPDATE PR_COUPON
+		<set> 
+			<if test="cpnNo != null"> 
+				cpn_no = #{cpnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cpnName != null"> 
+				cpn_name = #{cpnName, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="cpnTypeCode != null"> 
+				cpn_type_code = #{cpnTypeCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="normalCpnYn != null"> 
+				normal_cpn_yn = #{normalCpnYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="cpnUseGbnType != null"> 
+				cpn_use_gbn_type = #{cpnUseGbnType, jdbcType=CHAR}, 
+			</if> 
+			<if test="useYn != null"> 
+				use_yn = #{useYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="dispYn != null"> 
+				disp_yn = #{dispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="issueStartDtm != null"> 
+				issue_start_dtm = #{issueStartDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="issueEndDtm != null"> 
+				issue_end_dtm = #{issueEndDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="validTermGbnType != null"> 
+				valid_term_gbn_type = #{validTermGbnType, jdbcType=CHAR}, 
+			</if> 
+			<if test="validStartDtm != null"> 
+				valid_start_dtm = #{validStartDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="validEndDtm != null"> 
+				valid_end_dtm = #{validEndDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="useLimitDayCount != null"> 
+				use_limit_day_count = #{useLimitDayCount, jdbcType=SMALLINT}, 
+			</if> 
+			<if test="validTermAlertYn != null"> 
+				valid_term_alert_yn = #{validTermAlertYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="alertSendDayCount != null"> 
+				alert_send_day_count = #{alertSendDayCount, jdbcType=TINYINT}, 
+			</if> 
+			<if test="relayCpnUseYn != null"> 
+				relay_cpn_use_yn = #{relayCpnUseYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="relayCpnNo != null"> 
+				relay_cpn_no = #{relayCpnNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dwldPsbltYn != null"> 
+				dwld_psblt_yn = #{dwldPsbltYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="monYn != null"> 
+				mon_yn = #{monYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="tueYn != null"> 
+				tue_yn = #{tueYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="wedYn != null"> 
+				wed_yn = #{wedYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="thuYn != null"> 
+				thu_yn = #{thuYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="friYn != null"> 
+				fri_yn = #{friYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="satYn != null"> 
+				sat_yn = #{satYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="sunYn != null"> 
+				sun_yn = #{sunYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="dwldStartTime != null"> 
+				dwld_start_time = #{dwldStartTime, jdbcType=TIME}, 
+			</if> 
+			<if test="dwldEndTime != null"> 
+				dwld_end_time = #{dwldEndTime, jdbcType=TIME}, 
+			</if> 
+			<if test="usePlaceGbnType != null"> 
+				use_place_gbn_type = #{usePlaceGbnType, jdbcType=CHAR}, 
+			</if> 
+			<if test="cpnCrtType != null"> 
+				cpn_crt_type = #{cpnCrtType, jdbcType=CHAR}, 
+			</if> 
+			<if test="paperCrtCount != null"> 
+				paper_crt_count = #{paperCrtCount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="paperCrtRndmNoValue != null"> 
+				paper_crt_rndm_no_value = #{paperCrtRndmNoValue, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="storeApplyType != null"> 
+				store_apply_type = #{storeApplyType, jdbcType=CHAR}, 
+			</if> 
+			<if test="storePosDispYn != null"> 
+				store_pos_disp_yn = #{storePosDispYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="totalIssueLimitYn != null"> 
+				total_issue_limit_yn = #{totalIssueLimitYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="totalIssueLimitCount != null"> 
+				total_issue_limit_count = #{totalIssueLimitCount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="totalIssueCount != null"> 
+				total_issue_count = #{totalIssueCount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="per1psnIssueLimitYn != null"> 
+				per1psn_issue_limit_yn = #{per1psnIssueLimitYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="per1psnMaxIssueCount != null"> 
+				per1psn_max_issue_count = #{per1psnMaxIssueCount, jdbcType=INTEGER}, 
+			</if> 
+			<if test="minLimitSellAmt != null"> 
+				min_limit_sell_amt = #{minLimitSellAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="limitDscntRate != null"> 
+				limit_dscnt_rate = #{limitDscntRate, jdbcType=TINYINT}, 
+			</if> 
+			<if test="cpnApplyType != null"> 
+				cpn_apply_type = #{cpnApplyType, jdbcType=CHAR}, 
+			</if> 
+			<if test="cpnDescText != null"> 
+				cpn_desc_text = #{cpnDescText, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="dscntType != null"> 
+				dscnt_type = #{dscntType, jdbcType=CHAR}, 
+			</if> 
+			<if test="dscntValue != null"> 
+				dscnt_value = #{dscntValue, jdbcType=INTEGER}, 
+			</if> 
+			<if test="maxDscntLimitYn != null"> 
+				max_dscnt_limit_yn = #{maxDscntLimitYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="maxDscntLimitAmt != null"> 
+				max_dscnt_limit_amt = #{maxDscntLimitAmt, jdbcType=INTEGER}, 
+			</if> 
+			<if test="maxCpnApplyYn != null"> 
+				max_cpn_apply_yn = #{maxCpnApplyYn, jdbcType=CHAR}, 
+			</if> 
+			<if test="maxCpnApplyQty != null"> 
+				max_cpn_apply_qty = #{maxCpnApplyQty, jdbcType=INTEGER}, 
+			</if> 
+			<if test="affltsCode != null"> 
+				afflts_code = #{affltsCode, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgsterNo != null"> 
+				rgster_no = #{rgsterNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="rgstDtm != null"> 
+				rgst_dtm = #{rgstDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+			<if test="moderNo != null"> 
+				moder_no = #{moderNo, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="modDtm != null"> 
+				mod_dtm = #{modDtm, jdbcType=TIMESTAMP}, 
+			</if> 
+		</set> 
+		WHERE 
+			 cpn_no = #{cpnNo, jdbcType=VARCHAR}   
+    </update>
+    
+    <!--
+    	※ 경고
+		이 delete SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <delete id="delete" parameterType="kr.co.shop.web.promotion.model.master.PrCoupon">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrCouponDao.delete [기본 delete 쿼리] [Generator] */
+    
+		DELETE FROM PR_COUPON
+		WHERE 
+			 cpn_no = #{cpnNo, jdbcType=VARCHAR}  
+    </delete>
+</mapper>

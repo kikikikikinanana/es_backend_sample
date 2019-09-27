@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.promotion.repository.master.PrCouponDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.promotion.model.master.PrCoupon">
+    
+     /*+ kr.co.shop.web.promotion.repository.master.PrCouponDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			PR_COUPON
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+     <resultMap type="kr.co.shop.web.promotion.model.master.UpperCoupon" id="mbCouponAndPrCouponList">
+    	<collection property="coupon" column="{prdtNo=prdt_no,prdtOptnNo=prdt_optn_no,memberNo=member_no,dscntAmt=dscnt_amt}" ofType="kr.co.shop.web.promotion.model.master.PrCoupon" select="selectCanDownloadCouponList"/>
+    	<collection property="memberCoupon" column="{prdtNo=prdt_no,prdtOptnNo=prdt_optn_no,memberNo=member_no,dscntAmt=dscnt_amt}" ofType="kr.co.shop.web.promotion.model.master.PrCoupon" select="selectAvailableCouponList"/>
+    </resultMap>
+    
+    <select id="memberCouponListAndDownloadCouponList" parameterType="kr.co.shop.web.promotion.model.master.PrCoupon" resultMap="mbCouponAndPrCouponList">
+    	/*+ kr.co.shop.bo.promotion.repository.master.PrCouponDao.MemberCouponListAndDownloadCouponList [다운로드 가능 쿠폰 목록과 회원 쿠폰 목록 조회(서비스 요청서)] [황성준] */
+    	SELECT 
+    	  #{prdtNo, jdbcType=VARCHAR} AS prdt_no
+    	, #{prdtOptnNo, jdbcType=VARCHAR} AS prdt_optn_no
+		<if test='cartSeq != null and cartSeq != ""'> 
+		, #{cartSeq, jdbcType=INTEGER} AS cart_seq
+		</if>
+		, #{memberNo, jdbcType=VARCHAR} AS member_no
+		, #{dscntAmt, jdbcType=INTEGER} AS dscnt_amt
+    </select>
+    
+    <sql id="where-promotion-cpn-smtm-apply-psblt-yn">
+    	AND NOT EXISTS (
+    		SELECT 1 FROM pr_promotion PR
+    		JOIN pr_promotion_target_product PRP
+    		ON PR.promo_no = PRP.promo_no
+    		AND PRP.prdt_no = #{prdtNo, jdbcType=VARCHAR}
+    		AND PRP.prdt_type NOT IN ('L','G')
+    		WHERE PR.cpn_smtm_apply_psblt_yn = 'N'
+    		AND PR.promo_start_dtm <![CDATA[<=]]> SYSDATE
+   			AND PR.promo_end_dtm >= SYSDATE
+    	)
+    </sql>
+    
+    <sql id="select-columns-alias-a">
+    	  A.cpn_no, A.cpn_name, A.cpn_type_code, A.normal_cpn_yn, A.cpn_use_gbn_type, A.use_yn, A.disp_yn, A.issue_start_dtm, A.issue_end_dtm, A.valid_term_gbn_type, A.valid_start_dtm, A.valid_end_dtm
+    	, CASE WHEN A.valid_term_gbn_type = 'T' THEN TO_CHAR(A.valid_start_dtm, 'YYYY.MM.DD')
+    		   WHEN A.valid_term_gbn_type = 'D' THEN TO_CHAR(SYSDATE, 'YYYY.MM.DD')
+    	  END AS str_valid_start_dtm
+		, CASE WHEN A.valid_term_gbn_type = 'T' THEN TO_CHAR(A.valid_end_dtm, 'YYYY.MM.DD') 
+			   WHEN A.valid_term_gbn_type = 'D' THEN TO_CHAR(SYSDATE + A.use_limit_day_count, 'YYYY.MM.DD') 
+		  END AS str_valid_end_dtm
+    	, A.use_limit_day_count, A.valid_term_alert_yn, A.alert_send_day_count, A.relay_cpn_use_yn, A.relay_cpn_no, A.dwld_psblt_yn, A.mon_yn, A.tue_yn, A.wed_yn, A.thu_yn, A.fri_yn, A.sat_yn, A.sun_yn, A.dwld_start_time, A.dwld_end_time, A.use_place_gbn_type, A.cpn_crt_type, A.paper_crt_count, A.paper_crt_rndm_no_value, A.store_apply_type, A.store_pos_disp_yn, A.total_issue_limit_yn, A.total_issue_limit_count, A.total_issue_count, A.per1psn_issue_limit_yn, A.per1psn_max_issue_count, A.min_limit_sell_amt, A.limit_dscnt_rate, A.cpn_apply_type, A.cpn_desc_text, A.dscnt_type, A.dscnt_value, A.max_dscnt_limit_yn, A.max_dscnt_limit_amt, A.max_cpn_apply_yn, A.max_cpn_apply_qty, A.afflts_code, A.rgster_no, A.rgst_dtm, A.moder_no, A.mod_dtm
+    </sql>
+    
+    <select id="selectAvailableCouponList" parameterType="kr.co.shop.web.promotion.model.master.PrCoupon" resultType="kr.co.shop.web.member.model.master.MbMemberCoupon">
+    	/*+ kr.co.shop.bo.promotion.repository.master.PrCouponDao.selectAvailableCouponList [회원 보유 쿠폰 중 사용가능 쿠폰 목록 조회(서비스 요청서)] [황성준] */
+		SELECT
+			  A.member_no, A.hold_cpn_seq, A.cpn_no, A.paper_no_text, A.event_no, A.cpn_issue_dtm, A.valid_start_dtm, A.valid_end_dtm, A.cpn_use_dtm, A.re_issue_rsn_text, A.cpn_stat_code, A.rgster_no, A.rgst_dtm, A.moder_no, A.mod_dtm
+			, B.cpn_name, B.cpn_type_code, B.normal_cpn_yn, B.dscnt_type, B.dscnt_value, B.min_limit_sell_amt, B.limit_dscnt_rate, B.cpn_apply_type, B.max_dscnt_limit_yn, B.max_dscnt_limit_amt, B.max_cpn_apply_yn, B.max_cpn_apply_qty
+			, #{dscntAmt, jdbcType=INTEGER} AS dscnt_amt 
+			<!-- , FN_PRDT_OPT_PROMO_PRICE(#{prdtNo, jdbcType=VARCHAR}, #{prdtOptnNo, jdbcType=VARCHAR}) AS dscnt_amt -->
+		FROM mb_member_coupon A
+		JOIN pr_coupon B
+		ON A.cpn_no = B.cpn_no
+		JOIN pr_coupon_apply_product C
+		ON A.cpn_no = C.cpn_no
+		AND C.prdt_no = #{prdtNo, jdbcType=VARCHAR}
+		AND C.prdt_type != 'L'
+		<where>
+			AND A.member_no = #{memberNo, jdbcType=VARCHAR}
+			AND A.cpn_stat_code IN ('10000', '10001')
+			AND A.cpn_use_dtm IS NULL
+			AND A.valid_start_dtm <![CDATA[<=]]> SYSDATE
+			AND A.valid_end_dtm >= SYSDATE
+			AND B.min_limit_sell_amt <![CDATA[<=]]> #{dscntAmt, jdbcType=INTEGER}
+			<include refid="where-promotion-cpn-smtm-apply-psblt-yn" />
+		</where>
+    </select>
+    
+    <select id="selectCanDownloadCouponList" parameterType="kr.co.shop.web.promotion.model.master.PrCoupon" resultType="kr.co.shop.web.promotion.model.master.PrCoupon">
+    	/*+ kr.co.shop.bo.promotion.repository.master.PrCouponDao.selectCanDownloadCouponList [다운로드 가능 쿠폰 목록 조회(서비스 요청서)] [황성준] */
+	    SELECT
+	    	  <include refid="select-columns-alias-a" /> 
+			, C.share_rate
+			, CASE WHEN D.hold_cpn_seq IS NOT NULL THEN 'Y' ELSE 'N' END AS apply_psblt_qty_yn
+			, CASE WHEN A.cpn_no = D.cpn_no THEN 'Y' ELSE 'N' END AS cpn_dwld_yn
+			, D.hold_cpn_seq
+			, D.member_no
+			<!-- , FN_PRDT_OPT_PROMO_PRICE(#{prdtNo, jdbcType=VARCHAR}, #{prdtOptnNo, jdbcType=VARCHAR}) AS dscnt_amt -->
+			, #{dscntAmt, jdbcType=INTEGER} AS dscnt_amt
+			, (SELECT LISTAGG(FN_CODE_VALUE('DEVICE_CODE', device_code),',') WITHIN GROUP(ORDER BY FN_CODE_VALUE('DEVICE_CODE', device_code)) FROM pr_coupon_apply_device WHERE cpn_no =  A.cpn_no) AS device_code_name
+		FROM pr_coupon A
+		JOIN pr_coupon_apply_product B
+		ON A.cpn_no = B.cpn_no
+		AND B.prdt_no = #{prdtNo, jdbcType=VARCHAR}
+		AND B.prdt_type != 'L'
+		LEFT JOIN pr_coupon_vendor_share_rate C
+		ON A.cpn_no = C.cpn_no
+		LEFT JOIN mb_member_coupon D
+		ON A.cpn_no = D.cpn_no
+		AND D.member_no = #{memberNo, jdbcType=VARCHAR}
+		AND D.hold_cpn_seq = ( SELECT hold_cpn_seq FROM mb_member_coupon WHERE cpn_no = A.cpn_no AND member_no = #{memberNo, jdbcType=VARCHAR} ORDER BY hold_cpn_seq DESC FETCH FIRST 1 ROWS ONLY)
+		<where>
+			<include refid="where-coupon-search-vo-alias-a" />
+			AND A.min_limit_sell_amt <![CDATA[<=]]> #{dscntAmt, jdbcType=INTEGER}
+			<include refid="where-promotion-cpn-smtm-apply-psblt-yn" />
+		</where>
+    </select>
+    
+    <select id="selectCanDownloadCouponYn" parameterType="kr.co.shop.web.promotion.model.master.PrCoupon" resultType="java.lang.String">
+    	/*+ kr.co.shop.bo.promotion.repository.master.PrCouponDao.selectCanDownloadCouponYn [다운로드 가능 쿠폰 가능여부(서비스 요청서)] [황성준] */
+    	SELECT CASE WHEN C.CPN_USE_DTM IS NULL AND C.CPN_STAT_CODE IN (10000,10001) THEN 'True' ELSE 'False' END AS validator 
+    	FROM pr_coupon A
+		JOIN PR_COUPON_APPLY_PRODUCT B
+		ON A.cpn_no = B.cpn_no
+		AND B.prdt_type != 'L'
+		AND B.prdt_no = #{prdtNo, jdbcType=VARCHAR}
+    	LEFT JOIN mb_member_coupon C
+		ON A.cpn_no = C.cpn_no
+		AND C.member_no = #{memberNo, jdbcType=VARCHAR}
+   		<where>
+    		AND A.cpn_no = #{cpnNo, jdbcType=VARCHAR}
+			<include refid="where-coupon-search-vo-alias-a" />
+		</where>
+    </select>
+    
+    <sql id="where-coupon-search-vo-alias-a">
+    	AND A.use_yn = 'Y' 
+		AND A.dwld_psblt_yn = 'Y'
+		AND 'Y' = CASE WHEN TO_CHAR(SYSDATE, 'D') = 1 THEN A.sun_yn
+					   WHEN TO_CHAR(SYSDATE, 'D') = 2 THEN A.mon_yn 
+					   WHEN TO_CHAR(SYSDATE, 'D') = 3 THEN A.tue_yn
+					   WHEN TO_CHAR(SYSDATE, 'D') = 4 THEN A.wed_yn 
+					   WHEN TO_CHAR(SYSDATE, 'D') = 5 THEN A.thu_yn 
+					   WHEN TO_CHAR(SYSDATE, 'D') = 6 THEN A.fri_yn 
+					   WHEN TO_CHAR(SYSDATE, 'D') = 7 THEN A.sat_yn 
+				  END
+		AND A.valid_start_dtm <![CDATA[<=]]> SYSDATE
+		AND A.valid_end_dtm >= SYSDATE
+		AND A.dwld_start_time <![CDATA[<=]]> TO_CHAR(SYSTIMESTAMP, 'HH24:MI:SS.FF7')
+		AND A.dwld_end_time >= TO_CHAR(SYSTIMESTAMP, 'HH24:MI:SS.FF7')
+    </sql>
+    
+    <select id="selectMemberCouponCount" parameterType="Pageable" resultType="int">
+	/*+ kr.co.shop.bo.promotion.repository.master.PrCouponDao.selectMemberCouponCount [회원 보유 쿠폰 count] [이지훈] */
+		  SELECT COUNT(*)
+		  FROM PR_COUPON PC
+		  INNER JOIN MB_MEMBER_COUPON MMC
+		  			  ON MMC.CPN_NO = PC.CPN_NO
+		  WHERE MMC.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+		  AND PC.DISP_YN = 'Y'
+	</select>
+	
+	<select id="selectMemberCouponList" parameterType="Pageable" resultType="kr.co.shop.web.promotion.model.master.PrCoupon">
+	/*+ kr.co.shop.bo.promotion.repository.master.PrCouponDao.selectMemberCouponList [회원 보유 쿠폰 리스트 조회] [이지훈] */
+		  SELECT 
+			 PC.CPN_NO
+			,PC.CPN_NAME
+			,PC.CPN_TYPE_CODE
+			,PC.NORMAL_CPN_YN
+			,PC.CPN_USE_GBN_TYPE
+			,PC.USE_YN
+			,PC.DISP_YN
+			,PC.ISSUE_START_DTM
+			,PC.ISSUE_END_DTM
+			,PC.VALID_TERM_GBN_TYPE
+			,PC.VALID_START_DTM
+			,PC.VALID_END_DTM
+			,PC.USE_LIMIT_DAY_COUNT
+			,PC.VALID_TERM_ALERT_YN
+			,PC.ALERT_SEND_DAY_COUNT
+			,PC.RELAY_CPN_USE_YN
+			,PC.RELAY_CPN_NO
+			,PC.DWLD_PSBLT_YN
+			,PC.MON_YN
+			,PC.TUE_YN
+			,PC.WED_YN
+			,PC.THU_YN
+			,PC.FRI_YN
+			,PC.SAT_YN
+			,PC.SUN_YN
+			,PC.DWLD_START_TIME
+			,PC.DWLD_END_TIME
+			,PC.USE_PLACE_GBN_TYPE
+			,PC.CPN_CRT_TYPE
+			,PC.PAPER_CRT_COUNT
+			,PC.PAPER_CRT_RNDM_NO_VALUE
+			,PC.STORE_APPLY_TYPE
+			,PC.STORE_POS_DISP_YN
+			,PC.TOTAL_ISSUE_LIMIT_YN
+			,PC.TOTAL_ISSUE_LIMIT_COUNT
+			,PC.TOTAL_ISSUE_COUNT
+			,PC.PER1PSN_ISSUE_LIMIT_YN
+			,PC.PER1PSN_MAX_ISSUE_COUNT
+			,PC.MIN_LIMIT_SELL_AMT
+			,PC.LIMIT_DSCNT_RATE
+			,PC.CPN_APPLY_TYPE
+			,PC.CPN_DESC_TEXT
+			,PC.DSCNT_TYPE
+			,PC.DSCNT_VALUE
+			,PC.MAX_DSCNT_LIMIT_YN
+			,PC.MAX_DSCNT_LIMIT_AMT
+			,PC.MAX_CPN_APPLY_YN
+			,PC.MAX_CPN_APPLY_QTY
+			,PC.AFFLTS_CODE
+			,PC.RGSTER_NO
+			,PC.RGST_DTM
+			,PC.MODER_NO
+			,PC.MOD_DTM
+			,(SELECT COUNT(*) FROM PR_COUPON_APPLY_STORE PCAS WHERE PCAS.CPN_NO = PC.CPN_NO) AS STORE_COUNT
+			,(SELECT COUNT(*) FROM PR_COUPON_APPLY_PRODUCT PCAP WHERE PCAP.PRDT_TYPE = 'T' AND PCAP.CPN_NO = PC.CPN_NO) AS PRODUCT_COUNT
+			,(SELECT LISTAGG(FN_CODE_VALUE('DEVICE_CODE', PCAD.DEVICE_CODE),',') WITHIN GROUP(ORDER BY FN_CODE_VALUE('DEVICE_CODE', PCAD.DEVICE_CODE)) FROM PR_COUPON_APPLY_DEVICE PCAD WHERE PC.CPN_NO = PCAD.CPN_NO) AS DEVICE_CODE_NAME
+			, CASE 
+				WHEN PC.VALID_TERM_GBN_TYPE = 'T' THEN TRUNC(SYSDATE) - PC.ISSUE_START_DTM 
+				WHEN PC.VALID_TERM_GBN_TYPE = 'D' THEN TRUNC(SYSDATE) - TRUNC(MMC.CPN_ISSUE_DTM + PC.USE_LIMIT_DAY_COUNT)
+			 END AS LIMIT_DAY
+			,MMC.PAPER_NO_TEXT AS PAPER_NO_TEXT
+		  FROM PR_COUPON PC
+		  INNER JOIN MB_MEMBER_COUPON MMC
+		              ON MMC.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR}
+		  			 AND MMC.CPN_NO = PC.CPN_NO
+		  WHERE PC.DISP_YN = 'Y'
+		  <choose>
+		 		<when test='bean.sortType !=null and bean.sortType != ""'>
+		 			<if test='bean.sortType == "rgstDtm" '>ORDER BY PC.RGST_DTM ASC</if>
+		 		</when>
+		 		<otherwise>ORDER BY LIMIT_DAY DESC</otherwise>
+		  </choose>
+	</select>
+	
+	<select id="selectMemberCoupon" parameterType="kr.co.shop.web.promotion.model.master.PrCoupon" resultType="kr.co.shop.web.promotion.model.master.PrCoupon">
+	/*+ kr.co.shop.bo.promotion.repository.master.PrCouponDao.selectMemberCoupon [회원 보유 쿠폰 조회] [이지훈] */
+		  SELECT 
+			 PC.CPN_NO
+			,PC.CPN_NAME
+			,PC.CPN_TYPE_CODE
+			,PC.NORMAL_CPN_YN
+			,PC.CPN_USE_GBN_TYPE
+			,PC.USE_YN
+			,PC.DISP_YN
+			,PC.ISSUE_START_DTM
+			,PC.ISSUE_END_DTM
+			,PC.VALID_TERM_GBN_TYPE
+			,PC.VALID_START_DTM
+			,PC.VALID_END_DTM
+			,PC.USE_LIMIT_DAY_COUNT
+			,PC.VALID_TERM_ALERT_YN
+			,PC.ALERT_SEND_DAY_COUNT
+			,PC.RELAY_CPN_USE_YN
+			,PC.RELAY_CPN_NO
+			,PC.DWLD_PSBLT_YN
+			,PC.MON_YN
+			,PC.TUE_YN
+			,PC.WED_YN
+			,PC.THU_YN
+			,PC.FRI_YN
+			,PC.SAT_YN
+			,PC.SUN_YN
+			,PC.DWLD_START_TIME
+			,PC.DWLD_END_TIME
+			,PC.USE_PLACE_GBN_TYPE
+			,PC.CPN_CRT_TYPE
+			,PC.PAPER_CRT_COUNT
+			,PC.PAPER_CRT_RNDM_NO_VALUE
+			,PC.STORE_APPLY_TYPE
+			,PC.STORE_POS_DISP_YN
+			,PC.TOTAL_ISSUE_LIMIT_YN
+			,PC.TOTAL_ISSUE_LIMIT_COUNT
+			,PC.TOTAL_ISSUE_COUNT
+			,PC.PER1PSN_ISSUE_LIMIT_YN
+			,PC.PER1PSN_MAX_ISSUE_COUNT
+			,PC.MIN_LIMIT_SELL_AMT
+			,PC.LIMIT_DSCNT_RATE
+			,PC.CPN_APPLY_TYPE
+			,PC.CPN_DESC_TEXT
+			,PC.DSCNT_TYPE
+			,PC.DSCNT_VALUE
+			,PC.MAX_DSCNT_LIMIT_YN
+			,PC.MAX_DSCNT_LIMIT_AMT
+			,PC.MAX_CPN_APPLY_YN
+			,PC.MAX_CPN_APPLY_QTY
+			,PC.AFFLTS_CODE
+			,PC.RGSTER_NO
+			,PC.RGST_DTM
+			,PC.MODER_NO
+			,PC.MOD_DTM
+			,(SELECT COUNT(*) FROM PR_COUPON_APPLY_STORE PCAS WHERE PCAS.CPN_NO = PC.CPN_NO) AS STORE_COUNT
+			,(SELECT COUNT(*) FROM PR_COUPON_APPLY_PRODUCT PCAP WHERE PCAP.PRDT_TYPE = 'T' AND PCAP.CPN_NO = PC.CPN_NO) AS PRODUCT_COUNT
+			,(SELECT LISTAGG(FN_CODE_VALUE('DEVICE_CODE', PCAD.DEVICE_CODE),',') WITHIN GROUP(ORDER BY FN_CODE_VALUE('DEVICE_CODE', PCAD.DEVICE_CODE)) FROM PR_COUPON_APPLY_DEVICE PCAD WHERE PC.CPN_NO = PCAD.CPN_NO) AS DEVICE_CODE_NAME
+			, CASE 
+				WHEN PC.VALID_TERM_GBN_TYPE = 'T' THEN TRUNC(SYSDATE) - PC.ISSUE_START_DTM 
+				WHEN PC.VALID_TERM_GBN_TYPE = 'D' THEN TRUNC(SYSDATE) - TRUNC(MMC.CPN_ISSUE_DTM + PC.USE_LIMIT_DAY_COUNT)
+			 END AS LIMIT_DAY
+		  FROM PR_COUPON PC
+		  INNER JOIN MB_MEMBER_COUPON MMC
+		              ON MMC.MEMBER_NO = #{memberNo, jdbcType=VARCHAR}
+		  			 AND MMC.CPN_NO = PC.CPN_NO
+		  WHERE PC.CPN_NO = #{cpnNo, jdbcType=VARCHAR}
+		  	  AND PC.DISP_YN = 'Y'
+	</select>
+	
+	<select id="selectDownloadCouponList" parameterType="kr.co.shop.web.promotion.model.master.PrCoupon" resultType="kr.co.shop.web.promotion.model.master.PrCoupon">
+	/*+ kr.co.shop.bo.promotion.repository.master.PrCouponDao.selectDownloadCouponList [다운로드 가능 쿠폰 리스트] [이지훈] */
+		  SELECT 
+			 PC.CPN_NO
+			,PC.CPN_NAME
+			,PC.CPN_TYPE_CODE
+			,PC.NORMAL_CPN_YN
+			,PC.CPN_USE_GBN_TYPE
+			,PC.USE_YN
+			,PC.DISP_YN
+			,PC.ISSUE_START_DTM
+			,PC.ISSUE_END_DTM
+			,PC.VALID_TERM_GBN_TYPE
+			,PC.VALID_START_DTM
+			,PC.VALID_END_DTM
+			,PC.USE_LIMIT_DAY_COUNT
+			,PC.VALID_TERM_ALERT_YN
+			,PC.ALERT_SEND_DAY_COUNT
+			,PC.RELAY_CPN_USE_YN
+			,PC.RELAY_CPN_NO
+			,PC.DWLD_PSBLT_YN
+			,PC.MON_YN
+			,PC.TUE_YN
+			,PC.WED_YN
+			,PC.THU_YN
+			,PC.FRI_YN
+			,PC.SAT_YN
+			,PC.SUN_YN
+			,PC.DWLD_START_TIME
+			,PC.DWLD_END_TIME
+			,PC.USE_PLACE_GBN_TYPE
+			,PC.CPN_CRT_TYPE
+			,PC.PAPER_CRT_COUNT
+			,PC.PAPER_CRT_RNDM_NO_VALUE
+			,PC.STORE_APPLY_TYPE
+			,PC.STORE_POS_DISP_YN
+			,PC.TOTAL_ISSUE_LIMIT_YN
+			,PC.TOTAL_ISSUE_LIMIT_COUNT
+			,PC.TOTAL_ISSUE_COUNT
+			,PC.PER1PSN_ISSUE_LIMIT_YN
+			,PC.PER1PSN_MAX_ISSUE_COUNT
+			,PC.MIN_LIMIT_SELL_AMT
+			,PC.LIMIT_DSCNT_RATE
+			,PC.CPN_APPLY_TYPE
+			,PC.CPN_DESC_TEXT
+			,PC.DSCNT_TYPE
+			,PC.DSCNT_VALUE
+			,PC.MAX_DSCNT_LIMIT_YN
+			,PC.MAX_DSCNT_LIMIT_AMT
+			,PC.MAX_CPN_APPLY_YN
+			,PC.MAX_CPN_APPLY_QTY
+			,PC.AFFLTS_CODE
+			,PC.RGSTER_NO
+			,PC.RGST_DTM
+			,PC.MODER_NO
+			,PC.MOD_DTM
+			,(SELECT COUNT(*) FROM PR_COUPON_APPLY_STORE PCAS WHERE PCAS.CPN_NO = PC.CPN_NO) AS STORE_COUNT
+			,(SELECT COUNT(*) FROM PR_COUPON_APPLY_PRODUCT PCAP WHERE PCAP.PRDT_TYPE = 'T' AND PCAP.CPN_NO = PC.CPN_NO) AS PRODUCT_COUNT
+			,(SELECT LISTAGG(FN_CODE_VALUE('DEVICE_CODE', PCAD.DEVICE_CODE),',') WITHIN GROUP(ORDER BY FN_CODE_VALUE('DEVICE_CODE', PCAD.DEVICE_CODE)) FROM PR_COUPON_APPLY_DEVICE PCAD WHERE PC.CPN_NO = PCAD.CPN_NO) AS DEVICE_CODE_NAME
+		  FROM PR_COUPON PC
+		  WHERE PC.DISP_YN = 'Y'
+	  		  AND PC.DWLD_PSBLT_YN = 'Y'
+	  		  AND PC.USE_PLACE_GBN_TYPE != 'F'
+	  		  AND 'Y' = 
+	  		  CASE 
+	  		  	   WHEN TO_CHAR(SYSDATE, 'D') = 1 THEN PC.SUN_YN
+				   WHEN TO_CHAR(SYSDATE, 'D') = 2 THEN PC.MON_YN 
+				   WHEN TO_CHAR(SYSDATE, 'D') = 3 THEN PC.TUE_YN
+				   WHEN TO_CHAR(SYSDATE, 'D') = 4 THEN PC.WED_YN 
+				   WHEN TO_CHAR(SYSDATE, 'D') = 5 THEN PC.THU_YN 
+				   WHEN TO_CHAR(SYSDATE, 'D') = 6 THEN PC.FRI_YN 
+				   WHEN TO_CHAR(SYSDATE, 'D') = 7 THEN PC.SAT_YN 
+			  END
+			  AND DWLD_START_TIME <![CDATA[<=]]> TO_CHAR(SYSDATE, 'HH24:MI:SS')
+			  AND DWLD_END_TIME <![CDATA[>=]]> TO_CHAR(SYSDATE, 'HH24:MI:SS')
+	</select>
+	
+	<select id="selectPrCoupon" parameterType="kr.co.shop.web.promotion.model.master.PrCoupon" resultType="kr.co.shop.web.promotion.model.master.PrCoupon">
+   /*+  kr.co.shop.bo.promotion.repository.master.PrCouponDao.selectPrCoupon [쿠폰 상세 조회 쿼리] [이지훈] */
+    	SELECT
+			PC.CPN_NO
+			,PC.CPN_NAME
+			,PC.CPN_TYPE_CODE
+			,PC.NORMAL_CPN_YN
+			,PC.CPN_USE_GBN_TYPE
+			,PC.USE_YN
+			,PC.DISP_YN
+			,PC.ISSUE_START_DTM
+			,PC.ISSUE_END_DTM
+			,PC.VALID_TERM_GBN_TYPE
+			,PC.VALID_START_DTM
+			,PC.VALID_END_DTM
+			,PC.USE_LIMIT_DAY_COUNT
+			,PC.VALID_TERM_ALERT_YN
+			,PC.ALERT_SEND_DAY_COUNT
+			,PC.RELAY_CPN_USE_YN
+			,PC.RELAY_CPN_NO
+			,PC.DWLD_PSBLT_YN
+			,PC.MON_YN
+			,PC.TUE_YN
+			,PC.WED_YN
+			,PC.THU_YN
+			,PC.FRI_YN
+			,PC.SAT_YN
+			,PC.SUN_YN
+			,PC.DWLD_START_TIME
+			,PC.DWLD_END_TIME
+			,PC.USE_PLACE_GBN_TYPE
+			,PC.CPN_CRT_TYPE
+			,PC.PAPER_CRT_COUNT
+			,PC.PAPER_CRT_RNDM_NO_VALUE
+			,PC.STORE_APPLY_TYPE
+			,PC.STORE_POS_DISP_YN
+			,PC.TOTAL_ISSUE_LIMIT_YN
+			,PC.TOTAL_ISSUE_LIMIT_COUNT
+			,PC.TOTAL_ISSUE_COUNT
+			,PC.PER1PSN_ISSUE_LIMIT_YN
+			,PC.PER1PSN_MAX_ISSUE_COUNT
+			,PC.MIN_LIMIT_SELL_AMT
+			,PC.LIMIT_DSCNT_RATE
+			,PC.CPN_APPLY_TYPE
+			,PC.CPN_DESC_TEXT
+			,PC.DSCNT_TYPE
+			,PC.DSCNT_VALUE
+			,PC.MAX_DSCNT_LIMIT_YN
+			,PC.MAX_DSCNT_LIMIT_AMT
+			,PC.MAX_CPN_APPLY_YN
+			,PC.MAX_CPN_APPLY_QTY
+			,PC.AFFLTS_CODE
+			,PC.RGSTER_NO
+			,PC.RGST_DTM
+			,PC.MODER_NO
+			,PC.MOD_DTM
+    	    ,FN_CODE_VALUE('CPN_TYPE_CODE', PC.CPN_TYPE_CODE) AS CPN_TYPE_CODE_NAME
+			,(SELECT COUNT(*) FROM MB_MEMBER_COUPON MMC WHERE MMC.CPN_NO = PC.CPN_NO AND MMC.MEMBER_NO = #{memberNo, jdbcType=VARCHAR}) AS MEMBER_COUPON_CNT
+    	FROM  
+    		PR_COUPON PC
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+	<select id="selectCouponPaper" parameterType="kr.co.shop.web.promotion.model.master.PrCoupon" resultType="kr.co.shop.web.promotion.model.master.PrCoupon">
+   /*+  kr.co.shop.bo.promotion.repository.master.PrCouponDao.selectCouponPaper [쿠폰 지류 상세 조회 쿼리] [이지훈] */
+    	SELECT
+			PC.CPN_NO
+			,PC.CPN_NAME
+			,PC.CPN_TYPE_CODE
+			,PC.NORMAL_CPN_YN
+			,PC.CPN_USE_GBN_TYPE
+			,PC.USE_YN
+			,PC.DISP_YN
+			,PC.ISSUE_START_DTM
+			,PC.ISSUE_END_DTM
+			,PC.VALID_TERM_GBN_TYPE
+			,PC.VALID_START_DTM
+			,PC.VALID_END_DTM
+			,PC.USE_LIMIT_DAY_COUNT
+			,PC.VALID_TERM_ALERT_YN
+			,PC.ALERT_SEND_DAY_COUNT
+			,PC.RELAY_CPN_USE_YN
+			,PC.RELAY_CPN_NO
+			,PC.DWLD_PSBLT_YN
+			,PC.MON_YN
+			,PC.TUE_YN
+			,PC.WED_YN
+			,PC.THU_YN
+			,PC.FRI_YN
+			,PC.SAT_YN
+			,PC.SUN_YN
+			,PC.DWLD_START_TIME
+			,PC.DWLD_END_TIME
+			,PC.USE_PLACE_GBN_TYPE
+			,PC.CPN_CRT_TYPE
+			,PC.PAPER_CRT_COUNT
+			,PC.PAPER_CRT_RNDM_NO_VALUE
+			,PC.STORE_APPLY_TYPE
+			,PC.STORE_POS_DISP_YN
+			,PC.TOTAL_ISSUE_LIMIT_YN
+			,PC.TOTAL_ISSUE_LIMIT_COUNT
+			,PC.TOTAL_ISSUE_COUNT
+			,PC.PER1PSN_ISSUE_LIMIT_YN
+			,PC.PER1PSN_MAX_ISSUE_COUNT
+			,PC.MIN_LIMIT_SELL_AMT
+			,PC.LIMIT_DSCNT_RATE
+			,PC.CPN_APPLY_TYPE
+			,PC.CPN_DESC_TEXT
+			,PC.DSCNT_TYPE
+			,PC.DSCNT_VALUE
+			,PC.MAX_DSCNT_LIMIT_YN
+			,PC.MAX_DSCNT_LIMIT_AMT
+			,PC.MAX_CPN_APPLY_YN
+			,PC.MAX_CPN_APPLY_QTY
+			,PC.AFFLTS_CODE
+			,PC.RGSTER_NO
+			,PC.RGST_DTM
+			,PC.MODER_NO
+			,PC.MOD_DTM
+			,PCPN.PAPER_NO_TEXT
+			,PCPN.RGST_YN
+			,PCPN.STORE_USE_YN
+    	FROM  
+    		PR_COUPON PC
+    	INNER JOIN PR_COUPON_PAPER_NUMBER PCPN
+    				ON PC.CPN_NO = PCPN.CPN_NO
+    			  AND PCPN.PAPER_NO_TEXT = #{paperNoText, jdbcType=VARCHAR}
+    </select>
+    
+    <update id="updateCouponPaperByCpnNo" parameterType="String">
+    /*+  kr.co.shop.bo.promotion.repository.master.PrCouponDao.updateCouponPaperByCpnNo [쿠폰 지류 수정 쿼리] [이지훈] */
+    	UPDATE PR_COUPON_PAPER_NUMBER
+    	SET RGST_YN = 'Y'
+    	WHERE CPN_NO = #{cpnNo, jdbcType=VARCHAR}
+    </update>
+    
+    <sql id="column-dscnt-amt-coupon-alias-a">
+	   	<if test='normalAmt != null and normalAmt != ""'>
+	   		, CASE WHEN A.dscnt_type = 'R' THEN (#{normalAmt, jdbcType=INTEGER} - (#{normalAmt, jdbcType=INTEGER} * (A.dscnt_value - A.limit_dscnt_rate) * 0.01)) + #{optnAddAmt, jdbcType=INTEGER}
+	  		 	   WHEN A.dscnt_type = 'A' THEN #{normalAmt, jdbcType=INTEGER} - (A.dscnt_value - A.limit_dscnt_rate) + #{optnAddAmt, jdbcType=INTEGER}
+	  		  END AS dscnt_amt  
+		</if>
+    </sql>
+    
+    <select id="selectCouponByPrimaryKey" parameterType="kr.co.shop.web.promotion.model.master.PrCoupon" resultType="kr.co.shop.web.promotion.model.master.PrCoupon">
+    	/*+  kr.co.shop.bo.promotion.repository.master.PrCouponDao.selectCouponByPrimaryKey [쿠폰 단건 조회 상품 가격 계산까지] [황성준] */
+    	SELECT
+    	<include refid="select-columns" />
+    	<include refid="column-dscnt-amt-coupon-alias-a"/>
+		FROM 
+			PR_COUPON A
+		<where>
+			AND A.CPN_NO = #{cpnNo, jdbcType=VARCHAR}
+			AND A.MIN_LIMIT_SELL_AMT <![CDATA[<=]]> FN_PRDT_PROMO_PRICE(#{prdtNo, jdbcType=VARCHAR})
+			<!-- 최대할인제한금액과 주문수량도 계산에 포함시켜야 하는지 추후 확인 -->
+			<!-- <include refid="where-coupon-search-vo-alias-a"/> -->
+		</where> 
+    </select>
+    
+    <select id="selectCouponByPrdtNo" parameterType="java.lang.String" resultType="kr.co.shop.web.product.model.master.PdProductCoupon">
+    	/*+  kr.co.shop.bo.promotion.repository.master.PrCouponDao.selectCouponByPrdtNo [상품에 해당하는 쿠폰 조회 쿼리] [김세훈] */
+		SELECT
+			*
+		FROM
+			(
+				SELECT
+					COUPON.cpn_no,
+					COUPON.cpn_name,
+					COUPON.normal_cpn_yn,
+					COUPON.dscnt_type,
+					COUPON.dscnt_value,
+					FLOOR(
+						CASE
+							WHEN COUPON.dscnt_type = 'R' THEN ROUND(CEILING(COUPON.lowest_price * (COUPON.dscnt_value * 0.01)), -2)<!-- R:정률 -->
+							WHEN COUPON.dscnt_type = 'A' THEN COUPON.dscnt_value<!-- A:정액 -->
+							ELSE 0<!-- 오류케이스 -->
+						END
+					) AS dscnt_amt
+				FROM
+					(
+						SELECT
+							A.*,
+							FN_PRDT_PROMO_PRICE(B.prdt_no) AS lowest_price<!-- 최저판매가 -->
+						FROM
+							pr_coupon A
+							JOIN pr_coupon_apply_product B ON A.cpn_no = B.cpn_no AND B.prdt_type = 'T' AND B.prdt_no = #{prdtNo, jdbcType=VARCHAR}<!-- T:대상상품, L:제외상품 -->
+						WHERE
+							A.use_yn = 'Y'
+							AND A.disp_yn = 'Y'
+							AND A.dwld_psblt_yn = 'Y'
+							AND A.use_place_gbn_type != 'F'<!-- O:온라인, F:오프라인, A:온/오프라인 -->
+							AND A.cpn_crt_type = 'O'<!-- O:온라인, P:지류생성 -->
+							AND ((A.total_issue_limit_yn = 'N') OR (A.total_issue_limit_yn = 'Y' AND A.total_issue_limit_count &gt; A.total_issue_count))<!-- 발급제한이 없는 쿠폰 또는 발급제한이 있는 쿠폰 중, 발급된 수가 총발급제한수보다 적은 쿠폰 -->
+							AND 'Y' =
+								CASE
+									WHEN TO_CHAR(SYSDATE, 'D') = 1 THEN A.sun_yn
+									WHEN TO_CHAR(SYSDATE, 'D') = 2 THEN A.mon_yn 
+									WHEN TO_CHAR(SYSDATE, 'D') = 3 THEN A.tue_yn
+									WHEN TO_CHAR(SYSDATE, 'D') = 4 THEN A.wed_yn 
+									WHEN TO_CHAR(SYSDATE, 'D') = 5 THEN A.thu_yn 
+									WHEN TO_CHAR(SYSDATE, 'D') = 6 THEN A.fri_yn 
+									WHEN TO_CHAR(SYSDATE, 'D') = 7 THEN A.sat_yn 
+								END
+							AND A.valid_start_dtm &lt;= SYSDATE
+							AND A.valid_end_dtm &gt;= SYSDATE
+							AND A.dwld_start_time &lt;= TO_CHAR(SYSTIMESTAMP, 'HH24:MI:SS.FF7')
+							AND A.dwld_end_time &gt;= TO_CHAR(SYSTIMESTAMP, 'HH24:MI:SS.FF7')
+					) COUPON
+			) COUPON_PRICE
+		ORDER BY
+			COUPON_PRICE.dscnt_amt DESC
+    </select>
+    
+    <select id="selectSoldOutCmpnsCpnPolicy" resultType="kr.co.shop.web.promotion.model.master.PrCoupon">
+    	/*+  kr.co.shop.bo.promotion.repository.master.PrCouponDao.selectSoldOutCmpnsCpnPolicy [현재 시행중인 온라인 회원의 기본 정책 품절보상쿠폰 조회] [김태호] */
+		SELECT A.CPN_NO
+	    	 , CASE WHEN A.VALID_TERM_GBN_TYPE = 'T' THEN A.VALID_START_DTM
+	    	        WHEN A.VALID_TERM_GBN_TYPE = 'D' THEN SYSDATE
+	    	   END AS VALID_START_DTM
+			 , CASE WHEN A.VALID_TERM_GBN_TYPE = 'T' THEN A.VALID_END_DTM
+				    WHEN A.VALID_TERM_GBN_TYPE = 'D' THEN SYSDATE + A.USE_LIMIT_DAY_COUNT
+			   END AS VALID_END_DTM
+		  FROM PR_COUPON A
+		  JOIN CM_ONLINE_MEMBER_POLICY B
+		    ON A.CPN_NO = B.SOLD_OUT_CMPNS_CPN_NO
+		 WHERE A.ISSUE_START_DTM &lt;= SYSDATE AND SYSDATE &lt;= A.ISSUE_END_DTM
+		   AND A.USE_YN = 'Y'
+		   AND B.PLCY_SEQ = (
+		 						SELECT
+		                        	   PLCY_SEQ
+		                          FROM CM_ONLINE_MEMBER_POLICY
+		                         WHERE PLCY_APPLY_YMD &lt;= SYSDATE
+		                         ORDER BY PLCY_APPLY_YMD DESC, MOD_DTM DESC
+		                         FETCH FIRST 1 ROWS ONLY
+							)
+    </select>
+    
+</mapper>

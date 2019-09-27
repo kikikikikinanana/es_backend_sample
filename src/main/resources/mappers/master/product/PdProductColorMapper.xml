@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.product.repository.master.PdProductColorDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.product.model.master.PdProductColor">
+    
+     /*+ kr.co.shop.web.product.repository.master.PdProductColorDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			PD_PRODUCT_COLOR
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+	<select id="selectByPrdtNo" parameterType="java.lang.String" resultType="kr.co.shop.web.product.model.master.PdProductColor">
+		/*+ kr.co.shop.web.product.repository.master.PdProductColorDao.selectByPrdtNo [상품번호에 의한 색상 선택] [김세훈] */  
+		SELECT
+			<include refid="select-columns" />
+		FROM
+			pd_product_color
+		WHERE
+			prdt_no = #{prdtNo, jdbcType=VARCHAR}
+    </select>
+
+</mapper>

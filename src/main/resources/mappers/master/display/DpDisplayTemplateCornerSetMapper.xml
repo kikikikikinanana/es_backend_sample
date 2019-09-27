@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.display.repository.master.DpDisplayTemplateCornerSetDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.display.model.master.DpDisplayTemplateCornerSet">
+    
+     /*+ kr.co.shop.web.display.repository.master.DpDisplayTemplateCornerSetDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			dp_display_template_corner_set
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+    <select id="selectDpDisplayTemplateCornerSetListByDispContCountGreaterThanZero" parameterType="kr.co.shop.web.display.model.master.DpDisplayTemplateCornerSet" resultType="kr.co.shop.web.display.model.master.DpDisplayTemplateCornerSet">
+     /*+ kr.co.shop.web.display.repository.master.DpDisplayTemplateCornerSetDao.select [전시 템플릿 코너 셋 조회(전시콘텐츠수가 0보다 큰)] [박민우] */
+    
+		SELECT 
+			 <include refid="select-columns" />
+		FROM 
+			dp_display_template_corner_set
+		<where> 
+			<if test="dispTmplNo != null"> 
+				 disp_tmpl_no = #{dispTmplNo, jdbcType=VARCHAR}
+			</if> 
+			<if test="dispTmplCornerSeq != null"> 
+				 AND disp_tmpl_corner_seq = #{dispTmplCornerSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="dispTmplCornerSetSeq != null"> 
+				 AND disp_tmpl_corner_set_seq = #{dispTmplCornerSetSeq, jdbcType=INTEGER}
+			</if> 
+			<if test="contTypeCode != null"> 
+				 AND cont_type_code = #{contTypeCode, jdbcType=VARCHAR}
+			</if> 
+			 AND disp_cont_count &gt; 0
+		</where>
+		ORDER BY SORT_SEQ 
+    </select>
+
+</mapper>

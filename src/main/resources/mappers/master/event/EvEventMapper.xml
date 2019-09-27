@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.shop.web.event.repository.master.EvEventDao">
+
+    <!--
+    	※ 경고
+		이 select SQL은  Code Generator를 통하여 생성 되었습니다.
+     	기본 쿼리 이고 수시로 변경 될 소지가 있기 떄문에 Generator로 변경 하는 것이 아닌 직접 수정은 하지 마십시요.
+     	
+    -->
+    <select id="selectByPrimaryKey" parameterType="Object" resultType="kr.co.shop.web.event.model.master.EvEvent">
+    
+     /*+ kr.co.shop.web.event.repository.master.EvEventDao.selectByPrimaryKey [기본 PK 조회 쿼리] [Generator] */  
+    
+		SELECT 
+			<include refid="select-columns" />
+		FROM 
+			ev_event
+		WHERE 
+			<include refid="pk-columns" /> 
+    </select>
+    
+     <select id="selectEventCount" parameterType="Pageable" resultType="int">
+     	SELECT 
+			COUNT(*)
+		FROM 
+			EV_EVENT EE
+		<include refid="whereSql" />
+     </select>
+     
+     <select id="selectEventList" parameterType="Pageable" resultType="kr.co.shop.web.event.model.master.EvEvent">
+     /*+ kr.co.shop.web.event.repository.master.EvEventDao.selectEventList [이벤트 리스트 조회 쿼리] [이지훈] */  
+     	SELECT 
+			<include refid="select-columns" />
+			,(SELECT EEI.IMAGE_URL FROM EV_EVENT_IMAGE EEI WHERE EEI.EVENT_NO = EE.EVENT_NO AND EEI.DEVICE_CODE = '10000' AND IMAGE_GBN_TYPE = 'I' FETCH FIRST 1 ROWS ONLY) AS IMAGE_URL
+			,(SELECT LISTAGG(SSC.CHNNL_NAME, ',') WITHIN GROUP(ORDER BY SSC.CHNNL_NAME) 
+							FROM EV_EVENT_TARGET_CHANNEL EETC 
+							JOIN SY_SITE_CHNNL SSC 
+							ON EETC.CHNNL_NO = SSC.CHNNL_NO 
+							AND SSC.USE_YN = 'Y'
+							<choose>
+								<when test='bean.chnnlNo != null and bean.chnnlNo == "10003" '>
+									AND SSC.CHNNL_NO = #{bean.chnnlNo, jdbcType=VARCHAR}
+								</when>
+								<otherwise>AND SSC.CHNNL_NO != '10003'</otherwise>
+							</choose>
+							WHERE EETC.EVENT_NO = EE.EVENT_NO) AS CHNNL_NAME
+		FROM 
+			EV_EVENT EE
+		<include refid="whereSql" />
+		ORDER BY EE.RGST_DTM DESC
+		<include refid="Paging.mssql" />
+     </select>
+     
+     <select id="selectMemberEventCount" parameterType="Pageable" resultType="int">
+     	SELECT 
+			COUNT(*)
+		FROM 
+			EV_EVENT EE
+		<include refid="whereMemberSql" />
+     </select>
+     
+     <select id="selectEvent" parameterType="kr.co.shop.web.event.model.master.EvEvent" resultType="kr.co.shop.web.event.model.master.EvEvent">
+    /*+ kr.co.shop.web.event.repository.master.EvEventDao.selectEvent [이벤트 상세 조회 쿼리] [이지훈] */
+    	SELECT 
+			<include refid="select-columns" />
+			,(SELECT EEI.IMAGE_URL FROM EV_EVENT_IMAGE EEI WHERE EEI.EVENT_NO = EE.EVENT_NO AND EEI.DEVICE_CODE = '10000' AND IMAGE_GBN_TYPE = 'G' FETCH FIRST 1 ROWS ONLY) AS IMAGE_URL
+			,CASE
+    	    	WHEN EE.EVENT_START_DTM <![CDATA[>]]> SYSDATE THEN 'wait'
+    	    	WHEN EE.EVENT_START_DTM <![CDATA[>=]]> SYSDATE AND EE.EVENT_END_DTM <![CDATA[<=]]> SYSDATE THEN 'ing'
+    	    	ELSE 'end'
+    	     END AS EVENT_PROGRESS_STATUS
+		FROM 
+			EV_EVENT EE
+		WHERE
+			<include refid="pk-columns" />
+    </select>
+     
+     <select id="selectMemberEventList" parameterType="Pageable" resultType="kr.co.shop.web.event.model.master.EvEvent">
+     /*+ kr.co.shop.web.event.repository.master.EvEventDao.selectMemberEventList [회원이벤트조회 쿼리] [이지훈] */
+     	SELECT 
+			<include refid="select-columns" />
+			,(SELECT EEI.IMAGE_URL FROM EV_EVENT_IMAGE EEI WHERE EEI.EVENT_NO = EE.EVENT_NO AND EEI.DEVICE_CODE = '10000' AND IMAGE_GBN_TYPE = 'I' FETCH FIRST 1 ROWS ONLY) AS IMAGE_URL
+			,(SELECT COUNT(*) FROM EV_EVENT_RESULT_BENEFIT_MEMBER EERBM WHERE EERBM.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR} AND EERBM.EVENT_NO = EE.EVENT_NO) AS MY_RESULT_CNT
+			,(SELECT COUNT(*) FROM EV_EVENT_RESULT EER WHERE EER.EVENT_NO = EE.EVENT_NO AND EER.PBLC_YN = 'Y') AS RESULT_CNT
+			,CASE
+    	    	WHEN EE.EVENT_START_DTM <![CDATA[>]]> SYSDATE THEN 'wait'
+    	    	WHEN EE.EVENT_START_DTM <![CDATA[>=]]> SYSDATE AND EE.EVENT_END_DTM <![CDATA[<=]]> SYSDATE THEN 'ing'
+    	    	ELSE 'end'
+    	     END AS EVENT_PROGRESS_STATUS
+    	    ,CASE
+    	    	WHEN EE.EVENT_TYPE_CODE = '10001' THEN (SELECT TARGET.RGST_DTM FROM EV_EVENT_ANSWER TARGET WHERE TARGET.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR} AND TARGET.EVENT_NO = EE.EVENT_NO ORDER BY TARGET.RGST_DTM DESC FETCH FIRST 1 ROWS ONLY) 
+    	    	WHEN EE.EVENT_TYPE_CODE = '10002' THEN (SELECT TARGET.ATEND_DTM FROM EV_EVENT_ATTENDANCE_CHECK_MEMBER TARGET WHERE TARGET.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR} AND TARGET.EVENT_NO = EE.EVENT_NO ORDER BY TARGET.ATEND_DTM DESC FETCH FIRST 1 ROWS ONLY)
+    	    	WHEN EE.EVENT_TYPE_CODE = '10004' THEN (SELECT TARGET.JOIN_DTM FROM EV_EVENT_ROULETTE_JOIN_MEMBER TARGET WHERE TARGET.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR} AND TARGET.EVENT_NO = EE.EVENT_NO ORDER BY TARGET.JOIN_DTM DESC FETCH FIRST 1 ROWS ONLY)
+    	    	ELSE (SELECT TARGET.JOIN_DTM FROM EV_EVENT_ROULETTE_JOIN_MEMBER TARGET WHERE TARGET.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR} AND TARGET.EVENT_NO = EE.EVENT_NO ORDER BY TARGET.JOIN_DTM DESC FETCH FIRST 1 ROWS ONLY)
+    	     END AS EVENT_JOIN_DTM
+		FROM 
+			EV_EVENT EE
+		<include refid="whereMemberSql" />
+		ORDER BY EE.RGST_DTM DESC
+		<include refid="Paging.mssql" />
+     </select>
+     
+     <sql id="whereSql">
+     	<where>
+	     	AND EE.USE_YN = 'Y'
+	     	<if test='bean.statusType != null and bean.statusType == "ing" '>
+	     		AND EE.EVENT_START_DTM <![CDATA[<=]]> SYSDATE AND EE.EVENT_END_DTM <![CDATA[>=]]> SYSDATE
+	     	</if>
+	     	<if test='bean.statusType != null and bean.statusType == "end" '>
+	     		AND EE.EVENT_END_DTM <![CDATA[<]]> SYSDATE
+	     	</if>
+     	</where>
+     </sql>
+     
+     <sql id="whereMemberSql">
+     	<where>
+     		<choose>
+	     		<when test='bean.winningEvent != null and bean.winningEvent == "N" '>
+		     		EXISTS (
+		     			SELECT * FROM EV_EVENT_ANSWER EEA WHERE EEA.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR} AND EEA.EVENT_NO = EE.EVENT_NO
+		    				<!-- <if test='bean.startYmd != null and bean.startYmd != ""'>
+								AND CONVERT(DATETIME, EEA.RGST_DTM) >= CONVERT(DATETIME, #{bean.startYmd, jdbcType=VARCHAR})  
+							</if>
+							<if test='bean.endYmd != null and bean.endYmd != ""'>
+								AND CONVERT(DATETIME, #{bean.endYmd, jdbcType=VARCHAR}) >= CONVERT(DATETIME, EEA.RGST_DTM)   
+							</if> -->
+		     		)
+		     		OR
+		     		EXISTS (
+		     			SELECT * FROM EV_EVENT_ATTENDANCE_CHECK_MEMBER EEAC WHERE EEAC.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR} AND EEAC.EVENT_NO = EE.EVENT_NO
+		     				<!-- <if test='bean.startYmd != null and bean.startYmd != ""'>
+								AND CONVERT(DATETIME, EEAC.ATEND_DTM) >= CONVERT(DATETIME, #{bean.startYmd, jdbcType=VARCHAR})  
+							</if>
+							<if test='bean.endYmd != null and bean.endYmd != ""'>
+								AND CONVERT(DATETIME, #{bean.endYmd, jdbcType=VARCHAR}) >= CONVERT(DATETIME, EEAC.ATEND_DTM)   
+							</if> -->
+		     		)
+		     		OR
+		     		EXISTS (
+		     			SELECT * FROM EV_EVENT_ROULETTE_JOIN_MEMBER EERJM WHERE EERJM.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR} AND EERJM.EVENT_NO = EE.EVENT_NO
+		     				<!-- <if test='bean.startYmd != null and bean.startYmd != ""'>
+								AND CONVERT(DATETIME, EERJM.JOIN_DTM) >= CONVERT(DATETIME, #{bean.startYmd, jdbcType=VARCHAR})  
+							</if>
+							<if test='bean.endYmd != null and bean.endYmd != ""'>
+								AND CONVERT(DATETIME, #{bean.endYmd, jdbcType=VARCHAR}) >= CONVERT(DATETIME, EERJM.JOIN_DTM)   
+							</if> -->
+		     		)
+		     		OR
+		     		EXISTS (
+		     			SELECT * FROM EV_EVENT_JOIN_MEMBER EEJM WHERE EEJM.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR} AND EEJM.EVENT_NO = EE.EVENT_NO
+		     				<!-- <if test='bean.startYmd != null and bean.startYmd != ""'>
+								AND CONVERT(DATETIME, EEJM.JOIN_DTM) >= CONVERT(DATETIME, #{bean.startYmd, jdbcType=VARCHAR})  
+							</if>
+							<if test='bean.endYmd != null and bean.endYmd != ""'>
+								AND CONVERT(DATETIME, #{bean.endYmd, jdbcType=VARCHAR}) >= CONVERT(DATETIME, EEJM.JOIN_DTM)   
+							</if> -->
+		     		)
+	     		</when>
+	     		<when test='bean.winningEvent != null and bean.winningEvent == "Y" '>
+	     			EXISTS (
+						SELECT * FROM EV_EVENT_RESULT_BENEFIT_MEMBER EERBM WHERE EERBM.MEMBER_NO = #{bean.memberNo, jdbcType=VARCHAR} AND EERBM.EVENT_NO = EE.EVENT_NO
+	     			)
+	     		</when>
+	     	</choose>
+     	</where>
+     </sql>
+
+</mapper>
